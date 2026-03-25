@@ -26,6 +26,11 @@
   --color-brand-btn: #7c5fc7;
   --color-brand-btn-dark: #6347b5;
   --color-brand-foreground: #fff;
+  --color-surface-tinted: color-mix(in srgb, var(--color-surface), var(--color-brand) 5%);
+  --color-gray-50: color-mix(in srgb, #F9FAFB, var(--color-brand) 3%);
+  --color-gray-100: color-mix(in srgb, #F3F4F6, var(--color-brand) 5%);
+  --color-gray-200: color-mix(in srgb, #E5E7EB, var(--color-brand) 8%);
+  --color-gray-300: color-mix(in srgb, #D1D5DB, var(--color-brand) 10%);
 }
 
 body {
@@ -46,13 +51,6 @@ body {
 @media (hover: hover) and (pointer: fine) {
   .hover\:scale-hover:hover {
     transform: scale(1.02);
-  }
-}
-
-@media (hover: none) {
-  .hover\:hover:hover {
-    background-color: inherit;
-    transform: none;
   }
 }
 

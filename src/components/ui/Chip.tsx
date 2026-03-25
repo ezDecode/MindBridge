@@ -9,10 +9,10 @@ interface ChipProps extends HTMLAttributes<HTMLSpanElement> {
 
 const Chip = forwardRef<HTMLSpanElement, ChipProps>(
   ({ className = "", variant = "default", size = "md", children, ...props }, ref) => {
-    const base = "inline-flex items-center justify-center px-3.5 text-sm font-medium rounded-full transition-colors duration-160ms-ease transition-transform duration-160ms-ease touch-manipulation";
+    const base = "inline-flex items-center justify-center px-3.5 text-sm font-medium rounded-full transition-colors duration-150 ease-out transition-transform duration-150 ease-out touch-manipulation";
     const variants = {
-      default: "bg-[var(--color-surface)] text-[var(--color-text-secondary)] border border-[var(--color-border)] hover:bg-gray-50 hover:border-gray-300 hover:shadow-sm",
-      outline: "border border-[var(--color-border)] text-[var(--color-text-secondary)] bg-transparent hover:bg-gray-50 hover:border-gray-300",
+      default: "bg-[var(--color-surface)] text-[var(--color-text-secondary)] border border-[var(--color-border)] hover:bg-[var(--color-gray-50)] hover:border-[var(--color-gray-300)] hover:shadow-sm",
+      outline: "border border-[var(--color-border)] text-[var(--color-text-secondary)] bg-transparent hover:bg-[var(--color-gray-50)] hover:border-[var(--color-gray-300)]",
     };
     const sizes = {
       sm: "py-1",
