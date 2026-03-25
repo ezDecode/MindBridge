@@ -50,10 +50,7 @@ export function HeroSection() {
             <Button href="/register" variant="primary" size="md" className="animate-scale-in animation-delay-400">
               Get Started
             </Button>
-            <Button href="/chat" variant="secondary" size="md" className="sm:hidden bg-[var(--color-surface-tinted)] animate-scale-in animation-delay-500">
-              Try Free
-            </Button>
-            <Button href="/chat" variant="ghost" size="md" className="hidden sm:inline-flex animate-scale-in animation-delay-500">
+            <Button href="/chat" variant="secondary" size="md" className="bg-[var(--color-surface-tinted)] animate-scale-in animation-delay-500">
               Try Free
             </Button>
           </div>
