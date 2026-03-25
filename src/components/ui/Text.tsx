@@ -15,12 +15,21 @@ const Text = forwardRef<HTMLParagraphElement, TextProps>(
     const hasFixedWeight = ["h1", "h2", "h3", "heading"].includes(variant);
     
     const variants = {
-      h1: "text-4xl md:text-5xl font-serif tracking-tight",
-      h2: "text-3xl md:text-4xl font-serif tracking-tight",
-      h3: "text-xl md:text-2xl font-serif tracking-tight",
-      heading: "text-3xl md:text-4xl font-serif tracking-tight",
-      body: "text-lg leading-relaxed tracking-tight",
-      small: "text-sm tracking-tight",
+      h1: "font-serif tracking-tight",
+      h2: "font-serif tracking-tight",
+      h3: "font-serif tracking-tight",
+      heading: "font-serif tracking-tight",
+      body: "leading-relaxed tracking-tight",
+      small: "tracking-tight",
+    };
+
+    const variantSizes: Record<string, string> = {
+      h1: "text-[clamp(2.25rem,5vw,3.75rem)]",
+      h2: "text-[clamp(1.75rem,4vw,2.5rem)]",
+      h3: "text-[clamp(1.125rem,2.5vw,1.5rem)]",
+      heading: "text-[clamp(1.75rem,4vw,2.5rem)]",
+      body: "text-[clamp(1rem,2vw,1.125rem)]",
+      small: "text-sm",
     };
 
     const variantWeights: Record<string, string> = {
@@ -44,7 +53,7 @@ const Text = forwardRef<HTMLParagraphElement, TextProps>(
     };
 
     return (
-      <Component ref={ref} className={`${variants[variant]} ${hasFixedWeight ? variantWeights[variant] : weightOptions[weight]} ${colors[color]} ${className}`} {...props}>
+      <Component ref={ref} className={`${variants[variant]} ${variantSizes[variant]} ${hasFixedWeight ? variantWeights[variant] : weightOptions[weight]} ${colors[color]} ${className}`} {...props}>
         {children}
       </Component>
     );

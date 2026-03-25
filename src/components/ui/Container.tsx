@@ -9,12 +9,12 @@ interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
 const Container = forwardRef<HTMLDivElement, ContainerProps>(
   ({ className = "", size = "md", children, ...props }, ref) => {
     const sizes = { 
-      sm: "max-w-xl", 
-      md: "max-w-4xl" 
+      sm: "max-w-[640px]", 
+      md: "max-w-[1024px]" 
     };
 
     return (
-      <div ref={ref} className={`mx-auto w-full px-5 md:px-6 ${sizes[size]} ${className}`} {...props}>
+      <div ref={ref} className={`mx-auto w-full px-[clamp(1rem,4vw,1.5rem)] ${sizes[size]} ${className}`} {...props}>
         {children}
       </div>
     );

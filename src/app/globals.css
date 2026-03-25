@@ -34,6 +34,11 @@ body {
   font-family: var(--font-sans);
 }
 
+::selection {
+  background-color: color-mix(in srgb, var(--color-brand-btn), transparent 80%);
+  color: var(--color-brand-btn);
+}
+
 .text-balance {
   text-wrap: balance;
 }
@@ -92,4 +97,22 @@ body {
     animation: none;
     opacity: 1;
   }
+}
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-btn);
 }

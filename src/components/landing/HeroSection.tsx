@@ -10,7 +10,7 @@ const HERO_FEATURES = ["Anonymous", "24/7 Support", "Free For Students"];
 
 export function HeroSection() {
   return (
-    <section className="min-h-[75vh] w-full flex flex-col items-center justify-center bg-[var(--color-background)] px-5 py-16 md:px-6 overflow-hidden">
+    <section className="min-h-[75vh] w-full flex flex-col items-center justify-center bg-[var(--color-background)] py-[clamp(2rem,8vw,4rem)] overflow-hidden">
       <Container size="sm">
         <div className="flex flex-col items-center text-center">
           
@@ -25,7 +25,7 @@ export function HeroSection() {
           </Text>
 
           {/* Heading */}
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold tracking-tight text-[var(--color-text-primary)] mb-5 leading-[1.15] animate-fade-in animation-delay-100">
+          <h2 className="text-[clamp(2rem,6vw,3.75rem)] font-serif font-bold tracking-tight text-[var(--color-text-primary)] mb-[clamp(1.25rem,4vw,1.5rem)] leading-[1.15] animate-fade-in animation-delay-100">
             {APP_TAGLINE}
           </h2>
 
@@ -46,7 +46,7 @@ export function HeroSection() {
           </div>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-12">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-12">
             <Button href="/register" variant="primary" size="md">
               Get Started
             </Button>
