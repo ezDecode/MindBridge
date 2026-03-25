@@ -10,7 +10,7 @@ const HERO_FEATURES = ["Anonymous", "24/7 Support", "Free For Students"];
 
 export function HeroSection() {
   return (
-    <section className="min-h-[75vh] w-full flex flex-col items-center justify-center bg-[var(--color-background)] py-[clamp(2rem,8vw,4rem)] overflow-hidden">
+    <section className="min-h-[75vh] w-full flex flex-col items-center justify-center bg-[var(--color-background)] py-[clamp(3rem,12vw,6rem)] overflow-hidden">
       <Container size="sm">
         <div className="flex flex-col items-center text-center">
           
@@ -19,13 +19,13 @@ export function HeroSection() {
             variant="heading" 
             weight="semibold" 
             as="h1"
-            className="mb-6 animate-fade-in"
+            className="mb-[clamp(2rem,6vw,3rem)] animate-fade-in-up"
           >
             {APP_NAME}
           </Text>
 
           {/* Heading */}
-          <h2 className="text-[clamp(2rem,6vw,3.75rem)] font-serif font-bold tracking-tight text-[var(--color-text-primary)] mb-[clamp(1.25rem,4vw,1.5rem)] leading-[1.15] animate-fade-in animation-delay-100">
+          <h2 className="text-[clamp(2rem,6vw,3.75rem)] font-serif font-bold tracking-tight text-[var(--color-text-primary)] mb-[clamp(1.5rem,5vw,2rem)] leading-[1.15] animate-fade-in animation-delay-100">
             {APP_TAGLINE}
           </h2>
 
@@ -33,30 +33,30 @@ export function HeroSection() {
           <Text 
             variant="body" 
             color="secondary"
-            className="max-w-lg mb-8 animate-fade-in animation-delay-200"
+            className="max-w-lg mb-[clamp(2rem,6vw,2.5rem)] animate-fade-in animation-delay-200"
           >
             {APP_DESCRIPTION}
           </Text>
 
           {/* Feature Pills */}
-          <div className="flex flex-wrap justify-center gap-2.5 mb-10 animate-fade-in animation-delay-300">
+          <div className="flex flex-wrap justify-center gap-3 mb-[clamp(2.5rem,8vw,3.5rem)] animate-fade-in animation-delay-300">
             {HERO_FEATURES.map((feature: string) => (
               <Chip key={feature}>{feature}</Chip>
             ))}
           </div>
 
           {/* CTAs */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-12">
-            <Button href="/register" variant="primary" size="md">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 mb-[clamp(3rem,10vw,4rem)]">
+            <Button href="/register" variant="primary" size="md" className="animate-scale-in animation-delay-400">
               Get Started
             </Button>
-            <Button href="/chat" variant="ghost" size="md">
+            <Button href="/chat" variant="ghost" size="md" className="animate-scale-in animation-delay-500">
               Start Anonymously
             </Button>
           </div>
 
           {/* Hero Illustration */}
-          <div className="w-full flex justify-center animate-fade-in animation-delay-500">
+          <div className="w-full flex justify-center animate-fade-in-up animation-delay-600">
             <HeroIllustration />
           </div>
 

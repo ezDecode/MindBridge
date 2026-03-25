@@ -14,7 +14,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(
     };
 
     return (
-      <div ref={ref} className={`mx-auto w-full px-[clamp(1rem,4vw,1.5rem)] ${sizes[size]} ${className}`} {...props}>
+      <div ref={ref} className={`mx-auto w-full px-[clamp(1.2rem,4.8vw,1.8rem)] ${sizes[size]} ${className}`} {...props}>
         {children}
       </div>
     );
