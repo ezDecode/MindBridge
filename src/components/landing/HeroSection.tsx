@@ -47,7 +47,7 @@ export function HeroSection() {
 
           {/* CTAs */}
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 mb-[clamp(2rem,6vw,3rem)]">
-            <Button href="/register" variant="primary" size="md" className="animate-scale-in animation-delay-400">
+            <Button href="/onboarding" variant="primary" size="md" className="animate-scale-in animation-delay-400">
               Get Started
             </Button>
             <Button href="/chat" variant="secondary" size="md" className="bg-[var(--color-surface-tinted)] animate-scale-in animation-delay-500">

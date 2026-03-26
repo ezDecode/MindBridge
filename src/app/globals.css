@@ -31,6 +31,21 @@
   --color-gray-100: color-mix(in srgb, #F3F4F6, var(--color-brand) 5%);
   --color-gray-200: color-mix(in srgb, #E5E7EB, var(--color-brand) 8%);
   --color-gray-300: color-mix(in srgb, #D1D5DB, var(--color-brand) 10%);
+
+  /* Animated Blur Testimonials Theme */
+  --color-d-bg: hsl(var(--d-bg));
+  --color-d-fg: hsl(var(--d-fg));
+  --color-d-border: hsl(var(--d-border));
+  --color-d-sheet: hsl(var(--d-sheet));
+  --color-d-muted: hsl(var(--d-muted));
+}
+
+:root {
+  --d-bg: 0 0% 100%;
+  --d-muted: 0 0% 90%;
+  --d-fg: 0 0% 0%;
+  --d-border: 0 0% 90%;
+  --d-sheet: 0 0% 98%;
 }
 
 body {
