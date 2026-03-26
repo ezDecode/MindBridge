@@ -51,7 +51,7 @@ export function HeroSection() {
               Get Started
             </Button>
             <Button href="/chat" variant="secondary" size="md" className="bg-[var(--color-surface-tinted)] animate-scale-in animation-delay-500">
-              Try Free
+              Try Free Chat
             </Button>
           </div>
 
