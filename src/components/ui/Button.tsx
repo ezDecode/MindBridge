@@ -32,7 +32,7 @@ const sizeStyles: Record<ButtonSize, string> = {
   lg: "px-9 py-2.5 text-lg rounded-full",
 };
 
-const baseStyles = "inline-flex items-center justify-center font-medium transition-all duration-150 ease-out active:scale-[0.97] select-none cursor-pointer";
+const baseStyles = "inline-flex items-center justify-center font-semibold transition-all duration-150 ease-out active:scale-[0.97] select-none cursor-pointer";
 
 export function Button<T extends ElementType = "button">({
   as,

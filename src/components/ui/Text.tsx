@@ -15,10 +15,10 @@ const Text = forwardRef<HTMLParagraphElement, TextProps>(
     const hasFixedWeight = ["h1", "h2", "h3", "heading"].includes(variant);
     
     const variants = {
-      h1: "font-serif tracking-tight",
-      h2: "font-serif tracking-tight",
-      h3: "font-serif tracking-tight",
-      heading: "font-serif tracking-tight",
+      h1: "tracking-tight",
+      h2: "tracking-tight",
+      h3: "tracking-tight",
+      heading: "tracking-tight",
       body: "leading-relaxed tracking-tight",
       small: "tracking-tight",
     };
@@ -33,17 +33,17 @@ const Text = forwardRef<HTMLParagraphElement, TextProps>(
     };
 
     const variantWeights: Record<string, string> = {
-      h1: "font-bold",
+      h1: "font-semibold",
       h2: "font-semibold",
-      h3: "font-medium",
-      heading: "font-bold",
+      h3: "font-semibold",
+      heading: "font-semibold",
     };
 
     const weightOptions = {
       normal: "font-normal",
-      medium: "font-medium",
+      medium: "font-semibold",
       semibold: "font-semibold",
-      bold: "font-bold",
+      bold: "font-semibold",
     };
 
     const colors = {

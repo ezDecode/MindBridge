@@ -42,7 +42,7 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
           </motion.div>
         )}
         <div className="flex-1 min-w-0 text-left">
-          <span className="block font-medium text-[var(--color-text-primary)]">
+          <span className="block font-semibold text-[var(--color-text-primary)]">
             {label}
           </span>
           {sublabel && (

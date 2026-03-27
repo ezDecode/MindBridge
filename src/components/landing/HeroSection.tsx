@@ -4,7 +4,7 @@ import { Container, Chip, Button, Text } from "../ui";
 import { HeroIllustration } from "../../constants/assets";
 
 const APP_NAME = "MindBridge";
-const APP_TAGLINE = "Your Mental Health Companion";
+const APP_TAGLINE = "A Safe Space";
 const APP_DESCRIPTION = "A safe space to understand, track, and improve your mental well-being. Chat with AI, take validated quizzes, book counselors, and access resources, all privately.";
 const HERO_FEATURES = ["Anonymous", "24/7 Support", "Free For Students"];
 
@@ -25,7 +25,7 @@ export function HeroSection() {
           </Text>
 
           {/* Heading */}
-          <h2 className="text-[clamp(2rem,6vw,3.75rem)] font-serif font-bold tracking-tight text-[var(--color-text-primary)] mb-[clamp(1rem,3vw,1.5rem)] leading-[1.15] animate-fade-in animation-delay-100">
+          <h2 className="text-[clamp(2rem,6vw,3.75rem)] font-semibold tracking-tight text-[var(--color-text-primary)] mb-[clamp(1rem,3vw,1.5rem)] leading-[1.15] animate-fade-in animation-delay-100">
             {APP_TAGLINE}
           </h2>
 

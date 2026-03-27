@@ -17,6 +17,7 @@ export function Switch({ checked, onCheckedChange, className, disabled }: Switch
       type="button"
       role="switch"
       aria-checked={checked}
+      disabled={disabled}
       onClick={() => onCheckedChange(!checked)}
       whileTap={{ scale: 0.92 }}
       className={cn(

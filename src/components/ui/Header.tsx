@@ -61,7 +61,7 @@ export function Header({ logo = "MindBridge" }: HeaderProps) {
       {/* Desktop CTA */}
       <Link
         href="#waitlist"
-        className="hidden md:inline-flex h-9 items-center rounded-full bg-linear-to-b from-[var(--color-brand-btn)] to-[var(--color-brand-btn-dark)] px-5 text-sm font-medium text-[var(--color-brand-foreground)] shadow-[0px_1px_2px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(255,255,255,0.1)_inset] transition-all duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-[0.97]"
+        className="hidden md:inline-flex h-9 items-center rounded-full bg-linear-to-b from-[var(--color-brand-btn)] to-[var(--color-brand-btn-dark)] px-5 text-sm font-semibold text-[var(--color-brand-foreground)] shadow-[0px_1px_2px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(255,255,255,0.1)_inset] transition-all duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-[0.97]"
       >
         Join waitlist
       </Link>
@@ -98,7 +98,7 @@ export function Header({ logo = "MindBridge" }: HeaderProps) {
               <Link 
                 href="#waitlist"
                 onClick={() => setIsOpen(false)}
-                className="inline-flex h-12 mt-2 items-center justify-center rounded-full bg-linear-to-b from-[var(--color-brand-btn)] to-[var(--color-brand-btn-dark)] text-base font-medium text-[var(--color-brand-foreground)] shadow-[0px_1px_2px_rgba(0,0,0,0.1)]"
+                className="inline-flex h-12 mt-2 items-center justify-center rounded-full bg-linear-to-b from-[var(--color-brand-btn)] to-[var(--color-brand-btn-dark)] text-base font-semibold text-[var(--color-brand-foreground)] shadow-[0px_1px_2px_rgba(0,0,0,0.1)]"
               >
                 Join waitlist
               </Link>

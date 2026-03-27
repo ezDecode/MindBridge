@@ -11,8 +11,7 @@
   --color-text-secondary: #6B7280;
   --color-text-muted: #9CA3AF;
   --color-border: #E5E7EB;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-serif), ui-serif, Georgia, serif;
+  --font-sans: var(--font-sf-rounded), -apple-system, ui-sans-serif, system-ui, sans-serif;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
   --color-graphic-stone: #6B7280;
