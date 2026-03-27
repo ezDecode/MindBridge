@@ -15,10 +15,10 @@ export default function VerifyPage() {
               Verify OTP
             </Text>
             <Text as="h1" variant="h2" weight="medium" className="mt-3">
-              Enter the 6-digit code sent to your college email.
+              Enter the code sent to your email.
             </Text>
             <Text as="p" variant="body" color="secondary" className="mt-4">
-              This route can stay fast and quiet. Verification should feel like a bridge into support, not a wall before it.
+              A bridge into support, not a wall before it.
             </Text>
 
             <div className="mt-8 flex justify-center gap-3">

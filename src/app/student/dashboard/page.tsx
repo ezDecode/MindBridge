@@ -16,7 +16,7 @@ export default function StudentDashboardPage() {
       <PageIntro
         eyebrow="Student dashboard"
         title="Start with the gentlest next step."
-        description="MindBridge should help a student know what to do next without making them think too hard. Today’s view surfaces support, screening, and counselor access in one place."
+        description="Support, screening, and counselor access — surfaced so you don’t have to dig."
         actions={
           <>
             <Button href="/student/chat">Continue chat</Button>
@@ -77,7 +77,7 @@ export default function StudentDashboardPage() {
             7-day mood rhythm
           </Text>
           <Text as="p" variant="small" color="secondary" className="mt-2">
-            Enough signal to notice a pattern, without turning mental wellness into a dashboard obsession.
+            Enough signal to notice a pattern, without the obsession.
           </Text>
 
           <div className="chart-shell mt-8 flex h-52 items-end justify-between gap-3 rounded-[1.5rem] px-4 pb-4 pt-8">

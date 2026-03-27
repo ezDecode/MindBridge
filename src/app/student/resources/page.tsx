@@ -9,7 +9,7 @@ export default function StudentResourcesPage() {
       <PageIntro
         eyebrow="Resource hub"
         title="Curated support for the spaces between conversations."
-        description="The resource route should stay easy to browse and emotionally steady. A student can filter by what they are carrying and save what they want to return to later."
+        description="Filter by what you're carrying. Save what you want to return to."
         actions={
           <>
             <Button href="/student/chat">Ask for a recommendation</Button>
@@ -30,7 +30,7 @@ export default function StudentResourcesPage() {
               A calmer way to come down after an exam spiral
             </Text>
             <Text as="p" variant="body" color="secondary" className="mt-3">
-              Start with a short read, then pair it with a two-minute breathing reset. The goal is to help the student settle enough to choose the next step clearly.
+              Short read first, then a two-minute breathing reset to settle before your next step.
             </Text>
           </div>
 

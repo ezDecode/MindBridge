@@ -8,7 +8,7 @@ export default function StudentBookPage() {
       <PageIntro
         eyebrow="Counselor booking"
         title="A booking flow that respects both urgency and privacy."
-        description="Students should be able to choose whether they stay anonymous, share their name, or mark a booking as urgent. The route stays short and slot-based so it never feels like paperwork."
+        description="Stay anonymous, share your name, or mark it urgent. Short and slot-based — never paperwork."
         actions={
           <>
             <Button href="/student/dashboard">Confirm booking</Button>
@@ -125,7 +125,7 @@ export default function StudentBookPage() {
             </div>
 
             <Text as="p" variant="small" color="secondary" className="mt-4">
-              Confirmation email and 24-hour reminder should be handled after booking. If the booking is urgent, the counselor also gets a realtime alert.
+              Confirmation email and 24h reminder sent automatically. Urgent bookings alert the counselor in real time.
             </Text>
           </Card>
         </div>

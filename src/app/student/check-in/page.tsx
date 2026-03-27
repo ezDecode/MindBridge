@@ -8,7 +8,7 @@ export default function StudentCheckInPage() {
       <PageIntro
         eyebrow="Daily mood check-in"
         title="A 15-second log that still feels considered."
-        description="The check-in route should stay simple: one mood selection, one optional note, and a soft trend line that helps the student notice how the week is moving."
+        description="One mood, one optional note, and a soft trend to notice how the week moves."
         actions={
           <>
             <Button href="/student/dashboard">Save check-in</Button>
@@ -54,7 +54,7 @@ export default function StudentCheckInPage() {
               30-day trend preview
             </Text>
             <Text as="p" variant="small" color="secondary" className="mt-2">
-              No heatmap, no excessive analysis, just enough shape to help a student notice whether they are gradually sinking or lifting.
+              Just enough shape to notice whether you're sinking or lifting.
             </Text>
 
             <div className="chart-shell mt-8 flex h-56 items-end justify-between gap-3 rounded-[1.5rem] px-4 pb-4 pt-8">
@@ -76,7 +76,7 @@ export default function StudentCheckInPage() {
               Gentle prompt
             </Text>
             <Text as="p" variant="body" color="secondary" className="mt-3">
-              You have checked in four times this week. If the low feeling keeps hanging around, taking PHQ-9 could give you a clearer read before it turns into guesswork.
+              Four check-ins this week. If the low feeling lingers, PHQ-9 can give you a clearer read.
             </Text>
             <div className="mt-5 flex flex-wrap gap-3">
               <Button href="/student/quizzes">Take PHQ-9</Button>

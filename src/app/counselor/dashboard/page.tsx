@@ -8,7 +8,7 @@ export default function CounselorDashboardPage() {
       <PageIntro
         eyebrow="Counselor dashboard"
         title="Triage first, context second, admin noise never."
-        description="This view keeps the counselor focused on the next urgent signal, the next booking, and the notes that need attention. The interaction model stays deliberately simple."
+        description="Next urgent signal, next booking, notes that need attention. Deliberately simple."
         actions={
           <>
             <Button href="/student/book">Preview student booking</Button>
@@ -91,7 +91,7 @@ export default function CounselorDashboardPage() {
               Notes and slots
             </Text>
             <Text as="p" variant="body" color="secondary" className="mt-3">
-              Session notes remain private to the counselor, while availability is managed through a simple weekly slot form rather than a complex calendar builder.
+              Session notes stay private. Availability managed through a simple weekly slot form.
             </Text>
           </Card>
         </div>

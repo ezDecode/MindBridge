@@ -22,23 +22,23 @@ type PolymorphicComponentProp<T extends ElementType, Props = object> = {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "border border-transparent bg-linear-to-b from-[var(--color-brand-btn)] to-[var(--color-brand-btn-dark)] text-[var(--color-brand-foreground)] shadow-[var(--shadow-line),0_18px_35px_-24px_rgba(99,71,181,0.7)]",
+    "bg-[var(--color-black)] text-[var(--color-white)]",
   secondary:
-    "border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] shadow-[var(--shadow-line)]",
+    "border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-black)]",
   ghost:
     "border border-transparent bg-transparent text-[var(--color-text-secondary)]",
   brand:
-    "border border-transparent bg-linear-to-b from-[var(--color-brand-btn)] to-[var(--color-brand-btn-dark)] text-[var(--color-brand-foreground)] shadow-[var(--shadow-line),0_18px_35px_-24px_rgba(99,71,181,0.7)]",
+    "bg-[var(--color-black)] text-[var(--color-white)]",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "min-h-10 rounded-full px-4 text-sm",
-  md: "min-h-12 rounded-full px-5 text-[0.95rem]",
-  lg: "min-h-[3.25rem] rounded-full px-6 text-base",
+  sm: "min-h-9 rounded-full px-3.5 text-sm",
+  md: "min-h-11 rounded-full px-4 text-[0.9rem]",
+  lg: "min-h-12 rounded-full px-5 text-base",
 };
 
 const baseStyles =
-  "inline-flex select-none items-center justify-center gap-2 font-medium tracking-[-0.01em] transition-[transform,background-color,border-color,color,box-shadow] duration-200 ease-[var(--ease-out)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-btn)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] disabled:pointer-events-none disabled:opacity-50";
+  "inline-flex select-none items-center justify-center gap-2 font-medium tracking-[-0.01em] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] disabled:pointer-events-none disabled:opacity-50";
 
 export function Button<T extends ElementType = "button">({
   as,
@@ -55,11 +55,10 @@ export function Button<T extends ElementType = "button">({
     baseStyles,
     variantStyles[variant],
     sizeStyles[size],
-    "hover-lift",
-    variant === "ghost" && "hover:bg-[var(--color-brand)]/10 hover:text-[var(--color-brand-btn)]",
-    variant === "secondary" && "hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-tinted)]",
-    (variant === "primary" || variant === "brand") &&
-      "hover:shadow-[var(--shadow-line),0_24px_45px_-28px_rgba(99,71,181,0.82)]",
+    variant === "ghost" && "hover:bg-[var(--color-primary-light)] hover:text-[var(--color-black)]",
+    variant === "secondary" && "hover:bg-[var(--color-primary-light)] hover:border-[var(--color-primary-light)]",
+    variant === "primary" && "hover:bg-[var(--color-text-secondary)]",
+    variant === "brand" && "hover:bg-[var(--color-text-secondary)]",
     className
   );
 

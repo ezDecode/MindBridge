@@ -3,23 +3,43 @@
 @theme {
   --font-sans: var(--font-mindbridge), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  --color-background: #f7f4fd;
-  --color-background-soft: #f1ecfb;
-  --color-surface: #fffdff;
-  --color-surface-tinted: color-mix(in srgb, var(--color-surface), var(--color-brand) 8%);
-  --color-surface-strong: color-mix(in srgb, var(--color-surface), var(--color-brand) 16%);
-  --color-border: #dfd6f0;
-  --color-border-strong: #c9bde2;
-  --color-text-primary: #251c39;
-  --color-text-secondary: #5d5474;
-  --color-text-muted: #8f86a8;
-
+  /* 12 Core Colors */
+  --color-black: #000000;
+  --color-black-dark: #101010;
+  --color-white: #ffffff;
+  
+  /* Text Colors */
+  --color-text-primary: #2D2C2B;
+  --color-text-secondary: #4B4C4D;
+  --color-text-muted: #44423F;
+  --color-text-muted-light: #63605D;
+  
+  /* Primary Brand */
+  --color-primary: #0061EF;
+  --color-primary-light: #e8f0ff;
+  --color-link: #0000EE;
+  
+  /* Accent */
+  --color-accent: #FFCE00;
+  --color-accent-light: #fff8e0;
+  --color-accent-pink: #FFA1CC;
+  
+  /* Surface */
+  --color-surface: #FFFFFF;
+  --color-surface-warm: #F9F4F2;
+  --color-background: #F9F4F2;
+  
+  /* Borders */
+  --color-border: #E2DED9;
+  --color-border-light: #D2D5DE;
+  --color-border-warm: #C6C1B9;
+  
+  /* Semantic Colors (kept for compatibility) */
   --color-brand: #b8a9e8;
   --color-brand-dark: #8b74d1;
   --color-brand-btn: #7c5fc7;
   --color-brand-btn-dark: #6347b5;
   --color-brand-foreground: #fcfbff;
-
   --color-success: #3f9a6b;
   --color-success-soft: #e4f4ea;
   --color-warning: #da9b41;
@@ -35,10 +55,6 @@
   --color-gray-300: color-mix(in srgb, #ddd5ea, var(--color-brand) 10%);
   --color-gray-400: color-mix(in srgb, #c6bdd9, var(--color-brand) 12%);
 
-  --shadow-soft: 0 22px 60px -42px rgba(87, 70, 138, 0.45);
-  --shadow-card: 0 30px 70px -48px rgba(63, 49, 116, 0.4);
-  --shadow-line: inset 0 1px 0 rgba(255, 255, 255, 0.6);
-
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -50,9 +66,6 @@
   --section-gap: clamp(4rem, 8vw, 7rem);
   --content-max: 70vw;
   --radius-card: clamp(1.35rem, 2vw, 2rem);
-  --ring-shadow:
-    0 0 0 2px color-mix(in srgb, var(--color-background) 75%, transparent),
-    0 0 0 5px color-mix(in srgb, var(--color-brand-btn) 34%, transparent);
 }
 
 *,
@@ -68,10 +81,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, color-mix(in srgb, var(--color-brand) 28%, transparent) 0%, transparent 34%),
-    radial-gradient(circle at right 12% top 18%, color-mix(in srgb, var(--color-success) 14%, transparent) 0%, transparent 22%),
-    linear-gradient(180deg, #fbf9ff 0%, var(--color-background) 30%, var(--color-background) 100%);
+  background: var(--color-background);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
   font-kerning: normal;
@@ -120,7 +130,6 @@ button:disabled {
 .skip-link:focus-visible {
   transform: translateY(0);
   outline: none;
-  box-shadow: var(--ring-shadow);
 }
 
 .text-balance {
@@ -134,7 +143,6 @@ button:disabled {
 .surface-panel {
   border: 1px solid var(--color-border);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.98));
-  box-shadow: var(--shadow-line), var(--shadow-soft);
 }
 
 .ambient-grid {
@@ -160,23 +168,18 @@ button:disabled {
 .interactive-panel {
   border: 1px solid var(--color-border);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(251, 248, 255, 0.98));
-  box-shadow: var(--shadow-line);
   transition:
     transform 200ms var(--ease-out),
     border-color 200ms var(--ease-out),
-    background-color 200ms var(--ease-out),
-    box-shadow 200ms var(--ease-out);
+    background-color 200ms var(--ease-out);
 }
 
 .interactive-panel:hover {
-  transform: translateY(-2px);
   border-color: var(--color-border-strong);
-  box-shadow: var(--shadow-line), 0 24px 40px -34px rgba(86, 69, 138, 0.42);
 }
 
 .interactive-panel:focus-visible {
   outline: none;
-  box-shadow: var(--shadow-line), var(--ring-shadow);
 }
 
 .interactive-panel[data-active="true"] {
@@ -199,7 +202,6 @@ button:disabled {
   padding-inline: 0.8rem;
   font-size: 0.82rem;
   color: var(--color-text-secondary);
-  box-shadow: var(--shadow-line);
 }
 
 .chart-shell {
@@ -217,16 +219,11 @@ button:disabled {
 
 .chart-bar-fill {
   background: linear-gradient(180deg, var(--color-brand), var(--color-brand-btn-dark));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .hover-lift:hover {
-    transform: translateY(-2px);
-  }
-
   .hover-scale:hover {
-    transform: scale(1.015);
+    background-color: var(--color-primary-light);
   }
 }
 
@@ -282,19 +279,70 @@ button:disabled {
   animation-delay: 400ms;
 }
 
+.stagger-6 {
+  animation-delay: 480ms;
+}
+
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to { background-position: 200% center; }
+}
+
+.stat-value {
+  background: linear-gradient(90deg, var(--color-brand-btn), var(--color-brand-btn-dark), var(--color-brand-btn));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms var(--ease-out);
+}
+
+.faq-answer[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.faq-answer > div {
+  overflow: hidden;
+}
+
+.category-pill {
+  border: 1px solid var(--color-border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(251, 248, 255, 0.98));
+  transition: background-color 200ms var(--ease-out);
+}
+
+.category-pill:hover {
+  background: var(--color-primary-light);
+}
+
+.category-pill:active {
+  background: var(--color-primary-light);
+}
+
+.feature-link {
+  transition: gap 200ms var(--ease-out);
+}
+
+.feature-link:hover {
+  gap: 0.75rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
   .interactive-panel,
-  .hover-lift,
   .hover-scale {
     transition: none;
   }
 
   .interactive-panel:hover,
-  .hover-lift:hover,
   .hover-scale:hover {
     transform: none;
   }
@@ -303,6 +351,15 @@ button:disabled {
   .animate-scale-in {
     opacity: 1;
     animation: none;
+  }
+
+  .category-pill:hover,
+  .category-pill:active {
+    transform: none;
+  }
+
+  .faq-answer {
+    transition: none;
   }
 }
 

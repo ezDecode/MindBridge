@@ -15,10 +15,10 @@ export default function LoginPage() {
                 Anonymous-first access
               </Text>
               <Text as="h1" variant="h2" weight="medium" className="mt-3 max-w-[14ch]">
-                Use a college email only when you want to go deeper.
+                College email unlocks the deeper features.
               </Text>
               <Text as="p" variant="body" color="secondary" className="mt-4">
-                The chatbot preview and the support library can be browsed before sign-in. OTP unlocks quiz history, bookings, and saved progress without adding password friction.
+                Browse chat and resources before sign-in. OTP unlocks quiz history, bookings, and saved progress.
               </Text>
 
               <div className="mt-8 space-y-3">
@@ -27,7 +27,7 @@ export default function LoginPage() {
                     Why OTP here
                   </Text>
                   <Text as="p" variant="small" color="secondary" className="mt-2">
-                    It keeps access simple for students and reduces the number of moments where someone abandons support.
+                    Simple access. Fewer moments where someone abandons support.
                   </Text>
                 </div>
                 <div className="rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
@@ -35,7 +35,7 @@ export default function LoginPage() {
                     What stays private
                   </Text>
                   <Text as="p" variant="small" color="secondary" className="mt-2">
-                    Anonymous browsing stays available. Counselor notes and admin views remain separate from student-facing routes.
+                    Anonymous browsing always available. Counselor notes and admin views stay separate.
                   </Text>
                 </div>
               </div>
@@ -51,7 +51,7 @@ export default function LoginPage() {
                     Sign in with OTP
                   </Text>
                   <Text as="p" variant="small" color="secondary" className="mt-1">
-                    No password. No extra setup. Just your college email.
+                    No password. Just your college email.
                   </Text>
                 </div>
               </div>
@@ -72,7 +72,7 @@ export default function LoginPage() {
                   <div className="flex items-start gap-3">
                     <FiLock className="mt-0.5 h-4 w-4 text-[var(--color-brand-btn)]" />
                     <Text as="p" variant="small" color="secondary">
-                      OTP is used as the sign-in method. There is no password reset flow because there is no password to remember in the first place.
+                      OTP sign-in — no password to remember or reset.
                     </Text>
                   </div>
                 </div>

@@ -15,7 +15,7 @@ export function SiteHeader() {
         <div className="surface-panel rounded-[2rem] px-4 py-3 sm:px-5">
           <div className="flex items-center justify-between gap-3">
             <Link href="/" className="group flex min-w-0 items-center gap-3">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[var(--color-brand-btn)] to-[var(--color-brand-btn-dark)] text-sm font-medium text-[var(--color-brand-foreground)] shadow-[0_16px_30px_-20px_rgba(99,71,181,0.85)] transition-transform duration-200 group-hover:scale-[1.03]">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-black)] text-sm font-medium text-[var(--color-white)]">
                 MB
               </span>
               <div className="min-w-0">
@@ -33,7 +33,7 @@ export function SiteHeader() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-full px-4 py-2 text-sm text-[var(--color-text-secondary)] transition-[color,background-color] duration-200 hover:bg-[var(--color-surface-tinted)] hover:text-[var(--color-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-btn)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
+                  className="rounded-full px-4 py-2 text-sm text-[var(--color-text-secondary)] transition-[color,background-color] duration-200 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
                 >
                   {item.label}
                 </Link>
@@ -52,7 +52,7 @@ export function SiteHeader() {
             <button
               type="button"
               onClick={() => setIsOpen((open) => !open)}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] shadow-[var(--shadow-line)] transition-colors duration-200 hover:bg-[var(--color-surface-tinted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-btn)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] sm:hidden"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] transition-colors duration-200 hover:bg-[var(--color-surface-tinted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] sm:hidden"
               aria-expanded={isOpen}
               aria-controls="marketing-menu"
               aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -78,7 +78,7 @@ export function SiteHeader() {
               </div>
 
               <div className="mt-4 grid gap-2">
-                <Button href="/student/dashboard" className="w-full justify-between">
+                <Button href="/student/dashboard" variant="primary" className="w-full justify-between">
                   Explore student flow
                   <FiArrowRight className="h-4 w-4" />
                 </Button>

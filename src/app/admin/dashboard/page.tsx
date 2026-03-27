@@ -13,7 +13,7 @@ export default function AdminDashboardPage() {
       <PageIntro
         eyebrow="Admin dashboard"
         title="Institution-level signal without exposing student detail."
-        description="This route focuses on aggregate mood direction, screening distribution, booking volume, crisis counts, and resource management. It stays intentionally removed from personal student data."
+        description="Aggregate mood, screening distribution, bookings, and crisis counts. No personal student data."
         actions={
           <>
             <Button href="/counselor/dashboard">Open counselor view</Button>

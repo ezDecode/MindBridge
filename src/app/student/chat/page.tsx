@@ -10,7 +10,7 @@ export default function StudentChatPage() {
       <PageIntro
         eyebrow="Support chat"
         title="Short replies, steady tone, one next step at a time."
-        description="The chat route is designed to feel like a calm companion, not a wall of AI text. Suggestions stay contextual and the crisis path stays visible without overwhelming the rest of the interface."
+        description="A calm companion, not a wall of AI text. Crisis support stays close without overwhelming."
         actions={
           <>
             <Button href="/student/quizzes">Take PHQ-9</Button>
@@ -30,7 +30,7 @@ export default function StudentChatPage() {
                 Crisis support stays close
               </Text>
               <Text as="p" variant="small" color="secondary" className="mt-2">
-                If someone mentions self-harm or not wanting to live, the response should surface iCall `9152987821` first and suggest human help immediately.
+                Mentions of self-harm surface iCall `9152987821` and suggest human help immediately.
               </Text>
             </div>
           </div>
@@ -88,7 +88,7 @@ export default function StudentChatPage() {
                   Need a human next?
                 </Text>
                 <Text as="p" variant="small" color="secondary" className="mt-2 max-w-[32ch]">
-                  The chat should make escalation feel supportive instead of abrupt.
+                  Escalation that feels supportive, not abrupt.
                 </Text>
               </div>
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-warning-soft)] text-[var(--color-warning)]">

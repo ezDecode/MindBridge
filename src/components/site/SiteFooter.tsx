@@ -49,7 +49,7 @@ export function SiteFooter() {
                   Need urgent help?
                 </Text>
                 <Text as="p" variant="small" color="secondary" className="mt-3">
-                  If someone is in immediate danger, route to local emergency services or a crisis helpline before continuing with the app.
+                  In immediate danger? Contact emergency services or a crisis helpline first.
                 </Text>
                 <Text as="p" variant="small" weight="medium" color="brand" className="mt-4">
                   iCall · 9152987821

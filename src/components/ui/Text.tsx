@@ -25,14 +25,14 @@ const Text = forwardRef<HTMLElement, TextProps>(
     ref
   ) => {
     const variants = {
-      display: "text-[clamp(3rem,7vw,5.5rem)] leading-[0.94] tracking-[-0.06em]",
-      heading: "text-[clamp(2.2rem,4vw,3.6rem)] leading-[1.02] tracking-[-0.05em]",
-      h1: "text-[clamp(2rem,3.6vw,3.3rem)] leading-[1.03] tracking-[-0.05em]",
-      h2: "text-[clamp(1.5rem,2.6vw,2.3rem)] leading-[1.08] tracking-[-0.04em]",
-      h3: "text-[clamp(1.15rem,2vw,1.5rem)] leading-[1.15] tracking-[-0.03em]",
-      lead: "text-[clamp(1.05rem,1.5vw,1.2rem)] leading-[1.65] tracking-[-0.02em]",
-      body: "text-base leading-[1.7] tracking-[-0.01em]",
-      small: "text-sm leading-[1.6]",
+      display: "text-[clamp(3.2rem,6vw,5.33rem)] leading-[0.95] tracking-[-0.04em] text-center",
+      heading: "text-[clamp(2.4rem,4.5vw,4rem)] leading-[1.02] tracking-[-0.03em] text-center",
+      h1: "text-[clamp(2rem,3.5vw,3rem)] leading-[1.05] tracking-[-0.03em] text-center",
+      h2: "text-[clamp(1.5rem,2.5vw,2.25rem)] leading-[1.12] tracking-[-0.02em] text-center",
+      h3: "text-[clamp(1.2rem,1.8vw,1.68rem)] leading-[1.2] tracking-[-0.02em]",
+      lead: "text-[1.25rem] leading-[1.65] tracking-[-0.01em]",
+      body: "text-[1.25rem] leading-[1.7] tracking-[-0.01em]",
+      small: "text-[0.9375rem] leading-[1.6]",
       label: "text-[0.82rem] leading-[1.3] tracking-[0.08em] uppercase",
     };
 
@@ -47,7 +47,7 @@ const Text = forwardRef<HTMLElement, TextProps>(
       primary: "text-[var(--color-text-primary)]",
       secondary: "text-[var(--color-text-secondary)]",
       muted: "text-[var(--color-text-muted)]",
-      brand: "text-[var(--color-brand-btn)]",
+      brand: "text-[var(--color-primary)]",
       success: "text-[var(--color-success)]",
     };
 

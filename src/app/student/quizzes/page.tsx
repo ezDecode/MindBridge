@@ -10,7 +10,7 @@ export default function StudentQuizzesPage() {
       <PageIntro
         eyebrow="Mental health quizzes"
         title="Validated screening with plain-language framing."
-        description="These routes should feel clarifying, not alarming. The student sees what a score suggests, what it does not suggest, and what a calm next step could be."
+        description="Clarifying, not alarming. See what a score means and what a calm next step could be."
         actions={
           <>
             <Button href="/student/book">Book after screening</Button>
@@ -45,7 +45,7 @@ export default function StudentQuizzesPage() {
               High-score path
             </Text>
             <Text as="p" variant="small" color="secondary" className="mt-2">
-              If PHQ-9 or GAD-7 reaches 15 or higher, the student should see two calm options: talk to AI first, or book a counselor now.
+              Score 15+? Two calm options: talk to AI first, or book a counselor now.
             </Text>
           </div>
         </Card>
