@@ -14,25 +14,31 @@ const easeInOut: Easing = [0.77, 0, 0.175, 1];
 
 export function Stepper({ totalSteps, currentStep, className = "" }: StepperProps) {
   return (
-    <div className={`flex items-center justify-center gap-2 ${className}`}>
-      {Array.from({ length: totalSteps }).map((_, idx) => (
-        <motion.div
-          key={idx}
-          initial={false}
-          animate={{
-            backgroundColor:
-              idx <= currentStep
+    <div className={`flex items-center gap-1.5 ${className}`}>
+      {Array.from({ length: totalSteps }).map((_, idx) => {
+        const isActive = idx === currentStep;
+        const isCompleted = idx < currentStep;
+        
+        return (
+          <motion.div
+            key={idx}
+            initial={false}
+            animate={{
+              backgroundColor: isCompleted || isActive
                 ? "var(--color-brand-btn)"
                 : "var(--color-gray-300)",
-            width: idx === currentStep ? 24 : 8,
-          }}
-          transition={{
-            backgroundColor: { duration: 0.2, ease: easeOut },
-            width: { duration: 0.3, ease: easeInOut },
-          }}
-          className="h-2 rounded-full"
-        />
-      ))}
+              width: isActive ? 20 : 6,
+              opacity: isCompleted || isActive ? 1 : 0.5,
+            }}
+            transition={{
+              backgroundColor: { duration: 0.15, ease: easeOut },
+              width: { duration: 0.2, ease: easeInOut },
+              opacity: { duration: 0.15, ease: easeOut },
+            }}
+            className="h-1.5 rounded-full"
+          />
+        );
+      })}
     </div>
   );
 }

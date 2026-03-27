@@ -8,9 +8,9 @@ export interface HeaderProps {
 }
 
 const navLinks = [
-  { href: "/features", label: "Features" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "/tools", label: "Free Tools" },
+  { href: "/", label: "Features" },
+  { href: "/", label: "Pricing" },
+  { href: "/", label: "Free Tools" },
 ];
 
 function MenuIcon() {
