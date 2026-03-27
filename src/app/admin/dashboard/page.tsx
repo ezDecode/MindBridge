@@ -42,12 +42,12 @@ export default function AdminDashboardPage() {
           <Text as="p" variant="small" weight="medium">
             Mood trend
           </Text>
-          <div className="mt-6 flex h-56 items-end justify-between gap-4 rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 pb-4 pt-8">
+          <div className="chart-shell mt-6 flex h-56 items-end justify-between gap-4 rounded-[1.5rem] px-4 pb-4 pt-8">
             {adminMoodTrend.map((item) => (
               <div key={item.label} className="flex flex-1 flex-col items-center gap-3">
-                <div className="flex h-36 w-full items-end justify-center rounded-full bg-[var(--color-gray-100)]">
+                <div className="chart-bar-track flex h-36 w-full items-end justify-center rounded-full">
                   <div
-                    className="w-full rounded-full bg-linear-to-t from-[var(--color-success)] to-[var(--color-brand)]"
+                    className="w-full rounded-full bg-linear-to-t from-[var(--color-success)] to-[var(--color-brand)] shadow-[inset_0_1px_0_rgba(255,255,255,0.38)]"
                     style={{ height: `${item.value}%` }}
                   />
                 </div>

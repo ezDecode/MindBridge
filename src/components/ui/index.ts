@@ -14,14 +14,8 @@ export type { SelectionCardProps } from "./SelectionCard";
 
 export { Stepper } from "./Stepper";
 
-export { Switch } from "./Switch";
-export type { SwitchProps } from "./Switch";
-
 export { Text } from "./Text";
 export type { TextProps } from "./Text";
-
-export { Header } from "./Header";
-export type { HeaderProps } from "./Header";
 
 export { Input } from "./Input";
 export type { InputProps } from "./Input";

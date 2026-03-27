@@ -5,10 +5,10 @@ export type NavItem = {
 };
 
 export const marketingNav = [
-  { href: "#how-it-works", label: "How it works" },
-  { href: "#inside", label: "Inside the flow" },
-  { href: "#roles", label: "For each role" },
-  { href: "#resources", label: "Support library" },
+  { href: "/#how-it-works", label: "How it works" },
+  { href: "/#inside", label: "Inside the flow" },
+  { href: "/#roles", label: "For each role" },
+  { href: "/#resources", label: "Support library" },
 ];
 
 export const trustChips = [
@@ -359,4 +359,76 @@ export const adminResources = [
   { title: "Body scan for sleep", type: "Audio", category: "Sleep" },
   { title: "When exam pressure stops feeling normal", type: "Article", category: "Exam Stress" },
   { title: "How to ask for help without explaining everything", type: "Video", category: "Self-Care" },
+];
+
+// --- Headspace-inspired content sections ---
+
+export const headspaceCategories = [
+  { label: "Ease exam stress", icon: "📚" },
+  { label: "Sleep better tonight", icon: "🌙" },
+  { label: "Manage anxious thoughts", icon: "🧘" },
+  { label: "Process heavy feelings", icon: "💭" },
+  { label: "Build a daily rhythm", icon: "✨" },
+  { label: "Talk to someone real", icon: "🤝" },
+];
+
+export const socialProof = {
+  headline: "Trusted by campus communities across India",
+  stats: [
+    { value: "12,000+", label: "Students supported" },
+    { value: "94%", label: "Said it felt safe to open up" },
+    { value: "2 min", label: "Average time to first counselor session" },
+  ],
+};
+
+export const beKindCTA = {
+  eyebrow: "Be kind to your mind",
+  headline: "Your campus companion for calmer days and clearer nights.",
+  description:
+    "Access grounded AI chat when nights feel heavy, validated screenings to understand what you're carrying, and real counselor booking when you're ready for a human conversation.",
+  features: [
+    "Talk through what's sitting heavy — anytime, anonymously",
+    "Understand your mental patterns with PHQ-9 and GAD-7 screenings",
+    "Book a real counselor in under two minutes, crisis or calm",
+    "Track mood check-ins and build a gentle daily rhythm",
+  ],
+};
+
+export const stayInLoop = {
+  headline: "Stay in the loop",
+  description:
+    "Be the first to hear about new wellness resources, campus events, and features designed around student life.",
+};
+
+export const faqItems = [
+  {
+    question: "What is MindBridge?",
+    answer:
+      "MindBridge is your campus companion for better mental health. Through anonymous AI-powered chat, validated screening tools like PHQ-9 and GAD-7, and direct counselor booking, MindBridge helps students find support that feels calm before it feels clinical.",
+  },
+  {
+    question: "Is MindBridge really anonymous?",
+    answer:
+      "Yes. MindBridge is anonymous-first by design. You can chat, take screenings, and even book counselor sessions without sharing your name. You choose when — and if — to reveal your identity.",
+  },
+  {
+    question: "How does the AI chat work?",
+    answer:
+      "The chat is grounded, not generative therapy. It gives short, warm replies — one question at a time — and gently suggests next steps like taking a screening, reading a resource, or booking a counselor. It is not a replacement for professional support.",
+  },
+  {
+    question: "What are PHQ-9 and GAD-7?",
+    answer:
+      "These are clinically validated screening tools used worldwide. PHQ-9 screens for depression and GAD-7 screens for anxiety. MindBridge frames them as clarity tools with plain-language severity guidance, not diagnostic labels.",
+  },
+  {
+    question: "How do I book a counselor?",
+    answer:
+      "Navigate to the booking page, choose your session type — anonymous, named, or crisis — pick an available time slot, and confirm. The entire flow takes under two minutes.",
+  },
+  {
+    question: "Is MindBridge free for students?",
+    answer:
+      "MindBridge is designed to be free for students at participating institutions. Your campus covers the cost so you can focus on what matters.",
+  },
 ];

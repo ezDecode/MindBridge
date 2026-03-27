@@ -14,11 +14,18 @@ const easeInOut: Easing = [0.77, 0, 0.175, 1];
 
 export function Stepper({ totalSteps, currentStep, className = "" }: StepperProps) {
   return (
-    <div className={`flex items-center gap-1.5 ${className}`}>
+    <div
+      className={`flex items-center gap-1.5 ${className}`}
+      role="progressbar"
+      aria-label={`Step ${currentStep + 1} of ${totalSteps}`}
+      aria-valuemin={1}
+      aria-valuemax={totalSteps}
+      aria-valuenow={currentStep + 1}
+    >
       {Array.from({ length: totalSteps }).map((_, idx) => {
         const isActive = idx === currentStep;
         const isCompleted = idx < currentStep;
-        
+
         return (
           <motion.div
             key={idx}
@@ -39,6 +46,7 @@ export function Stepper({ totalSteps, currentStep, className = "" }: StepperProp
           />
         );
       })}
+      <span className="sr-only">{`Step ${currentStep + 1} of ${totalSteps}`}</span>
     </div>
   );
 }

@@ -10,12 +10,17 @@ import {
   resources,
   roleCards,
   trustChips,
+  headspaceCategories,
+  socialProof,
+  beKindCTA,
+  stayInLoop,
+  faqItems,
 } from "@/content/mindbridge";
 import { SiteFooter, SiteHeader } from "@/components/site";
 
 export function LandingPage() {
   return (
-    <main className="w-full overflow-hidden">
+    <main id="main-content" className="w-full overflow-hidden">
       <SiteHeader />
 
       <section className="w-full pb-12 pt-6 sm:pb-16 sm:pt-8">
@@ -373,6 +378,152 @@ export function LandingPage() {
               </div>
             </div>
           </Card>
+        </Container>
+      </section>
+
+      {/* Headspace-inspired: "What kind of support?" */}
+      <section className="page-section w-full">
+        <Container size="md">
+          <div className="text-center">
+            <Text as="p" variant="label" color="brand">
+              Explore what fits
+            </Text>
+            <Text as="h2" variant="h1" weight="medium" className="mx-auto mt-3 max-w-[18ch]">
+              What kind of support are you looking for?
+            </Text>
+            <Text as="p" variant="lead" color="secondary" className="mx-auto mt-4 max-w-[52ch]">
+              Everyone carries something different. Pick what resonates and we will guide you to the right place.
+            </Text>
+          </div>
+          <div className="mx-auto mt-10 flex max-w-[48rem] flex-wrap justify-center gap-3">
+            {headspaceCategories.map((cat) => (
+              <button
+                key={cat.label}
+                type="button"
+                className="interactive-panel flex items-center gap-2.5 rounded-full px-5 py-3 text-[0.95rem] font-medium text-[var(--color-text-primary)]"
+              >
+                <span className="text-lg">{cat.icon}</span>
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="mx-auto mt-14 grid max-w-[54rem] gap-6 sm:grid-cols-3">
+            {socialProof.stats.map((stat) => (
+              <div key={stat.label} className="text-center">
+                <Text as="p" variant="h2" weight="semibold" color="brand">
+                  {stat.value}
+                </Text>
+                <Text as="p" variant="small" color="secondary" className="mt-1">
+                  {stat.label}
+                </Text>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Headspace-inspired: "Be kind to your mind" CTA */}
+      <section className="page-section w-full">
+        <Container size="md">
+          <Card variant="elevated" padding="lg" className="relative overflow-hidden rounded-[2.25rem]">
+            <div className="absolute -left-16 -top-16 h-56 w-56 rounded-full bg-[color-mix(in_srgb,var(--color-brand)_18%,transparent)] blur-3xl" />
+            <div className="absolute -bottom-12 -right-12 h-48 w-48 rounded-full bg-[color-mix(in_srgb,var(--color-success)_14%,transparent)] blur-3xl" />
+            <div className="relative grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+              <div>
+                <Text as="p" variant="label" color="brand">
+                  {beKindCTA.eyebrow}
+                </Text>
+                <Text as="h2" variant="h1" weight="medium" className="mt-3 max-w-[16ch]">
+                  {beKindCTA.headline}
+                </Text>
+                <Text as="p" variant="lead" color="secondary" className="mt-4 max-w-[54ch]">
+                  {beKindCTA.description}
+                </Text>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Button href="/student/dashboard" size="lg">
+                    Get your calm space
+                  </Button>
+                  <Button href="/student/chat" variant="secondary" size="lg">
+                    Try the chat first
+                  </Button>
+                </div>
+              </div>
+              <div className="grid gap-3">
+                {beKindCTA.features.map((feature) => (
+                  <div
+                    key={feature}
+                    className="flex items-start gap-3 rounded-[1.4rem] border border-[var(--color-border)] bg-[rgba(255,255,255,0.8)] p-4 shadow-[var(--shadow-line)]"
+                  >
+                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-success-soft)] text-[var(--color-success)]">
+                      <FiCheckCircle className="h-3.5 w-3.5" />
+                    </span>
+                    <Text as="p" variant="body" color="secondary">
+                      {feature}
+                    </Text>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+        </Container>
+      </section>
+
+      {/* Headspace-inspired: FAQ */}
+      <section className="page-section w-full pb-4">
+        <Container size="md">
+          <div className="mb-10 max-w-[42rem]">
+            <Text as="p" variant="label" color="brand">
+              Common questions
+            </Text>
+            <Text as="h2" variant="h1" weight="medium" className="mt-3">
+              Frequently asked questions
+            </Text>
+          </div>
+          <div className="grid gap-3">
+            {faqItems.map((faq) => (
+              <details
+                key={faq.question}
+                className="group rounded-[1.6rem] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-line)] transition-colors duration-200 open:border-[var(--color-border-strong)] open:bg-[var(--color-surface-tinted)]"
+              >
+                <summary className="flex cursor-pointer items-center justify-between gap-4 px-6 py-5 text-[var(--color-text-primary)] [&::-webkit-details-marker]:hidden">
+                  <Text as="span" variant="body" weight="medium">
+                    {faq.question}
+                  </Text>
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-text-muted)] transition-transform duration-200 group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <div className="px-6 pb-5">
+                  <Text as="p" variant="body" color="secondary" className="max-w-[64ch]">
+                    {faq.answer}
+                  </Text>
+                </div>
+              </details>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Headspace-inspired: Stay in the loop newsletter */}
+      <section className="w-full pb-8">
+        <Container size="md">
+          <div className="rounded-[2rem] border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-surface),var(--color-brand)_8%)] p-8 text-center shadow-[var(--shadow-line)] sm:p-10">
+            <Text as="h2" variant="h2" weight="medium">
+              {stayInLoop.headline}
+            </Text>
+            <Text as="p" variant="body" color="secondary" className="mx-auto mt-3 max-w-[48ch]">
+              {stayInLoop.description}
+            </Text>
+            <div className="mx-auto mt-6 flex max-w-md gap-3">
+              <input
+                type="email"
+                placeholder="Your college email"
+                className="min-h-12 flex-1 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-5 text-sm text-[var(--color-text-primary)] shadow-[var(--shadow-line)] outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-brand-btn)] focus:shadow-[var(--ring-shadow)]"
+              />
+              <Button size="md">Subscribe</Button>
+            </div>
+          </div>
         </Container>
       </section>
 

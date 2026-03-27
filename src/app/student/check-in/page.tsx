@@ -36,13 +36,14 @@ export default function StudentCheckInPage() {
           </div>
 
           <div className="mt-6 rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-            <Text as="p" variant="small" weight="medium">
+            <Text as="label" htmlFor="check-in-note" variant="small" weight="medium">
               Optional note
             </Text>
             <textarea
+              id="check-in-note"
               rows={5}
               defaultValue="The day was manageable, but I still felt that low pressure in my chest after classes."
-              className="mt-3 w-full resize-none rounded-[1rem] border border-[var(--color-border)] bg-[var(--color-gray-50)] px-4 py-3 text-sm text-[var(--color-text-primary)] outline-none transition-colors duration-200 focus:border-[var(--color-brand-btn)]"
+              className="mt-3 w-full resize-none rounded-[1rem] border border-[var(--color-border)] bg-[var(--color-gray-50)] px-4 py-3 text-sm leading-6 text-[var(--color-text-primary)] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[var(--color-brand-btn)] focus:shadow-[var(--ring-shadow)]"
             />
           </div>
         </Card>
@@ -56,12 +57,12 @@ export default function StudentCheckInPage() {
               No heatmap, no excessive analysis, just enough shape to help a student notice whether they are gradually sinking or lifting.
             </Text>
 
-            <div className="mt-8 flex h-56 items-end justify-between gap-3 rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 pb-4 pt-8">
+            <div className="chart-shell mt-8 flex h-56 items-end justify-between gap-3 rounded-[1.5rem] px-4 pb-4 pt-8">
               {[...moodHistory, ...moodHistory].map((item, index) => (
                 <div key={`${item.day}-${index}`} className="flex flex-1 flex-col items-center gap-2">
-                  <div className="flex h-[8.5rem] w-full items-end justify-center rounded-full bg-[var(--color-gray-100)]">
+                  <div className="chart-bar-track flex h-[8.5rem] w-full items-end justify-center rounded-full">
                     <div
-                      className="w-full rounded-full bg-linear-to-t from-[var(--color-success)] to-[var(--color-brand)]"
+                      className="w-full rounded-full bg-linear-to-t from-[var(--color-success)] to-[var(--color-brand)] shadow-[inset_0_1px_0_rgba(255,255,255,0.38)]"
                       style={{ height: `${item.score * 18}%` }}
                     />
                   </div>

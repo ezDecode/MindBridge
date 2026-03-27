@@ -51,22 +51,23 @@ export function Button<T extends ElementType = "button">({
 }: PolymorphicComponentProp<T, ButtonProps<T>>) {
   const Component = as || "button";
   const isLink = Component === "a" || href;
+  const sharedClassName = cn(
+    baseStyles,
+    variantStyles[variant],
+    sizeStyles[size],
+    "hover-lift",
+    variant === "ghost" && "hover:bg-[var(--color-brand)]/10 hover:text-[var(--color-brand-btn)]",
+    variant === "secondary" && "hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-tinted)]",
+    (variant === "primary" || variant === "brand") &&
+      "hover:shadow-[var(--shadow-line),0_24px_45px_-28px_rgba(99,71,181,0.82)]",
+    className
+  );
 
   if (isLink && href) {
     return (
       <Link
         href={href}
-        className={cn(
-          baseStyles,
-          variantStyles[variant],
-          sizeStyles[size],
-          "hover-lift",
-          variant === "ghost" && "hover:bg-[var(--color-brand)]/10 hover:text-[var(--color-brand-btn)]",
-          variant === "secondary" && "hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-tinted)]",
-          (variant === "primary" || variant === "brand") &&
-            "hover:shadow-[var(--shadow-line),0_24px_45px_-28px_rgba(99,71,181,0.82)]",
-          className
-        )}
+        className={sharedClassName}
       >
         {children}
       </Link>
@@ -75,17 +76,8 @@ export function Button<T extends ElementType = "button">({
 
   return (
     <Component
-      className={cn(
-        baseStyles,
-        variantStyles[variant],
-        sizeStyles[size],
-        "hover-lift",
-        variant === "ghost" && "hover:bg-[var(--color-brand)]/10 hover:text-[var(--color-brand-btn)]",
-        variant === "secondary" && "hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-tinted)]",
-        (variant === "primary" || variant === "brand") &&
-          "hover:shadow-[var(--shadow-line),0_24px_45px_-28px_rgba(99,71,181,0.82)]",
-        className
-      )}
+      className={sharedClassName}
+      {...(Component === "button" ? { type: "button" } : {})}
       {...props}
     >
       {children}

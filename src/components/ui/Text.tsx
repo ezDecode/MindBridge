@@ -8,6 +8,7 @@ interface TextProps extends HTMLAttributes<HTMLElement> {
   weight?: "normal" | "medium" | "semibold" | "bold";
   color?: "primary" | "secondary" | "muted" | "brand" | "success";
   as?: ElementType;
+  htmlFor?: string;
 }
 
 const Text = forwardRef<HTMLElement, TextProps>(
@@ -38,7 +39,7 @@ const Text = forwardRef<HTMLElement, TextProps>(
     const weightOptions = {
       normal: "font-normal",
       medium: "font-medium",
-      semibold: "font-medium",
+      semibold: "font-semibold",
       bold: "font-bold",
     };
 

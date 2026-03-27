@@ -80,9 +80,7 @@ export default function CounselorDashboardPage() {
                   <span className="rounded-full bg-[var(--color-gray-100)] px-3 py-1.5 text-xs text-[var(--color-text-secondary)]">
                     {booking.type}
                   </span>
-                  <Text as="span" variant="small" color="muted">
-                    {booking.status}
-                  </Text>
+                  <span className="status-pill">{booking.status}</span>
                 </div>
               ))}
             </div>

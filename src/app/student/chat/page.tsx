@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FiAlertCircle, FiArrowRight, FiPhone } from "react-icons/fi";
 import { PageIntro } from "@/components/site";
 import { Button, Card, Text } from "@/components/ui";
@@ -34,7 +35,7 @@ export default function StudentChatPage() {
             </div>
           </div>
 
-          <div className="mt-5 space-y-3">
+          <div className="mt-5 space-y-3" aria-label="Conversation preview" role="log">
             {chatMessages.map((message) => (
               <div
                 key={`${message.role}-${message.content}`}
@@ -98,7 +99,7 @@ export default function StudentChatPage() {
             <div className="mt-5 space-y-3">
               <a
                 href="tel:9152987821"
-                className="flex items-center justify-between rounded-[1.4rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
+                className="interactive-panel flex items-center justify-between rounded-[1.4rem] px-4 py-3"
               >
                 <div>
                   <Text as="p" variant="small" weight="medium">
@@ -110,9 +111,9 @@ export default function StudentChatPage() {
                 </div>
                 <FiArrowRight className="h-4 w-4 text-[var(--color-brand-btn)]" />
               </a>
-              <a
+              <Link
                 href="/student/book"
-                className="flex items-center justify-between rounded-[1.4rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
+                className="interactive-panel flex items-center justify-between rounded-[1.4rem] px-4 py-3"
               >
                 <div>
                   <Text as="p" variant="small" weight="medium">
@@ -123,7 +124,7 @@ export default function StudentChatPage() {
                   </Text>
                 </div>
                 <FiArrowRight className="h-4 w-4 text-[var(--color-brand-btn)]" />
-              </a>
+              </Link>
             </div>
           </Card>
         </div>

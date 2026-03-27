@@ -5,7 +5,7 @@ const otpSlots = ["6", "2", "4", "1", "8", "9"];
 
 export default function VerifyPage() {
   return (
-    <main className="w-full">
+    <main id="main-content" className="w-full">
       <SiteHeader />
 
       <section className="w-full py-10 sm:py-14">

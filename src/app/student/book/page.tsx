@@ -79,11 +79,13 @@ export default function StudentBookPage() {
                 <button
                   key={slot}
                   type="button"
-                  className={`rounded-[1.4rem] border px-4 py-3 text-left text-sm transition-colors duration-200 ${
+                  className={`interactive-panel rounded-[1.4rem] px-4 py-3 text-left text-sm focus-visible:outline-none ${
                     index === 0
-                      ? "border-[var(--color-brand-btn)] bg-[var(--color-surface-strong)] text-[var(--color-text-primary)]"
-                      : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)]"
+                      ? "text-[var(--color-text-primary)]"
+                      : "text-[var(--color-text-secondary)]"
                   }`}
+                  data-active={index === 0}
+                  aria-pressed={index === 0}
                 >
                   {slot}
                 </button>

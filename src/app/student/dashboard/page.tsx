@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FiArrowRight, FiBookOpen, FiCalendar, FiMessageSquare } from "react-icons/fi";
 import { PageIntro } from "@/components/site";
 import { Button, Card, Text } from "@/components/ui";
@@ -49,14 +50,11 @@ export default function StudentDashboardPage() {
           </Text>
           <div className="mt-5 grid gap-3">
             {actionTiles.map((tile, index) => (
-              <a
+              <Link
                 key={tile.title}
                 href={tile.href}
-                className={`group rounded-[1.5rem] border p-4 transition-colors duration-200 ${
-                  index === 0
-                    ? "border-[var(--color-brand-btn)] bg-[var(--color-surface-strong)]"
-                    : "border-[var(--color-border)] bg-[var(--color-surface)]"
-                }`}
+                className="interactive-panel group rounded-[1.5rem] p-4"
+                data-active={index === 0}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -69,7 +67,7 @@ export default function StudentDashboardPage() {
                   </div>
                   <FiArrowRight className="mt-1 h-4 w-4 text-[var(--color-brand-btn)] transition-transform duration-200 group-hover:translate-x-1" />
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         </Card>
@@ -82,12 +80,12 @@ export default function StudentDashboardPage() {
             Enough signal to notice a pattern, without turning mental wellness into a dashboard obsession.
           </Text>
 
-          <div className="mt-8 flex h-52 items-end justify-between gap-3 rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 pb-4 pt-8">
+          <div className="chart-shell mt-8 flex h-52 items-end justify-between gap-3 rounded-[1.5rem] px-4 pb-4 pt-8">
             {moodHistory.map((item) => (
               <div key={item.day} className="flex flex-1 flex-col items-center gap-3">
-                <div className="flex h-32 w-full items-end justify-center rounded-full bg-[var(--color-gray-100)]">
+                <div className="chart-bar-track flex h-32 w-full items-end justify-center rounded-full">
                   <div
-                    className="w-full rounded-full bg-linear-to-t from-[var(--color-brand-btn)] to-[var(--color-brand)]"
+                    className="chart-bar-fill w-full rounded-full"
                     style={{ height: `${item.score * 20}%` }}
                   />
                 </div>
@@ -150,11 +148,11 @@ export default function StudentDashboardPage() {
             {resources.slice(0, 4).map((resource, index) => (
               <div
                 key={resource.title}
-                className={`rounded-[1.5rem] border p-4 ${
-                  index === 0
-                    ? "border-[var(--color-brand-btn)] bg-[var(--color-surface-strong)]"
-                    : "border-[var(--color-border)] bg-[var(--color-surface)]"
-                }`}
+                className="rounded-[1.5rem] border p-4"
+                style={{
+                  borderColor: index === 0 ? "var(--color-brand-btn)" : "var(--color-border)",
+                  background: index === 0 ? "var(--color-surface-strong)" : "var(--color-surface)",
+                }}
               >
                 <div className="flex items-center gap-2 text-[var(--color-text-secondary)]">
                   {resource.type === "Audio" ? (
@@ -171,9 +169,12 @@ export default function StudentDashboardPage() {
                 <Text as="p" variant="body" weight="medium" className="mt-3">
                   {resource.title}
                 </Text>
-                <Text as="p" variant="small" color="muted" className="mt-2">
-                  {resource.duration}
-                </Text>
+                <div className="mt-3 flex items-center justify-between gap-3">
+                  <Text as="p" variant="small" color="muted">
+                    {resource.duration}
+                  </Text>
+                  {resource.saved ? <span className="status-pill">Saved</span> : null}
+                </div>
               </div>
             ))}
           </div>

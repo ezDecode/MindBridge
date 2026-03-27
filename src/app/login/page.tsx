@@ -4,7 +4,7 @@ import { SiteFooter, SiteHeader } from "@/components/site";
 
 export default function LoginPage() {
   return (
-    <main className="w-full">
+    <main id="main-content" className="w-full">
       <SiteHeader />
 
       <section className="w-full py-8 sm:py-12">

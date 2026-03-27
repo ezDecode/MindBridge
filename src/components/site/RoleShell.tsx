@@ -46,7 +46,7 @@ export function RoleShell({
   const pathname = usePathname();
 
   return (
-    <main className="w-full py-6 sm:py-8">
+    <main id="main-content" className="w-full py-6 sm:py-8">
       <Container size="md">
         <div className="grid gap-6 lg:grid-cols-[17.25rem_minmax(0,1fr)]">
           <aside className="surface-panel hidden self-start rounded-[2rem] p-5 lg:sticky lg:top-6 lg:block">
@@ -79,10 +79,11 @@ export function RoleShell({
                   <Link
                     key={item.href}
                     href={item.href}
+                    aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "flex items-center gap-3 rounded-[1.2rem] border px-4 py-3 text-sm transition-[transform,background-color,border-color,color] duration-200 ease-[var(--ease-out)]",
+                      "flex items-center gap-3 rounded-[1.2rem] border px-4 py-3 text-sm transition-[transform,background-color,border-color,color,box-shadow] duration-200 ease-[var(--ease-out)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-btn)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]",
                       isActive
-                        ? "border-[var(--color-brand-btn)] bg-[var(--color-surface-strong)] text-[var(--color-text-primary)]"
+                        ? "border-[var(--color-brand-btn)] bg-[var(--color-surface-strong)] text-[var(--color-text-primary)] shadow-[var(--shadow-line)]"
                         : "border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border)] hover:bg-[var(--color-surface-tinted)] hover:text-[var(--color-text-primary)]"
                     )}
                   >
@@ -128,11 +129,12 @@ export function RoleShell({
                     <Link
                       key={item.href}
                       href={item.href}
+                      aria-current={isActive ? "page" : undefined}
                       className={cn(
-                        "inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-colors duration-200",
+                        "inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-btn)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
                         isActive
                           ? "border-[var(--color-brand-btn)] bg-[var(--color-surface-strong)] text-[var(--color-text-primary)]"
-                          : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)]"
+                          : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-tinted)]"
                       )}
                     >
                       <Icon className="h-4 w-4" />

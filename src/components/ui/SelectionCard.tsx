@@ -22,26 +22,20 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
         type="button"
         whileTap={disabled ? {} : { scale: 0.97 }}
         onClick={disabled ? undefined : onClick}
+        aria-pressed={selected}
+        aria-disabled={disabled}
         className={cn(
-          "flex items-center gap-4 p-4 rounded-xl border transition-colors duration-200",
+          "interactive-panel flex min-h-14 items-center gap-4 rounded-[1.5rem] p-4 text-left focus-visible:outline-none",
           selected
-            ? "bg-[var(--color-surface-tinted)] border-[var(--color-brand-btn)] ring-2 ring-[var(--color-brand-btn)]/20"
-            : "bg-[var(--color-gray-100)] border-transparent hover:bg-[var(--color-gray-200)]",
-          disabled && "opacity-50 cursor-not-allowed",
+            ? "border-[var(--color-brand-btn)] bg-[var(--color-surface-strong)] shadow-[var(--shadow-line),0_0_0_1px_color-mix(in_srgb,var(--color-brand-btn),white_72%)]"
+            : "bg-[var(--color-surface)]",
+          disabled && "cursor-not-allowed opacity-50",
+          "focus-visible:shadow-[var(--shadow-line),var(--ring-shadow)]",
           className
         )}
       >
-        {icon && (
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, scale: 0.8 },
-              visible: { opacity: 1, scale: 1 },
-            }}
-          >
-            {icon}
-          </motion.div>
-        )}
-        <div className="flex-1 min-w-0 text-left">
+        {icon ? <motion.div className="shrink-0">{icon}</motion.div> : null}
+        <div className="min-w-0 flex-1 text-left">
           <span className="block font-semibold text-[var(--color-text-primary)]">
             {label}
           </span>
@@ -55,10 +49,10 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-5 h-5 rounded-full bg-[var(--color-brand-btn)] flex items-center justify-center flex-shrink-0"
+            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-brand-btn)]"
           >
             <svg
-              className="w-3 h-3 text-white"
+              className="h-3 w-3 text-white"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
