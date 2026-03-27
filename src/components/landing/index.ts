@@ -1,1 +1,1 @@
-export { HeroSection } from "./HeroSection";
+export { LandingPage } from "./LandingPage";

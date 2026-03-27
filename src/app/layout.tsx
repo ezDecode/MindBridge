@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -49,8 +50,17 @@ const mindBridge = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "MindBridge",
-  description: "Anonymous mental health support, 24/7. No judgment, just care.",
+  title: {
+    default: "MindBridge",
+    template: "%s | MindBridge",
+  },
+  description: "A campus-first mental wellness space for students who need calm support, clarity, and a quick path to real help.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -60,7 +70,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${mindBridge.variable} ${mindBridge.className}`}>
-      <body className="font-sans antialiased bg-[var(--color-background)] text-[var(--color-text-primary)]">
+      <body className="font-sans antialiased text-[var(--color-text-primary)]">
         {children}
       </body>
     </html>

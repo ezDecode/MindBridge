@@ -53,8 +53,8 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
         </div>
         {selected && (
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
             className="w-5 h-5 rounded-full bg-[var(--color-brand-btn)] flex items-center justify-center flex-shrink-0"
           >
             <svg

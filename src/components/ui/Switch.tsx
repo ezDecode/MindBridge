@@ -38,8 +38,8 @@ export function Switch({ checked, onCheckedChange, className, disabled }: Switch
         }}
         transition={{ 
           type: "spring", 
-          duration: 0.4, 
-          bounce: 0.2,
+          duration: 0.35, 
+          bounce: 0.12,
         }}
         whileTap={{ scale: 0.85 }}
         className="pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0"
