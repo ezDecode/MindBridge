@@ -4,7 +4,7 @@ import { ElementType, HTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface TextProps extends HTMLAttributes<HTMLElement> {
-  variant?: "display" | "heading" | "h1" | "h2" | "h3" | "lead" | "body" | "small" | "label";
+  variant?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "body" | "small" | "label";
   weight?: "normal" | "medium" | "semibold" | "bold";
   color?: "primary" | "secondary" | "muted" | "brand" | "success";
   as?: ElementType;
@@ -25,15 +25,15 @@ const Text = forwardRef<HTMLElement, TextProps>(
     ref
   ) => {
     const variants = {
-      display: "text-[clamp(3.2rem,6vw,5.33rem)] leading-[0.95] tracking-[-0.04em] text-center",
-      heading: "text-[clamp(2.4rem,4.5vw,4rem)] leading-[1.02] tracking-[-0.03em] text-center",
-      h1: "text-[clamp(2rem,3.5vw,3rem)] leading-[1.05] tracking-[-0.03em] text-center",
-      h2: "text-[clamp(1.5rem,2.5vw,2.25rem)] leading-[1.12] tracking-[-0.02em] text-center",
-      h3: "text-[clamp(1.2rem,1.8vw,1.68rem)] leading-[1.2] tracking-[-0.02em]",
-      lead: "text-[1.25rem] leading-[1.65] tracking-[-0.01em]",
-      body: "text-[1.25rem] leading-[1.7] tracking-[-0.01em]",
-      small: "text-[0.9375rem] leading-[1.6]",
-      label: "text-[0.82rem] leading-[1.3] tracking-[0.08em] uppercase",
+      h1: "text-5xl",
+      h2: "text-4xl",
+      h3: "text-3xl",
+      h4: "text-2xl",
+      h5: "text-xl",
+      h6: "text-lg",
+      body: "text-p",
+      small: "text-sm",
+      label: "text-base",
     };
 
     const weightOptions = {
@@ -44,11 +44,11 @@ const Text = forwardRef<HTMLElement, TextProps>(
     };
 
     const colors = {
-      primary: "text-[var(--color-text-primary)]",
-      secondary: "text-[var(--color-text-secondary)]",
-      muted: "text-[var(--color-text-muted)]",
-      brand: "text-[var(--color-primary)]",
-      success: "text-[var(--color-success)]",
+      primary: "text-text-primary",
+      secondary: "text-text-secondary",
+      muted: "text-text-muted",
+      brand: "text-primary",
+      success: "text-success",
     };
 
     return (

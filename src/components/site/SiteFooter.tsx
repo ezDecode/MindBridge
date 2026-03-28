@@ -18,7 +18,7 @@ export function SiteFooter() {
               <Text as="p" variant="label" color="brand">
                 MindBridge
               </Text>
-              <Text as="h2" variant="h3" weight="medium" className="mt-3">
+              <Text as="h2" variant="h3" weight="bold" className="mt-3">
                 Life-changing habits start with a single calm conversation.
               </Text>
               <Text as="p" variant="body" color="secondary" className="mt-3 max-w-[58ch]">
@@ -28,7 +28,7 @@ export function SiteFooter() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="rounded-[1.6rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
-                <Text as="p" variant="small" weight="medium">
+                <Text as="p" variant="h6" weight="bold">
                   Quick routes
                 </Text>
                 <div className="mt-4 grid gap-2">
@@ -36,7 +36,7 @@ export function SiteFooter() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="rounded-[1rem] px-3 py-2 text-sm text-[var(--color-text-secondary)] transition-[background-color,color] duration-200 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-black)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]"
+                      className="rounded-[1rem] px-3 py-2 text-[var(--fs-label)] font-medium text-[var(--color-text-secondary)] transition-[background-color,color] duration-200 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-black)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]"
                     >
                       {item.label}
                     </Link>
@@ -45,7 +45,7 @@ export function SiteFooter() {
               </div>
 
               <div className="rounded-[1.6rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
-                <Text as="p" variant="small" weight="medium">
+                <Text as="p" variant="h6" weight="bold">
                   Need urgent help?
                 </Text>
                 <Text as="p" variant="small" color="secondary" className="mt-3">

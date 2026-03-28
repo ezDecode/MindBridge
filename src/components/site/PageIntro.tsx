@@ -14,14 +14,14 @@ export function PageIntro({ eyebrow, title, description, actions }: PageIntroPro
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-[52rem]">
           {eyebrow && (
-            <Text as="p" variant="label" color="brand" className="mb-1">
+            <Text as="p" variant="label" weight="bold" color="brand" className="mb-1">
               {eyebrow}
             </Text>
           )}
-          <Text as="h1" variant="h1" weight="medium" className="mt-3 max-w-[18ch] text-balance">
+          <Text as="h1" variant="h1" weight="bold" className="mt-3 max-w-[18ch] text-balance">
             {title}
           </Text>
-          <Text as="p" variant="lead" color="secondary" className="mt-3 max-w-[62ch]">
+          <Text as="p" variant="body" color="secondary" className="mt-3 max-w-[62ch]">
             {description}
           </Text>
         </div>

@@ -29,10 +29,10 @@ export default function StudentDashboardPage() {
       <div className="grid gap-4 xl:grid-cols-3">
         {dashboardMetrics.map((metric) => (
           <Card key={metric.label} variant="default" padding="md">
-            <Text as="p" variant="small" color="secondary">
+            <Text as="p" variant="label" weight="medium" color="secondary">
               {metric.label}
             </Text>
-            <Text as="p" variant="h3" weight="medium" className="mt-3">
+            <Text as="p" variant="h3" weight="bold" className="mt-3">
               {metric.value}
             </Text>
             <Text as="p" variant="small" color="muted" className="mt-2">
@@ -44,7 +44,7 @@ export default function StudentDashboardPage() {
 
       <div className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">
         <Card variant="elevated" padding="lg">
-          <Text as="p" variant="small" weight="medium">
+          <Text as="p" variant="h6" weight="bold">
             Today&apos;s actions
           </Text>
           <div className="mt-5 grid gap-3">
@@ -57,7 +57,7 @@ export default function StudentDashboardPage() {
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <Text as="p" variant="small" weight="medium">
+                    <Text as="p" variant="h6" weight="bold">
                       {tile.title}
                     </Text>
                     <Text as="p" variant="small" color="secondary" className="mt-2 max-w-[42ch]">
@@ -72,7 +72,7 @@ export default function StudentDashboardPage() {
         </Card>
 
         <Card variant="subtle" padding="lg">
-          <Text as="p" variant="small" weight="medium">
+          <Text as="p" variant="h6" weight="bold">
             7-day mood rhythm
           </Text>
           <Text as="p" variant="small" color="secondary" className="mt-2">
@@ -88,7 +88,7 @@ export default function StudentDashboardPage() {
                     style={{ height: `${item.score * 20}%` }}
                   />
                 </div>
-                <Text as="span" variant="small" color="muted">
+                <Text as="span" variant="label" weight="medium" color="muted">
                   {item.day}
                 </Text>
               </div>
@@ -100,7 +100,7 @@ export default function StudentDashboardPage() {
       <div className="grid gap-4 xl:grid-cols-[0.96fr_1.04fr]">
         <Card variant="default" padding="lg">
           <div className="flex items-center justify-between">
-            <Text as="p" variant="small" weight="medium">
+            <Text as="p" variant="h6" weight="bold">
               Recent screenings
             </Text>
             <Button href="/student/quizzes" variant="warm" size="sm">
@@ -114,7 +114,7 @@ export default function StudentDashboardPage() {
                 className="flex items-center justify-between rounded-[1.4rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
               >
                 <div>
-                  <Text as="p" variant="small" weight="medium">
+                  <Text as="p" variant="label" weight="bold">
                     {entry.type}
                   </Text>
                   <Text as="p" variant="small" color="secondary" className="mt-1">
@@ -122,7 +122,7 @@ export default function StudentDashboardPage() {
                   </Text>
                 </div>
                 <div className="text-right">
-                  <Text as="p" variant="small" weight="medium">
+                  <Text as="p" variant="label" weight="bold">
                     {entry.score}
                   </Text>
                   <Text as="p" variant="small" color="muted" className="mt-1">
@@ -136,7 +136,7 @@ export default function StudentDashboardPage() {
 
         <Card variant="elevated" padding="lg">
           <div className="flex items-center justify-between">
-            <Text as="p" variant="small" weight="medium">
+            <Text as="p" variant="h6" weight="bold">
               Saved and suggested
             </Text>
             <Button href="/student/resources" variant="warm" size="sm">
@@ -161,15 +161,15 @@ export default function StudentDashboardPage() {
                   ) : (
                     <FiBookOpen className="h-4 w-4" />
                   )}
-                  <Text as="span" variant="small" color="secondary">
+                  <Text as="span" variant="label" weight="medium" color="secondary">
                     {resource.category}
                   </Text>
                 </div>
-                <Text as="p" variant="body" weight="medium" className="mt-3">
+                <Text as="p" variant="body" weight="bold" className="mt-3">
                   {resource.title}
                 </Text>
                 <div className="mt-3 flex items-center justify-between gap-3">
-                  <Text as="p" variant="small" color="muted">
+                  <Text as="p" variant="label" weight="medium" color="muted">
                     {resource.duration}
                   </Text>
                   {resource.saved ? <span className="status-pill">Saved</span> : null}

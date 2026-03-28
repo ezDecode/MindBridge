@@ -52,17 +52,17 @@ export function RoleShell({
           <aside className="surface-panel hidden self-start rounded-[2rem] p-5 lg:sticky lg:top-6 lg:block">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-sm text-[var(--color-text-secondary)] transition-colors duration-200 hover:text-[var(--color-text-primary)]"
+              className="inline-flex items-center gap-2 text-[var(--fs-span)] font-medium text-[var(--color-text-secondary)] transition-colors duration-200 hover:text-[var(--color-text-primary)]"
             >
               <FiArrowLeft className="h-4 w-4" />
               Back to home
             </Link>
 
             <div className="mt-6 rounded-[1.6rem] bg-[var(--color-surface-tinted)] p-5">
-              <Text as="p" variant="label" color="brand">
+              <Text as="p" variant="label" weight="bold" color="brand">
                 {roleLabel}
               </Text>
-              <Text as="p" variant="h3" weight="medium" className="mt-3">
+              <Text as="p" variant="h3" weight="bold" className="mt-3">
                 MindBridge
               </Text>
               <Text as="p" variant="small" color="secondary" className="mt-2">
@@ -81,7 +81,7 @@ export function RoleShell({
                     href={item.href}
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "flex items-center gap-3 rounded-[1.2rem] border px-4 py-3 text-sm transition-colors duration-200 ease-[var(--ease-out)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]",
+                      "flex items-center gap-3 rounded-[1.2rem] border px-4 py-3 text-[var(--fs-label)] font-medium transition-colors duration-200 ease-[var(--ease-out)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]",
                       isActive
                         ? "border-[var(--color-black)] bg-[var(--color-primary-light)] text-[var(--color-text-primary)]"
                         : "border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border)] hover:bg-[var(--color-primary-light)] hover:text-[var(--color-text-primary)]"
@@ -95,7 +95,7 @@ export function RoleShell({
             </nav>
 
             <div className="mt-6 rounded-[1.6rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
-              <Text as="p" variant="small" weight="medium" color="primary">
+              <Text as="p" variant="h6" weight="bold" color="primary">
                 Crisis protocol
               </Text>
               <Text as="p" variant="small" color="secondary" className="mt-2">
@@ -107,7 +107,7 @@ export function RoleShell({
           <div className="flex min-w-0 flex-col gap-6">
             <div className="surface-panel flex items-center justify-between gap-4 rounded-[2rem] px-5 py-4 lg:hidden">
               <div>
-                <Text as="p" variant="label" color="brand">
+                <Text as="p" variant="label" weight="bold" color="brand">
                   {roleLabel}
                 </Text>
                 <Text as="p" variant="small" color="secondary" className="mt-1">
@@ -131,7 +131,7 @@ export function RoleShell({
                       href={item.href}
                       aria-current={isActive ? "page" : undefined}
                       className={cn(
-                        "inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
+                        "inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2.5 text-[var(--fs-label)] font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
                         isActive
                           ? "border-[var(--color-black)] bg-[var(--color-primary-light)] text-[var(--color-text-primary)]"
                           : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-primary-light)]"

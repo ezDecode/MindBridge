@@ -18,8 +18,18 @@ const mindBridge = localFont({
     },
     {
       path: "./fonts/MindBridge-Bold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "./fonts/MindBridge-Bold.woff2",
       weight: "700",
       style: "normal",
+    },
+    {
+      path: "./fonts/MindBridge-BoldItalic.woff2",
+      weight: "700",
+      style: "italic",
     },
   ],
 });
@@ -44,8 +54,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${mindBridge.variable} ${mindBridge.className}`}>
-      <body className="font-sans antialiased text-[var(--color-text-primary)]">
+    <html lang="en" className={mindBridge.variable}>
+      <body className="font-sans antialiased text-text-primary">
         <a href="#main-content" className="skip-link">
           Skip to content
         </a>

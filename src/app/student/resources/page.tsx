@@ -26,7 +26,7 @@ export default function StudentResourcesPage() {
             <Text as="p" variant="small" weight="medium">
               Featured resource
             </Text>
-            <Text as="h2" variant="h3" weight="medium" className="mt-3">
+            <Text as="h2" variant="h3" weight="bold" className="mt-3">
               A calmer way to come down after an exam spiral
             </Text>
             <Text as="p" variant="body" color="secondary" className="mt-3">

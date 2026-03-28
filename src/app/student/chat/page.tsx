@@ -26,7 +26,7 @@ export default function StudentChatPage() {
           <div className="flex items-start gap-3 rounded-[1.5rem] border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] p-4">
             <FiAlertCircle className="mt-0.5 h-5 w-5 text-[var(--color-danger)]" />
             <div>
-              <Text as="p" variant="small" weight="medium">
+              <Text as="p" variant="h6" weight="bold">
                 Crisis support stays close
               </Text>
               <Text as="p" variant="small" color="secondary" className="mt-2">
@@ -39,7 +39,7 @@ export default function StudentChatPage() {
             {chatMessages.map((message) => (
               <div
                 key={`${message.role}-${message.content}`}
-                className={`max-w-[90%] rounded-[1.55rem] px-4 py-3 text-sm leading-6 ${
+                className={`max-w-[90%] rounded-[1.55rem] px-4 py-3 text-[var(--fs-span)] leading-[var(--lh-span)] font-medium ${
                   message.role === "user"
                     ? "ml-auto bg-[var(--color-brand-btn)] text-[var(--color-brand-foreground)]"
                     : "bg-[var(--color-surface)] text-[var(--color-text-secondary)] shadow-[var(--shadow-line)]"
@@ -61,7 +61,7 @@ export default function StudentChatPage() {
 
         <div className="grid gap-4">
           <Card variant="default" padding="lg">
-            <Text as="p" variant="small" weight="medium">
+            <Text as="p" variant="h6" weight="bold">
               Recent sessions
             </Text>
             <div className="mt-4 space-y-3">
@@ -70,7 +70,7 @@ export default function StudentChatPage() {
                   key={session.title}
                   className="rounded-[1.4rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
                 >
-                  <Text as="p" variant="small" weight="medium">
+                  <Text as="p" variant="label" weight="bold">
                     {session.title}
                   </Text>
                   <Text as="p" variant="small" color="secondary" className="mt-1">
@@ -84,7 +84,7 @@ export default function StudentChatPage() {
           <Card variant="elevated" padding="lg">
             <div className="flex items-center justify-between">
               <div>
-                <Text as="p" variant="small" weight="medium">
+                <Text as="p" variant="h6" weight="bold">
                   Need a human next?
                 </Text>
                 <Text as="p" variant="small" color="secondary" className="mt-2 max-w-[32ch]">
@@ -102,7 +102,7 @@ export default function StudentChatPage() {
                 className="interactive-panel flex items-center justify-between rounded-[1.4rem] px-4 py-3"
               >
                 <div>
-                  <Text as="p" variant="small" weight="medium">
+                  <Text as="p" variant="label" weight="bold">
                     Call iCall helpline
                   </Text>
                   <Text as="p" variant="small" color="secondary" className="mt-1">
@@ -116,7 +116,7 @@ export default function StudentChatPage() {
                 className="interactive-panel flex items-center justify-between rounded-[1.4rem] px-4 py-3"
               >
                 <div>
-                  <Text as="p" variant="small" weight="medium">
+                  <Text as="p" variant="label" weight="bold">
                     Book a counselor session
                   </Text>
                   <Text as="p" variant="small" color="secondary" className="mt-1">

@@ -30,7 +30,7 @@ export default function AdminDashboardPage() {
             <Text as="p" variant="small" color="secondary">
               {metric.label}
             </Text>
-            <Text as="p" variant="h3" weight="medium" className="mt-3">
+            <Text as="p" variant="h3" weight="bold" className="mt-3">
               {metric.value}
             </Text>
           </Card>

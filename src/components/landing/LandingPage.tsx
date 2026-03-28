@@ -4,7 +4,6 @@ import { SiteFooter, SiteHeader } from "@/components/site";
 import { Hero } from "./Hero";
 import { Resources, SupportCategories } from "./Sections";
 import { FAQ, Newsletter } from "./BottomCTA";
-import { sectionReveal } from "./motion";
 import UnifiedSection from "./UnifiedSection";
 
 export function LandingPage() {

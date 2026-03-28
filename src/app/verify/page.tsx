@@ -14,7 +14,7 @@ export default function VerifyPage() {
             <Text as="p" variant="label" color="brand">
               Verify OTP
             </Text>
-            <Text as="h1" variant="h2" weight="medium" className="mt-3">
+            <Text as="h1" variant="h2" weight="bold" className="mt-3">
               Enter the code sent to your email.
             </Text>
             <Text as="p" variant="body" color="secondary" className="mt-4">
@@ -25,7 +25,7 @@ export default function VerifyPage() {
               {otpSlots.map((digit, index) => (
                 <div
                   key={`${digit}-${index}`}
-                  className="flex h-14 w-12 items-center justify-center rounded-[1rem] border border-[var(--color-border)] bg-[var(--color-surface)] text-lg font-medium text-[var(--color-text-primary)] shadow-[var(--shadow-line)]"
+                  className="flex h-14 w-12 items-center justify-center rounded-[1rem] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--fs-h4)] font-bold text-[var(--color-text-primary)] shadow-[var(--shadow-line)]"
                 >
                   {digit}
                 </div>

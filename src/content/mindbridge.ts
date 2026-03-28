@@ -380,7 +380,7 @@ export const beKindCTA = {
 export const stayInLoop = {
   headline: "Stay in the loop",
   description:
-    "Be the first to hear about new wellness resources, campus events, and features designed around student life.",
+    "Be the first to hear about new wellness resources, campus events, and features designed for student.",
 };
 
 export const faqItems = [

@@ -14,7 +14,7 @@ export default function LoginPage() {
               <Text as="p" variant="label" color="brand">
                 Anonymous-first access
               </Text>
-              <Text as="h1" variant="h2" weight="medium" className="mt-3 max-w-[14ch]">
+              <Text as="h1" variant="h2" weight="bold" className="mt-3 max-w-[14ch]">
                 College email unlocks the deeper features.
               </Text>
               <Text as="p" variant="body" color="secondary" className="mt-4">
@@ -23,7 +23,7 @@ export default function LoginPage() {
 
               <div className="mt-8 space-y-3">
                 <div className="rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-                  <Text as="p" variant="small" weight="medium">
+                  <Text as="p" variant="h6" weight="bold">
                     Why OTP here
                   </Text>
                   <Text as="p" variant="small" color="secondary" className="mt-2">
@@ -31,7 +31,7 @@ export default function LoginPage() {
                   </Text>
                 </div>
                 <div className="rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-                  <Text as="p" variant="small" weight="medium">
+                  <Text as="p" variant="h6" weight="bold">
                     What stays private
                   </Text>
                   <Text as="p" variant="small" color="secondary" className="mt-2">
@@ -47,7 +47,7 @@ export default function LoginPage() {
                   <FiMail className="h-5 w-5" />
                 </span>
                 <div>
-                  <Text as="p" variant="h3" weight="medium">
+                  <Text as="p" variant="h3" weight="bold">
                     Sign in with OTP
                   </Text>
                   <Text as="p" variant="small" color="secondary" className="mt-1">
@@ -58,7 +58,7 @@ export default function LoginPage() {
 
               <div className="mt-8 space-y-5">
                 <label className="block">
-                  <Text as="span" variant="small" weight="medium">
+                  <Text as="span" variant="label" weight="medium">
                     College email
                   </Text>
                   <Input

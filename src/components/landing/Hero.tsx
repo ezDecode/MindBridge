@@ -22,10 +22,10 @@ export function Hero() {
           className="mx-auto flex w-full max-w-[86.25rem] flex-col gap-6 px-5 pb-4 sm:gap-7"
         >
           <motion.div variants={item} className="flex flex-col items-center text-center">
-            <h1 className="text-[clamp(2rem,3.5vw,3rem)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--color-text-primary)]">
+            <Text as="h1" variant="h1" weight="bold">
               <span className="block text-[var(--color-primary)]">When campus feels heavy</span>
               <span className="block mt-1">You&apos;re not alone</span>
-            </h1>
+            </Text>
           </motion.div>
 
           <motion.div variants={item}>
@@ -33,7 +33,7 @@ export function Hero() {
               {valueProps.map((prop, i) => (
                 <li key={i} className="group flex cursor-pointer items-center gap-2 rounded-full px-2.5 py-1.25 transition-all duration-300 hover:bg-[var(--color-primary-light)]">
                   <FiCheckCircle className="h-3.5 w-3.5 shrink-0 text-[var(--color-primary)]" aria-hidden="true" />
-                  <Text as="span" variant="body" color="secondary" className="transition-colors duration-300 group-hover:text-[var(--color-text-primary)]">{prop}</Text>
+                  <Text as="span" variant="h6" color="secondary" className="transition-colors duration-300 group-hover:text-[var(--color-text-primary)]">{prop}</Text>
                 </li>
               ))}
             </ul>
