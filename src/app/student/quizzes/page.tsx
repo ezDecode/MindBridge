@@ -14,7 +14,7 @@ export default function StudentQuizzesPage() {
         actions={
           <>
             <Button href="/student/book">Book after screening</Button>
-            <Button href="/student/chat" variant="secondary">
+            <Button href="/student/chat" variant="warm">
               Talk first
             </Button>
           </>

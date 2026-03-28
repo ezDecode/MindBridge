@@ -41,7 +41,7 @@ export function SiteHeader() {
             </nav>
 
             <div className="hidden items-center gap-2 sm:flex">
-              <Button href="/login" variant="ghost" size="sm">
+              <Button href="/login" variant="warm" size="sm">
                 Login
               </Button>
               <Button href="/student/dashboard" size="sm">
@@ -72,17 +72,17 @@ export function SiteHeader() {
                     className="interactive-panel flex items-center justify-between rounded-[1.35rem] px-4 py-3 text-sm text-[var(--color-text-primary)]"
                   >
                     <span>{item.label}</span>
-                    <FiArrowRight className="h-4 w-4 text-[var(--color-brand-btn)]" />
+                    <FiArrowRight className="h-4 w-4 text-[var(--color-black)]" />
                   </Link>
                 ))}
               </div>
 
               <div className="mt-4 grid gap-2">
-                <Button href="/student/dashboard" variant="primary" className="w-full justify-between">
+                <Button href="/student/dashboard" className="w-full justify-between">
                   Explore student flow
                   <FiArrowRight className="h-4 w-4" />
                 </Button>
-                <Button href="/login" variant="secondary" className="w-full">
+                <Button href="/login" variant="warm" className="w-full">
                   Continue with college email
                 </Button>
               </div>

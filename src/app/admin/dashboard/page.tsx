@@ -17,7 +17,7 @@ export default function AdminDashboardPage() {
         actions={
           <>
             <Button href="/counselor/dashboard">Open counselor view</Button>
-            <Button href="/" variant="secondary">
+            <Button href="/" variant="warm">
               Return home
             </Button>
           </>
@@ -110,7 +110,7 @@ export default function AdminDashboardPage() {
             <Text as="p" variant="small" weight="medium">
               Resource management
             </Text>
-            <Button href="/student/resources" variant="ghost" size="sm">
+            <Button href="/student/resources" variant="warm" size="sm">
               Preview library
             </Button>
           </div>

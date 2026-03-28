@@ -14,7 +14,7 @@ export default function StudentChatPage() {
         actions={
           <>
             <Button href="/student/quizzes">Take PHQ-9</Button>
-            <Button href="/student/book" variant="secondary">
+            <Button href="/student/book" variant="warm">
               Book counselor
             </Button>
           </>
@@ -52,7 +52,7 @@ export default function StudentChatPage() {
 
           <div className="mt-6 flex flex-wrap gap-2">
             {suggestedActions.map((action) => (
-              <Button key={action} variant="secondary" size="sm">
+              <Button key={action} variant="warm" size="sm">
                 {action}
               </Button>
             ))}

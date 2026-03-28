@@ -77,17 +77,17 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                <Button href="/verify" size="lg" className="w-full">
+                <Button href="/verify" variant="warm" size="md" className="w-full">
                   Send code
                   <FiArrowRight className="h-4 w-4" />
                 </Button>
               </div>
 
               <div className="mt-8 grid gap-3 sm:grid-cols-2">
-                <Button href="/student/chat" variant="secondary" className="w-full">
+                <Button href="/student/chat" variant="warm" className="w-full">
                   Browse chat preview
                 </Button>
-                <Button href="/student/resources" variant="ghost" className="w-full">
+                <Button href="/student/resources" variant="warm" className="w-full">
                   Open resource hub
                 </Button>
               </div>

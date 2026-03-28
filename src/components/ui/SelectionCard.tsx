@@ -20,17 +20,16 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
       <motion.button
         ref={ref}
         type="button"
-        whileTap={disabled ? {} : { scale: 0.97 }}
+        whileTap={disabled ? {} : { scale: 0.98 }}
         onClick={disabled ? undefined : onClick}
         aria-pressed={selected}
         aria-disabled={disabled}
         className={cn(
-          "interactive-panel flex min-h-14 items-center gap-4 rounded-[1.5rem] p-4 text-left focus-visible:outline-none",
+          "interactive-panel flex min-h-14 items-center gap-4 rounded-[1.5rem] p-4 text-left focus-visible:outline-none border border-[var(--color-border)]",
           selected
-            ? "border-[var(--color-brand-btn)] bg-[var(--color-surface-strong)] shadow-[var(--shadow-line),0_0_0_1px_color-mix(in_srgb,var(--color-brand-btn),white_72%)]"
+            ? "border-[var(--color-black)] bg-[var(--color-primary-light)]"
             : "bg-[var(--color-surface)]",
           disabled && "cursor-not-allowed opacity-50",
-          "focus-visible:shadow-[var(--shadow-line),var(--ring-shadow)]",
           className
         )}
       >
@@ -49,7 +48,7 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-brand-btn)]"
+            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-black)]"
           >
             <svg
               className="h-3 w-3 text-white"

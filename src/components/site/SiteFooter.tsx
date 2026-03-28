@@ -12,7 +12,7 @@ export function SiteFooter() {
   return (
     <footer className="w-full pb-12 pt-10">
       <Container size="md">
-        <div className="section-divider rounded-[2rem] border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-surface),var(--color-brand)_6%)] px-6 py-8 shadow-[var(--shadow-line)] sm:px-8">
+        <div className="section-divider rounded-[2rem] border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-surface),var(--color-brand)_6%)] px-6 py-8 sm:px-8">
           <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr]">
             <div className="max-w-[44rem]">
               <Text as="p" variant="label" color="brand">
@@ -27,7 +27,7 @@ export function SiteFooter() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-[1.6rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-[var(--shadow-line)]">
+              <div className="rounded-[1.6rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
                 <Text as="p" variant="small" weight="medium">
                   Quick routes
                 </Text>
@@ -36,7 +36,7 @@ export function SiteFooter() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="rounded-[1rem] px-3 py-2 text-sm text-[var(--color-text-secondary)] transition-[background-color,color] duration-200 hover:bg-[var(--color-surface-tinted)] hover:text-[var(--color-brand-btn)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-btn)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]"
+                      className="rounded-[1rem] px-3 py-2 text-sm text-[var(--color-text-secondary)] transition-[background-color,color] duration-200 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-black)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]"
                     >
                       {item.label}
                     </Link>
@@ -44,7 +44,7 @@ export function SiteFooter() {
                 </div>
               </div>
 
-              <div className="rounded-[1.6rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-[var(--shadow-line)]">
+              <div className="rounded-[1.6rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
                 <Text as="p" variant="small" weight="medium">
                   Need urgent help?
                 </Text>

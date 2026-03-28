@@ -14,13 +14,12 @@ export default function StudentDashboardPage() {
   return (
     <>
       <PageIntro
-        eyebrow="Student dashboard"
         title="Start with the gentlest next step."
         description="Support, screening, and counselor access — surfaced so you don’t have to dig."
         actions={
           <>
             <Button href="/student/chat">Continue chat</Button>
-            <Button href="/student/check-in" variant="secondary">
+            <Button href="/student/check-in" variant="warm">
               Log check-in
             </Button>
           </>
@@ -104,7 +103,7 @@ export default function StudentDashboardPage() {
             <Text as="p" variant="small" weight="medium">
               Recent screenings
             </Text>
-            <Button href="/student/quizzes" variant="ghost" size="sm">
+            <Button href="/student/quizzes" variant="warm" size="sm">
               View all
             </Button>
           </div>
@@ -140,7 +139,7 @@ export default function StudentDashboardPage() {
             <Text as="p" variant="small" weight="medium">
               Saved and suggested
             </Text>
-            <Button href="/student/resources" variant="ghost" size="sm">
+            <Button href="/student/resources" variant="warm" size="sm">
               Browse library
             </Button>
           </div>

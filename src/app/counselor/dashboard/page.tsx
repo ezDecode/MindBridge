@@ -12,7 +12,7 @@ export default function CounselorDashboardPage() {
         actions={
           <>
             <Button href="/student/book">Preview student booking</Button>
-            <Button href="/" variant="secondary">
+            <Button href="/" variant="warm">
               Back to home
             </Button>
           </>

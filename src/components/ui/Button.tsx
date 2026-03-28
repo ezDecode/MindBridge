@@ -4,7 +4,7 @@ import { ElementType, ComponentPropsWithoutRef, ReactNode } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "secondary" | "ghost" | "brand";
+type ButtonVariant = "primary" | "warm";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps<T extends ElementType = "button"> {
@@ -22,23 +22,19 @@ type PolymorphicComponentProp<T extends ElementType, Props = object> = {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--color-black)] text-[var(--color-white)]",
-  secondary:
-    "border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-black)]",
-  ghost:
-    "border border-transparent bg-transparent text-[var(--color-text-secondary)]",
-  brand:
-    "bg-[var(--color-black)] text-[var(--color-white)]",
+    "bg-[var(--color-black)] !text-[var(--color-white)] hover:bg-[var(--color-black-dark)] hover:!text-[var(--color-white)]",
+  warm:
+    "bg-[#F3EDE8] text-[var(--color-text-primary)] hover:bg-[#EAE0D5] hover:text-[var(--color-text-primary)]",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "min-h-9 rounded-full px-3.5 text-sm",
-  md: "min-h-11 rounded-full px-4 text-[0.9rem]",
-  lg: "min-h-12 rounded-full px-5 text-base",
+  sm: "h-10 px-4 text-[0.9375rem]",
+  md: "h-11 px-5 text-[0.9375rem]",
+  lg: "h-[3.25rem] px-6 text-base",
 };
 
 const baseStyles =
-  "inline-flex select-none items-center justify-center gap-2 font-medium tracking-[-0.01em] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] disabled:pointer-events-none disabled:opacity-50";
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full whitespace-nowrap font-semibold leading-none tracking-[-0.015em] transition-[background-color,color,box-shadow,transform] duration-200 ease-[var(--ease-out)] active:translate-y-px disabled:pointer-events-none disabled:translate-y-0 disabled:opacity-50 [&_svg]:shrink-0 outline-none";
 
 export function Button<T extends ElementType = "button">({
   as,
@@ -55,19 +51,12 @@ export function Button<T extends ElementType = "button">({
     baseStyles,
     variantStyles[variant],
     sizeStyles[size],
-    variant === "ghost" && "hover:bg-[var(--color-primary-light)] hover:text-[var(--color-black)]",
-    variant === "secondary" && "hover:bg-[var(--color-primary-light)] hover:border-[var(--color-primary-light)]",
-    variant === "primary" && "hover:bg-[var(--color-text-secondary)]",
-    variant === "brand" && "hover:bg-[var(--color-text-secondary)]",
     className
   );
 
   if (isLink && href) {
     return (
-      <Link
-        href={href}
-        className={sharedClassName}
-      >
+      <Link href={href} className={sharedClassName}>
         {children}
       </Link>
     );

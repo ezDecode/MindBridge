@@ -12,7 +12,7 @@ export default function StudentCheckInPage() {
         actions={
           <>
             <Button href="/student/dashboard">Save check-in</Button>
-            <Button href="/student/chat" variant="secondary">
+            <Button href="/student/chat" variant="warm">
               Talk instead
             </Button>
           </>
@@ -54,7 +54,7 @@ export default function StudentCheckInPage() {
               30-day trend preview
             </Text>
             <Text as="p" variant="small" color="secondary" className="mt-2">
-              Just enough shape to notice whether you're sinking or lifting.
+              Just enough shape to notice whether you&apos;re sinking or lifting.
             </Text>
 
             <div className="chart-shell mt-8 flex h-56 items-end justify-between gap-3 rounded-[1.5rem] px-4 pb-4 pt-8">
@@ -80,7 +80,7 @@ export default function StudentCheckInPage() {
             </Text>
             <div className="mt-5 flex flex-wrap gap-3">
               <Button href="/student/quizzes">Take PHQ-9</Button>
-              <Button href="/student/resources" variant="secondary">
+              <Button href="/student/resources" variant="warm">
                 Open sleep resources
               </Button>
             </div>

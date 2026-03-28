@@ -32,7 +32,7 @@ export function Stepper({ totalSteps, currentStep, className = "" }: StepperProp
             initial={false}
             animate={{
               backgroundColor: isCompleted || isActive
-                ? "var(--color-brand-btn)"
+                ? "var(--color-black)"
                 : "var(--color-gray-300)",
               width: isActive ? 20 : 6,
               opacity: isCompleted || isActive ? 1 : 0.5,

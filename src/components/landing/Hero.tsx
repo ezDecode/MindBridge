@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiCheckCircle } from "react-icons/fi";
 import { Button, Card, Container, Text } from "@/components/ui";
 import { stagger, item } from "./motion";
 
@@ -32,18 +32,14 @@ export function Hero() {
             <ul className="mx-auto flex flex-wrap justify-center gap-x-5 gap-y-0 whitespace-nowrap">
               {valueProps.map((prop, i) => (
                 <li key={i} className="group flex cursor-pointer items-center gap-2 rounded-full px-2.5 py-1.25 transition-all duration-300 hover:bg-[var(--color-primary-light)]">
-                  <img 
-                    src="https://static.headspace.com/marketing-site/todo-checked-icon.svg" 
-                    alt="" 
-                    className="h-3.5 w-3.5 shrink-0"
-                  />
+                  <FiCheckCircle className="h-3.5 w-3.5 shrink-0 text-[var(--color-primary)]" aria-hidden="true" />
                   <Text as="span" variant="body" color="secondary" className="transition-colors duration-300 group-hover:text-[var(--color-text-primary)]">{prop}</Text>
                 </li>
               ))}
             </ul>
           </motion.div>
 
-          <motion.div variants={item} className="mt-2 grid gap-4 sm:grid-cols-[2.3fr_1fr]">
+          <motion.div variants={item} className="mt-2 grid gap-4 sm:grid-cols-[1.5fr_1fr]">
             <Card 
               variant="elevated" 
               padding="none"
@@ -52,10 +48,10 @@ export function Hero() {
               <div className="absolute inset-0 bg-[var(--color-surface-warm)]" />
               <div className="relative flex flex-col items-center gap-5 px-4 sm:px-6">
                 <div className="text-center">
-                  <h3 className="text-[clamp(1.1rem,1.5vw,1.3rem)] font-semibold leading-[1.25] text-[var(--color-text-primary)]">
+                  <Text as="h3" variant="h3" weight="semibold">
                     <span className="block">Your mental health matters —</span>
                     <span className="block">we help you thrive every day</span>
-                  </h3>
+                  </Text>
                 </div>
                 <Button href="/student/dashboard" size="md" className="w-fit">
                   Start for free
@@ -83,10 +79,10 @@ export function Hero() {
               <div className="absolute inset-0 bg-[var(--color-surface-warm)]" />
               <div className="relative flex flex-col items-center gap-5 px-4 sm:px-6">
                 <div className="text-center">
-                  <h3 className="text-[clamp(1.1rem,1.5vw,1.3rem)] font-semibold leading-[1.25] text-[var(--color-text-primary)]">
-                    <span className="block">Someone to talk to, anytime —</span>
-                    <span className="block">your safe space to be heard</span>
-                  </h3>
+                  <Text as="h3" variant="h3" weight="semibold">
+                    <span className="block">Someone to talk to, anytime</span>
+                    <span className="block">Your safe space</span>
+                  </Text>
                 </div>
                 <Button href="/student/chat" size="md" className="w-fit">
                   Chat now

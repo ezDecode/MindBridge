@@ -81,10 +81,10 @@ export function RoleShell({
                     href={item.href}
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "flex items-center gap-3 rounded-[1.2rem] border px-4 py-3 text-sm transition-[transform,background-color,border-color,color,box-shadow] duration-200 ease-[var(--ease-out)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-btn)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]",
+                      "flex items-center gap-3 rounded-[1.2rem] border px-4 py-3 text-sm transition-colors duration-200 ease-[var(--ease-out)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]",
                       isActive
-                        ? "border-[var(--color-brand-btn)] bg-[var(--color-surface-strong)] text-[var(--color-text-primary)] shadow-[var(--shadow-line)]"
-                        : "border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border)] hover:bg-[var(--color-surface-tinted)] hover:text-[var(--color-text-primary)]"
+                        ? "border-[var(--color-black)] bg-[var(--color-primary-light)] text-[var(--color-text-primary)]"
+                        : "border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border)] hover:bg-[var(--color-primary-light)] hover:text-[var(--color-text-primary)]"
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -114,7 +114,7 @@ export function RoleShell({
                   {roleDescription}
                 </Text>
               </div>
-              <Button href="/" variant="secondary" size="sm">
+              <Button href="/" variant="warm" size="sm">
                 Home
               </Button>
             </div>
@@ -131,10 +131,10 @@ export function RoleShell({
                       href={item.href}
                       aria-current={isActive ? "page" : undefined}
                       className={cn(
-                        "inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-btn)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
+                        "inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
                         isActive
-                          ? "border-[var(--color-brand-btn)] bg-[var(--color-surface-strong)] text-[var(--color-text-primary)]"
-                          : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-tinted)]"
+                          ? "border-[var(--color-black)] bg-[var(--color-primary-light)] text-[var(--color-text-primary)]"
+                          : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-primary-light)]"
                       )}
                     >
                       <Icon className="h-4 w-4" />

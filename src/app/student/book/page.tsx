@@ -12,7 +12,7 @@ export default function StudentBookPage() {
         actions={
           <>
             <Button href="/student/dashboard">Confirm booking</Button>
-            <Button href="/student/chat" variant="secondary">
+            <Button href="/student/chat" variant="warm">
               Talk first
             </Button>
           </>

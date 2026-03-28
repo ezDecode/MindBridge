@@ -33,10 +33,10 @@ export default function VerifyPage() {
             </div>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <Button href="/student/dashboard" size="lg">
+              <Button href="/student/dashboard" variant="warm" size="md">
                 Continue to dashboard
               </Button>
-              <Button href="/login" variant="secondary" size="lg">
+              <Button href="/login" variant="warm" size="md">
                 Resend code
               </Button>
             </div>

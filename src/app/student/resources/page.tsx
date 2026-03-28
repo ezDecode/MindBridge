@@ -13,7 +13,7 @@ export default function StudentResourcesPage() {
         actions={
           <>
             <Button href="/student/chat">Ask for a recommendation</Button>
-            <Button href="/student/dashboard" variant="secondary">
+            <Button href="/student/dashboard" variant="warm">
               Back to dashboard
             </Button>
           </>
@@ -35,7 +35,7 @@ export default function StudentResourcesPage() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Button href="/student/check-in" variant="secondary">
+            <Button href="/student/check-in" variant="warm">
               Log mood first
             </Button>
             <Button href="/student/book">Book if needed</Button>
