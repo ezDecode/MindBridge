@@ -47,63 +47,63 @@
   /* ── Neutrals ── */
   --color-black: #000000;
   --color-black-dark: #141313;
-  --color-white: #ffffff;
+    --color-white: #FFFFFF;
 
   /* ── Text ── */
-  --color-text-primary: #2D2C2B;
-  --color-text-secondary: #4B4C4D;
-  --color-text-muted: #44423F;
-  --color-text-muted-light: #63605D;
+  --color-text-primary: #2D2926;
+  --color-text-secondary: #5C5550;
+  --color-text-muted: #8A827A;
+  --color-text-muted-light: #8A827A;
   --color-text-inverse: #FFFFFF;
 
-  /* ── Primary (interactive blue) ── */
-  --color-primary: #0061EF;
-  --color-primary-light: #e8f0ff;
-  --color-primary-dark: #0040EA;
-  --color-primary-darker: #0000DB;
-  --color-link: #0040EA;
+  /* ── Primary (Warm Wellness Orange) ── */
+  --color-primary: #F47D4B;
+  --color-primary-light: #F9F4F2;
+  --color-primary-dark: #C4572A;
+  --color-primary-darker: #A3421D;
+  --color-link: #F47D4B;
 
-  /* ── Brand (deep purple identity) ── */
-  --color-brand: #5431A5;
-  --color-brand-dark: #3B197F;
-  --color-brand-accent: #5431A5;
-  --color-brand-accent-dark: #3B197F;
-  --color-brand-soft: #b8a9e8;
+  /* ── Brand (Lavender) ── */
+  --color-brand: #7B61C2;
+  --color-brand-dark: #5B3FA0;
+  --color-brand-accent: #7B61C2;
+  --color-brand-accent-dark: #5B3FA0;
+  --color-brand-soft: #C4B5E3;
 
   /* ── Accent ── */
-  --color-accent: #FFCE00;
-  --color-accent-dark: #FFB700;
-  --color-accent-light: #fff8e0;
-  --color-accent-pink: #FFA1CC;
+  --color-accent: #E5B85C;
+  --color-accent-dark: #C5983C;
+  --color-accent-light: #FBF3DF;
+  --color-accent-pink: #D4899F;
 
   /* ── Surface ── */
   --color-surface: #FFFFFF;
   --color-surface-warm: #F9F4F2;
-  --color-surface-warm-hover: #F3EDE8;
-  --color-surface-warm-active: #EAE0D5;
-  --color-surface-tinted: #FAF8FB;
-  --color-surface-dark: #141313;
-  --color-surface-dark-alt: #2D2C2B;
-  --color-surface-strong: color-mix(in srgb, var(--color-surface), var(--color-brand-soft) 12%);
-  --color-background: #F9F4F2;
+  --color-surface-warm-hover: #F9F4F2;
+  --color-surface-warm-active: #F9F4F2;
+  --color-surface-tinted: #F9F4F2;
+  --color-surface-dark: #2D2926;
+  --color-surface-dark-alt: #3D3834;
+  --color-surface-strong: #F3ECE8;
+  --color-background: #FFFFFF;
 
   /* ── Borders ── */
-  --color-border: #E2DED9;
-  --color-border-strong: #A8A29E;
-  --color-border-light: #D2D5DE;
-  --color-border-cool: #E5E7EC;
-  --color-border-warm: #C6C1B9;
-  --color-border-dark: #44423F;
+  --color-border: #D9CEBF;
+  --color-border-strong: #B5A898;
+  --color-border-light: #E8DFD4;
+  --color-border-cool: #E8DFD4;
+  --color-border-warm: #D9CEBF;
+  --color-border-dark: #8A827A;
 
   /* ── Semantic ── */
-  --color-success: #02873E;
-  --color-success-soft: #e4f4ea;
-  --color-warning: #da9b41;
-  --color-warning-soft: #fbf1df;
-  --color-danger: #c26a7a;
-  --color-danger-soft: #faeaef;
-  --color-info: #5a8ec7;
-  --color-info-soft: #ebf2fb;
+  --color-success: #6B9E7D;
+  --color-success-soft: #E8F2EC;
+  --color-warning: #D4899F;
+  --color-warning-soft: #F9E8ED;
+  --color-danger: #C26A6A;
+  --color-danger-soft: #FAEAEA;
+  --color-info: #5A8EC7;
+  --color-info-soft: #EBF2FB;
 
   /* ── Gray scale (brand-tinted) ── */
   --color-gray-50: color-mix(in srgb, #faf9fc, var(--color-brand-soft) 4%);
@@ -123,6 +123,12 @@
   --spacing-section-gap: clamp(4rem, 8vw, 7rem);
   --spacing-content-max: 70vw;
   --radius-card: clamp(1.35rem, 2vw, 2rem);
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 3px rgba(45, 41, 38, 0.06);
+  --shadow-md: 0 4px 12px rgba(45, 41, 38, 0.10);
+  --shadow-lg: 0 8px 24px rgba(45, 41, 38, 0.14);
+  --shadow-xl: 0 12px 36px rgba(45, 41, 38, 0.18);
 }
 
 @utility text-h1 { font-size: var(--font-size-h1); line-height: var(--font-size-h1--line-height); letter-spacing: var(--font-size-h1--letter-spacing); }
@@ -213,7 +219,7 @@ button:disabled {
 
 .surface-panel {
   border: 1px solid var(--color-border);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.98));
+  background: var(--color-surface);
 }
 
 .ambient-grid {
@@ -233,12 +239,12 @@ button:disabled {
   inset: 0 auto auto 0;
   height: 1px;
   width: 100%;
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-brand-soft), transparent 75%), transparent);
+  background: var(--color-border-warm);
 }
 
 .interactive-panel {
   border: 1px solid var(--color-border);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.98));
+  background: var(--color-surface);
   transition:
     transform 200ms var(--ease-out),
     border-color 200ms var(--ease-out),
@@ -255,11 +261,7 @@ button:disabled {
 
 .interactive-panel[data-active="true"] {
   border-color: var(--color-brand-accent);
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--color-surface), var(--color-brand-soft) 24%),
-    color-mix(in srgb, var(--color-surface), var(--color-brand-soft) 14%)
-  );
+  background: var(--color-surface-warm);
 }
 
 .status-pill {
@@ -277,19 +279,15 @@ button:disabled {
 
 .chart-shell {
   border: 1px solid var(--color-border);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 252, 255, 0.96)),
-    linear-gradient(180deg, rgba(0, 97, 239, 0.05), transparent 60%);
+  background: var(--color-surface);
 }
 
 .chart-bar-track {
-  background:
-    linear-gradient(180deg, rgba(0, 97, 239, 0.12), rgba(0, 97, 239, 0.04)),
-    var(--color-gray-100);
+  background: var(--color-gray-100);
 }
 
 .chart-bar-fill {
-  background: linear-gradient(180deg, var(--color-primary), var(--color-primary));
+  background: var(--color-primary);
 }
 
 @media (hover: hover) and (pointer: fine) {

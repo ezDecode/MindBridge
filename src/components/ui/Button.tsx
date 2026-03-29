@@ -6,11 +6,13 @@ import { cn } from "@/lib/utils";
 
 type ButtonVariant = "primary" | "warm";
 type ButtonSize = "sm" | "md" | "lg";
+type ButtonWeight = "normal" | "medium" | "semibold" | "bold";
 
 interface ButtonProps<T extends ElementType = "button"> {
   as?: T;
   variant?: ButtonVariant;
   size?: ButtonSize;
+  weight?: ButtonWeight;
   children: ReactNode;
   className?: string;
   href?: string;
@@ -22,7 +24,7 @@ type PolymorphicComponentProp<T extends ElementType, Props = object> = {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--color-primary)] !text-[var(--color-white)] hover:bg-[var(--color-primary-dark)] hover:!text-[var(--color-white)]",
+    "bg-[var(--color-text-primary)] !text-[var(--color-white)] hover:bg-[var(--color-black-dark)] hover:!text-[var(--color-white)]",
   warm:
     "bg-[var(--color-surface-warm-hover)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-warm-active)] hover:text-[var(--color-text-primary)]",
 };
@@ -33,13 +35,21 @@ const sizeStyles: Record<ButtonSize, string> = {
   lg: "h-[3.25rem] px-6",
 };
 
+const weightStyles: Record<ButtonWeight, string> = {
+  normal: "font-normal",
+  medium: "font-medium",
+  semibold: "font-semibold",
+  bold: "font-bold",
+};
+
 const baseStyles =
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full whitespace-nowrap text-button font-bold transition-[background-color,color,box-shadow,transform] duration-200 ease-[var(--ease-out)] active:translate-y-px disabled:pointer-events-none disabled:translate-y-0 disabled:opacity-50 [&_svg]:shrink-0 outline-none";
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full whitespace-nowrap text-button transition-[background-color,color,box-shadow,transform] duration-200 ease-[var(--ease-out)] active:translate-y-px disabled:pointer-events-none disabled:translate-y-0 disabled:opacity-50 [&_svg]:shrink-0 outline-none";
 
 export function Button<T extends ElementType = "button">({
   as,
   variant = "primary",
   size = "md",
+  weight = "bold",
   className = "",
   href,
   children,
@@ -51,6 +61,7 @@ export function Button<T extends ElementType = "button">({
     baseStyles,
     variantStyles[variant],
     sizeStyles[size],
+    weightStyles[weight],
     className
   );
 

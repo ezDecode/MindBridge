@@ -32,7 +32,7 @@ export default function StudentDashboardPage() {
             <Text as="p" variant="label" weight="medium" color="secondary">
               {metric.label}
             </Text>
-            <Text as="p" variant="h3" weight="bold" className="mt-3">
+            <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--color-primary)]">
               {metric.value}
             </Text>
             <Text as="p" variant="small" color="muted" className="mt-2">

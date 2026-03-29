@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { FiCheckCircle, FiMessageCircle, FiClipboard, FiUser, FiBookOpen, FiMoon, FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { FiCheckCircle, FiMessageCircle, FiClipboard, FiUser, FiBookOpen, FiMoon } from "react-icons/fi";
 import { motion } from "motion/react";
 import { Button, Card, Container, Text } from "@/components/ui";
-import { beKindCTA, quizCards, counselors, bookingTypes } from "@/content/mindbridge";
+import { beKindCTA, quizCards, counselors } from "@/content/mindbridge";
 import { sectionReveal } from "./motion";
 
 interface TabConfig {
@@ -12,7 +12,7 @@ interface TabConfig {
   label: string;
 }
 
-interface UnifiedSectionProps {
+interface CarouselSectionProps {
   tabs: TabConfig[];
 }
 
@@ -36,19 +36,11 @@ const Slide = ({ children }: SlideProps) => {
 
 /* ── Main Carousel Section ── */
 
-function UnifiedSection({ tabs }: UnifiedSectionProps) {
+export function CarouselSection({ tabs }: CarouselSectionProps) {
   const [current, setCurrent] = useState(0);
 
   const handleTabClick = (index: number) => {
     setCurrent(index);
-  };
-
-  const handlePrevious = () => {
-    setCurrent((prev) => (prev < 1 ? tabs.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
-    setCurrent((prev) => (prev === tabs.length - 1 ? 0 : prev + 1));
   };
 
   return (
@@ -227,5 +219,3 @@ function UnifiedSection({ tabs }: UnifiedSectionProps) {
     </motion.section>
   );
 }
-
-export default UnifiedSection;

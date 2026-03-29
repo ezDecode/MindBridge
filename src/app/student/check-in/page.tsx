@@ -29,7 +29,7 @@ export default function StudentCheckInPage() {
               <SelectionCard
                 key={option.label}
                 selected={index === 2}
-                label={`${option.emoji} ${option.label}`}
+                label={option.label}
                 sublabel={option.note}
               />
             ))}

@@ -1,13 +1,17 @@
 "use client";
 
 import { SiteFooter, SiteHeader } from "@/components/site";
-import { Hero } from "./Hero";
-import { Resources, SupportCategories } from "./Sections";
-import { FAQ, Newsletter } from "./BottomCTA";
-import UnifiedSection from "./UnifiedSection";
+import { 
+  HeroSection, 
+  CategoriesSection, 
+  CarouselSection, 
+  ResourcesSection, 
+  FaqSection, 
+  NewsletterSection 
+} from "./index";
 
 export function LandingPage() {
-  const unifiedSectionTabs = [
+  const carouselTabs = [
     { id: "aicompanion", label: "AI Companion" },
     { id: "wellnesscheck", label: "Wellness Check" },
     { id: "expertsupport", label: "Expert Support" },
@@ -17,12 +21,12 @@ export function LandingPage() {
   return (
     <main id="main-content" className="w-full overflow-hidden">
       <SiteHeader />
-      <Hero />
-      <UnifiedSection tabs={unifiedSectionTabs} />
-      <Resources />
-      <SupportCategories />
-      <FAQ />
-      <Newsletter />
+      <HeroSection />
+      <CategoriesSection />
+      <CarouselSection tabs={carouselTabs} />
+      <ResourcesSection />
+      <FaqSection />
+      <NewsletterSection />
       <SiteFooter />
     </main>
   );

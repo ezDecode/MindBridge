@@ -25,7 +25,7 @@ export default function CounselorDashboardPage() {
             <Text as="p" variant="small" color="secondary">
               {metric.label}
             </Text>
-            <Text as="p" variant="h3" weight="bold" className="mt-3">
+            <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--color-primary)]">
               {metric.value}
             </Text>
           </Card>

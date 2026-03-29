@@ -181,11 +181,11 @@ export const sessionHistory = [
 export const suggestedActions = ["Take PHQ-9", "Book a counselor", "Read a breathing guide"];
 
 export const moodOptions = [
-  { emoji: "😞", label: "Very low", note: "Heavy, flat, or drained." },
-  { emoji: "😟", label: "Strained", note: "Tense, uneasy, overloaded." },
-  { emoji: "😐", label: "Steady", note: "Managing, but not great." },
-  { emoji: "🙂", label: "Lighter", note: "A bit more settled today." },
-  { emoji: "😊", label: "Good", note: "Clearer, calmer, or hopeful." },
+  { label: "Very low", note: "Heavy, flat, or drained." },
+  { label: "Strained", note: "Tense, uneasy, overloaded." },
+  { label: "Steady", note: "Managing, but not great." },
+  { label: "Lighter", note: "A bit more settled today." },
+  { label: "Good", note: "Clearer, calmer, or hopeful." },
 ];
 
 export const quizCards = [
@@ -345,15 +345,15 @@ export const adminResources = [
   { title: "How to ask for help without explaining everything", type: "Video", category: "Self-Care" },
 ];
 
-// --- Headspace-inspired content sections ---
+// --- Mindbridge-inspired content sections ---
 
-export const headspaceCategories = [
-  { label: "Ease exam stress", icon: "📚" },
-  { label: "Sleep better tonight", icon: "🌙" },
-  { label: "Manage anxious thoughts", icon: "🧘" },
-  { label: "Process heavy feelings", icon: "💭" },
-  { label: "Build a daily rhythm", icon: "✨" },
-  { label: "Talk to someone real", icon: "🤝" },
+export const mindbridgeCategories = [
+  { label: "Stress less", id: "stress" },
+  { label: "Sleep soundly", id: "sleep" },
+  { label: "Manage anxiety", id: "anxiety" },
+  { label: "Process thoughts", id: "thoughts" },
+  { label: "Practice meditation", id: "meditation" },
+  { label: "Start therapy", id: "therapy" },
 ];
 
 export const socialProof = {
