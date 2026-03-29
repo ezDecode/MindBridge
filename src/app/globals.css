@@ -3,112 +3,100 @@
 @theme {
   --font-sans: var(--font-mindbridge), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  /* Typography Design Tokens (Headspace-inspired) */
+  /* ── Typography ── */
   --font-size-h1: clamp(2.75rem, 6vw, 3.5rem);
   --font-size-h1--line-height: 1.1;
   --font-size-h1--letter-spacing: -0.036em;
-  --font-size-5xl: var(--font-size-h1);
-  --font-size-5xl--line-height: var(--font-size-h1--line-height);
-  --font-size-5xl--letter-spacing: var(--font-size-h1--letter-spacing);
 
-  --font-size-h2: 2.5rem;    /* 40px */
-  --font-size-h2--line-height: 2.875rem;      /* 46px */
-  --font-size-h2--letter-spacing: -0.036em;   /* -1.2px */
-  --font-size-4xl: var(--font-size-h2);
-  --font-size-4xl--line-height: var(--font-size-h2--line-height);
-  --font-size-4xl--letter-spacing: var(--font-size-h2--letter-spacing);
+  --font-size-h2: 2.5rem;
+  --font-size-h2--line-height: 2.875rem;
+  --font-size-h2--letter-spacing: -0.036em;
 
-  --font-size-h3: 2rem;      /* 32px */
-  --font-size-h3--line-height: 2.4rem;  /* 38.4px */
-  --font-size-h3--letter-spacing: -0.03em;  /* -0.8px */
-  --font-size-3xl: var(--font-size-h3);
-  --font-size-3xl--line-height: var(--font-size-h3--line-height);
-  --font-size-3xl--letter-spacing: var(--font-size-h3--letter-spacing);
+  --font-size-h3: 2rem;
+  --font-size-h3--line-height: 2.4rem;
+  --font-size-h3--letter-spacing: -0.03em;
 
-  --font-size-h4: 1.75rem;    /* 28px */
-  --font-size-h4--line-height: 2.1rem;      /* 33.6px */
-  --font-size-h4--letter-spacing: -0.024em;  /* -0.56px */
-  --font-size-2xl: var(--font-size-h4);
-  --font-size-2xl--line-height: var(--font-size-h4--line-height);
-  --font-size-2xl--letter-spacing: var(--font-size-h4--letter-spacing);
+  --font-size-h4: 1.75rem;
+  --font-size-h4--line-height: 2.1rem;
+  --font-size-h4--letter-spacing: -0.024em;
 
-  --font-size-h5: 1.5rem;      /* 24px */
-  --font-size-h5--line-height: 1.8rem;    /* 28.8px */
-  --font-size-h5--letter-spacing: -0.018em;  /* -0.36px */
-  --font-size-xl: var(--font-size-h5);
-  --font-size-xl--line-height: var(--font-size-h5--line-height);
-  --font-size-xl--letter-spacing: var(--font-size-h5--letter-spacing);
+  --font-size-h5: 1.5rem;
+  --font-size-h5--line-height: 1.8rem;
+  --font-size-h5--letter-spacing: -0.018em;
 
-  --font-size-h6: 1.125rem;   /* 18px */
-  --font-size-h6--line-height: 1.35rem;   /* 21.6px */
+  --font-size-h6: 1.125rem;
+  --font-size-h6--line-height: 1.35rem;
   --font-size-h6--letter-spacing: -0.011em;
-  --font-size-lg: var(--font-size-h6);
-  --font-size-lg--line-height: var(--font-size-h6--line-height);
-  --font-size-lg--letter-spacing: var(--font-size-h6--letter-spacing);
 
-  --font-size-p: 1.25rem;    /* 20px */
-  --font-size-p--line-height: 1.5rem;     /* 24px */
-  --font-size-p--letter-spacing: -0.036em;    /* -0.6px */
+  --font-size-p: 1.25rem;
+  --font-size-p--line-height: 1.5rem;
+  --font-size-p--letter-spacing: -0.036em;
 
-  --font-size-button: 1.125rem; /* 18px */
-  --font-size-button--line-height: 1.35rem; /* 21.6px */
-  --font-size-button--letter-spacing: -0.036em; /* -0.54px */
+  --font-size-button: 1.125rem;
+  --font-size-button--line-height: 1.35rem;
+  --font-size-button--letter-spacing: -0.036em;
 
-  --font-size-label: 1rem;   /* 16px */
-  --font-size-label--line-height: 1.15rem;   /* 18.4px */
+  --font-size-label: 1rem;
+  --font-size-label--line-height: 1.15rem;
   --font-size-label--letter-spacing: -0.011em;
-  --font-size-base: var(--font-size-label);
-  --font-size-base--line-height: var(--font-size-label--line-height);
-  --font-size-base--letter-spacing: var(--font-size-label--letter-spacing);
 
-  --font-size-span: 0.875rem; /* 14px */
-  --font-size-span--line-height: 1.05rem; /* 16.8px */
+  --font-size-span: 0.875rem;
+  --font-size-span--line-height: 1.05rem;
   --font-size-span--letter-spacing: -0.011em;
-  --font-size-sm: var(--font-size-span);
-  --font-size-sm--line-height: var(--font-size-span--line-height);
-  --font-size-sm--letter-spacing: var(--font-size-span--letter-spacing);
 
-  /* 12 Core Colors */
+  /* ── Neutrals ── */
   --color-black: #000000;
-  --color-black-dark: #101010;
+  --color-black-dark: #141313;
   --color-white: #ffffff;
-  
-  /* Text Colors */
+
+  /* ── Text ── */
   --color-text-primary: #2D2C2B;
   --color-text-secondary: #4B4C4D;
   --color-text-muted: #44423F;
   --color-text-muted-light: #63605D;
-  
-  /* Primary Brand */
+  --color-text-inverse: #FFFFFF;
+
+  /* ── Primary (interactive blue) ── */
   --color-primary: #0061EF;
   --color-primary-light: #e8f0ff;
-  --color-primary-dark: #004dc0;
-  --color-link: #0000EE;
-  
-  /* Accent */
+  --color-primary-dark: #0040EA;
+  --color-primary-darker: #0000DB;
+  --color-link: #0040EA;
+
+  /* ── Brand (deep purple identity) ── */
+  --color-brand: #5431A5;
+  --color-brand-dark: #3B197F;
+  --color-brand-accent: #5431A5;
+  --color-brand-accent-dark: #3B197F;
+  --color-brand-soft: #b8a9e8;
+
+  /* ── Accent ── */
   --color-accent: #FFCE00;
+  --color-accent-dark: #FFB700;
   --color-accent-light: #fff8e0;
   --color-accent-pink: #FFA1CC;
-  
-  /* Surface */
+
+  /* ── Surface ── */
   --color-surface: #FFFFFF;
   --color-surface-warm: #F9F4F2;
+  --color-surface-warm-hover: #F3EDE8;
+  --color-surface-warm-active: #EAE0D5;
   --color-surface-tinted: #FAF8FB;
+  --color-surface-dark: #141313;
+  --color-surface-dark-alt: #2D2C2B;
+  --color-surface-strong: color-mix(in srgb, var(--color-surface), var(--color-brand-soft) 12%);
   --color-background: #F9F4F2;
-  
-  /* Borders */
+
+  /* ── Borders ── */
   --color-border: #E2DED9;
   --color-border-strong: #A8A29E;
   --color-border-light: #D2D5DE;
+  --color-border-cool: #E5E7EC;
   --color-border-warm: #C6C1B9;
-  
-  /* Semantic Colors (kept for compatibility) */
-  --color-brand: #b8a9e8;
-  --color-brand-dark: #8b74d1;
-  --color-brand-btn: #7c5fc7;
-  --color-brand-btn-dark: #6347b5;
-  --color-brand-foreground: #fcfbff;
-  --color-success: #3f9a6b;
+  --color-border-dark: #44423F;
+
+  /* ── Semantic ── */
+  --color-success: #02873E;
   --color-success-soft: #e4f4ea;
   --color-warning: #da9b41;
   --color-warning-soft: #fbf1df;
@@ -117,15 +105,24 @@
   --color-info: #5a8ec7;
   --color-info-soft: #ebf2fb;
 
-  --color-gray-50: color-mix(in srgb, #faf9fc, var(--color-brand) 4%);
-  --color-gray-100: color-mix(in srgb, #f3f0f8, var(--color-brand) 6%);
-  --color-gray-200: color-mix(in srgb, #ebe6f3, var(--color-brand) 8%);
-  --color-gray-300: color-mix(in srgb, #ddd5ea, var(--color-brand) 10%);
-  --color-gray-400: color-mix(in srgb, #c6bdd9, var(--color-brand) 12%);
+  /* ── Gray scale (brand-tinted) ── */
+  --color-gray-50: color-mix(in srgb, #faf9fc, var(--color-brand-soft) 4%);
+  --color-gray-100: color-mix(in srgb, #f3f0f8, var(--color-brand-soft) 6%);
+  --color-gray-200: color-mix(in srgb, #ebe6f3, var(--color-brand-soft) 8%);
+  --color-gray-300: color-mix(in srgb, #ddd5ea, var(--color-brand-soft) 10%);
+  --color-gray-400: color-mix(in srgb, #c6bdd9, var(--color-brand-soft) 12%);
 
+  /* ── Easing ── */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ── Layout ── */
+  --spacing-page-inline: clamp(1rem, 3vw, 2rem);
+  --spacing-page-block: clamp(1.5rem, 4vw, 3rem);
+  --spacing-section-gap: clamp(4rem, 8vw, 7rem);
+  --spacing-content-max: 70vw;
+  --radius-card: clamp(1.35rem, 2vw, 2rem);
 }
 
 @utility text-h1 { font-size: var(--font-size-h1); line-height: var(--font-size-h1--line-height); letter-spacing: var(--font-size-h1--letter-spacing); }
@@ -138,14 +135,6 @@
 @utility text-label { font-size: var(--font-size-label); line-height: var(--font-size-label--line-height); letter-spacing: var(--font-size-label--letter-spacing); }
 @utility text-span { font-size: var(--font-size-span); line-height: var(--font-size-span--line-height); letter-spacing: var(--font-size-span--letter-spacing); }
 @utility text-button { font-size: var(--font-size-button); line-height: var(--font-size-button--line-height); letter-spacing: var(--font-size-button--letter-spacing); }
-
-:root {
-  --page-inline: clamp(1rem, 3vw, 2rem);
-  --page-block: clamp(1.5rem, 4vw, 3rem);
-  --section-gap: clamp(4rem, 8vw, 7rem);
-  --content-max: 70vw;
-  --radius-card: clamp(1.35rem, 2vw, 2rem);
-}
 
 *,
 *::before,
@@ -203,7 +192,7 @@ button:disabled {
   z-index: 100;
   border-radius: 9999px;
   background: var(--color-text-primary);
-  color: var(--color-brand-foreground);
+  color: var(--color-text-inverse);
   padding: 0.8rem 1rem;
   transform: translateY(-140%);
   transition: transform 180ms var(--ease-out);
@@ -219,7 +208,7 @@ button:disabled {
 }
 
 .page-section {
-  padding-block: var(--section-gap);
+  padding-block: var(--spacing-section-gap);
 }
 
 .surface-panel {
@@ -229,8 +218,8 @@ button:disabled {
 
 .ambient-grid {
   background-image:
-    linear-gradient(to right, rgba(124, 95, 199, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(124, 95, 199, 0.06) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in srgb, var(--color-brand-soft), transparent 94%) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-brand-soft), transparent 94%) 1px, transparent 1px);
   background-size: 1.25rem 1.25rem;
 }
 
@@ -244,12 +233,12 @@ button:disabled {
   inset: 0 auto auto 0;
   height: 1px;
   width: 100%;
-  background: linear-gradient(90deg, transparent, rgba(124, 95, 199, 0.25), transparent);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-brand-soft), transparent 75%), transparent);
 }
 
 .interactive-panel {
   border: 1px solid var(--color-border);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(251, 248, 255, 0.98));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.98));
   transition:
     transform 200ms var(--ease-out),
     border-color 200ms var(--ease-out),
@@ -265,11 +254,11 @@ button:disabled {
 }
 
 .interactive-panel[data-active="true"] {
-  border-color: var(--color-brand-btn);
+  border-color: var(--color-brand-accent);
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--color-surface), var(--color-brand) 24%),
-    color-mix(in srgb, var(--color-surface), var(--color-brand) 14%)
+    color-mix(in srgb, var(--color-surface), var(--color-brand-soft) 24%),
+    color-mix(in srgb, var(--color-surface), var(--color-brand-soft) 14%)
   );
 }
 
@@ -394,7 +383,7 @@ button:disabled {
 
 .category-pill {
   border: 1px solid var(--color-border);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(251, 248, 255, 0.98));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.98));
   transition: background-color 200ms var(--ease-out);
 }
 
@@ -456,11 +445,11 @@ button:disabled {
 
 ::-webkit-scrollbar-thumb {
   border-radius: 9999px;
-  background: color-mix(in srgb, var(--color-brand-btn), white 25%);
+  background: color-mix(in srgb, var(--color-brand-accent), white 25%);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-brand-btn);
+  background: var(--color-brand-accent);
 }
 
 @media (hover: none) and (pointer: coarse) {

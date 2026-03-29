@@ -12,7 +12,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     const variants = {
       default: "border border-[var(--color-border)] bg-[var(--color-surface)]",
       elevated:
-        "border border-[var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.88),rgba(255,255,255,0.98))]",
+        "border border-[var(--color-border)] bg-[linear-gradient(180deg,var(--color-surface),var(--color-surface-warm))]",
       outline: "border border-[var(--color-border)] bg-transparent",
       subtle: "border border-[var(--color-border)] bg-[var(--color-surface-tinted)]",
     };

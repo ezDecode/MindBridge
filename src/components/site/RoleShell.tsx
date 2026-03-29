@@ -52,7 +52,7 @@ export function RoleShell({
           <aside className="surface-panel hidden self-start rounded-[2rem] p-5 lg:sticky lg:top-6 lg:block">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-[var(--fs-span)] font-medium text-[var(--color-text-secondary)] transition-colors duration-200 hover:text-[var(--color-text-primary)]"
+              className="inline-flex items-center gap-2 text-span font-medium text-[var(--color-text-secondary)] transition-colors duration-200 hover:text-[var(--color-text-primary)]"
             >
               <FiArrowLeft className="h-4 w-4" />
               Back to home
@@ -81,9 +81,9 @@ export function RoleShell({
                     href={item.href}
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "flex items-center gap-3 rounded-[1.2rem] border px-4 py-3 text-[var(--fs-label)] font-medium transition-colors duration-200 ease-[var(--ease-out)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]",
+                      "flex items-center gap-3 rounded-[1.2rem] border px-4 py-3 text-label font-medium transition-colors duration-200 ease-[var(--ease-out)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]",
                       isActive
-                        ? "border-[var(--color-black)] bg-[var(--color-primary-light)] text-[var(--color-text-primary)]"
+                        ? "border-[var(--color-primary)] bg-[var(--color-primary-light)] text-[var(--color-text-primary)]"
                         : "border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border)] hover:bg-[var(--color-primary-light)] hover:text-[var(--color-text-primary)]"
                     )}
                   >
@@ -131,9 +131,9 @@ export function RoleShell({
                       href={item.href}
                       aria-current={isActive ? "page" : undefined}
                       className={cn(
-                        "inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2.5 text-[var(--fs-label)] font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
+                        "inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2.5 text-label font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
                         isActive
-                          ? "border-[var(--color-black)] bg-[var(--color-primary-light)] text-[var(--color-text-primary)]"
+                          ? "border-[var(--color-primary)] bg-[var(--color-primary-light)] text-[var(--color-text-primary)]"
                           : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-primary-light)]"
                       )}
                     >

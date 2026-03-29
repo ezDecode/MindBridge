@@ -77,7 +77,7 @@ export default function CounselorDashboardPage() {
                       {booking.time}
                     </Text>
                   </div>
-                  <span className="rounded-full bg-[var(--color-gray-100)] px-3 py-1.5 text-xs text-[var(--color-text-secondary)]">
+                  <span className="rounded-full bg-[var(--color-gray-100)] px-3 py-1.5 text-span text-[var(--color-text-secondary)]">
                     {booking.type}
                   </span>
                   <span className="status-pill">{booking.status}</span>

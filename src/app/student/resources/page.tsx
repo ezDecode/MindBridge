@@ -49,14 +49,14 @@ export default function StudentResourcesPage() {
             {resourceFilters.map((filter, index) => (
               <Chip
                 key={filter}
-                className={index === 0 ? "border-[var(--color-brand-btn)] bg-[var(--color-surface-strong)] text-[var(--color-text-primary)]" : ""}
+                className={index === 0 ? "border-[var(--color-primary)] bg-[var(--color-surface-strong)] text-[var(--color-text-primary)]" : ""}
               >
                 {filter}
               </Chip>
             ))}
           </div>
 
-          <div className="flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-sm text-[var(--color-text-secondary)]">
+          <div className="flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-span text-[var(--color-text-secondary)]">
             <FiSearch className="h-4 w-4" />
             Search is deferred for MVP
           </div>
@@ -68,7 +68,7 @@ export default function StudentResourcesPage() {
           <Card key={resource.title} variant="subtle" padding="lg" className="rounded-[1.9rem]">
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-surface)] text-[var(--color-brand-btn)] shadow-[var(--shadow-line)]">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-surface)] text-[var(--color-primary)]">
                   {resource.type === "Audio" ? (
                     <FiHeadphones className="h-5 w-5" />
                   ) : resource.type === "Video" ? (
@@ -88,7 +88,7 @@ export default function StudentResourcesPage() {
               </div>
 
               {resource.saved ? (
-                <span className="rounded-full bg-[var(--color-surface)] px-3 py-1.5 text-xs text-[var(--color-brand-btn)] shadow-[var(--shadow-line)]">
+                <span className="rounded-full bg-[var(--color-surface)] px-3 py-1.5 text-span text-[var(--color-primary)]">
                   Saved
                 </span>
               ) : null}

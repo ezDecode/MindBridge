@@ -27,7 +27,7 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
         className={cn(
           "interactive-panel flex min-h-14 items-center gap-4 rounded-[1.5rem] p-4 text-left focus-visible:outline-none border border-[var(--color-border)]",
           selected
-            ? "border-[var(--color-black)] bg-[var(--color-primary-light)]"
+            ? "border-[var(--color-primary)] bg-[var(--color-primary-light)]"
             : "bg-[var(--color-surface)]",
           disabled && "cursor-not-allowed opacity-50",
           className
@@ -39,7 +39,7 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
             {label}
           </span>
           {sublabel && (
-            <span className="text-sm text-[var(--color-text-muted)]">
+            <span className="text-span text-[var(--color-text-muted)]">
               {sublabel}
             </span>
           )}
@@ -48,10 +48,10 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-black)]"
+            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)]"
           >
             <svg
-              className="h-3 w-3 text-white"
+              className="h-3 w-3 text-[var(--color-white)]"
               fill="currentColor"
               viewBox="0 0 20 20"
             >

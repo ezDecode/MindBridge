@@ -50,7 +50,7 @@ export default function StudentBookPage() {
                   key={counselor.name}
                   className={`rounded-[1.5rem] border p-4 ${
                     index === 0
-                      ? "border-[var(--color-brand-btn)] bg-[var(--color-surface-strong)]"
+                      ? "border-[var(--color-primary)] bg-[var(--color-surface-strong)]"
                       : "border-[var(--color-border)] bg-[var(--color-surface)]"
                   }`}
                 >
@@ -79,7 +79,7 @@ export default function StudentBookPage() {
                 <button
                   key={slot}
                   type="button"
-                  className={`interactive-panel rounded-[1.4rem] px-4 py-3 text-left text-sm focus-visible:outline-none ${
+                  className={`interactive-panel rounded-[1.4rem] px-4 py-3 text-left text-span focus-visible:outline-none ${
                     index === 0
                       ? "text-[var(--color-text-primary)]"
                       : "text-[var(--color-text-secondary)]"

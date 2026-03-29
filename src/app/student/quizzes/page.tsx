@@ -65,7 +65,7 @@ export default function StudentQuizzesPage() {
                     {answerOptions.map((option, optionIndex) => (
                       <Chip
                         key={option}
-                        className={optionIndex === 1 ? "border-[var(--color-brand-btn)] bg-[var(--color-surface-strong)] text-[var(--color-text-primary)]" : ""}
+                        className={optionIndex === 1 ? "border-[var(--color-primary)] bg-[var(--color-surface-strong)] text-[var(--color-text-primary)]" : ""}
                       >
                         {option}
                       </Chip>

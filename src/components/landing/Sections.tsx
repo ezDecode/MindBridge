@@ -34,7 +34,7 @@ export function Resources() {
 
               <div className="grid gap-2 sm:grid-cols-2">
                 {resources.slice(0, 4).map((r) => (
-                  <div key={r.title} className="rounded-[1.1rem] border border-[var(--color-border)] bg-[rgba(255,255,255,0.84)] p-3">
+                  <div key={r.title} className="rounded-[1.1rem] border border-[var(--color-border)] bg-[var(--color-surface)]/84 p-3">
                     <div className="flex items-center gap-2">
                       <Text as="span" variant="label" weight="bold" color="secondary">{r.type}</Text>
                       <Text as="span" variant="small" color="muted">·</Text>
@@ -69,7 +69,7 @@ export function SupportCategories() {
               type="button"
               variants={item}
               // whileHover={{ y: -2 }}
-              className="category-pill flex items-center gap-2 rounded-full px-3.5 py-2 text-[var(--fs-label)] font-medium text-[var(--color-text-primary)]"
+              className="category-pill flex items-center gap-2 rounded-full px-3.5 py-2 text-label font-medium text-[var(--color-text-primary)]"
             >
               <span>{cat.icon}</span>
               {cat.label}

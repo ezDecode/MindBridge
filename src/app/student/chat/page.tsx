@@ -39,10 +39,10 @@ export default function StudentChatPage() {
             {chatMessages.map((message) => (
               <div
                 key={`${message.role}-${message.content}`}
-                className={`max-w-[90%] rounded-[1.55rem] px-4 py-3 text-[var(--fs-span)] leading-[var(--lh-span)] font-medium ${
+                className={`max-w-[90%] rounded-[1.55rem] px-4 py-3 text-span font-medium ${
                   message.role === "user"
-                    ? "ml-auto bg-[var(--color-brand-btn)] text-[var(--color-brand-foreground)]"
-                    : "bg-[var(--color-surface)] text-[var(--color-text-secondary)] shadow-[var(--shadow-line)]"
+                    ? "ml-auto bg-[var(--color-primary)] text-[var(--color-text-inverse)]"
+                    : "bg-[var(--color-surface)] text-[var(--color-text-secondary)]"
                 }`}
               >
                 {message.content}
@@ -109,7 +109,7 @@ export default function StudentChatPage() {
                     9152987821
                   </Text>
                 </div>
-                <FiArrowRight className="h-4 w-4 text-[var(--color-brand-btn)]" />
+                <FiArrowRight className="h-4 w-4 text-[var(--color-primary)]" />
               </a>
               <Link
                 href="/student/book"
@@ -123,7 +123,7 @@ export default function StudentChatPage() {
                     Anonymous, named, or crisis booking
                   </Text>
                 </div>
-                <FiArrowRight className="h-4 w-4 text-[var(--color-brand-btn)]" />
+                <FiArrowRight className="h-4 w-4 text-[var(--color-primary)]" />
               </Link>
             </div>
           </Card>

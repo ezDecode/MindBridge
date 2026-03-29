@@ -25,7 +25,7 @@ export default function VerifyPage() {
               {otpSlots.map((digit, index) => (
                 <div
                   key={`${digit}-${index}`}
-                  className="flex h-14 w-12 items-center justify-center rounded-[1rem] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--fs-h4)] font-bold text-[var(--color-text-primary)] shadow-[var(--shadow-line)]"
+                  className="flex h-14 w-12 items-center justify-center rounded-[1rem] border border-[var(--color-border)] bg-[var(--color-surface)] text-h4 font-bold text-[var(--color-text-primary)]"
                 >
                   {digit}
                 </div>

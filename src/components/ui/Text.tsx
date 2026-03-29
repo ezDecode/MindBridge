@@ -25,15 +25,15 @@ const Text = forwardRef<HTMLElement, TextProps>(
     ref
   ) => {
     const variants = {
-      h1: "text-5xl",
-      h2: "text-4xl",
-      h3: "text-3xl",
-      h4: "text-2xl",
-      h5: "text-xl",
-      h6: "text-lg",
+      h1: "text-h1",
+      h2: "text-h2",
+      h3: "text-h3",
+      h4: "text-h4",
+      h5: "text-h5",
+      h6: "text-h6",
       body: "text-p",
-      small: "text-sm",
-      label: "text-base",
+      small: "text-span",
+      label: "text-label",
     };
 
     const weightOptions = {

@@ -22,9 +22,9 @@ type PolymorphicComponentProp<T extends ElementType, Props = object> = {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--color-black)] !text-[var(--color-white)] hover:bg-[var(--color-black-dark)] hover:!text-[var(--color-white)]",
+    "bg-[var(--color-primary)] !text-[var(--color-white)] hover:bg-[var(--color-primary-dark)] hover:!text-[var(--color-white)]",
   warm:
-    "bg-[#F3EDE8] text-[var(--color-text-primary)] hover:bg-[#EAE0D5] hover:text-[var(--color-text-primary)]",
+    "bg-[var(--color-surface-warm-hover)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-warm-active)] hover:text-[var(--color-text-primary)]",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

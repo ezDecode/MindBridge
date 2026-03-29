@@ -32,7 +32,7 @@ export function Hero() {
             <ul className="mx-auto flex flex-wrap justify-center gap-x-5 gap-y-0 whitespace-nowrap">
               {valueProps.map((prop, i) => (
                 <li key={i} className="group flex cursor-pointer items-center gap-2 rounded-full px-2.5 py-1.25 transition-all duration-300 hover:bg-[var(--color-primary-light)]">
-                  <FiCheckCircle className="h-3.5 w-3.5 shrink-0 text-[var(--color-primary)]" aria-hidden="true" />
+                  <FiCheckCircle className="h-3.5 w-3.5 shrink-0 text-[var(--color-accent)]" aria-hidden="true" />
                   <Text as="span" variant="h6" color="secondary" className="transition-colors duration-300 group-hover:text-[var(--color-text-primary)]">{prop}</Text>
                 </li>
               ))}

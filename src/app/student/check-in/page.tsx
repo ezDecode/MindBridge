@@ -43,7 +43,7 @@ export default function StudentCheckInPage() {
               id="check-in-note"
               rows={5}
               defaultValue="The day was manageable, but I still felt that low pressure in my chest after classes."
-              className="mt-3 w-full resize-none rounded-[1rem] border border-[var(--color-border)] bg-[var(--color-gray-50)] px-4 py-3 text-sm leading-6 text-[var(--color-text-primary)] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[var(--color-brand-btn)] focus:shadow-[var(--ring-shadow)]"
+              className="mt-3 w-full resize-none rounded-[1rem] border border-[var(--color-border)] bg-[var(--color-gray-50)] px-4 py-3 text-span text-[var(--color-text-primary)] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[var(--color-primary)]"
             />
           </div>
         </Card>
@@ -62,7 +62,7 @@ export default function StudentCheckInPage() {
                 <div key={`${item.day}-${index}`} className="flex flex-1 flex-col items-center gap-2">
                   <div className="chart-bar-track flex h-[8.5rem] w-full items-end justify-center rounded-full">
                     <div
-                      className="w-full rounded-full bg-linear-to-t from-[var(--color-success)] to-[var(--color-brand)] shadow-[inset_0_1px_0_rgba(255,255,255,0.38)]"
+                      className="w-full rounded-full bg-linear-to-t from-[var(--color-success)] to-[var(--color-primary)] shadow-[inset_0_1px_0_rgba(255,255,255,0.38)]"
                       style={{ height: `${item.score * 18}%` }}
                     />
                   </div>

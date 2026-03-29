@@ -64,7 +64,7 @@ export default function StudentDashboardPage() {
                       {tile.description}
                     </Text>
                   </div>
-                  <FiArrowRight className="mt-1 h-4 w-4 text-[var(--color-brand-btn)] transition-transform duration-200 group-hover:translate-x-1" />
+                  <FiArrowRight className="mt-1 h-4 w-4 text-[var(--color-primary)] transition-transform duration-200 group-hover:translate-x-1" />
                 </div>
               </Link>
             ))}
@@ -149,7 +149,7 @@ export default function StudentDashboardPage() {
                 key={resource.title}
                 className="rounded-[1.5rem] border p-4"
                 style={{
-                  borderColor: index === 0 ? "var(--color-brand-btn)" : "var(--color-border)",
+                  borderColor: index === 0 ? "var(--color-primary)" : "var(--color-border)",
                   background: index === 0 ? "var(--color-surface-strong)" : "var(--color-surface)",
                 }}
               >

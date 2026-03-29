@@ -83,9 +83,9 @@ function UnifiedSection({ tabs }: UnifiedSectionProps) {
                   <div className={`grid lg:grid-cols-2 ${CARD_MIN_HEIGHT}`}>
                     <div className="relative bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-dark)] flex items-center justify-center p-8">
                       <div className="text-center">
-                        <div className="text-7xl mb-4">💬</div>
-                        <Text as="h3" variant="h3" weight="bold" className="text-white">AI Companion</Text>
-                        <Text as="p" variant="small" className="text-white/70 mt-2">
+                        <div className="text-[4.5rem] leading-none mb-4">💬</div>
+                        <Text as="h3" variant="h3" weight="bold" className="text-[var(--color-white)]">AI Companion</Text>
+                        <Text as="p" variant="small" className="text-[var(--color-white)]/70 mt-2">
                           Talk anytime, anonymously
                         </Text>
                       </div>
@@ -117,7 +117,7 @@ function UnifiedSection({ tabs }: UnifiedSectionProps) {
                   <div className={`grid lg:grid-cols-2 ${CARD_MIN_HEIGHT}`}>
                     <div className="relative bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-surface-warm)] flex items-center justify-center p-8">
                       <div className="text-center">
-                        <div className="text-7xl mb-4">📋</div>
+                        <div className="text-[4.5rem] leading-none mb-4">📋</div>
                         <Text as="h3" variant="h3" weight="bold" className="text-[var(--color-primary)]">Wellness Check</Text>
                         <Text as="p" variant="small" className="text-[var(--color-text-secondary)] mt-2">
                           PHQ-9 & GAD-7 validated tools
@@ -157,7 +157,7 @@ function UnifiedSection({ tabs }: UnifiedSectionProps) {
                   <div className={`grid lg:grid-cols-2 ${CARD_MIN_HEIGHT}`}>
                     <div className="relative bg-gradient-to-br from-[var(--color-accent-light)] to-[var(--color-surface-warm)] flex items-center justify-center p-8">
                       <div className="text-center">
-                        <div className="text-7xl mb-4">👨‍⚕️</div>
+                        <div className="text-[4.5rem] leading-none mb-4">👨‍⚕️</div>
                         <Text as="h3" variant="h3" weight="bold" className="text-[var(--color-text-primary)]">Expert Support</Text>
                         <Text as="p" variant="small" className="text-[var(--color-text-secondary)] mt-2">
                           Book in under 2 minutes
@@ -203,7 +203,7 @@ function UnifiedSection({ tabs }: UnifiedSectionProps) {
                   <div className={`grid lg:grid-cols-2 ${CARD_MIN_HEIGHT}`}>
                     <div className="relative bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-surface-warm)] flex items-center justify-center p-8">
                       <div className="text-center">
-                        <div className="text-7xl mb-4">🧘</div>
+                        <div className="text-[4.5rem] leading-none mb-4">🧘</div>
                         <Text as="h3" variant="h3" weight="bold" className="text-[var(--color-primary)]">Feel-good Library</Text>
                         <Text as="p" variant="small" className="text-[var(--color-text-secondary)] mt-2">
                           1000+ guided meditations
@@ -215,7 +215,7 @@ function UnifiedSection({ tabs }: UnifiedSectionProps) {
                     </div>
                     <div className="relative bg-gradient-to-br from-[var(--color-accent-light)] to-[var(--color-surface-warm)] flex items-center justify-center p-8">
                       <div className="text-center">
-                        <div className="text-7xl mb-4">🌙</div>
+                        <div className="text-[4.5rem] leading-none mb-4">🌙</div>
                         <Text as="h3" variant="h3" weight="bold" className="text-[var(--color-text-primary)]">Breathe & Sleep</Text>
                         <Text as="p" variant="small" className="text-[var(--color-text-secondary)] mt-2">
                           Calm your mind

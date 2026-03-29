@@ -43,7 +43,7 @@ export default function LoginPage() {
 
             <Card variant="elevated" padding="lg" className="rounded-[2rem]">
               <div className="flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-brand)]/25 text-[var(--color-brand-btn)]">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-brand-soft)]/25 text-[var(--color-primary)]">
                   <FiMail className="h-5 w-5" />
                 </span>
                 <div>
@@ -70,7 +70,7 @@ export default function LoginPage() {
 
                 <div className="rounded-[1.3rem] border border-[var(--color-border)] bg-[var(--color-gray-50)] p-4">
                   <div className="flex items-start gap-3">
-                    <FiLock className="mt-0.5 h-4 w-4 text-[var(--color-brand-btn)]" />
+                    <FiLock className="mt-0.5 h-4 w-4 text-[var(--color-primary)]" />
                     <Text as="p" variant="small" color="secondary">
                       OTP sign-in — no password to remember or reset.
                     </Text>

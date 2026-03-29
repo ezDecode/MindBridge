@@ -15,7 +15,7 @@ export function SiteHeader() {
         <div className="surface-panel rounded-[2rem] px-4 py-3 sm:px-5">
           <div className="flex items-center justify-between gap-3">
             <Link href="/" className="group flex min-w-0 items-center gap-3">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-black)] text-[var(--fs-span)] font-bold text-[var(--color-white)]">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-span font-bold text-[var(--color-white)]">
                 MB
               </span>
               <div className="min-w-0">
@@ -33,7 +33,7 @@ export function SiteHeader() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-full px-4 py-2 text-[var(--fs-label)] font-medium text-[var(--color-text-secondary)] transition-[color,background-color] duration-200 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
+                  className="rounded-full px-4 py-2 text-label font-medium text-[var(--color-text-secondary)] transition-[color,background-color] duration-200 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
                 >
                   {item.label}
                 </Link>
@@ -69,7 +69,7 @@ export function SiteHeader() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsOpen(false)}
-                    className="interactive-panel flex items-center justify-between rounded-[1.35rem] px-4 py-3 text-[var(--fs-label)] font-medium text-[var(--color-text-primary)]"
+                    className="interactive-panel flex items-center justify-between rounded-[1.35rem] px-4 py-3 text-label font-medium text-[var(--color-text-primary)]"
                   >
                     <span>{item.label}</span>
                     <FiArrowRight className="h-4 w-4 text-[var(--color-black)]" />

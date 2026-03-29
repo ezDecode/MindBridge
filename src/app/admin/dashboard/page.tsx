@@ -47,7 +47,7 @@ export default function AdminDashboardPage() {
               <div key={item.label} className="flex flex-1 flex-col items-center gap-3">
                 <div className="chart-bar-track flex h-36 w-full items-end justify-center rounded-full">
                   <div
-                    className="w-full rounded-full bg-linear-to-t from-[var(--color-success)] to-[var(--color-brand)] shadow-[inset_0_1px_0_rgba(255,255,255,0.38)]"
+                    className="w-full rounded-full bg-linear-to-t from-[var(--color-success)] to-[var(--color-primary)] shadow-[inset_0_1px_0_rgba(255,255,255,0.38)]"
                     style={{ height: `${item.value}%` }}
                   />
                 </div>
@@ -76,7 +76,7 @@ export default function AdminDashboardPage() {
                 </div>
                 <div className="mt-2 h-3 rounded-full bg-[var(--color-gray-100)]">
                   <div
-                    className="h-3 rounded-full bg-[var(--color-brand-btn)]"
+                    className="h-3 rounded-full bg-[var(--color-primary)]"
                     style={{ width: `${item.value * 3}%` }}
                   />
                 </div>
