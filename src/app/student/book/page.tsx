@@ -48,7 +48,7 @@ export default function StudentBookPage() {
               {counselors.map((counselor, index) => (
                 <div
                   key={counselor.name}
-                  className={`rounded-[1.5rem] border p-4 ${
+                  className={`rounded-[calc(var(--radius-lg)*var(--brm))] squircle border p-4 ${
                     index === 0
                       ? "border-[var(--color-primary)] bg-[var(--color-surface-strong)]"
                       : "border-[var(--color-border)] bg-[var(--color-surface)]"
@@ -79,7 +79,7 @@ export default function StudentBookPage() {
                 <button
                   key={slot}
                   type="button"
-                  className={`interactive-panel rounded-[1.4rem] px-4 py-3 text-left text-span focus-visible:outline-none ${
+                  className={`interactive-panel rounded-[calc(var(--radius-md)*var(--brm))] squircle px-4 py-3 text-left text-span focus-visible:outline-none ${
                     index === 0
                       ? "text-[var(--color-text-primary)]"
                       : "text-[var(--color-text-secondary)]"
@@ -97,7 +97,7 @@ export default function StudentBookPage() {
             <Text as="p" variant="small" weight="medium">
               Booking summary
             </Text>
-            <div className="mt-5 space-y-3 rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+            <div className="mt-5 space-y-3 rounded-[calc(var(--radius-lg)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
               <div className="flex items-center justify-between">
                 <Text as="span" variant="small" color="secondary">
                   Type

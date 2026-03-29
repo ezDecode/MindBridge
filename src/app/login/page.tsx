@@ -10,7 +10,7 @@ export default function LoginPage() {
       <section className="w-full py-8 sm:py-12">
         <Container size="md">
           <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
-            <Card variant="subtle" padding="lg" className="rounded-[2rem]">
+            <Card variant="subtle" padding="lg" className="rounded-[calc(var(--radius-2xl)*var(--brm))] squircle">
               <Text as="p" variant="label" color="brand">
                 Anonymous-first access
               </Text>
@@ -22,7 +22,7 @@ export default function LoginPage() {
               </Text>
 
               <div className="mt-8 space-y-3">
-                <div className="rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+                <div className="rounded-[calc(var(--radius-lg)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
                   <Text as="p" variant="h6" weight="bold">
                     Why OTP here
                   </Text>
@@ -30,7 +30,7 @@ export default function LoginPage() {
                     Simple access. Fewer moments where someone abandons support.
                   </Text>
                 </div>
-                <div className="rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+                <div className="rounded-[calc(var(--radius-lg)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
                   <Text as="p" variant="h6" weight="bold">
                     What stays private
                   </Text>
@@ -41,7 +41,7 @@ export default function LoginPage() {
               </div>
             </Card>
 
-            <Card variant="elevated" padding="lg" className="rounded-[2rem]">
+            <Card variant="elevated" padding="lg" className="rounded-[calc(var(--radius-2xl)*var(--brm))] squircle">
               <div className="flex items-center gap-3">
                 <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)]">
                   <FiMail className="h-5 w-5" />
@@ -64,11 +64,11 @@ export default function LoginPage() {
                   <Input
                     type="email"
                     placeholder="you@college.edu"
-                    className="mt-2 min-h-[3.25rem] rounded-[1rem] border-[var(--color-border)] bg-[var(--color-surface)]"
+                    className="mt-2 min-h-[3.25rem] rounded-[calc(var(--radius-sm)*var(--brm))] squircle border-[var(--color-border)] bg-[var(--color-surface)]"
                   />
                 </label>
 
-                <div className="rounded-[1.3rem] border border-[var(--color-border)] bg-[var(--color-gray-50)] p-4">
+                <div className="rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-gray-50)] p-4">
                   <div className="flex items-start gap-3">
                     <FiLock className="mt-0.5 h-4 w-4 text-[var(--color-primary)]" />
                     <Text as="p" variant="small" color="secondary">

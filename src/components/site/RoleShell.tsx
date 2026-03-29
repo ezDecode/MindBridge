@@ -49,7 +49,7 @@ export function RoleShell({
     <main id="main-content" className="w-full py-6 sm:py-8">
       <Container size="md">
         <div className="grid gap-6 lg:grid-cols-[17.25rem_minmax(0,1fr)]">
-          <aside className="surface-panel hidden self-start rounded-[2rem] p-5 lg:sticky lg:top-6 lg:block">
+          <aside className="surface-panel hidden self-start rounded-[calc(var(--radius-2xl)*var(--brm))] squircle p-5 lg:sticky lg:top-6 lg:block">
             <Link
               href="/"
               className="inline-flex items-center gap-2 text-span font-medium text-[var(--color-text-secondary)] transition-colors duration-200 hover:text-[var(--color-text-primary)]"
@@ -58,7 +58,7 @@ export function RoleShell({
               Back to home
             </Link>
 
-            <div className="mt-6 rounded-[1.6rem] bg-[var(--color-surface-tinted)] p-5">
+            <div className="mt-6 rounded-[calc(var(--radius-xl)*var(--brm))] squircle bg-[var(--color-surface-tinted)] p-5">
               <Text as="p" variant="label" weight="bold" color="brand">
                 {roleLabel}
               </Text>
@@ -81,7 +81,7 @@ export function RoleShell({
                     href={item.href}
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "flex items-center gap-3 rounded-[1.2rem] border px-4 py-3 text-label font-medium transition-colors duration-200 ease-[var(--ease-out)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]",
+                      "flex items-center gap-3 rounded-[calc(var(--radius-md)*var(--brm))] squircle border px-4 py-3 text-label font-medium transition-colors duration-200 ease-[var(--ease-out)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]",
                       isActive
                         ? "border-[var(--color-primary)] bg-[var(--color-primary-light)] text-[var(--color-text-primary)]"
                         : "border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border)] hover:bg-[var(--color-primary-light)] hover:text-[var(--color-text-primary)]"
@@ -94,7 +94,7 @@ export function RoleShell({
               })}
             </nav>
 
-            <div className="mt-6 rounded-[1.6rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+            <div className="mt-6 rounded-[calc(var(--radius-xl)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
               <Text as="p" variant="h6" weight="bold" color="primary">
                 Crisis protocol
               </Text>
@@ -105,7 +105,7 @@ export function RoleShell({
           </aside>
 
           <div className="flex min-w-0 flex-col gap-6">
-            <div className="surface-panel flex items-center justify-between gap-4 rounded-[2rem] px-5 py-4 lg:hidden">
+            <div className="surface-panel flex items-center justify-between gap-4 rounded-[calc(var(--radius-2xl)*var(--brm))] squircle px-5 py-4 lg:hidden">
               <div>
                 <Text as="p" variant="label" weight="bold" color="brand">
                   {roleLabel}

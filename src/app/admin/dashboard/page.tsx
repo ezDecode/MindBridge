@@ -42,7 +42,7 @@ export default function AdminDashboardPage() {
           <Text as="p" variant="small" weight="medium">
             Mood trend
           </Text>
-          <div className="chart-shell mt-6 flex h-56 items-end justify-between gap-4 rounded-[1.5rem] px-4 pb-4 pt-8">
+          <div className="chart-shell mt-6 flex h-56 items-end justify-between gap-4 rounded-[calc(var(--radius-lg)*var(--brm))] squircle px-4 pb-4 pt-8">
             {adminMoodTrend.map((item) => (
               <div key={item.label} className="flex flex-1 flex-col items-center gap-3">
                 <div className="chart-bar-track flex h-36 w-full items-end justify-center rounded-full">
@@ -95,7 +95,7 @@ export default function AdminDashboardPage() {
             {["Mon · 2 flags", "Tue · 1 flag", "Wed · 0 flags", "Thu · 3 flags"].map((item) => (
               <div
                 key={item}
-                className="rounded-[1.4rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
+                className="rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
               >
                 <Text as="p" variant="small" color="secondary">
                   {item}
@@ -118,7 +118,7 @@ export default function AdminDashboardPage() {
             {adminResources.map((resource) => (
               <div
                 key={resource.title}
-                className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
+                className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[calc(var(--radius-lg)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
               >
                 <div>
                   <Text as="p" variant="small" weight="medium">

@@ -19,7 +19,7 @@ export function NewsletterSection() {
           <Card 
             variant="elevated" 
             padding="none"
-            className="relative overflow-hidden border-none bg-[var(--color-primary-light)] rounded-[1.5rem] px-6 py-12 sm:px-12 sm:py-16"
+            className="relative overflow-hidden border-none bg-[var(--color-primary-light)] rounded-[calc(var(--radius-lg)*var(--brm))] squircle px-6 py-12 sm:px-12 sm:py-16"
           >
             <motion.div variants={item} className="relative flex flex-col items-center text-center">
               <Text as="h2" variant="h3" weight="bold" className="text-[var(--color-text-primary)]">

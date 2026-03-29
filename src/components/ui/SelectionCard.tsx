@@ -25,7 +25,7 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
         aria-pressed={selected}
         aria-disabled={disabled}
         className={cn(
-          "interactive-panel flex min-h-14 items-center gap-4 rounded-[1.5rem] p-4 text-left focus-visible:outline-none border border-[var(--color-border)]",
+          "interactive-panel flex min-h-14 items-center gap-4 rounded-[calc(var(--radius-lg)*var(--brm))] squircle p-4 text-left focus-visible:outline-none border border-[var(--color-border)]",
           selected
             ? "border-[var(--color-primary)] bg-[var(--color-primary-light)]"
             : "bg-[var(--color-surface)]",

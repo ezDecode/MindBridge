@@ -40,7 +40,7 @@ export default function StudentQuizzesPage() {
             ))}
           </div>
 
-          <div className="mt-6 rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-warning-soft)] p-4">
+          <div className="mt-6 rounded-[calc(var(--radius-lg)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-warning-soft)] p-4">
             <Text as="p" variant="small" weight="medium">
               High-score path
             </Text>
@@ -57,7 +57,7 @@ export default function StudentQuizzesPage() {
             </Text>
             <div className="mt-5 space-y-4">
               {quizQuestions.map((question, index) => (
-                <div key={question} className="rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+                <div key={question} className="rounded-[calc(var(--radius-lg)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
                   <Text as="p" variant="small" weight="medium">
                     {index + 1}. {question}
                   </Text>
@@ -84,7 +84,7 @@ export default function StudentQuizzesPage() {
               {quizHistory.map((entry) => (
                 <div
                   key={`${entry.type}-${entry.date}`}
-                  className="grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-[1.4rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
+                  className="grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
                 >
                   <div>
                     <Text as="p" variant="small" weight="medium">

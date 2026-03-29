@@ -27,7 +27,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     return (
       <div
         ref={ref}
-        className={`rounded-[var(--radius-card)] ${variants[variant]} ${paddings[padding]} ${className}`}
+        className={`rounded-[calc(var(--radius-card)*var(--brm))] squircle ${variants[variant]} ${paddings[padding]} ${className}`}
         {...props}
       >
         {children}

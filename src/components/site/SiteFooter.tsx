@@ -20,7 +20,7 @@ export function SiteFooter() {
   return (
     <footer className="w-full pb-10 pt-4">
       <Container size="md">
-        <div className="relative overflow-hidden border-none bg-[var(--color-primary-light)] rounded-[1.5rem] px-6 py-10 sm:px-10 sm:py-14">
+        <div className="relative overflow-hidden border-none bg-[var(--color-primary-light)] rounded-[calc(var(--radius-lg)*var(--brm))] squircle px-6 py-10 sm:px-10 sm:py-14">
           <div className="relative">
             <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
               {/* Brand & Mission */}
@@ -79,7 +79,7 @@ export function SiteFooter() {
             </div>
 
             {/* Emergency Support Strip */}
-            <div className="mt-14 rounded-[1.2rem] bg-white/60 border border-[var(--color-warning)]/20 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 backdrop-blur-sm">
+            <div className="mt-14 rounded-[calc(var(--radius-md)*var(--brm))] squircle bg-white/60 border border-[var(--color-warning)]/20 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 backdrop-blur-sm">
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-warning-soft)]">
                   <FiHeart className="h-4.5 w-4.5 text-[var(--color-warning)]" />

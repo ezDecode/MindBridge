@@ -116,7 +116,7 @@ export function CategoriesSection() {
                   key={cat.id}
                   type="button"
                   variants={item}
-                  className="group flex w-full items-center justify-between rounded-[1.2rem] border-[0.125rem] border-[var(--color-border)] bg-white p-2 pl-6 transition-[border-color,background-color] duration-200 hover:border-[var(--color-border-strong)] focus:outline-none"
+                  className="group flex w-full items-center justify-between rounded-[calc(var(--radius-md)*var(--brm))] squircle border-[0.125rem] border-[var(--color-border)] bg-white p-2 pl-6 transition-[border-color,background-color] duration-200 hover:border-[var(--color-border-strong)] focus:outline-none"
                 >
                   <Text 
                     as="span" 

@@ -10,7 +10,7 @@ interface PageIntroProps {
 
 export function PageIntro({ eyebrow, title, description, actions }: PageIntroProps) {
   return (
-    <div className="section-divider flex flex-col gap-5 rounded-[2rem] border border-[var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(255,255,255,0.97))] p-6 sm:p-8">
+    <div className="section-divider flex flex-col gap-5 rounded-[calc(var(--radius-2xl)*var(--brm))] squircle border border-[var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(255,255,255,0.97))] p-6 sm:p-8">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-[52rem]">
           {eyebrow && (

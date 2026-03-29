@@ -52,7 +52,7 @@ export default function StudentDashboardPage() {
               <Link
                 key={tile.title}
                 href={tile.href}
-                className="interactive-panel group rounded-[1.5rem] p-4"
+                className="interactive-panel group rounded-[calc(var(--radius-lg)*var(--brm))] squircle p-4"
                 data-active={index === 0}
               >
                 <div className="flex items-start justify-between gap-4">
@@ -79,7 +79,7 @@ export default function StudentDashboardPage() {
             Enough signal to notice a pattern, without the obsession.
           </Text>
 
-          <div className="chart-shell mt-8 flex h-52 items-end justify-between gap-3 rounded-[1.5rem] px-4 pb-4 pt-8">
+          <div className="chart-shell mt-8 flex h-52 items-end justify-between gap-3 rounded-[calc(var(--radius-lg)*var(--brm))] squircle px-4 pb-4 pt-8">
             {moodHistory.map((item) => (
               <div key={item.day} className="flex flex-1 flex-col items-center gap-3">
                 <div className="chart-bar-track flex h-32 w-full items-end justify-center rounded-full">
@@ -111,7 +111,7 @@ export default function StudentDashboardPage() {
             {quizHistory.map((entry) => (
               <div
                 key={`${entry.type}-${entry.date}`}
-                className="flex items-center justify-between rounded-[1.4rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
+                className="flex items-center justify-between rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
               >
                 <div>
                   <Text as="p" variant="label" weight="bold">
@@ -147,7 +147,7 @@ export default function StudentDashboardPage() {
             {resources.slice(0, 4).map((resource, index) => (
               <div
                 key={resource.title}
-                className="rounded-[1.5rem] border p-4"
+                className="rounded-[calc(var(--radius-lg)*var(--brm))] squircle border p-4"
                 style={{
                   borderColor: index === 0 ? "var(--color-primary)" : "var(--color-border)",
                   background: index === 0 ? "var(--color-surface-strong)" : "var(--color-surface)",

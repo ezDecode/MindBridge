@@ -65,7 +65,7 @@ export default function StudentResourcesPage() {
 
       <div className="grid gap-4 xl:grid-cols-2">
         {resources.map((resource) => (
-          <Card key={resource.title} variant="subtle" padding="lg" className="rounded-[1.9rem]">
+          <Card key={resource.title} variant="subtle" padding="lg" className="rounded-[calc(var(--radius-lg)*var(--brm))] squircle">
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-3">
                 <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-surface)] text-[var(--color-primary)]">

@@ -43,7 +43,7 @@ export function HeroSection() {
             <Card 
               variant="elevated" 
               padding="none"
-              className="group relative flex flex-col justify-between overflow-hidden rounded-[1.5rem] border-none bg-[var(--color-primary-light)] pt-[1.6rem] pb-0 sm:min-h-[290px]"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none bg-[var(--color-primary-light)] pt-[1.6rem] pb-0 sm:min-h-[290px]"
             >
               <div className="absolute inset-0 bg-[var(--color-primary-light)]" />
               <div className="relative flex flex-col items-center gap-5 px-4 sm:px-6">
@@ -74,7 +74,7 @@ export function HeroSection() {
             <Card 
               variant="elevated" 
               padding="none"
-              className="group relative flex flex-col justify-between overflow-hidden rounded-[1.5rem] border-none bg-[var(--color-primary-light)] pt-[1.6rem] pb-0 sm:min-h-[290px]"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none bg-[var(--color-primary-light)] pt-[1.6rem] pb-0 sm:min-h-[290px]"
             >
               <div className="absolute inset-0 bg-[var(--color-primary-light)]" />
               <div className="relative flex flex-col items-center gap-5 px-4 sm:px-6">

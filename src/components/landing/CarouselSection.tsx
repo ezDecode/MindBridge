@@ -83,7 +83,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
               {tabs.map((tab) => (
                 <Slide key={tab.id}>
                   {tab.id === "aicompanion" && (
-                    <Card variant="elevated" padding="none" className="rounded-[1.5rem] border-none overflow-hidden bg-[var(--color-surface-warm)] h-full shadow-sm">
+                    <Card variant="elevated" padding="none" className="rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none overflow-hidden bg-[var(--color-surface-warm)] h-full shadow-sm">
                       <div className={`grid lg:grid-cols-2 ${CARD_HEIGHT}`}>
                         <div className="relative bg-[var(--color-primary-light)] flex items-center justify-center p-8">
                           <div className="text-center">
@@ -114,7 +114,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
                   )}
 
                   {tab.id === "wellnesscheck" && (
-                    <Card variant="elevated" padding="none" className="rounded-[1.5rem] border-none overflow-hidden bg-[var(--color-surface-warm)] h-full shadow-sm">
+                    <Card variant="elevated" padding="none" className="rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none overflow-hidden bg-[var(--color-surface-warm)] h-full shadow-sm">
                       <div className={`grid lg:grid-cols-2 ${CARD_HEIGHT}`}>
                         <div className="relative bg-[var(--color-primary-light)] flex items-center justify-center p-8">
                           <div className="text-center">
@@ -145,7 +145,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
                   )}
 
                   {tab.id === "expertsupport" && (
-                    <Card variant="elevated" padding="none" className="rounded-[1.5rem] border-none overflow-hidden bg-[var(--color-surface-warm)] h-full shadow-sm">
+                    <Card variant="elevated" padding="none" className="rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none overflow-hidden bg-[var(--color-surface-warm)] h-full shadow-sm">
                       <div className={`grid lg:grid-cols-2 ${CARD_HEIGHT}`}>
                         <div className="relative bg-[var(--color-primary-light)] flex items-center justify-center p-8">
                           <div className="text-center">
@@ -161,7 +161,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
                           <Text as="p" variant="body" className="mt-3.5 text-[var(--color-text-secondary)] leading-relaxed">Your choice — anonymous, named, or crisis booking. Get the support you deserve.</Text>
                           <div className="mt-6 grid gap-3">
                             {counselors.slice(0, 2).map((c) => (
-                              <div key={c.name} className="rounded-[1rem] bg-white border border-[var(--color-border-warm)] p-4 shadow-sm">
+                              <div key={c.name} className="rounded-[calc(var(--radius-sm)*var(--brm))] squircle bg-white border border-[var(--color-border-warm)] p-4 shadow-sm">
                                 <div className="flex items-center justify-between">
                                   <div>
                                     <Text as="p" variant="h6" weight="bold" className="text-[var(--color-text-primary)]">{c.name}</Text>
@@ -178,7 +178,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
                   )}
 
                   {tab.id === "feelgood" && (
-                    <Card variant="elevated" padding="none" className="rounded-[1.5rem] border-none overflow-hidden bg-[var(--color-surface-warm)] h-full shadow-sm">
+                    <Card variant="elevated" padding="none" className="rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none overflow-hidden bg-[var(--color-surface-warm)] h-full shadow-sm">
                       <div className={`grid lg:grid-cols-2 ${CARD_HEIGHT}`}>
                         <div className="relative bg-[var(--color-primary-light)] flex flex-col items-center justify-center p-12 text-center border-r border-white/20">
                           <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white shadow-sm mb-6">

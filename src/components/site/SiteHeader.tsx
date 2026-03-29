@@ -12,7 +12,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 w-full pt-4 sm:pt-5">
       <Container size="md">
-        <div className="surface-panel rounded-[2rem] px-4 py-3 sm:px-5">
+        <div className="surface-panel rounded-[calc(var(--radius-2xl)*var(--brm))] squircle px-4 py-3 sm:px-5">
           <div className="flex items-center justify-between gap-3">
             <Link href="/" className="group flex min-w-0 items-center gap-3">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-span font-bold text-[var(--color-white)]">
@@ -69,7 +69,7 @@ export function SiteHeader() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsOpen(false)}
-                    className="interactive-panel flex items-center justify-between rounded-[1.35rem] px-4 py-3 text-label font-medium text-[var(--color-text-primary)]"
+                    className="interactive-panel flex items-center justify-between rounded-[calc(var(--radius-md)*var(--brm))] squircle px-4 py-3 text-label font-medium text-[var(--color-text-primary)]"
                   >
                     <span>{item.label}</span>
                     <FiArrowRight className="h-4 w-4 text-[var(--color-black)]" />

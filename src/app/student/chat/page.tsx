@@ -23,7 +23,7 @@ export default function StudentChatPage() {
 
       <div className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">
         <Card variant="subtle" padding="lg">
-          <div className="flex items-start gap-3 rounded-[1.5rem] border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] p-4">
+          <div className="flex items-start gap-3 rounded-[calc(var(--radius-lg)*var(--brm))] squircle border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] p-4">
             <FiAlertCircle className="mt-0.5 h-5 w-5 text-[var(--color-danger)]" />
             <div>
               <Text as="p" variant="h6" weight="bold">
@@ -39,7 +39,7 @@ export default function StudentChatPage() {
             {chatMessages.map((message) => (
               <div
                 key={`${message.role}-${message.content}`}
-                className={`max-w-[90%] rounded-[1.55rem] px-4 py-3 text-span font-medium ${
+                className={`max-w-[90%] rounded-[calc(var(--radius-lg)*var(--brm))] squircle px-4 py-3 text-span font-medium ${
                   message.role === "user"
                     ? "ml-auto bg-[var(--color-primary)] text-[var(--color-text-inverse)]"
                     : "bg-[var(--color-surface)] text-[var(--color-text-secondary)]"
@@ -68,7 +68,7 @@ export default function StudentChatPage() {
               {sessionHistory.map((session) => (
                 <div
                   key={session.title}
-                  className="rounded-[1.4rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
+                  className="rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
                 >
                   <Text as="p" variant="label" weight="bold">
                     {session.title}
@@ -99,7 +99,7 @@ export default function StudentChatPage() {
             <div className="mt-5 space-y-3">
               <a
                 href="tel:9152987821"
-                className="interactive-panel flex items-center justify-between rounded-[1.4rem] px-4 py-3"
+                className="interactive-panel flex items-center justify-between rounded-[calc(var(--radius-md)*var(--brm))] squircle px-4 py-3"
               >
                 <div>
                   <Text as="p" variant="label" weight="bold">
@@ -113,7 +113,7 @@ export default function StudentChatPage() {
               </a>
               <Link
                 href="/student/book"
-                className="interactive-panel flex items-center justify-between rounded-[1.4rem] px-4 py-3"
+                className="interactive-panel flex items-center justify-between rounded-[calc(var(--radius-md)*var(--brm))] squircle px-4 py-3"
               >
                 <div>
                   <Text as="p" variant="label" weight="bold">

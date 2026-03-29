@@ -41,7 +41,7 @@ export default function CounselorDashboardPage() {
             {counselorAlerts.map((alert, index) => (
               <div
                 key={alert.title}
-                className={`rounded-[1.5rem] border p-4 ${
+                className={`rounded-[calc(var(--radius-lg)*var(--brm))] squircle border p-4 ${
                   index === 0
                     ? "border-[var(--color-danger)]/30 bg-[var(--color-danger-soft)]"
                     : "border-[var(--color-border)] bg-[var(--color-surface)]"
@@ -67,7 +67,7 @@ export default function CounselorDashboardPage() {
               {counselorBookings.map((booking) => (
                 <div
                   key={`${booking.student}-${booking.time}`}
-                  className="grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
+                  className="grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-[calc(var(--radius-lg)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
                 >
                   <div>
                     <Text as="p" variant="small" weight="medium">
