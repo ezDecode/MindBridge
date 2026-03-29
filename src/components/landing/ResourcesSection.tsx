@@ -45,7 +45,7 @@ export function ResourcesSection() {
 
                 <div className="grid gap-3 sm:grid-cols-2">
                   {resources.slice(0, 4).map((r) => (
-                    <div key={r.title} className="flex flex-col justify-center rounded-[1.2rem] bg-white p-5 shadow-sm border border-[var(--color-border-warm)]/40 transition-transform hover:scale-[1.02]">
+                    <div key={r.title} className="flex flex-col justify-center rounded-[1.2rem] bg-white p-5 shadow-sm border border-[var(--color-border-warm)]/40 transition-[border-color,box-shadow] duration-200 hover:border-[var(--color-border-strong)] hover:shadow-md">
                       <div className="flex items-center gap-2">
                         <Text as="span" variant="label" weight="bold" className="text-[var(--color-primary)]">{r.type}</Text>
                         <Text as="span" variant="small" color="muted">·</Text>

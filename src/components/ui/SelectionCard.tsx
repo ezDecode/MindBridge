@@ -20,7 +20,7 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
       <motion.button
         ref={ref}
         type="button"
-        whileTap={disabled ? {} : { scale: 0.98 }}
+        whileTap={disabled ? {} : { opacity: 0.8 }}
         onClick={disabled ? undefined : onClick}
         aria-pressed={selected}
         aria-disabled={disabled}
@@ -46,8 +46,8 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
         </div>
         {selected && (
           <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)]"
           >
             <svg

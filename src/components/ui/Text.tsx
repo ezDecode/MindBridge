@@ -47,7 +47,7 @@ const Text = forwardRef<HTMLElement, TextProps>(
       primary: "text-text-primary",
       secondary: "text-text-secondary",
       muted: "text-text-muted",
-      brand: "text-primary",
+      brand: "text-primary",  /* maps to --color-primary (Sunset Orange) */
       success: "text-success",
     };
 

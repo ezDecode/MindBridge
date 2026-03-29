@@ -43,7 +43,7 @@ export default function LoginPage() {
 
             <Card variant="elevated" padding="lg" className="rounded-[2rem]">
               <div className="flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-brand-soft)]/25 text-[var(--color-primary)]">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)]">
                   <FiMail className="h-5 w-5" />
                 </span>
                 <div>

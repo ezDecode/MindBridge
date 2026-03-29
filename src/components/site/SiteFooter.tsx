@@ -53,7 +53,7 @@ export function SiteFooter() {
                         className="group flex items-center gap-2 text-label font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)]"
                       >
                         {item.label}
-                        <FiArrowRight className="h-3.5 w-3.5 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+                        <FiArrowRight className="h-3.5 w-3.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                       </Link>
                     ))}
                   </div>
@@ -70,7 +70,7 @@ export function SiteFooter() {
                         className="group flex items-center gap-2 text-label font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)]"
                       >
                         {item.label}
-                        <FiArrowRight className="h-3.5 w-3.5 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+                        <FiArrowRight className="h-3.5 w-3.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                       </Link>
                     ))}
                   </div>
@@ -93,7 +93,7 @@ export function SiteFooter() {
                   </Text>
                 </div>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-[var(--color-warning)] rounded-full text-white shadow-md shadow-[var(--color-warning)]/20 transition-transform hover:scale-[1.02]">
+              <div className="flex items-center gap-2 px-4 py-2 bg-[var(--color-warning)] rounded-full text-white shadow-md shadow-[var(--color-warning)]/20 transition-opacity duration-150 hover:opacity-90">
                 <Text as="span" variant="label" weight="bold">
                   iCall · 9152987821
                 </Text>

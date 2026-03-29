@@ -11,93 +11,6 @@ export const marketingNav = [
   { href: "/#resources", label: "Support library" },
 ];
 
-export const trustChips = [
-  "Anonymous-first support",
-  "Campus counselor ready",
-  "Warm, non-clinical guidance",
-];
-
-export const heroHighlights = [
-  {
-    title: "Talk before you spiral",
-    description: "Open a chat, say what's heavy, get a calm next step.",
-  },
-  {
-    title: "Screen what you feel",
-    description: "PHQ-9 and GAD-7 give you clarity, not guesswork.",
-  },
-  {
-    title: "Book a counselor fast",
-    description: "Anonymous, named, or crisis — booked in under two minutes.",
-  },
-];
-
-export const journeyCards = [
-  {
-    step: "01",
-    title: "A softer first touch",
-    description: "No form walls. A supportive place to land, even before login.",
-  },
-  {
-    step: "02",
-    title: "Clarity without labels",
-    description: "Validated screening that helps you understand without over-diagnosing.",
-  },
-  {
-    step: "03",
-    title: "Real campus support",
-    description: "Not just content — a real path to a real counselor session.",
-  },
-];
-
-export const featureShowcase = [
-  {
-    eyebrow: "AI support",
-    title: "A grounded chat that sounds human.",
-    description: "Short replies, one question at a time, with gentle next-step suggestions.",
-    route: "/student/chat",
-    routeLabel: "Open chat",
-  },
-  {
-    eyebrow: "Screening",
-    title: "Validated check-ins, not wellness fluff.",
-    description: "PHQ-9 and GAD-7 framed as clarity tools with plain-language guidance.",
-    route: "/student/quizzes",
-    routeLabel: "See quizzes",
-  },
-  {
-    eyebrow: "Booking",
-    title: "Anonymous, named, or urgent.",
-    description: "Stay private until you're ready. Counselors still get what they need.",
-    route: "/student/book",
-    routeLabel: "See booking",
-  },
-];
-
-export const roleCards = [
-  {
-    eyebrow: "Student view",
-    title: "Daily support without the clinical feel.",
-    description: "Mood, chat, quizzes, resources, and booking — one calm place.",
-    route: "/student/dashboard",
-    routeLabel: "Student dashboard",
-  },
-  {
-    eyebrow: "Counselor view",
-    title: "Built for triage, not noise.",
-    description: "Sessions, flags, availability, and notes — no clutter.",
-    route: "/counselor/dashboard",
-    routeLabel: "Counselor dashboard",
-  },
-  {
-    eyebrow: "Admin view",
-    title: "Signals without student exposure.",
-    description: "Aggregate trends, crisis counts, and content — no personal data.",
-    route: "/admin/dashboard",
-    routeLabel: "Admin dashboard",
-  },
-];
-
 export const studentNav: NavItem[] = [
   { href: "/student/dashboard", label: "Dashboard", icon: "grid" },
   { href: "/student/chat", label: "Chat", icon: "chat" },
@@ -134,7 +47,7 @@ export const moodHistory = [
 export const actionTiles = [
   {
     title: "Talk through tonight",
-    description: "Continue your last chat — short, clear, private.",
+    description: "Continue your last chat - short, clear, private.",
     href: "/student/chat",
   },
   {
@@ -144,7 +57,7 @@ export const actionTiles = [
   },
   {
     title: "Book a session",
-    description: "Anonymous, named, or crisis — whatever feels safe.",
+    description: "Anonymous, named, or crisis - whatever feels safe.",
     href: "/student/book",
   },
 ];
@@ -356,21 +269,12 @@ export const mindbridgeCategories = [
   { label: "Start therapy", id: "therapy" },
 ];
 
-export const socialProof = {
-  headline: "Trusted by campus communities across India",
-  stats: [
-    { value: "12,000+", label: "Students supported" },
-    { value: "94%", label: "Said it felt safe to open up" },
-    { value: "2 min", label: "Average time to first counselor session" },
-  ],
-};
-
 export const beKindCTA = {
   eyebrow: "Be kind to your mind",
   headline: "Your companion for calmer days and clearer nights.",
   description: "AI chat when nights feel heavy. Validated screenings. Real counselor booking when you're ready.",
   features: [
-    "Talk through what's heavy — anytime, anonymously",
+    "Talk through what's heavy - anytime, anonymously",
     "Understand patterns with PHQ-9 and GAD-7",
     "Book a counselor in under two minutes",
     "Track mood and build a daily rhythm",
@@ -386,7 +290,7 @@ export const stayInLoop = {
 export const faqItems = [
   {
     question: "What is MindBridge?",
-    answer: "Your campus companion for mental health — anonymous AI chat, validated screenings (PHQ-9, GAD-7), and direct counselor booking. Calm before clinical.",
+    answer: "Your campus companion for mental health - anonymous AI chat, validated screenings (PHQ-9, GAD-7), and direct counselor booking. Calm before clinical.",
   },
   {
     question: "Is it really anonymous?",
@@ -394,7 +298,7 @@ export const faqItems = [
   },
   {
     question: "How does the AI chat work?",
-    answer: "Short, warm replies — one question at a time. It suggests next steps like screenings or booking a counselor. Not a replacement for professional support.",
+    answer: "Short, warm replies - one question at a time. It suggests next steps like screenings or booking a counselor. Not a replacement for professional support.",
   },
   {
     question: "What are PHQ-9 and GAD-7?",
@@ -402,7 +306,7 @@ export const faqItems = [
   },
   {
     question: "How do I book a counselor?",
-    answer: "Choose anonymous, named, or crisis — pick a slot — confirm. Under two minutes.",
+    answer: "Choose anonymous, named, or crisis - pick a slot - confirm. Under two minutes.",
   },
   {
     question: "Is MindBridge free?",

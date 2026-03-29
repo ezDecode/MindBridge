@@ -43,7 +43,7 @@ const weightStyles: Record<ButtonWeight, string> = {
 };
 
 const baseStyles =
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full whitespace-nowrap text-button transition-[background-color,color,box-shadow,transform] duration-200 ease-[var(--ease-out)] active:translate-y-px disabled:pointer-events-none disabled:translate-y-0 disabled:opacity-50 [&_svg]:shrink-0 outline-none";
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full whitespace-nowrap text-button transition-[background-color,color,box-shadow,opacity] duration-150 ease-[var(--ease-out)] active:opacity-80 disabled:pointer-events-none disabled:opacity-50 [&_svg]:shrink-0 outline-none";
 
 export function Button<T extends ElementType = "button">({
   as,

@@ -16,18 +16,16 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(
     };
 
     return (
-      <div className="w-full">
-        <div
-          ref={ref}
-          className={cn(
-            "mx-auto w-full px-4 sm:px-6 lg:px-8",
-            sizes[size],
-            className
-          )}
-          {...props}
-        >
-          {children}
-        </div>
+      <div
+        ref={ref}
+        className={cn(
+          "mx-auto w-full px-4 sm:px-6 lg:px-8",
+          sizes[size],
+          className
+        )}
+        {...props}
+      >
+        {children}
       </div>
     );
   }

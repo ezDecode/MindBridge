@@ -76,7 +76,7 @@ const TherapyIcon = () => (
   </svg>
 );
 
-const categoryIcons: Record<string, any> = {
+const categoryIcons: Record<string, React.FC> = {
   stress: StressIcon,
   sleep: SleepIcon,
   anxiety: AnxietyIcon,
@@ -116,18 +116,20 @@ export function CategoriesSection() {
                   key={cat.id}
                   type="button"
                   variants={item}
-                  className="group flex w-full items-center justify-between rounded-[0.5rem] border-[0.125rem] border-[#E1DDD8] bg-white p-2 pl-6 transition-all hover:border-[#C6C1B9] focus:outline-none"
+                  className="group flex w-full items-center justify-between rounded-[1.2rem] border-[0.125rem] border-[var(--color-border)] bg-white p-2 pl-6 transition-[border-color,background-color] duration-200 hover:border-[var(--color-border-strong)] focus:outline-none"
                 >
                   <Text 
                     as="span" 
-                    className="text-[16px] font-bold text-[#4B4C4D] transition-colors group-hover:text-black"
+                    variant="label"
+                    weight="bold"
+                    className="text-[var(--color-text-secondary)] transition-colors group-hover:text-[var(--color-text-primary)]"
                   >
                     {cat.label}
                   </Text>
                   
                   <div className="flex items-center gap-2">
                     {Icon && <Icon />}
-                    <div className="p-2 text-[#4B4C4D] transition-transform group-hover:translate-x-0.5">
+                    <div className="p-2 text-[var(--color-text-secondary)] transition-colors group-hover:text-[var(--color-text-primary)]">
                       <FiChevronRight className="h-5 w-5" />
                     </div>
                   </div>
