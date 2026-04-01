@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { PageIntro } from "@/components/site"
 import { Button, Card, Text, SkeletonText } from "@/components/ui"
-import { createBrowserClient } from '@supabase/ssr'
+import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'motion/react'
 
 interface CrisisAlert {
@@ -43,10 +43,7 @@ export default function CounselorDashboardPage() {
     todaySessions: 0,
   })
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const supabase = useMemo(() => createClient(), [])
 
   // Fetch data
   const fetchData = useCallback(async () => {
@@ -75,12 +72,19 @@ export default function CounselorDashboardPage() {
     // Fetch crisis alerts (last 24h)
     const { data: alerts } = await supabase
       .from('crisis_logs')
-      .select('id, created_at, severity, student_id')
-      .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
-      .order('created_at', { ascending: false })
+      .select('id, triggered_at, severity, student_id')
+      .gte('triggered_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+      .order('triggered_at', { ascending: false })
       .limit(10)
 
-    if (alerts) setCrisisAlerts(alerts)
+    if (alerts) {
+      setCrisisAlerts(alerts.map(a => ({
+        id: a.id,
+        created_at: a.triggered_at,
+        severity: a.severity,
+        student_id: a.student_id,
+      })))
+    }
 
     // Fetch bookings from slots API
     try {

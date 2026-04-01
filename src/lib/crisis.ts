@@ -1,7 +1,24 @@
 import { createServiceClient } from '@/lib/supabase/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy initialization to prevent build-time errors
+let _resend: Resend | null = null
+
+function getResendClient(): Resend {
+  if (!_resend) {
+    if (!process.env.RESEND_API_KEY) {
+      console.warn('RESEND_API_KEY not set, email notifications will be disabled')
+      // Return a mock client that does nothing
+      return {
+        emails: {
+          send: async () => ({ data: null, error: null }),
+        },
+      } as unknown as Resend
+    }
+    _resend = new Resend(process.env.RESEND_API_KEY)
+  }
+  return _resend
+}
 
 /**
  * Crisis Alert System
@@ -107,6 +124,7 @@ async function sendCrisisEmail(
   }
 
   try {
+    const resend = getResendClient()
     await resend.emails.send({
       from: 'MindBridge Alerts <alerts@mindbridge.app>',
       to: counselorEmail,

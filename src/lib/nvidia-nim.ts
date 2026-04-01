@@ -2,10 +2,28 @@ import OpenAI from 'openai'
 
 // NVIDIA NIM client - 100% OpenAI SDK compatible
 // Uses meta/llama-3.1-8b-instruct for fast, capable mental health conversations
-export const nim = new OpenAI({
-  apiKey: process.env.NVIDIA_NIM_API_KEY!,
-  baseURL: 'https://integrate.api.nvidia.com/v1',
-})
+// Lazy initialization to prevent build-time errors
+let _nim: OpenAI | null = null
+
+export function getNimClient(): OpenAI {
+  if (!_nim) {
+    if (!process.env.NVIDIA_NIM_API_KEY) {
+      throw new Error('NVIDIA_NIM_API_KEY environment variable is required')
+    }
+    _nim = new OpenAI({
+      apiKey: process.env.NVIDIA_NIM_API_KEY,
+      baseURL: 'https://integrate.api.nvidia.com/v1',
+    })
+  }
+  return _nim
+}
+
+// Backwards compatibility export
+export const nim = {
+  get chat() {
+    return getNimClient().chat
+  },
+}
 
 // Model configuration
 export const NIM_MODEL = 'meta/llama-3.1-8b-instruct'

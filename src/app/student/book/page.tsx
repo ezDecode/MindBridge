@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { PageIntro } from "@/components/site"
 import { Button, Card, SelectionCard, Stepper, Text, SkeletonText } from "@/components/ui"
 import { bookingTypes as defaultBookingTypes } from "@/content/mindbridge"
-import { createBrowserClient } from '@supabase/ssr'
+import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'motion/react'
 
 interface Counselor {
@@ -51,10 +51,7 @@ export default function StudentBookPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const supabase = useMemo(() => createClient(), [])
 
   useEffect(() => {
     const checkUser = async () => {
