@@ -215,24 +215,6 @@ create policy "Counselors can acknowledge alerts"
 create index idx_crisis_logs_counselor on crisis_logs(counselor_id, acknowledged, triggered_at desc);
 
 -- ============================================
--- CHAT SESSIONS (for grouping conversations)
--- ============================================
-create table if not exists chat_sessions (
-  id              uuid primary key default gen_random_uuid(),
-  user_id         uuid references profiles(id) on delete cascade not null,
-  title           text,
-  started_at      timestamptz default now(),
-  last_message_at timestamptz default now()
-);
-
-alter table chat_sessions enable row level security;
-
-create policy "Students own their sessions"
-  on chat_sessions for all using (auth.uid() = user_id);
-
-create index idx_chat_sessions_user on chat_sessions(user_id, last_message_at desc);
-
--- ============================================
 -- FUNCTIONS
 -- ============================================
 

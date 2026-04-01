@@ -58,8 +58,3 @@ end $$;
 -- Enable realtime for crisis logs and outreach
 -- ============================================
 
--- Enable realtime for crisis_logs (counselor dashboard)
-alter publication supabase_realtime add table crisis_logs;
-
--- Enable realtime for bookings (both student and counselor dashboards)
-alter publication supabase_realtime add table bookings;

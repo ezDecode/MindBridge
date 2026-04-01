@@ -111,7 +111,7 @@ function TypingCursor() {
 
 function TypingIndicator() {
   return (
-    <div className="flex items-center gap-1">
+    <span className="inline-flex items-center gap-1 h-5 align-middle">
       <motion.span
         animate={{ opacity: [0.4, 1, 0.4] }}
         transition={{ duration: 1, repeat: Infinity, delay: 0 }}
@@ -127,6 +127,6 @@ function TypingIndicator() {
         transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
         className="h-2 w-2 rounded-full bg-[var(--color-text-muted)]"
       />
-    </div>
+    </span>
   )
 }
