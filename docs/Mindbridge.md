@@ -1,558 +1,989 @@
-# 🧠 MindBridge — Simplified Feature Specification
-**Stack:** Next.js 15 + Supabase + NVIDIA NIM  
-**Version:** 2.0 | **Audience:** Development Team  
-**Philosophy:** *"Do fewer things. Do them well. Ship."*
+# 🧠 MindBridge — Master Build Plan
+**Version:** 3.0 — Final  
+**Solo Dev + AI Agents Build**  
+**Demo Target:** SIH 2025 Live Demo  
+**Timeline:** 3 Weeks
 
 ---
 
-## Why We're Simplifying
+## The One Thing This Product Is
 
-We studied 10+ mental health apps — Calm, Headspace, Woebot, Wysa, Youper, Sanvello, BetterHelp, Wysa, Flourish, and Bearable. Here is the one pattern that separates apps people actually use from apps people download and forget:
+Not a chatbot. Not a quiz app. Not a booking tool.
 
-> **The apps that work do 3–4 things extremely well. The apps that fail try to do 12 things.**
+**A companion that knows you, watches over you quietly, and acts on your behalf — before you even know you need help.**
 
-Woebot is just a chatbot. Headspace is just guided content. Calm is just sleep and meditation. All of them are category leaders. Our original PRD had Socket.io, WebRTC, Redis, Bull queues, face-api emotion detection, 6 languages, gamification, and a TSV moderation system — for a hackathon project with a 6-person team. That is a failure recipe.
-
-MindBridge's core value proposition is three sentences:
-1. A student feeling low at 2 AM can talk to an AI and feel heard.
-2. A student who doesn't know if what they're feeling is "serious" can take a quiz and get clarity.
-3. A student who needs real help can book a counselor in under 2 minutes.
-
-Every feature in this document either serves those three sentences or is cut.
+Every single decision in this document flows from that sentence. If a feature doesn't serve that sentence, it doesn't exist in this product.
 
 ---
 
-## AI: NVIDIA NIM (Replacing OpenAI)
+## What's Already Built (Current State)
 
-### Why NVIDIA NIM
+You have a complete UI shell. That's actually a great foundation.
 
-NVIDIA NIM provides **OpenAI-compatible API endpoints** — meaning the code change from OpenAI to NIM is literally two lines (base URL + model name). No SDK migration, no prompt rewriting. NVIDIA's API Catalog gives free access to hosted NIM endpoints for prototyping with no credit card required, and you get credits to get started immediately.
+| What You Have | Status | Decision |
+|---|---|---|
+| Landing page | ✅ Complete | Keep — don't touch |
+| Student dashboard UI | ✅ UI only | Keep shell, wire backend |
+| Chat UI | ✅ UI only | Keep — this is the core |
+| Check-in (5 moods) | ✅ UI only | Keep as secondary input |
+| Quizzes page (PHQ-9 forms) | ✅ UI only | **Cut** — AI does this conversationally now |
+| Resources page | ✅ UI only | **Simplify** — 8 curated embeds, no backend |
+| Booking UI | ✅ UI only | Keep — wire backend |
+| Counselor dashboard | ✅ UI only | Keep — critical for demo |
+| Admin dashboard | ✅ UI only | **Cut** — not needed for demo |
+| Auth pages | ⚠️ Placeholder | Wire Supabase Auth |
 
-### Recommended Model
+**The entire product differentiation — Memory Engine, Proactive Agent, Auto-booking, Crisis Alert — does not exist yet. That's what we build.**
+
+---
+
+## Tech Stack (Locked)
+
+```yaml
+Framework:      Next.js 15 App Router (you're on 16.2.1, fine)
+Language:       TypeScript 5
+Styling:        Tailwind CSS 4
+Animations:     Motion (already installed)
+
+Database:       Supabase (PostgreSQL)
+Auth:           Supabase Auth (email OTP — no passwords)
+Realtime:       Supabase Realtime (counselor crisis alerts)
+Storage:        Supabase Storage (not needed for MVP — resources are URLs)
+
+AI:             NVIDIA NIM API
+Model:          meta/llama-3.1-8b-instruct (free, OpenAI-compatible)
+Streaming:      Next.js Route Handler + ReadableStream (SSE)
+
+Email:          Resend (booking confirmations, OTP)
+Scheduler:      Supabase pg_cron (proactive morning check-ins)
+
+State:          Zustand + TanStack Query
+Charts:         Recharts
+i18n:           English only for MVP (Hindi — post-demo)
+
+Deployment:     Vercel + Supabase
+```
+
+### Why NVIDIA NIM over OpenAI
+
+The API is 100% OpenAI SDK compatible — 2 line change. Free for prototyping with no credit card. `meta/llama-3.1-8b-instruct` is fast, capable, and more than sufficient for empathetic conversation. More importantly — for a hackathon built on government infrastructure, open-source model provenance is a story you can tell. "We're not dependent on proprietary US APIs" is a strong point for a J&K government problem statement.
+
+```typescript
+// lib/nvidia-nim.ts
+import OpenAI from 'openai'
+
+export const nim = new OpenAI({
+  apiKey: process.env.NVIDIA_NIM_API_KEY!,
+  baseURL: 'https://integrate.api.nvidia.com/v1',
+})
+
+// Use exactly like OpenAI — same SDK, same methods
+const stream = await nim.chat.completions.create({
+  model: 'meta/llama-3.1-8b-instruct',
+  messages: [...],
+  stream: true,
+})
+```
+
+---
+
+## The Agent Architecture
+
+This is the brain of MindBridge. Four agents. One model. Different jobs.
+
+They are not separate services. They are the same NIM model called with different system prompts and different context. The intelligence comes from what you feed each agent and when you call them.
 
 ```
-Model:   meta/llama-3.1-8b-instruct
-Reason:  Free on NIM API Catalog, OpenAI-compatible, 8B params is more than
-         sufficient for empathetic conversation and crisis keyword detection.
-         Excellent instruction following. Fast response latency.
+┌─────────────────────────────────────────────────────┐
+│                   SUPABASE DATABASE                  │
+│  mood_logs | chat_messages | bookings | profiles     │
+└──────────────────────┬──────────────────────────────┘
+                       │ reads
+          ┌────────────▼────────────┐
+          │     MEMORY AGENT        │  Runs before every chat
+          │  Builds "who is Riya    │  response. Reads all
+          │  right now" summary     │  history, outputs a
+          └────────────┬────────────┘  context block.
+                       │ feeds context to
+          ┌────────────▼────────────┐
+          │    COMPANION AGENT      │  The one that talks.
+          │  Knows Riya. Speaks     │  Receives memory summary.
+          │  naturally. Decides     │  Responds to student.
+          │  what to do next.       │  Returns JSON with
+          └────────────┬────────────┘  action suggestions.
+                       │ triggers
+       ┌───────────────┼───────────────┐
+       │               │               │
+┌──────▼──────┐ ┌──────▼──────┐ ┌──────▼──────┐
+│  OBSERVER   │ │   ACTION    │ │  PROACTIVE  │
+│   AGENT     │ │   AGENT     │ │   AGENT     │
+│             │ │             │ │             │
+│ Runs on     │ │ Executes    │ │ Runs on     │
+│ schedule.   │ │ tool calls: │ │ pg_cron     │
+│ Spots       │ │ book_slot   │ │ every       │
+│ patterns.   │ │ alert_      │ │ morning.    │
+│ Triggers    │ │ counselor   │ │ Decides if  │
+│ proactive   │ │ send_email  │ │ to initiate │
+│ check-in.   │ │             │ │ a message.  │
+└─────────────┘ └─────────────┘ └─────────────┘
 ```
 
-Alternative if Llama-3.1-8B feels too limited:
-```
-Model:   meta/llama-3.3-70b-instruct
-Reason:  Much stronger reasoning, better nuance for mental health context.
-         Still free on NIM API Catalog for prototyping.
-```
+---
 
-### Integration (Drop-in Replacement)
+## Module 1: Memory Engine
 
-```javascript
-// BEFORE (OpenAI)
-import OpenAI from 'openai';
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-const response = await client.chat.completions.create({
-  model: 'gpt-4o-mini',
-  messages: [...]
-});
+### What
+Before every AI response, the system reads the student's entire history and compresses it into a rich context summary. The companion agent then gets this summary as part of its system prompt — so it always knows who it's talking to.
 
-// AFTER (NVIDIA NIM) — only 2 changes
-import OpenAI from 'openai';
-const client = new OpenAI({
-  apiKey: process.env.NVIDIA_NIM_API_KEY,
-  baseURL: 'https://integrate.api.nvidia.com/v1',  // ← change 1
-});
-const response = await client.chat.completions.create({
-  model: 'meta/llama-3.1-8b-instruct',  // ← change 2
-  messages: [...]
-});
-```
+### Why
+This is the single feature that makes MindBridge feel different from every other mental health app. Every other app treats each conversation as new. We treat every conversation as a continuation of an ongoing relationship. Woebot "remembers previous chats" and users call it out as the reason they trust it. We go further — we synthesize everything and use it proactively.
 
-### Crisis Detection System Prompt (Simplified)
+### How
 
-```
-You are a compassionate mental wellness support assistant for Indian college students.
-You are NOT a therapist. You provide emotional support and psychoeducation only.
+**Step 1 — Collect raw history**
+```typescript
+// lib/agents/memory-agent.ts
 
-CRISIS DETECTION RULES (non-negotiable):
-- If the user mentions suicide, self-harm, hurting themselves, or not wanting to
-  live: ALWAYS respond with empathy first, then provide iCall helpline: 9152987821.
-  Set internal flag: crisis=true in your JSON response.
-- Never minimize or dismiss what the user shares.
-- Keep responses short (3-5 sentences max). One follow-up question at a time.
-- Speak like a warm, calm friend — not a clinical professional.
-- Never diagnose. Say "it sounds like you might be experiencing..." not "you have..."
+async function buildMemoryContext(userId: string): Promise<string> {
+  const [moods, chats, assessments] = await Promise.all([
+    supabase
+      .from('mood_logs')
+      .select('score, note, logged_at')
+      .eq('user_id', userId)
+      .order('logged_at', { ascending: false })
+      .limit(30),
 
-Response format (JSON):
-{
-  "message": "your response here",
-  "crisis": false,
-  "suggested_action": null | "book_counselor" | "take_quiz" | "call_helpline"
+    supabase
+      .from('chat_messages')
+      .select('role, content, crisis_flag, sent_at')
+      .eq('user_id', userId)
+      .order('sent_at', { ascending: false })
+      .limit(50),
+
+    supabase
+      .from('assessments')
+      .select('indicators, severity, assessed_at')
+      .eq('user_id', userId)
+      .order('assessed_at', { ascending: false })
+      .limit(5),
+  ])
+
+  // Step 2 — Ask NIM to summarize all of this into a context block
+  const summary = await nim.chat.completions.create({
+    model: 'meta/llama-3.1-8b-instruct',
+    messages: [{
+      role: 'user',
+      content: `You are a memory system. Given this student's history, write a brief 
+      context summary (max 200 words) that will help a companion AI understand who 
+      this person is right now. Include: emotional trend, key themes they've discussed, 
+      any concerns to be aware of, their communication style.
+      
+      Mood history (last 30 days): ${JSON.stringify(moods.data)}
+      Recent conversations: ${JSON.stringify(chats.data)}
+      Mental health indicators: ${JSON.stringify(assessments.data)}
+      
+      Write as if briefing a counselor before a session. Be specific, not generic.`
+    }],
+    max_tokens: 300,
+  })
+
+  return summary.choices[0].message.content ?? ''
 }
 ```
 
+**Step 3 — This context flows into every companion agent call**
+
+The memory context is rebuilt on every conversation start. It's not cached — fresh data every time. At 50 messages + 30 mood logs, the Supabase query takes ~50ms. The NIM summary call takes ~800ms. Total: ~850ms before the first response. Acceptable for a chat app — we show a "thinking" state.
+
+**What the judges see:** Student opens chat. AI says "Hey Riya — rough week last week, how's today going?" without being asked. The student didn't tell it what week it was or what happened. It just knows. That's the moment.
+
 ---
 
-## Stack (Final — Simplified)
+## Module 2: Companion Agent (The Chat)
 
-```yaml
-Frontend + Backend:  Next.js 15 (App Router)
-                     - Pages serve as the UI
-                     - Route Handlers replace Express API
-                     - Server Actions for form submissions
+### What
+The conversational AI that the student talks to. It's not a generic chatbot. It receives the memory context, speaks in a warm natural tone, and has specific behaviours baked into its system prompt. It also does hidden assessment — evaluating PHQ-9 and GAD-7 criteria conversationally without ever using clinical language.
 
-Database:            Supabase (PostgreSQL)
-                     - All data stored here
-                     - Row Level Security enforces permissions
-                     - Built-in Auth (email OTP)
+### Why
+Forms feel clinical. Clinical feels scary. Scared people lie on forms or avoid them. Conversation feels natural. Natural conversation yields honest answers. Woebot proved this — users who'd never fill in a PHQ-9 form happily chatted about their week and got accurate assessments. We go further — our assessment is completely invisible to the user.
 
-Real-time:           Supabase Realtime
-                     - Counselor gets live crisis alerts
-                     - Booking status updates
+### How
 
-AI Chatbot:          NVIDIA NIM API (meta/llama-3.1-8b-instruct)
-                     - OpenAI-compatible SDK
-                     - Streamed via Next.js ReadableStream (SSE)
+**System prompt (the most important piece of code in this product):**
 
-Storage:             Supabase Storage
-                     - Resource hub media (PDFs, audio, thumbnails)
+```typescript
+// lib/agents/companion-agent.ts
 
-Email:               Resend
-                     - Booking confirmations, OTP delivery
+function buildSystemPrompt(memoryContext: string, studentName: string): string {
+  return `You are MindBridge, a compassionate AI companion for ${studentName}, 
+an Indian college student. You are not a therapist. You are a warm, intelligent 
+friend who happens to understand mental health deeply.
 
-Styling:             Tailwind CSS v3
-State:               Zustand + TanStack Query
-Charts:              Recharts
-i18n:                i18next (English + Hindi only for MVP)
-Testing:             Vitest (unit) + Playwright (E2E)
-Deployment:          Vercel (frontend + API) + Supabase (data)
+CONTEXT ABOUT ${studentName} RIGHT NOW:
+${memoryContext}
+
+YOUR PERSONALITY:
+- Warm but never saccharine. Real, not performative.
+- You remember things and reference them naturally. Never say "as I mentioned" 
+  or "according to my records" — just speak like you know them.
+- Short responses. 2-4 sentences max per turn. You ask one question at a time.
+- You never say "I understand how you feel." You show understanding through 
+  specific, contextual responses.
+- Never use clinical words: "depression", "anxiety disorder", "symptoms", 
+  "diagnosis". Say "sounds heavy", "that's a lot to carry", "makes sense 
+  you'd feel that way".
+
+HIDDEN ASSESSMENT:
+As the conversation progresses, evaluate these 9 PHQ-9 criteria naturally:
+1. Low mood / hopelessness
+2. Loss of interest in things they used to enjoy  
+3. Sleep problems (too much or too little)
+4. Low energy / fatigue
+5. Appetite changes
+6. Feelings of worthlessness or guilt
+7. Concentration problems
+8. Psychomotor changes (slowing down or restlessness)
+9. Any thoughts of self-harm
+
+You evaluate these through natural conversation. Never ask about them directly.
+Track which ones come up organically. When you have signal on 5+, flag it internally.
+
+CRISIS PROTOCOL (non-negotiable):
+If the student mentions: not wanting to be here, ending it, hurting themselves, 
+suicide, self-harm — respond with warmth first, then include iCall: 9152987821 
+naturally in your response. Always set crisis: true.
+
+TOOL CALLS:
+When appropriate, you can suggest actions. Return these as part of your JSON response.
+Available actions: "book_counselor", "show_resources", "send_crisis_alert"
+
+RESPONSE FORMAT — always return valid JSON:
+{
+  "message": "your natural response here",
+  "crisis": false,
+  "assessment_update": {
+    "criteria_flagged": [],
+    "severity": "none | mild | moderate | severe"
+  },
+  "suggested_action": null | "book_counselor" | "show_resources" | "send_crisis_alert",
+  "action_context": null | "reason for the suggestion"
+}`
+}
 ```
 
-**What we removed from the original stack and why:**
+**Streaming the response:**
 
-| Removed | Why |
-|---------|-----|
-| Redis + Bull queue | Booking reminders handled by Supabase `pg_cron` + Resend. No always-on worker needed. |
-| Socket.io | Supabase Realtime handles DB-change events. SSE handles AI streaming. No persistent WS server. |
-| face-api.js emotion detection | Privacy risk, complexity, and unreliable in low-light Indian hostel rooms. Cut entirely. |
-| AWS EC2 + Docker Compose | Vercel is zero-ops. No servers to manage. |
-| AWS S3 + CloudFront | Supabase Storage has built-in CDN. Simpler setup, same result. |
-| mediasoup WebRTC | Cut (see Video Consultations below). |
-| migrate-mongo | Using Supabase migrations via `supabase db push`. |
+```typescript
+// app/api/chat/route.ts
 
----
+export async function POST(req: Request) {
+  const { message, userId, sessionId } = await req.json()
 
-## Feature Specification
+  // 1. Build memory context
+  const memoryContext = await buildMemoryContext(userId)
+  const profile = await getProfile(userId)
 
-### Legend
-- ✅ **Build it** — core to the product, must be in the demo
-- 🔜 **Defer** — good idea, but not for the first version
-- ❌ **Cut** — removed permanently; adds complexity without proportional value
+  // 2. Get conversation history for this session
+  const history = await getSessionHistory(sessionId)
 
----
+  // 3. Stream from NIM
+  const stream = await nim.chat.completions.create({
+    model: 'meta/llama-3.1-8b-instruct',
+    messages: [
+      { role: 'system', content: buildSystemPrompt(memoryContext, profile.name) },
+      ...history,
+      { role: 'user', content: message }
+    ],
+    stream: true,
+    max_tokens: 500,
+  })
 
-### 1. Authentication
+  // 4. Stream back to client as SSE
+  const encoder = new TextEncoder()
+  const readable = new ReadableStream({
+    async start(controller) {
+      let fullResponse = ''
+      
+      for await (const chunk of stream) {
+        const text = chunk.choices[0]?.delta?.content ?? ''
+        fullResponse += text
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`))
+      }
 
-✅ **Email OTP Login/Register**
-Student registers with their college email. Supabase sends a 6-digit OTP. No password. Session managed by Supabase Auth automatically.
+      // 5. Parse the JSON from completed response
+      try {
+        const parsed = JSON.parse(fullResponse)
+        
+        // Save to DB
+        await saveMessage(userId, sessionId, 'user', message)
+        await saveMessage(userId, sessionId, 'assistant', parsed.message, parsed.crisis)
+        
+        // Handle crisis
+        if (parsed.crisis) {
+          await triggerCrisisAlert(userId)
+        }
+        
+        // Update assessment if new signals found
+        if (parsed.assessment_update.criteria_flagged.length > 0) {
+          await updateAssessment(userId, parsed.assessment_update)
+        }
 
-✅ **Role-based access (3 roles)**
-- `student` — access to their own dashboard, chatbot, bookings, resources
-- `counselor` — access to counselor dashboard, their own bookings only
-- `admin` — access to analytics only (no student PII)
+        // Send action metadata at end of stream
+        controller.enqueue(
+          encoder.encode(`data: ${JSON.stringify({ done: true, action: parsed.suggested_action })}\n\n`)
+        )
+      } catch (e) {
+        // If JSON parse fails, the message is already streamed — just save raw
+      }
+      
+      controller.close()
+    }
+  })
 
-✅ **Anonymous-first browsing**
-First 3 chatbot messages and the resource hub are accessible without login. Gate deeper features (bookings, quiz history, mood tracking) behind auth.
+  return new Response(readable, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+    }
+  })
+}
+```
 
-🔜 **Social login (Google)** — defer; OTP is sufficient for college emails.
-
-❌ **Forgot password with reset link** — Supabase Auth's OTP flow IS the login, so there is no password to reset. Not needed.
-
----
-
-### 2. Daily Mood Check-In
-
-✅ **Simple mood input**
-One screen. Student selects a mood on a scale of 1–5 (represented by emojis: 😞 😟 😐 🙂 😊). Optional free-text note (max 200 chars). Takes 15 seconds.
-
-✅ **30-day mood trend chart**
-A Recharts line chart showing the last 30 days. Simple, clean. No annotation overlays, no heatmaps, no "insights" AI layer on top.
-
-✅ **Streak counter**
-A simple streak number ("7 days in a row") shown on the dashboard. No badges, no levels, no gamification system — just the number.
-
-🔜 **Weekly mood summary email** — defer; adds complexity.
-
-❌ **Heatmap calendar** — the Recharts line chart is enough. A heatmap adds a second chart for no additional insight for the user.
-
-❌ **Emotion detection via camera** — cut permanently. See reasoning above.
-
----
-
-### 3. Mental Health Quizzes
-
-✅ **PHQ-9 (Depression screening)**
-9 questions, standard 4-point scale, auto-scored. Show severity band: Minimal / Mild / Moderate / Moderately Severe / Severe. Plain language explanation of what the score means.
-
-✅ **GAD-7 (Anxiety screening)**
-7 questions, same format.
-
-✅ **Crisis trigger on high score**
-If PHQ-9 ≥ 15 or GAD-7 ≥ 15: show a gentle prompt with two buttons — "Talk to AI first" and "Book a counselor now". Do not force. Do not alarm.
-
-✅ **Quiz history**
-Student can see their last 5 quiz attempts with scores and dates. Simple table. No graphs for this in MVP.
-
-🔜 **PSS-10, Academic Burnout Scale** — defer. Two validated instruments are enough for demo.
-
-❌ **AI-generated 7-day wellness plan** — this was a P1 feature. Cut for now. The chatbot already recommends activities conversationally. A separate "plan generator" is a separate product almost.
-
----
-
-### 4. AI Chatbot (Core Feature)
-
-✅ **Conversational support chatbot**
-Powered by NVIDIA NIM (`meta/llama-3.1-8b-instruct`). Streamed response via SSE so the text appears word-by-word (not a loading spinner then a wall of text). Warm, non-clinical tone.
-
-✅ **Persistent chat sessions**
-Each conversation is saved. Student can scroll back and read previous chats. This is important — Woebot's "remembers previous chats" is a key reason users trust it.
-
-✅ **Crisis detection and escalation**
-The model's JSON response includes a `crisis: true` flag when crisis signals are detected. When flagged:
-1. Response includes iCall helpline number prominently.
-2. A quiet notification goes to the assigned counselor (Supabase Realtime).
-3. Crisis is logged (anonymized timestamp + severity flag — no message content).
-
-✅ **Suggested action chips**
-After each AI response, show 1–2 contextual action chips: "Take PHQ-9 quiz", "Book a counselor", "Read this article". These are suggested by the AI in its JSON response, not hardcoded.
-
-🔜 **Voice input** — defer. Useful but not core to the demo.
-
-❌ **Offline fallback scripted chatbot** — the original PRD had pre-scripted responses as a fallback. NVIDIA NIM's free tier has good uptime. If the API is down, show a simple "I'm unavailable right now — please try again in a few minutes" message. A scripted fallback is a separate system to maintain.
+**What the judges see:** Student types "I've been really tired lately, can't sleep, nothing feels worth doing." AI responds: "That sounds exhausting — not sleeping and feeling disconnected from things usually hit at the same time. Has this been building up over a few days or longer?" No form. No score. But internally, the system just logged: low_energy ✓, anhedonia ✓, sleep_issues ✓. Assessment happening invisibly.
 
 ---
 
-### 5. Counselor Booking
+## Module 3: Proactive Agent (The Jarvis Moment)
 
-✅ **Slot-based booking calendar**
-Counselors define available slots (e.g., Mon 10–11 AM, Tue 2–3 PM). Students pick an open slot. Booking confirmed instantly. That's it.
+### What
+Every morning at 8 AM, a Supabase Edge Function runs via pg_cron. It checks every active student's history. For students who show patterns worth checking in on, it initiates a conversation — the app messages them first.
 
-✅ **Three booking types**
-- **Anonymous** — student name not shown to counselor until they arrive
-- **Named** — student name visible in counselor dashboard
-- **Crisis** — flagged as urgent; counselor gets a Supabase Realtime push alert immediately
+### Why
+Every mental health app waits for the user to come to them. That's backwards. The students who most need support are the ones least likely to open the app. Proactive outreach is what separates a companion from a tool. This is the feature that will make the live demo audience go quiet.
 
-✅ **Email confirmation**
-Booking confirmed → Resend sends email to student. 24h reminder email before the session.
+### How
 
-✅ **Counselor can add session notes**
-Simple text area. Notes are encrypted client-side before writing to Supabase (AES-256). Only the counselor can read their own notes. Admin cannot see notes.
+**pg_cron schedule in Supabase:**
+```sql
+-- Runs every day at 8 AM IST (2:30 AM UTC)
+select cron.schedule(
+  'proactive-morning-checkin',
+  '30 2 * * *',
+  $$
+  select net.http_post(
+    url := 'https://your-project.supabase.co/functions/v1/proactive-agent',
+    headers := '{"Authorization": "Bearer ' || current_setting('app.service_key') || '"}'::jsonb
+  )
+  $$
+);
+```
 
-🔜 **Booking reschedule by student** — defer; counselor can cancel and student re-books.
+**The Observer Agent logic (runs inside the Edge Function):**
 
-🔜 **Calendar sync (Google Calendar)** — defer.
+```typescript
+// supabase/functions/proactive-agent/index.ts
 
-❌ **WebRTC video consultations** — cut. This is an entire infra problem (TURN servers, mediasoup, NAT traversal). For the demo and v1, the counselor's booking confirmation email includes a Google Meet link they paste in manually. Zero complexity, same outcome for the SIH demo.
+serve(async () => {
+  // Get all active students (logged in within last 7 days)
+  const students = await getActiveStudents()
 
-❌ **Therapist rating/review system** — cut. Inappropriate for a mental health context (students rating their counselors creates a bad dynamic) and adds complexity.
+  for (const student of students) {
+    const shouldCheckIn = await observerAgent(student)
+    
+    if (shouldCheckIn.trigger) {
+      await initiateProactiveChat(student.id, shouldCheckIn.openingMessage)
+    }
+  }
+})
 
----
+async function observerAgent(student: Student): Promise<ObserverResult> {
+  const history = await getStudentHistory(student.id)
+  
+  // Rule-based triggers (fast, no LLM needed)
+  const rules = [
+    // Hasn't checked in for 2+ days
+    daysSinceLastActivity(history) >= 2,
+    // 3 consecutive low mood scores
+    lastThreeMoods(history).every(m => m.score <= 2),
+    // Assessment moved from mild to moderate
+    assessmentSeverityIncreased(history),
+    // Upcoming exam period (if institution data available)
+    isExamPeriod(),
+  ]
 
-### 6. Resource Hub
+  const triggered = rules.filter(Boolean)
+  if (triggered.length === 0) return { trigger: false }
 
-✅ **Curated content library**
-Articles, short audio clips (guided breathing, body scan meditation), and short videos (<10 min). Admin uploads via the admin dashboard. Students browse and read/listen/watch.
+  // Only call LLM if we're going to trigger — to craft the right opening
+  const opening = await nim.chat.completions.create({
+    model: 'meta/llama-3.1-8b-instruct',
+    messages: [{
+      role: 'user',
+      content: `You're MindBridge checking in on ${student.name} proactively.
+      
+      Context: ${JSON.stringify(history.summary)}
+      Trigger reason: ${triggered.join(', ')}
+      
+      Write a single, natural opening message (1-2 sentences max). 
+      Don't mention the app. Don't say "I noticed". Just open conversation naturally.
+      Sound like a friend texting, not a bot checking in.
+      
+      Examples of good openers:
+      - "Hey, rough few days — how's today treating you?"
+      - "Haven't heard from you in a bit. What's going on?"
+      - "Exams are close — how are you holding up?"
+      
+      Return just the message, no JSON.`
+    }],
+    max_tokens: 80,
+  })
 
-✅ **Category filtering**
-Filter by: Anxiety, Depression, Exam Stress, Relationships, Sleep, Self-Care. Simple tag-based filter, no search in MVP.
+  return {
+    trigger: true,
+    openingMessage: opening.choices[0].message.content ?? "Hey, how are you doing today?"
+  }
+}
 
-✅ **Bookmarking**
-Student can save resources. Shown in their profile under "Saved".
+async function initiateProactiveChat(studentId: string, message: string) {
+  // Insert as an 'assistant' message to start a new session
+  // This will appear as a new conversation in the student's chat on next open
+  await supabase.from('chat_messages').insert({
+    user_id: studentId,
+    session_id: generateSessionId(),
+    role: 'assistant',
+    content: message,
+    proactive: true,
+    sent_at: new Date().toISOString()
+  })
 
-🔜 **Full-text search** — defer. Category filter is sufficient for MVP content volume.
+  // Optionally push a notification (PWA — post demo)
+}
+```
 
-🔜 **Continue watching / progress tracking for videos** — defer. Adds state complexity.
-
-❌ **Community-submitted resources** — cut. Moderation burden. Admin-curated only.
-
-❌ **Resource recommendation AI** — cut. The chatbot already recommends articles conversationally. A separate recommendation engine is over-engineering.
-
----
-
-### 7. Peer Community Forum
-
-🔜 **Anonymous peer forum** — deferred to v1.1.
-
-**Why deferred (not cut):** Every successful mental health app with a community feature (Sanvello, Headspace's community) has a full-time moderation team. We do not. Unmoderated mental health forums are actively dangerous. The TSV (Trained Student Volunteer) system in the original PRD was the right instinct but it's a separate operational system, not just code. We will build this after launch when we have real users who can volunteer as moderators.
-
-For SIH demo: the chatbot fills the "I want to feel heard" need. We mention the forum as a "coming soon" feature.
-
----
-
-### 8. Counselor Dashboard
-
-✅ **Upcoming bookings list**
-Sorted by date. Shows booking type (anonymous/named/crisis). Crisis bookings are highlighted in red. One-click to view student details (if named booking).
-
-✅ **Real-time crisis alert**
-When a student's chatbot session triggers `crisis: true`, the counselor gets a badge notification on their dashboard immediately (Supabase Realtime). No email — it needs to be instant.
-
-✅ **Session notes**
-Per-booking notes editor. Encrypted. Only accessible to the counselor who created them.
-
-✅ **Slot management**
-Counselor sets their weekly availability. Simple form — day + time range. No drag-and-drop calendar builder.
-
-🔜 **Session history analytics (counselor's own stats)** — defer.
-
-❌ **Direct messaging between counselor and student** — cut. All communication happens through bookings and the structured session. Unstructured messaging in a mental health context is a liability.
-
----
-
-### 9. Admin Dashboard
-
-✅ **Institution-level mood trends**
-Aggregate anonymous data: average mood score over time (line chart), quiz score distributions (bar chart). No individual student data visible anywhere.
-
-✅ **Booking volume metrics**
-Total bookings this month, split by type (anonymous/named/crisis). Trend over 3 months.
-
-✅ **Crisis alert log**
-Count of crisis flags per week. No message content, no student identity. Just the count and the time.
-
-✅ **Counselor account management**
-Admin can create/deactivate counselor accounts. Assign counselors to the institution.
-
-✅ **Resource management**
-Admin uploads and manages the resource hub content. Title, category, type (article/audio/video), URL or file upload.
-
-❌ **Multi-institution Super-Admin** — cut for v1. One institution per deployment.
-
-❌ **Exportable PDF reports** — cut. CSV export is fine for now.
-
----
-
-### 10. Notifications
-
-✅ **Email notifications (Resend)**
-- Booking confirmation (student)
-- 24h booking reminder (student)
-- Crisis alert (counselor, email as backup to Realtime)
-- OTP for login
-
-🔜 **PWA push notifications** — defer. Service worker setup adds complexity. Email covers the critical paths.
-
-❌ **SMS notifications** — cut. Twilio costs money. Email is free.
+**What the judges see:** Demo student (Riya) had low mood scores Tuesday and Wednesday. She hasn't opened the app Thursday. Live demo is Thursday morning. App shows a message already waiting: *"Hey, rough couple of days — how's today treating you?"* Nobody asked for it. The app just cared. Room goes quiet. That's the moment.
 
 ---
 
-## What We're Not Building (and Why)
+## Module 4: Action Agent (Auto-Booking)
 
-| Feature | Reason Cut |
-|---------|------------|
-| WebRTC video consultations | An entire infra problem (TURN, mediasoup, NAT traversal). Use Google Meet link in email. |
-| Socket.io real-time | Supabase Realtime + SSE handles all our real-time needs without a persistent server. |
-| Redis + Bull job queue | `pg_cron` in Supabase handles scheduled reminders. No always-on worker needed. |
-| face-api.js emotion detection | Privacy risk, unreliable in real-world conditions, complex to implement correctly. |
-| AI wellness plan generator | The chatbot already recommends activities. A separate plan generator is v2. |
-| Peer community forum | Requires active moderation. A dangerous feature without it. Deferred to v1.1. |
-| 6 Indian languages | English + Hindi covers ~60% of our target users. More languages = more maintenance. |
-| Gamification (badges, levels) | Mental health is not a game. Streak counter only. |
-| Community-submitted resources | Admin-curated content only. Moderation burden too high. |
-| Scripted chatbot fallback | If NVIDIA NIM is down, show a friendly error. Two chatbot systems to maintain is worse. |
-| Student/counselor rating system | Wrong dynamic for mental health. Cut permanently. |
-| Direct messaging | All communication through structured bookings. No open messaging. |
-| Multi-institution admin | One institution per deployment. Super-admin is v2. |
-| ABHA health ID integration | Out of scope for a hackathon demo. |
-| WhatsApp/Telegram bot | Different product. V3 at the earliest. |
-| Dark mode | V1.1. Low effort but low priority during initial build. |
+### What
+When the Companion Agent determines a student needs a counselor session, it doesn't just suggest it. It finds an available slot, tells the student "I found Thursday 3 PM with Dr. Sharma — confirming it for you" and creates the booking. Student just taps Confirm or Cancel.
+
+### Why
+The friction between "I should talk to someone" and "I have a booking" is where students fall off. Making them navigate to a booking page, find a slot, fill in a form — that's 5 steps too many for someone who's already struggling. The agent collapses it to zero steps.
+
+### How
+
+**Tool definitions (given to companion agent in its context):**
+
+```typescript
+// lib/agents/action-agent.ts
+
+export const AVAILABLE_TOOLS = [
+  {
+    name: 'find_and_book_slot',
+    description: 'Find the earliest available counselor slot and create a pending booking',
+    parameters: {
+      type: 'object',
+      properties: {
+        booking_type: {
+          type: 'string',
+          enum: ['anonymous', 'named', 'crisis']
+        },
+        reason: {
+          type: 'string',
+          description: 'Brief reason for booking (internal use only, not shown to counselor)'
+        }
+      }
+    }
+  }
+]
+
+export async function executeBooking(
+  studentId: string,
+  bookingType: 'anonymous' | 'named' | 'crisis'
+): Promise<BookingResult> {
+  // Find earliest available slot
+  const slot = await supabase
+    .from('counselor_slots')
+    .select('*, counselor:profiles(name)')
+    .eq('available', true)
+    .gte('slot_start', new Date().toISOString())
+    .order('slot_start', { ascending: true })
+    .limit(1)
+    .single()
+
+  if (!slot.data) {
+    return { success: false, message: 'No slots available this week' }
+  }
+
+  // Create PENDING booking — student confirms
+  const booking = await supabase.from('bookings').insert({
+    student_id: studentId,
+    counselor_id: slot.data.counselor_id,
+    slot_start: slot.data.slot_start,
+    slot_end: slot.data.slot_end,
+    type: bookingType,
+    status: 'pending_confirmation', // student must confirm
+  }).select().single()
+
+  // Mark slot as tentatively held for 10 min
+  await supabase
+    .from('counselor_slots')
+    .update({ available: false, held_until: tenMinutesFromNow() })
+    .eq('id', slot.data.id)
+
+  return {
+    success: true,
+    booking: booking.data,
+    counselorName: slot.data.counselor.name,
+    slotTime: formatSlot(slot.data.slot_start),
+    message: `Found a slot with ${slot.data.counselor.name} on ${formatSlot(slot.data.slot_start)}`
+  }
+}
+```
+
+**In the chat UI — when action agent fires:**
+
+```tsx
+// When the AI stream ends with suggested_action: "book_counselor"
+// Show this inline in the chat — not a redirect, not a modal
+
+<div className="booking-suggestion">
+  <p>I found a slot with Dr. Priya Sharma — Thursday, 3:00 PM</p>
+  <div className="flex gap-2">
+    <Button onClick={() => confirmBooking(pendingBookingId)}>
+      Yes, confirm it
+    </Button>
+    <Button variant="ghost" onClick={() => cancelHold(pendingBookingId)}>
+      Not right now
+    </Button>
+  </div>
+</div>
+```
+
+**What the judges see:** Student says "I think I need to talk to someone." AI says "I found a slot with Dr. Sharma — Thursday at 3 PM. Confirming it for you?" Student taps yes. Done. No page navigation, no form, no friction. Booking appears in counselor dashboard immediately. The whole thing happens inside the chat window.
 
 ---
 
-## Simplified Database Schema
+## Module 5: Crisis Escalation
 
-Six tables. That's it.
+### What
+When the Companion Agent returns `crisis: true`, three things happen simultaneously: the AI response includes iCall helpline number naturally, the counselor's dashboard shows a real-time alert badge (Supabase Realtime), and a crisis log entry is written (no message content — just timestamp and severity).
+
+### Why
+This is the feature that makes MindBridge a responsible product, not just a clever one. It's also the most impressive thing you can show a room of judges — a genuine safety net that fires in real time.
+
+For the demo: trigger manually via a "simulate crisis" button in your demo toolkit. The counselor's laptop (open on the counselor dashboard) lights up live. Judges see both screens simultaneously.
+
+### How
+
+```typescript
+// lib/crisis.ts
+
+export async function triggerCrisisAlert(userId: string) {
+  // 1. Get student's assigned counselor
+  const { data: student } = await supabase
+    .from('profiles')
+    .select('counselor_id, institution')
+    .eq('id', userId)
+    .single()
+
+  // 2. Write crisis log (no PII, no message content)
+  await supabase.from('crisis_logs').insert({
+    student_id: userId,
+    counselor_id: student.counselor_id,
+    severity: 'high',
+    triggered_at: new Date().toISOString(),
+    // Deliberately no message content stored
+  })
+
+  // 3. Supabase Realtime fires automatically — counselor dashboard
+  // is subscribed to crisis_logs INSERT for their counselor_id
+  // No additional code needed — Realtime handles this
+
+  // 4. Send backup email via Resend
+  await sendCrisisEmail(student.counselor_id, userId)
+}
+```
+
+**Counselor dashboard subscription:**
+
+```typescript
+// app/(counselor)/dashboard/page.tsx
+
+useEffect(() => {
+  const channel = supabase
+    .channel('crisis-alerts')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'crisis_logs',
+      filter: `counselor_id=eq.${counselorId}`
+    }, (payload) => {
+      // This fires in real-time on the counselor's screen
+      setCrisisAlerts(prev => [payload.new, ...prev])
+      playAlertSound() // subtle audio cue
+    })
+    .subscribe()
+
+  return () => supabase.removeChannel(channel)
+}, [])
+```
+
+**What the judges see:** Riya types something concerning in chat. Simultaneously — on the counselor's laptop across the table — a red badge appears. No refresh. No delay. Live. The room understands immediately that this is not a mock-up.
+
+---
+
+## Module 6: Resource Hub
+
+### What
+8-10 hand-curated videos and audio tracks. Hardcoded. No backend. No admin panel. Just a JSON file and a clean UI.
+
+### Why
+Resources are table stakes — every mental health app has them. We're not competing on resources. We have them so the product feels complete and so the companion agent can say "want me to pull up a 5-minute breathing exercise?" and actually have something to show.
+
+### How
+
+```typescript
+// src/content/resources.ts — this is the entire backend
+
+export const RESOURCES = [
+  {
+    id: '1',
+    title: '5-Minute Breathing Exercise',
+    category: 'anxiety',
+    type: 'video',
+    duration: '5 min',
+    url: 'https://youtube.com/embed/...',
+    thumbnail: '...'
+  },
+  {
+    id: '2',
+    title: 'Body Scan Meditation for Sleep',
+    category: 'sleep',
+    type: 'audio',
+    duration: '12 min',
+    url: 'https://youtube.com/embed/...',
+    thumbnail: '...'
+  },
+  // 6-8 more...
+]
+```
+
+That's the entire resource hub. No Supabase table. No admin upload. JSON file. Ship it in 2 hours, never touch it again.
+
+---
+
+## Database Schema (Complete)
 
 ```sql
--- Users (managed by Supabase Auth, extended here)
+-- ============================================
+-- PROFILES (extends Supabase Auth)
+-- ============================================
 create table profiles (
-  id          uuid references auth.users primary key,
-  role        text check (role in ('student','counselor','admin')) not null,
-  name        text,
-  institution text,
-  created_at  timestamptz default now()
+  id              uuid references auth.users primary key,
+  name            text,
+  role            text check (role in ('student', 'counselor')) not null,
+  institution     text,
+  counselor_id    uuid references profiles(id), -- student's assigned counselor
+  created_at      timestamptz default now()
 );
 
--- Mood logs
+-- RLS: Users read/write only their own profile
+alter table profiles enable row level security;
+create policy "Users own their profile"
+  on profiles for all using (auth.uid() = id);
+
+-- ============================================
+-- MOOD LOGS
+-- ============================================
 create table mood_logs (
-  id         uuid primary key default gen_random_uuid(),
-  user_id    uuid references profiles(id) on delete cascade,
-  score      int check (score between 1 and 5),
-  note       text,
-  logged_at  timestamptz default now()
-);
-
--- Quiz attempts
-create table quiz_attempts (
   id          uuid primary key default gen_random_uuid(),
   user_id     uuid references profiles(id) on delete cascade,
-  quiz_type   text check (quiz_type in ('PHQ9','GAD7')),
-  answers     jsonb,  -- array of {question_id, score}
-  total_score int,
-  severity    text,
-  taken_at    timestamptz default now()
+  score       int check (score between 1 and 5),
+  note        text,
+  logged_at   timestamptz default now()
 );
 
--- Counselor slots + bookings
+alter table mood_logs enable row level security;
+create policy "Students own their mood logs"
+  on mood_logs for all using (auth.uid() = user_id);
+
+-- ============================================
+-- CHAT MESSAGES
+-- ============================================
+create table chat_messages (
+  id           uuid primary key default gen_random_uuid(),
+  user_id      uuid references profiles(id) on delete cascade,
+  session_id   uuid not null,
+  role         text check (role in ('user', 'assistant')),
+  content      text not null,
+  crisis_flag  boolean default false,
+  proactive    boolean default false, -- true if AI initiated
+  sent_at      timestamptz default now()
+);
+
+alter table chat_messages enable row level security;
+create policy "Students own their messages"
+  on chat_messages for all using (auth.uid() = user_id);
+
+-- ============================================
+-- ASSESSMENTS (implicit PHQ-9/GAD-7 from chat)
+-- ============================================
+create table assessments (
+  id                uuid primary key default gen_random_uuid(),
+  user_id           uuid references profiles(id) on delete cascade,
+  criteria_flagged  text[], -- ['low_mood', 'sleep_issues', 'anhedonia']
+  severity          text check (severity in ('none', 'mild', 'moderate', 'severe')),
+  assessed_at       timestamptz default now()
+);
+
+alter table assessments enable row level security;
+create policy "Students own their assessments"
+  on assessments for all using (auth.uid() = user_id);
+
+-- ============================================
+-- COUNSELOR SLOTS
+-- ============================================
+create table counselor_slots (
+  id             uuid primary key default gen_random_uuid(),
+  counselor_id   uuid references profiles(id) on delete cascade,
+  slot_start     timestamptz not null,
+  slot_end       timestamptz not null,
+  available      boolean default true,
+  held_until     timestamptz -- temporary hold during booking flow
+);
+
+alter table counselor_slots enable row level security;
+-- Counselors manage their own slots
+create policy "Counselors own their slots"
+  on counselor_slots for all using (auth.uid() = counselor_id);
+-- Students can read available slots
+create policy "Students read available slots"
+  on counselor_slots for select using (available = true);
+
+-- ============================================
+-- BOOKINGS
+-- ============================================
 create table bookings (
+  id                  uuid primary key default gen_random_uuid(),
+  student_id          uuid references profiles(id),
+  counselor_id        uuid references profiles(id),
+  slot_id             uuid references counselor_slots(id),
+  slot_start          timestamptz,
+  slot_end            timestamptz,
+  type                text check (type in ('anonymous', 'named', 'crisis')),
+  status              text check (status in ('pending_confirmation', 'confirmed', 'cancelled', 'completed')),
+  notes_encrypted     text, -- AES-256, counselor-only
+  created_at          timestamptz default now()
+);
+
+alter table bookings enable row level security;
+create policy "Students see their bookings"
+  on bookings for select using (auth.uid() = student_id);
+create policy "Counselors see their bookings"
+  on bookings for all using (auth.uid() = counselor_id);
+
+-- ============================================
+-- CRISIS LOGS (no message content stored)
+-- ============================================
+create table crisis_logs (
   id             uuid primary key default gen_random_uuid(),
   student_id     uuid references profiles(id),
   counselor_id   uuid references profiles(id),
-  slot_start     timestamptz,
-  slot_end       timestamptz,
-  type           text check (type in ('anonymous','named','crisis')),
-  status         text check (status in ('pending','confirmed','cancelled','completed')),
-  notes_encrypted text,  -- AES-256 encrypted session notes
-  created_at     timestamptz default now()
+  severity       text,
+  acknowledged   boolean default false,
+  triggered_at   timestamptz default now()
 );
 
--- Chat sessions + messages
-create table chat_messages (
-  id          uuid primary key default gen_random_uuid(),
-  user_id     uuid references profiles(id) on delete cascade,
-  session_id  uuid,  -- groups messages into conversations
-  role        text check (role in ('user','assistant')),
-  content     text,
-  crisis_flag boolean default false,
-  sent_at     timestamptz default now()
-);
-
--- Resources
-create table resources (
-  id          uuid primary key default gen_random_uuid(),
-  title       text,
-  category    text check (category in ('anxiety','depression','exam_stress','relationships','sleep','self_care')),
-  type        text check (type in ('article','audio','video')),
-  url         text,
-  created_by  uuid references profiles(id),
-  created_at  timestamptz default now()
-);
+alter table crisis_logs enable row level security;
+-- Counselors see their own crisis alerts (Realtime subscribes to this)
+create policy "Counselors see their crisis alerts"
+  on crisis_logs for all using (auth.uid() = counselor_id);
 ```
-
-RLS policies ensure:
-- Students can only read/write their own rows
-- Counselors can read bookings where they are the counselor
-- Admin can read aggregated data but never individual student rows
 
 ---
 
-## Simplified Project Structure
+## Project Structure (Revised)
 
 ```
 mindbridge/
 ├── app/
+│   ├── (public)/
+│   │   └── page.tsx                    ← Landing (already built ✅)
 │   ├── (auth)/
-│   │   ├── login/page.tsx
-│   │   └── verify/page.tsx
+│   │   ├── login/page.tsx              ← Wire Supabase OTP
+│   │   └── verify/page.tsx             ← Wire Supabase OTP verify
 │   ├── (student)/
-│   │   ├── dashboard/page.tsx       ← mood streak + today's actions
-│   │   ├── chat/page.tsx            ← AI chatbot
-│   │   ├── checkin/page.tsx         ← mood log
-│   │   ├── quiz/page.tsx            ← PHQ-9 / GAD-7
-│   │   ├── resources/page.tsx       ← resource hub
-│   │   └── book/page.tsx            ← counselor booking
+│   │   ├── dashboard/page.tsx          ← Mood streak + proactive message badge
+│   │   ├── chat/page.tsx               ← THE core — streaming AI chat
+│   │   ├── check-in/page.tsx           ← Quick mood (1-5) — secondary
+│   │   ├── resources/page.tsx          ← Static embeds from JSON
+│   │   └── book/page.tsx               ← Booking confirmation (post-chat mostly)
 │   ├── (counselor)/
-│   │   └── dashboard/page.tsx       ← bookings + alerts + notes
-│   ├── (admin)/
-│   │   └── dashboard/page.tsx       ← analytics
+│   │   └── dashboard/page.tsx          ← Bookings + LIVE crisis alerts
 │   └── api/
-│       ├── chat/route.ts            ← NVIDIA NIM streaming endpoint
-│       ├── quiz/score/route.ts
-│       └── bookings/route.ts
-├── components/
-│   ├── ui/                          ← Button, Card, Input, Modal, Badge
-│   ├── MoodChart.tsx
-│   ├── ChatWindow.tsx
-│   ├── QuizFlow.tsx
-│   └── BookingCalendar.tsx
+│       ├── chat/route.ts               ← NIM streaming + agent orchestration
+│       ├── bookings/
+│       │   ├── route.ts                ← Create/list bookings
+│       │   └── [id]/confirm/route.ts   ← Confirm pending booking
+│       └── crisis/
+│           └── simulate/route.ts       ← Demo-only: manual crisis trigger
+│
 ├── lib/
 │   ├── supabase/
-│   │   ├── client.ts                ← browser client
-│   │   └── server.ts                ← server client (Route Handlers)
-│   ├── nvidia-nim.ts                ← OpenAI-compatible NIM client
-│   ├── crisis-detector.ts           ← parse crisis flag from AI response
-│   └── encryption.ts               ← AES-256 for session notes
+│   │   ├── client.ts                   ← Browser client
+│   │   └── server.ts                   ← Server client (Route Handlers)
+│   ├── agents/
+│   │   ├── memory-agent.ts             ← Builds context summary
+│   │   ├── companion-agent.ts          ← System prompt builder
+│   │   ├── action-agent.ts             ← Book slots, execute actions
+│   │   └── observer-agent.ts           ← Pattern detection logic
+│   ├── nvidia-nim.ts                   ← OpenAI-compatible NIM client
+│   ├── crisis.ts                       ← Crisis alert orchestration
+│   └── encryption.ts                   ← AES-256 for session notes
+│
+├── components/
+│   ├── ui/                             ← Already built ✅
+│   ├── chat/
+│   │   ├── ChatWindow.tsx              ← Message list + input
+│   │   ├── MessageBubble.tsx           ← Streaming text rendering
+│   │   ├── ActionChip.tsx              ← "Book counselor" suggestion UI
+│   │   └── BookingSuggestion.tsx       ← Inline confirm/cancel booking card
+│   ├── dashboard/
+│   │   ├── MoodChart.tsx               ← Recharts 30-day line
+│   │   ├── StreakCounter.tsx           ← Number + flame icon
+│   │   └── ProactiveMessageBadge.tsx  ← "New message from MindBridge"
+│   └── counselor/
+│       └── CrisisAlert.tsx             ← Realtime alert component
+│
+├── src/
+│   └── content/
+│       ├── mindbridge.ts               ← Already exists ✅ (keep)
+│       └── resources.ts                ← NEW: 8-10 hardcoded resources
+│
 └── supabase/
-    └── migrations/                  ← SQL migration files
+    ├── migrations/
+    │   └── 001_initial_schema.sql      ← All tables + RLS above
+    └── functions/
+        └── proactive-agent/
+            └── index.ts                ← Morning check-in edge function
 ```
 
 ---
 
-## Development Phases (Revised)
+## 3-Week Build Plan (Solo Dev)
 
-```
-WEEK 1 — Foundation
-├── Next.js project setup + Supabase project created
-├── Database schema + RLS policies written and tested
-├── Supabase Auth (email OTP) working end-to-end
-├── NVIDIA NIM API key obtained, test call works
-└── Design system: colors, Button, Card, Input components
+### Week 1 — Foundation + The Brain
 
-WEEK 2-3 — Student Core
-├── Dashboard page (mood streak display)
-├── Mood check-in (log + 30-day chart)
-├── PHQ-9 + GAD-7 quiz flow + scoring
-└── Resource hub (browse + bookmark)
+**Goal:** By end of week 1, a student can log in, chat with an AI that knows their history, and it feels genuinely intelligent.
 
-WEEK 4 — AI Chatbot
-├── NVIDIA NIM Route Handler with SSE streaming
-├── Chat UI (streaming message bubbles)
-├── Crisis detection + counselor alert via Supabase Realtime
-└── Session persistence (read past chats)
+| Day | Task | Why First |
+|-----|------|-----------|
+| Day 1 | Supabase setup — project, schema, RLS, seed data | Everything depends on this |
+| Day 1 | Supabase Auth wired to login/verify pages | Can't build anything authenticated without this |
+| Day 2 | NVIDIA NIM client + basic chat Route Handler | Core of the product |
+| Day 2 | Memory Agent — history query + NIM summarization | What makes it feel smart |
+| Day 3 | Companion Agent system prompt + JSON response parsing | The personality layer |
+| Day 3 | Chat UI streaming (SSE → word-by-word rendering) | What makes it feel alive |
+| Day 4 | Implicit assessment — criteria tracking + DB write | The invisible PHQ-9 |
+| Day 4 | Session persistence — load past conversations | Judges will scroll back |
+| Day 5 | Mood check-in wired to Supabase | Quick win, feeds memory |
+| Day 5 | Dashboard — mood chart + streak from real data | Visual proof it works |
 
-WEEK 5 — Booking System
-├── Counselor slot management
-├── Student booking flow (select slot → confirm → email)
-├── Counselor dashboard (bookings list + crisis alerts)
-└── Session notes (encrypted write + read)
-
-WEEK 6 — Admin + Polish
-├── Admin analytics dashboard (charts)
-├── Hindi language (i18next, key screens only)
-├── Mobile responsiveness pass
-├── Error states, loading states, empty states
-└── Basic E2E tests (Playwright) on critical flows
-
-WEEK 7 — SIH Demo Prep
-├── Seed data for demo (3 student personas, 1 counselor, content)
-├── Deploy to Vercel + Supabase production
-├── Demo script + walkthrough recording
-└── Documentation
-```
+**End of Week 1 checkpoint:** Open chat, say "I've been really stressed about exams and can't sleep" — AI responds warmly, asks a follow-up, and internally logs sleep_issues + anxiety. Memory context shows on next session. This should feel real.
 
 ---
 
-## Definition of Done (Simplified)
+### Week 2 — Agents + Actions
 
-A feature is done when:
-- [ ] Works on mobile (360px) and desktop (1280px)
-- [ ] Loading state shown during any async operation
-- [ ] Empty state handled (no data yet)
-- [ ] Error state handled (API failure, validation error)
-- [ ] RLS policy tested: can a student read another student's data? (must be no)
-- [ ] No console errors in production build
+**Goal:** By end of week 2, the proactive check-in fires, auto-booking works inside chat, and the counselor alert is live.
 
-That's it. No 80% test coverage requirement, no Swagger docs, no ARIA label audit — those are real requirements for a production app. For the SIH demo, working and correct is the goal.
+| Day | Task |
+|-----|------|
+| Day 6 | Observer Agent — pattern detection rules (no LLM needed) |
+| Day 6 | Proactive Agent — opening message generation via NIM |
+| Day 7 | Supabase pg_cron — schedule morning edge function |
+| Day 7 | Proactive message appears in chat on next student open |
+| Day 8 | Counselor slot management (simple form — day + time range) |
+| Day 8 | Action Agent — find_and_book_slot tool |
+| Day 9 | Booking suggestion UI inside chat (inline confirm/cancel) |
+| Day 9 | Booking confirmation flow — email via Resend |
+| Day 10 | Crisis escalation — crisis_logs write + Realtime subscribe |
+| Day 10 | Counselor dashboard — live alert badge (Supabase Realtime) |
+
+**End of Week 2 checkpoint:** Run the full demo flow yourself. Student chats → AI suggests booking → student confirms inside chat → counselor sees booking appear. Then trigger crisis manually → counselor badge fires live. Fix everything that breaks.
 
 ---
 
-## What Differentiates MindBridge
+### Week 3 — Polish + Demo Prep
 
-After reviewing all major mental health apps, here is what none of them do that we do:
+**Goal:** By end of week 3, the demo flow is so tight you could do it in your sleep, on bad wifi, with a judge asking questions mid-demo.
 
-1. **Campus counselor integration** — Woebot, Wysa, Calm, Headspace are all direct-to-consumer. They have no concept of an institutional counselor. MindBridge is the only app where a college counselor sees live crisis alerts and manages bookings.
+| Day | Task |
+|-----|------|
+| Day 11 | Resource hub — static JSON → clean UI (8 embeds) |
+| Day 11 | Mobile responsiveness pass — chat, dashboard, counselor |
+| Day 12 | Error states everywhere — API down, no slots, network fail |
+| Day 12 | Loading states — skeleton loaders, streaming indicators |
+| Day 13 | Seed demo data — Riya's 2 weeks of mood + chat history |
+| Day 13 | Demo crisis simulate button (hidden, keyboard shortcut) |
+| Day 14 | Deploy to Vercel + Supabase production |
+| Day 14 | End-to-end demo run on production — fix prod-only bugs |
+| Day 15 | Rehearse demo 10 times with real people |
+| Day 15 | Write the 2-minute product pitch |
 
-2. **Indian campus context** — All leading apps are Western-designed. No PHQ-9 results page that says "your score suggests moderate depression — iCall (9152987821) and your campus counselor are here for you."
+---
 
-3. **Anonymous-first booking** — BetterHelp, Talkspace require identity upfront. MindBridge lets a student book a counselor session without revealing their name until they're ready.
+## The Demo Script (4 Minutes)
 
-These three are our differentiators. Every feature we build either strengthens one of these three or gets cut.
+**Minute 1 — "It knows her"**
+Open student dashboard as Riya. Show that MindBridge already sent her a message this morning — unprompted. "Hey, rough couple of days — how's today treating you?" Explain: app noticed low mood Tuesday + Wednesday. Nobody asked it to reach out.
+
+**Minute 2 — "It assesses without asking"**
+Riya replies: "Still not great honestly, exams are close and I can't sleep." AI responds naturally. No form. No "on a scale of 1-10". Just a conversation. Point out to judges: internally it just flagged sleep_issues, exam_stress, low_mood. Hidden assessment. Invisible to the user.
+
+**Minute 3 — "It acts without being asked"**
+AI says: "I can see this is building up. I found a slot with Dr. Priya Sharma — Thursday at 3 PM. Want me to confirm it?" Riya taps "Yes". Booking confirmed. No page redirect. Inside the chat.
+
+**Minute 4 — "It protects her"**
+Riya says something concerning. Switch to counselor's laptop. Crisis alert fires live. No refresh. Real-time. "A student needs support." Counselor acknowledges. Both screens showing simultaneously. Done.
+
+---
+
+## What This Becomes (Post-Demo Roadmap)
+
+This is the honest roadmap — not features for the sake of features, but natural extensions of the companion concept.
+
+**v1.1 — 1 month post-demo**
+- Hindi language support (i18next already in stack)
+- PWA push notifications (proactive check-in as a push, not just in-app)
+- Peer community — anonymous forum once moderation is figured out
+- Multiple counselors per institution
+
+**v2.0 — 3 months post-demo**
+- Voice interface — student speaks, companion listens (Web Speech API + Whisper via NIM)
+- Longitudinal reports — "Here's your emotional journey over 3 months" (for student only, beautiful chart)
+- Counselor session prep — before a booking, companion summarizes relevant context for the counselor (anonymized, student-approved)
+- Multi-institution deployment — separate Supabase projects per institution
+
+**v3.0 — 6 months post-demo**
+- True fine-tuned model — after 6 months of conversation data, fine-tune Llama on mental health + Indian campus context (NVIDIA makes this straightforward)
+- WhatsApp interface — meet students where they already are
+- ABHA health ID integration — for formal health record continuity
+- Research dashboard — anonymized aggregate data for mental health researchers
+
+---
+
+## The Three Things That Differentiate This
+
+After analyzing every mental health app in the market:
+
+**1. It initiates.** Every other app waits. We reach out first. This is new.
+
+**2. It remembers everything and uses it naturally.** Not "according to your history" — just genuine continuity. This is new.
+
+**3. It connects to a real institutional safety net.** Your campus counselor sees the alert. Not a generic helpline. Your actual counselor. This is new.
+
+These three things are not features. They are the product. Everything else is infrastructure.
