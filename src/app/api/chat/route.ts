@@ -105,7 +105,7 @@ export async function POST(request: Request) {
           }
 
           // 8. Update assessment if new signals found
-          if (parsed?.assessment_update?.criteria_flagged?.length > 0) {
+          if (parsed?.assessment_update?.criteria_flagged && parsed.assessment_update.criteria_flagged.length > 0) {
             await updateAssessment(supabase, user.id, parsed.assessment_update)
           }
 
@@ -205,9 +205,14 @@ async function updateAssessment(
   const existingCriteria = existing?.criteria_flagged ?? []
   const mergedCriteria = [...new Set([...existingCriteria, ...update.criteria_flagged])]
 
+  // Validate severity matches enum
+  const validSeverity = ['none', 'mild', 'moderate', 'severe'].includes(update.severity)
+    ? update.severity as 'none' | 'mild' | 'moderate' | 'severe'
+    : 'mild'
+
   await supabase.from('assessments').insert({
     user_id: userId,
     criteria_flagged: mergedCriteria,
-    severity: update.severity,
+    severity: validSeverity,
   })
 }

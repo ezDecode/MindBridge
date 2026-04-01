@@ -69,7 +69,7 @@ async function logCrisisWithoutCounselor(
     .from('profiles')
     .select('id')
     .eq('role', 'counselor')
-    .eq('institution', student?.institution)
+    .eq('institution', student?.institution ?? '')
     .limit(1)
     .single()
 

@@ -74,6 +74,37 @@ export type Database = {
           }
         ]
       }
+      chat_sessions: {
+        Row: {
+          id: string
+          user_id: string
+          title: string | null
+          created_at: string
+          last_message_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          title?: string | null
+          created_at?: string
+          last_message_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          title?: string | null
+          created_at?: string
+          last_message_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'chat_sessions_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       chat_messages: {
         Row: {
           id: string
@@ -110,6 +141,12 @@ export type Database = {
             foreignKeyName: 'chat_messages_user_id_fkey'
             columns: ['user_id']
             referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'chat_messages_session_id_fkey'
+            columns: ['session_id']
+            referencedRelation: 'chat_sessions'
             referencedColumns: ['id']
           }
         ]
@@ -293,6 +330,7 @@ export type Database = {
 // Helper types for easy access
 export type Profile = Database['public']['Tables']['profiles']['Row']
 export type MoodLog = Database['public']['Tables']['mood_logs']['Row']
+export type ChatSession = Database['public']['Tables']['chat_sessions']['Row']
 export type ChatMessage = Database['public']['Tables']['chat_messages']['Row']
 export type Assessment = Database['public']['Tables']['assessments']['Row']
 export type CounselorSlot = Database['public']['Tables']['counselor_slots']['Row']
@@ -302,5 +340,6 @@ export type CrisisLog = Database['public']['Tables']['crisis_logs']['Row']
 // Insert types
 export type ProfileInsert = Database['public']['Tables']['profiles']['Insert']
 export type MoodLogInsert = Database['public']['Tables']['mood_logs']['Insert']
+export type ChatSessionInsert = Database['public']['Tables']['chat_sessions']['Insert']
 export type ChatMessageInsert = Database['public']['Tables']['chat_messages']['Insert']
 export type BookingInsert = Database['public']['Tables']['bookings']['Insert']

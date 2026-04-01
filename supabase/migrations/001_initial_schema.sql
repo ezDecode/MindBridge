@@ -58,12 +58,30 @@ create policy "Students own their mood logs"
 create index idx_mood_logs_user_time on mood_logs(user_id, logged_at desc);
 
 -- ============================================
+-- CHAT SESSIONS
+-- ============================================
+create table if not exists chat_sessions (
+  id               uuid primary key default gen_random_uuid(),
+  user_id          uuid references profiles(id) on delete cascade not null,
+  title            text,
+  created_at       timestamptz default now(),
+  last_message_at  timestamptz default now()
+);
+
+alter table chat_sessions enable row level security;
+
+create policy "Students own their sessions"
+  on chat_sessions for all using (auth.uid() = user_id);
+
+create index idx_chat_sessions_user_time on chat_sessions(user_id, last_message_at desc);
+
+-- ============================================
 -- CHAT MESSAGES
 -- ============================================
 create table if not exists chat_messages (
   id           uuid primary key default gen_random_uuid(),
   user_id      uuid references profiles(id) on delete cascade not null,
-  session_id   uuid not null,
+  session_id   uuid references chat_sessions(id) on delete cascade not null,
   role         text check (role in ('user', 'assistant')) not null,
   content      text not null,
   crisis_flag  boolean default false,

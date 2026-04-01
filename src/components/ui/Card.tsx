@@ -3,7 +3,7 @@
 import { HTMLAttributes, forwardRef } from "react";
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "elevated" | "outline" | "subtle";
+  variant?: "default" | "elevated" | "outline" | "subtle" | "warm";
   padding?: "none" | "sm" | "md" | "lg";
 }
 
@@ -15,6 +15,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         "border border-[var(--color-border)] bg-[var(--color-surface-warm)]",
       outline: "border border-[var(--color-border)] bg-transparent",
       subtle: "border border-[var(--color-border)] bg-[var(--color-surface-tinted)]",
+      warm: "border border-amber-200 bg-amber-50",
     };
 
     const paddings = {

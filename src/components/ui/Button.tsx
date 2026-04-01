@@ -4,7 +4,7 @@ import { ElementType, ComponentPropsWithoutRef, ReactNode } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "warm";
+export type ButtonVariant = "primary" | "warm" | "ghost" | "link" | "danger";
 type ButtonSize = "sm" | "md" | "lg";
 type ButtonWeight = "normal" | "medium" | "semibold" | "bold";
 
@@ -27,6 +27,12 @@ const variantStyles: Record<ButtonVariant, string> = {
     "bg-[var(--color-text-primary)] !text-[var(--color-white)] hover:bg-[var(--color-black-dark)] hover:!text-[var(--color-white)]",
   warm:
     "bg-[var(--color-surface-warm-hover)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-warm-active)] hover:text-[var(--color-text-primary)]",
+  ghost:
+    "bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-strong)] hover:text-[var(--color-text-primary)]",
+  link:
+    "bg-transparent text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] underline-offset-4 hover:underline p-0 h-auto",
+  danger:
+    "bg-red-600 text-white hover:bg-red-700",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -60,7 +66,7 @@ export function Button<T extends ElementType = "button">({
   const sharedClassName = cn(
     baseStyles,
     variantStyles[variant],
-    sizeStyles[size],
+    variant !== "link" && sizeStyles[size],
     weightStyles[weight],
     className
   );
