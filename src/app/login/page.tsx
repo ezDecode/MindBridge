@@ -1,8 +1,27 @@
-import { FiArrowRight, FiLock, FiMail } from "react-icons/fi";
+"use client";
+
+import { useActionState, useEffect, useState } from "react";
+import { FiArrowRight, FiLock, FiMail, FiLoader, FiCheckCircle, FiAlertCircle } from "react-icons/fi";
 import { Button, Card, Container, Input, Text } from "@/components/ui";
 import { SiteFooter, SiteHeader } from "@/components/site";
+import { signInWithOtp, type AuthState } from "@/lib/auth/actions";
+import { useRouter } from "next/navigation";
+
+const initialState: AuthState = {};
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [state, formAction, isPending] = useActionState(signInWithOtp, initialState);
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    if (state.success) {
+      // Store email for verify page
+      sessionStorage.setItem("pendingEmail", email);
+      router.push("/verify");
+    }
+  }, [state.success, email, router]);
+
   return (
     <main id="main-content" className="w-full">
       <SiteHeader />
@@ -56,17 +75,44 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <div className="mt-6 md:mt-8 space-y-4 md:space-y-5">
+              <form action={formAction} className="mt-6 md:mt-8 space-y-4 md:space-y-5">
                 <label className="block">
                   <Text as="span" variant="label" weight="medium">
                     College email
                   </Text>
                   <Input
                     type="email"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@college.edu"
+                    required
+                    disabled={isPending}
                     className="mt-2 min-h-[3.25rem] rounded-[calc(var(--radius-sm)*var(--brm))] squircle border-[var(--color-border)] bg-[var(--color-surface)]"
                   />
                 </label>
+
+                {state.error && (
+                  <div className="rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-danger)] bg-red-50 p-4">
+                    <div className="flex items-start gap-3">
+                      <FiAlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-danger)]" />
+                      <Text as="p" variant="small" className="text-[var(--color-danger)]">
+                        {state.error}
+                      </Text>
+                    </div>
+                  </div>
+                )}
+
+                {state.success && (
+                  <div className="rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-success)] bg-green-50 p-4">
+                    <div className="flex items-start gap-3">
+                      <FiCheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-success)]" />
+                      <Text as="p" variant="small" className="text-[var(--color-success)]">
+                        {state.message}
+                      </Text>
+                    </div>
+                  </div>
+                )}
 
                 <div className="rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-gray-50)] p-4">
                   <div className="flex items-start gap-3">
@@ -77,11 +123,26 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                <Button href="/verify" variant="warm" size="md" className="w-full">
-                  Send code
-                  <FiArrowRight className="h-4 w-4" />
+                <Button 
+                  type="submit" 
+                  variant="warm" 
+                  size="md" 
+                  className="w-full"
+                  disabled={isPending || !email}
+                >
+                  {isPending ? (
+                    <>
+                      <FiLoader className="h-4 w-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send code
+                      <FiArrowRight className="h-4 w-4" />
+                    </>
+                  )}
                 </Button>
-              </div>
+              </form>
 
               <div className="mt-6 md:mt-8 grid gap-3 sm:grid-cols-2">
                 <Button href="/student/chat" variant="warm" className="w-full">
