@@ -15,7 +15,6 @@ export const studentNav: NavItem[] = [
   { href: "/student/dashboard", label: "Dashboard", icon: "grid" },
   { href: "/student/chat", label: "Chat", icon: "chat" },
   { href: "/student/check-in", label: "Check-in", icon: "heart" },
-  { href: "/student/quizzes", label: "Quizzes", icon: "quiz" },
   { href: "/student/resources", label: "Resources", icon: "library" },
   { href: "/student/book", label: "Book", icon: "calendar" },
 ];
@@ -24,14 +23,10 @@ export const counselorNav: NavItem[] = [
   { href: "/counselor/dashboard", label: "Dashboard", icon: "shield" },
 ];
 
-export const adminNav: NavItem[] = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: "chart" },
-];
-
 export const dashboardMetrics = [
   { label: "Check-in streak", value: "9 days", note: "Gentle consistency." },
   { label: "Next session", value: "Tue, 2:00 PM", note: "Anonymous booking." },
-  { label: "Latest screening", value: "PHQ-9 · Mild", note: "Retake in 7 days." },
+  { label: "Active chats", value: "2 threads", note: "Continue anytime." },
 ];
 
 export const moodHistory = [
@@ -52,7 +47,7 @@ export const actionTiles = [
   },
   {
     title: "Log a check-in",
-    description: "Track today’s mood before the week blurs.",
+    description: "Track today's mood before the week blurs.",
     href: "/student/check-in",
   },
   {
@@ -73,15 +68,15 @@ export const chatMessages = [
   },
   {
     role: "assistant",
-    content: "That sounds exhausting. Want to untangle the pressure, or check if the low feeling has been building?",
+    content: "That sounds exhausting. Want to untangle the pressure, or check if you need to talk to someone?",
   },
   {
     role: "user",
-    content: "Maybe the low feeling. It's been building for weeks.",
+    content: "Maybe talk to someone. It's been building for weeks.",
   },
   {
     role: "assistant",
-    content: "A quick PHQ-9 could give you a clearer picture. We can stay in the chat after if you want.",
+    content: "I can help you book a counselor session. Anonymous or named - whatever feels right. Want to see the options?",
   },
 ];
 
@@ -91,7 +86,7 @@ export const sessionHistory = [
   { title: "Could not sleep", time: "Mar 19 · 12:07 AM" },
 ];
 
-export const suggestedActions = ["Take PHQ-9", "Book a counselor", "Read a breathing guide"];
+export const suggestedActions = ["Continue chat", "Book a counselor", "Read wellness resources"];
 
 export const moodOptions = [
   { label: "Very low", note: "Heavy, flat, or drained." },
@@ -99,72 +94,6 @@ export const moodOptions = [
   { label: "Steady", note: "Managing, but not great." },
   { label: "Lighter", note: "A bit more settled today." },
   { label: "Good", note: "Clearer, calmer, or hopeful." },
-];
-
-export const quizCards = [
-  {
-    name: "PHQ-9",
-    label: "Depression screening",
-    note: "9 questions · plain-language severity band",
-  },
-  {
-    name: "GAD-7",
-    label: "Anxiety screening",
-    note: "7 questions · same calm scoring flow",
-  },
-];
-
-export const quizQuestions = [
-  "Little interest or pleasure in doing things",
-  "Feeling down, depressed, or hopeless",
-  "Trouble concentrating on classes, reading, or work",
-];
-
-export const quizHistory = [
-  { type: "PHQ-9", score: "8", severity: "Mild", date: "Mar 23" },
-  { type: "GAD-7", score: "11", severity: "Moderate", date: "Mar 17" },
-  { type: "PHQ-9", score: "6", severity: "Minimal", date: "Mar 10" },
-];
-
-export const resources = [
-  {
-    type: "Article",
-    title: "How to steady yourself before an exam spiral",
-    category: "Exam Stress",
-    duration: "5 min read",
-    saved: true,
-  },
-  {
-    type: "Audio",
-    title: "Two-minute breathing reset for racing thoughts",
-    category: "Anxiety",
-    duration: "2 min listen",
-    saved: false,
-  },
-  {
-    type: "Video",
-    title: "A gentle sleep routine for hostel nights",
-    category: "Sleep",
-    duration: "7 min watch",
-    saved: true,
-  },
-  {
-    type: "Article",
-    title: "What to say when you need space from everyone",
-    category: "Relationships",
-    duration: "4 min read",
-    saved: false,
-  },
-];
-
-export const resourceFilters = [
-  "All",
-  "Anxiety",
-  "Depression",
-  "Exam Stress",
-  "Relationships",
-  "Sleep",
-  "Self-Care",
 ];
 
 export const counselors = [
@@ -232,34 +161,7 @@ export const counselorBookings = [
   { student: "Anonymous", type: "Anonymous", time: "Wed · 11:30 AM", status: "Pending" },
 ];
 
-export const adminMetrics = [
-  { label: "Average mood this week", value: "3.4 / 5" },
-  { label: "Bookings this month", value: "82" },
-  { label: "Crisis flags this week", value: "7" },
-];
-
-export const adminMoodTrend = [
-  { label: "Week 1", value: 56 },
-  { label: "Week 2", value: 64 },
-  { label: "Week 3", value: 60 },
-  { label: "Week 4", value: 72 },
-];
-
-export const adminQuizDistribution = [
-  { label: "Minimal", value: 28 },
-  { label: "Mild", value: 24 },
-  { label: "Moderate", value: 18 },
-  { label: "High", value: 9 },
-];
-
-export const adminResources = [
-  { title: "Body scan for sleep", type: "Audio", category: "Sleep" },
-  { title: "When exam pressure stops feeling normal", type: "Article", category: "Exam Stress" },
-  { title: "How to ask for help without explaining everything", type: "Video", category: "Self-Care" },
-];
-
-// --- Mindbridge-inspired content sections ---
-
+// Landing page content
 export const mindbridgeCategories = [
   { label: "Stress less", id: "stress" },
   { label: "Sleep soundly", id: "sleep" },
@@ -272,37 +174,27 @@ export const mindbridgeCategories = [
 export const beKindCTA = {
   eyebrow: "Be kind to your mind",
   headline: "Your companion for calmer days and clearer nights.",
-  description: "AI chat when nights feel heavy. Validated screenings. Real counselor booking when you're ready.",
+  description: "AI chat when nights feel heavy. Real counselor booking when you're ready.",
   features: [
     "Talk through what's heavy - anytime, anonymously",
-    "Understand patterns with PHQ-9 and GAD-7",
-    "Book a counselor in under two minutes",
     "Track mood and build a daily rhythm",
+    "Book a counselor in under two minutes",
+    "Access curated wellness resources",
   ],
-};
-
-export const stayInLoop = {
-  headline: "Stay in the loop",
-  description:
-    "Be the first to hear about new wellness resources, campus events, and features designed for student.",
 };
 
 export const faqItems = [
   {
     question: "What is MindBridge?",
-    answer: "Your campus companion for mental health - anonymous AI chat, validated screenings (PHQ-9, GAD-7), and direct counselor booking. Calm before clinical.",
+    answer: "Your campus companion for mental health - anonymous AI chat, mood tracking, and direct counselor booking. Calm before clinical.",
   },
   {
     question: "Is it really anonymous?",
-    answer: "Yes. Chat, take screenings, and book sessions without sharing your name. You choose when to reveal your identity.",
+    answer: "Yes. Chat, track mood, and book sessions without sharing your name. You choose when to reveal your identity.",
   },
   {
     question: "How does the AI chat work?",
-    answer: "Short, warm replies - one question at a time. It suggests next steps like screenings or booking a counselor. Not a replacement for professional support.",
-  },
-  {
-    question: "What are PHQ-9 and GAD-7?",
-    answer: "Clinically validated screening tools. PHQ-9 screens for depression, GAD-7 for anxiety. Plain-language guidance, not diagnostic labels.",
+    answer: "Short, warm replies - one question at a time. It suggests next steps like mood check-ins or booking a counselor. Not a replacement for professional support.",
   },
   {
     question: "How do I book a counselor?",

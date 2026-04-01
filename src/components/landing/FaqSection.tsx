@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
-import { Card, Container, Text } from "@/components/ui";
+import { Container, Text } from "@/components/ui";
 import { faqItems } from "@/content/mindbridge";
 import { sectionReveal, stagger, item } from "./motion";
 
@@ -13,15 +13,15 @@ export function FaqSection() {
   return (
     <motion.section 
       id="faq" 
-      className="w-full py-16 sm:py-24" 
+      className="w-full py-12 sm:py-16 md:py-24" 
       initial="hidden" 
       whileInView="visible" 
       viewport={{ once: true, margin: "-100px" }} 
       variants={sectionReveal}
     >
       <Container size="md">
-        <motion.div variants={item} className="text-center">
-          <Text as="h2" variant="h2" weight="bold" className="text-balance text-[var(--color-text-primary)]">
+        <motion.div variants={item} className="text-center px-4">
+          <Text as="h2" variant="h3" weight="bold" className="text-balance text-[var(--color-text-primary)] md:text-h2">
             Common questions
           </Text>
           <Text as="p" variant="body" color="secondary" className="mx-auto mt-2 max-w-[50ch] text-balance">
@@ -31,7 +31,7 @@ export function FaqSection() {
 
         <motion.div 
           variants={stagger} 
-          className="mx-auto mt-12 max-w-[54rem]"
+          className="mx-auto mt-10 md:mt-12 max-w-[54rem]"
         >
           <div className="border-t border-[var(--color-border-light)]">
             {faqItems.map((faq, i) => {
@@ -44,14 +44,14 @@ export function FaqSection() {
                 >
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : i)}
-                    className="flex w-full items-center justify-between py-6 text-left transition-colors hover:text-[var(--color-primary)] focus:outline-none"
+                    className="flex w-full min-h-[4rem] items-center justify-between py-4 md:py-6 text-left transition-colors hover:text-[var(--color-primary)] focus:outline-none"
                     aria-expanded={isOpen}
                   >
                     <Text 
                       as="span" 
-                      variant="h6" 
+                      variant="label" 
                       weight="bold" 
-                      className={`pr-8 transition-colors duration-300 ${
+                      className={`pr-6 md:pr-8 transition-colors duration-300 ${
                         isOpen ? "text-[var(--color-primary)]" : "text-[var(--color-text-primary)]"
                       }`}
                     >
@@ -74,7 +74,7 @@ export function FaqSection() {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        <div className="pb-8 pr-12">
+                        <div className="pb-6 md:pb-8 pr-10 md:pr-12">
                           <Text as="p" variant="body" className="max-w-[65ch] text-[var(--color-text-secondary)] leading-relaxed">
                             {faq.answer}
                           </Text>

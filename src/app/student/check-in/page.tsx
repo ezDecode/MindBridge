@@ -79,7 +79,7 @@ export default function StudentCheckInPage() {
               Four check-ins this week. If the low feeling lingers, PHQ-9 can give you a clearer read.
             </Text>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Button href="/student/quizzes">Take PHQ-9</Button>
+              <Button href="/student/book">Book counselor</Button>
               <Button href="/student/resources" variant="warm">
                 Open sleep resources
               </Button>

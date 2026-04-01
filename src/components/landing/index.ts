@@ -4,4 +4,3 @@ export { CarouselSection } from "./CarouselSection";
 export { CategoriesSection } from "./CategoriesSection";
 export { ResourcesSection } from "./ResourcesSection";
 export { FaqSection } from "./FaqSection";
-export { NewsletterSection } from "./NewsletterSection";

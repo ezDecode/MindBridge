@@ -96,17 +96,17 @@ export function CategoriesSection() {
     >
       <Container size="lg">
         <div className="mx-auto w-full max-w-[90rem] px-6 py-16 sm:px-12 sm:pb-32 sm:pt-16">
-          <motion.div variants={item} className="mb-12">
+          <motion.div variants={item} className="mb-8 sm:mb-12">
             <Text 
               as="h2" 
-              className="text-[var(--color-text-primary)] font-bold text-center text-3xl sm:text-4xl"
+              className="text-[var(--color-text-primary)] font-bold text-center text-2xl sm:text-3xl md:text-4xl"
             >
               What kind of mindbridge are you looking for?
             </Text>
           </motion.div>
 
           <motion.div 
-            className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3" 
+            className="grid w-full grid-cols-1 gap-3 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3" 
             variants={stagger}
           >
             {mindbridgeCategories.map((cat) => {
@@ -116,7 +116,7 @@ export function CategoriesSection() {
                   key={cat.id}
                   type="button"
                   variants={item}
-                  className="group flex w-full items-center justify-between rounded-[calc(var(--radius-md)*var(--brm))] squircle border-[0.125rem] border-[var(--color-border)] bg-white p-2 pl-6 transition-[border-color,background-color] duration-200 hover:border-[var(--color-border-strong)] focus:outline-none"
+                  className="group flex min-h-[4rem] w-full items-center justify-between rounded-[calc(var(--radius-md)*var(--brm))] squircle border-[0.125rem] border-[var(--color-border)] bg-white p-3 pl-5 sm:p-2 sm:pl-6 transition-[border-color,background-color] duration-200 hover:border-[var(--color-border-strong)] focus:outline-none"
                 >
                   <Text 
                     as="span" 

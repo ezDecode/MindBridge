@@ -13,7 +13,7 @@ export default function StudentChatPage() {
         description="A calm companion, not a wall of AI text. Crisis support stays close without overwhelming."
         actions={
           <>
-            <Button href="/student/quizzes">Take PHQ-9</Button>
+            <Button href="/student/check-in">Check mood</Button>
             <Button href="/student/book" variant="warm">
               Book counselor
             </Button>

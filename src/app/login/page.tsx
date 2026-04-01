@@ -14,14 +14,14 @@ export default function LoginPage() {
               <Text as="p" variant="label" color="brand">
                 Anonymous-first access
               </Text>
-              <Text as="h1" variant="h2" weight="bold" className="mt-3 max-w-[14ch]">
+              <Text as="h1" variant="h3" weight="bold" className="mt-3 max-w-[14ch)] md:text-h2">
                 College email unlocks the deeper features.
               </Text>
               <Text as="p" variant="body" color="secondary" className="mt-4">
                 Browse chat and resources before sign-in. OTP unlocks quiz history, bookings, and saved progress.
               </Text>
 
-              <div className="mt-8 space-y-3">
+              <div className="mt-6 md:mt-8 space-y-3">
                 <div className="rounded-[calc(var(--radius-lg)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
                   <Text as="p" variant="h6" weight="bold">
                     Why OTP here
@@ -43,11 +43,11 @@ export default function LoginPage() {
 
             <Card variant="elevated" padding="lg" className="rounded-[calc(var(--radius-2xl)*var(--brm))] squircle">
               <div className="flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)]">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)]">
                   <FiMail className="h-5 w-5" />
                 </span>
                 <div>
-                  <Text as="p" variant="h3" weight="bold">
+                  <Text as="p" variant="h4" weight="bold" className="md:text-h3">
                     Sign in with OTP
                   </Text>
                   <Text as="p" variant="small" color="secondary" className="mt-1">
@@ -56,7 +56,7 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <div className="mt-8 space-y-5">
+              <div className="mt-6 md:mt-8 space-y-4 md:space-y-5">
                 <label className="block">
                   <Text as="span" variant="label" weight="medium">
                     College email
@@ -70,7 +70,7 @@ export default function LoginPage() {
 
                 <div className="rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-gray-50)] p-4">
                   <div className="flex items-start gap-3">
-                    <FiLock className="mt-0.5 h-4 w-4 text-[var(--color-primary)]" />
+                    <FiLock className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-primary)]" />
                     <Text as="p" variant="small" color="secondary">
                       OTP sign-in — no password to remember or reset.
                     </Text>
@@ -83,7 +83,7 @@ export default function LoginPage() {
                 </Button>
               </div>
 
-              <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              <div className="mt-6 md:mt-8 grid gap-3 sm:grid-cols-2">
                 <Button href="/student/chat" variant="warm" className="w-full">
                   Browse chat preview
                 </Button>

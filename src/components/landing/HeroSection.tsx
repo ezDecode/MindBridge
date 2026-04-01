@@ -22,51 +22,51 @@ export function HeroSection() {
           className="mx-auto flex w-full max-w-[86.25rem] flex-col gap-6 px-5 pb-4 sm:gap-7"
         >
           <motion.div variants={item} className="flex flex-col items-center text-center">
-            <Text as="h1" variant="h1" weight="bold" className="text-[var(--color-text-primary)]">
+            <Text as="h1" variant="h1" weight="bold" className="text-[clamp(1.875rem,6vw,3.5rem)] leading-[1.1] tracking-tight text-[var(--color-text-primary)]">
               <span className="block">When campus feels heavy</span>
               <span className="block mt-1">You&apos;re not alone</span>
             </Text>
           </motion.div>
 
           <motion.div variants={item}>
-            <ul className="mx-auto flex flex-wrap justify-center gap-x-5 gap-y-0 whitespace-nowrap">
+            <ul className="mx-auto flex flex-wrap justify-center gap-x-2 sm:gap-x-4 gap-y-2 max-w-[48rem]">
               {valueProps.map((prop, i) => (
-                <li key={i} className="group flex cursor-pointer items-center gap-2 rounded-full px-2.5 py-1.25 transition-all duration-300 hover:bg-[var(--color-primary-light)]">
-                  <FiCheckCircle className="h-3.5 w-3.5 shrink-0 text-[var(--color-primary)]" aria-hidden="true" />
-                  <Text as="span" variant="h6" className="text-[var(--color-text-secondary)] transition-colors duration-300 group-hover:text-[var(--color-text-primary)]">{prop}</Text>
+                <li key={i} className="group flex cursor-pointer items-center gap-1.5 sm:gap-2 rounded-full px-2.5 py-1.5 sm:px-3 sm:py-1.25 transition-all duration-300 hover:bg-[var(--color-primary-light)]">
+                  <FiCheckCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0 text-[var(--color-primary)]" aria-hidden="true" />
+                  <Text as="span" variant="small" weight="medium" className="tracking-tight text-[var(--color-text-secondary)] text-center transition-colors duration-300 group-hover:text-[var(--color-text-primary)]">{prop}</Text>
                 </li>
               ))}
             </ul>
           </motion.div>
 
-          <motion.div variants={item} className="mt-2 grid gap-4 sm:grid-cols-[1.5fr_1fr]">
+          <motion.div variants={item} className="mt-4 sm:mt-2 grid gap-4 md:grid-cols-[1.5fr_1fr]">
             <Card 
               variant="elevated" 
               padding="none"
-              className="group relative flex flex-col justify-between overflow-hidden rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none bg-[var(--color-primary-light)] pt-[1.6rem] pb-0 sm:min-h-[290px]"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none bg-[var(--color-primary-light)] pt-5 sm:pt-6 pb-4 sm:pb-0 md:pt-[1.6rem] min-h-[260px] sm:min-h-[290px]"
             >
               <div className="absolute inset-0 bg-[var(--color-primary-light)]" />
-              <div className="relative flex flex-col items-center gap-5 px-4 sm:px-6">
+              <div className="relative z-10 flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 px-4 sm:px-6">
                 <div className="text-center">
-                  <Text as="h3" variant="h3" weight="semibold" className="text-[var(--color-text-primary)]">
+                  <Text as="h3" weight="semibold" className="text-[clamp(1rem,2.5vw,1.75rem)] leading-[1.2] tracking-tight text-[var(--color-text-primary)]">
                     <span className="block">Your mental health matters —</span>
                     <span className="block">we help you thrive every day</span>
                   </Text>
                 </div>
-                <Button href="/student/dashboard" size="md" className="w-fit">
+                <Button href="/student/dashboard" size="sm" className="w-fit">
                   Start for free
-                  <FiArrowRight className="ml-2 h-4 w-4" />
+                  <FiArrowRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Button>
               </div>
-              <div className="relative mt-auto">
-                <svg viewBox="0 0 400 200" fill="none" className="w-full h-auto">
-                  <rect x="60" y="30" width="280" height="150" rx="12" fill="var(--color-surface)" />
-                  <rect x="80" y="50" width="240" height="16" rx="4" fill="var(--color-primary-light)" />
-                  <rect x="80" y="76" width="180" height="10" rx="3" fill="var(--color-primary-light)" />
-                  <rect x="80" y="94" width="200" height="10" rx="3" fill="var(--color-primary-light)" />
-                  <rect x="80" y="112" width="140" height="10" rx="3" fill="var(--color-primary-light)" />
-                  <circle cx="320" cy="150" r="30" fill="var(--color-primary-light)" />
-                  <path d="M308 150h24M320 138v24" stroke="var(--color-primary)" strokeWidth="3" strokeLinecap="round" />
+              <div className="absolute bottom-0 left-0 right-0">
+                <svg viewBox="0 0 400 180" fill="none" className="w-full h-auto max-h-[100px] sm:max-h-none">
+                  <rect x="40" y="20" width="320" height="140" rx="10" fill="var(--color-surface)" />
+                  <rect x="60" y="40" width="280" height="14" rx="4" fill="var(--color-primary-light)" />
+                  <rect x="60" y="62" width="200" height="9" rx="3" fill="var(--color-primary-light)" />
+                  <rect x="60" y="78" width="220" height="9" rx="3" fill="var(--color-primary-light)" />
+                  <rect x="60" y="94" width="160" height="9" rx="3" fill="var(--color-primary-light)" />
+                  <circle cx="340" cy="130" r="25" fill="var(--color-primary-light)" />
+                  <path d="M330 130h20M340 120v20" stroke="var(--color-primary)" strokeWidth="2.5" strokeLinecap="round" />
                 </svg>
               </div>
             </Card>
@@ -74,31 +74,31 @@ export function HeroSection() {
             <Card 
               variant="elevated" 
               padding="none"
-              className="group relative flex flex-col justify-between overflow-hidden rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none bg-[var(--color-primary-light)] pt-[1.6rem] pb-0 sm:min-h-[290px]"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none bg-[var(--color-primary-light)] pt-5 sm:pt-6 pb-4 sm:pb-0 md:pt-[1.6rem] min-h-[260px] sm:min-h-[290px]"
             >
               <div className="absolute inset-0 bg-[var(--color-primary-light)]" />
-              <div className="relative flex flex-col items-center gap-5 px-4 sm:px-6">
+              <div className="relative z-10 flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 px-4 sm:px-6">
                 <div className="text-center">
-                  <Text as="h3" variant="h3" weight="semibold" className="text-[var(--color-text-primary)]">
+                  <Text as="h3" weight="semibold" className="text-[clamp(1rem,2.5vw,1.75rem)] leading-[1.2] tracking-tight text-[var(--color-text-primary)]">
                     <span className="block">Someone to talk to, anytime</span>
                     <span className="block">Your safe space</span>
                   </Text>
                 </div>
-                <Button href="/student/chat" size="md" className="w-fit">
+                <Button href="/student/chat" size="sm" className="w-fit">
                   Chat now
-                  <FiArrowRight className="ml-2 h-4 w-4" />
+                  <FiArrowRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Button>
               </div>
-              <div className="relative mt-auto">
-                <svg viewBox="0 0 400 200" fill="none" className="w-full h-auto">
-                  <rect x="60" y="30" width="280" height="150" rx="12" fill="var(--color-surface)" />
-                  <rect x="80" y="50" width="80" height="24" rx="6" fill="var(--color-primary-light)" />
-                  <rect x="170" y="50" width="150" height="24" rx="6" fill="var(--color-primary-light)" />
-                  <rect x="80" y="84" width="120" height="16" rx="4" fill="var(--color-primary-light)" />
-                  <rect x="80" y="108" width="180" height="16" rx="4" fill="var(--color-primary-light)" />
-                  <rect x="80" y="132" width="100" height="16" rx="4" fill="var(--color-primary-light)" />
-                  <circle cx="200" cy="160" r="20" fill="var(--color-primary)" />
-                  <path d="M192 160h16M200 152v16" stroke="var(--color-surface)" strokeWidth="2.5" strokeLinecap="round" />
+              <div className="absolute bottom-0 left-0 right-0">
+                <svg viewBox="0 0 400 180" fill="none" className="w-full h-auto max-h-[100px] sm:max-h-none">
+                  <rect x="40" y="20" width="320" height="140" rx="10" fill="var(--color-surface)" />
+                  <rect x="60" y="40" width="90" height="22" rx="5" fill="var(--color-primary-light)" />
+                  <rect x="160" y="40" width="170" height="22" rx="5" fill="var(--color-primary-light)" />
+                  <rect x="60" y="70" width="140" height="14" rx="4" fill="var(--color-primary-light)" />
+                  <rect x="60" y="92" width="200" height="14" rx="4" fill="var(--color-primary-light)" />
+                  <rect x="60" y="114" width="110" height="14" rx="4" fill="var(--color-primary-light)" />
+                  <circle cx="200" cy="140" r="18" fill="var(--color-primary)" />
+                  <path d="M193 140h14M200 133v14" stroke="var(--color-surface)" strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </div>
             </Card>

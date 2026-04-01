@@ -1,0 +1,65 @@
+[
+  {
+    "title": "5-Minute Guided Breathing for Anxiety Relief",
+    "url": "https://www.youtube.com/watch?v=tybOi4hjZFQ",
+    "type": "YouTube",
+    "duration": "5 min",
+    "description": "Simple breathing exercises to calm racing thoughts and reduce anxiety."
+  },
+  {
+    "title": "Sleep Stories for College Students",
+    "url": "https://www.youtube.com/watch?v=lFcSrYw-ARY", 
+    "type": "YouTube",
+    "duration": "20 min",
+    "description": "Peaceful bedtime stories designed to help you drift off to sleep."
+  },
+  {
+    "title": "Study Break Meditation",
+    "url": "https://www.youtube.com/watch?v=4EaMJOo1jks",
+    "type": "YouTube", 
+    "duration": "10 min",
+    "description": "Quick reset between study sessions to clear your mind and refocus."
+  },
+  {
+    "title": "Exam Stress Relief Meditation",
+    "url": "https://www.youtube.com/watch?v=YRPh_GaiL8s",
+    "type": "YouTube",
+    "duration": "12 min", 
+    "description": "Calm your nerves before and after exams with this guided meditation."
+  },
+  {
+    "title": "Body Scan for Deep Relaxation",
+    "url": "https://www.youtube.com/watch?v=ihO02wUzgkc",
+    "type": "Audio",
+    "duration": "15 min",
+    "description": "Progressive muscle relaxation to release physical tension and stress."
+  },
+  {
+    "title": "Mindful Walking for Mental Clarity",
+    "url": "https://www.youtube.com/watch?v=eUFTiuqcNPY",
+    "type": "YouTube", 
+    "duration": "8 min",
+    "description": "Transform your daily walk into a mindfulness practice."
+  },
+  {
+    "title": "Quick Morning Motivation",
+    "url": "https://www.youtube.com/watch?v=mgmVOuLgFB0",
+    "type": "Audio",
+    "duration": "3 min",
+    "description": "Start your day with positive affirmations and gentle encouragement."
+  },
+  {
+    "title": "Rain Sounds for Focus",
+    "url": "https://www.youtube.com/watch?v=mPZkdNFkNps", 
+    "type": "Audio",
+    "duration": "60 min",
+    "description": "Natural rain sounds to help you concentrate while studying or working."
+  },
+  {
+    "title": "Gratitude Practice for Better Mental Health",
+    "url": "https://www.youtube.com/watch?v=WPPPFqsECz0",
+    "type": "YouTube",
+    "duration": "7 min",
+    "description": "Daily gratitude exercises to shift your mindset and improve wellbeing."
+  }
+]

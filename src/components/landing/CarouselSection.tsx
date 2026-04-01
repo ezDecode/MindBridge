@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FiCheckCircle, FiMessageCircle, FiClipboard, FiUser, FiBookOpen, FiMoon } from "react-icons/fi";
 import { motion } from "motion/react";
 import { Button, Card, Container, Text } from "@/components/ui";
-import { beKindCTA, quizCards, counselors } from "@/content/mindbridge";
+import { beKindCTA, counselors } from "@/content/mindbridge";
 import { sectionReveal } from "./motion";
 
 interface TabConfig {
@@ -127,17 +127,22 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
                         </div>
                         <div className="flex flex-col justify-center p-8 lg:p-12">
                           <Text as="h3" variant="h3" weight="bold" className="text-[var(--color-text-primary)] leading-tight">Understand Your Feelings</Text>
-                          <Text as="p" variant="body" className="mt-3.5 text-[var(--color-text-secondary)] leading-relaxed">Check your mental health with clinically validated tools. Get clarity without labels.</Text>
+                          <Text as="p" variant="body" className="mt-3.5 text-[var(--color-text-secondary)] leading-relaxed">Track your mental wellness with simple, thoughtful tools designed for students.</Text>
                           <div className="mt-6 space-y-4">
-                            {quizCards.map((card) => (
-                              <div key={card.name} className="flex items-start gap-3">
-                                <FiCheckCircle className="h-4.5 w-4.5 shrink-0 text-[var(--color-primary)] mt-1" />
-                                <div>
-                                  <Text as="p" variant="h6" weight="bold" className="text-[var(--color-text-primary)]">{card.label}</Text>
-                                  <Text as="p" variant="small" className="text-[var(--color-text-secondary)] mt-0.5">{card.note}</Text>
-                                </div>
+                            <div className="flex items-start gap-3">
+                              <FiCheckCircle className="h-4.5 w-4.5 shrink-0 text-[var(--color-primary)] mt-1" />
+                              <div>
+                                <Text as="p" variant="h6" weight="bold" className="text-[var(--color-text-primary)]">Daily mood check-ins</Text>
+                                <Text as="p" variant="small" className="text-[var(--color-text-secondary)] mt-0.5">Track patterns and build consistent self-awareness</Text>
                               </div>
-                            ))}
+                            </div>
+                            <div className="flex items-start gap-3">
+                              <FiCheckCircle className="h-4.5 w-4.5 shrink-0 text-[var(--color-primary)] mt-1" />
+                              <div>
+                                <Text as="p" variant="h6" weight="bold" className="text-[var(--color-text-primary)]">Wellness resources</Text>
+                                <Text as="p" variant="small" className="text-[var(--color-text-secondary)] mt-0.5">Curated videos and audio for mental health support</Text>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>

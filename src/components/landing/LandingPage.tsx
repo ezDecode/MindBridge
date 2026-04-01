@@ -6,8 +6,7 @@ import {
   CategoriesSection, 
   CarouselSection, 
   ResourcesSection, 
-  FaqSection, 
-  NewsletterSection 
+  FaqSection
 } from "./index";
 
 export function LandingPage() {
@@ -26,7 +25,6 @@ export function LandingPage() {
       <CarouselSection tabs={carouselTabs} />
       <ResourcesSection />
       <FaqSection />
-      <NewsletterSection />
       <SiteFooter />
     </main>
   );

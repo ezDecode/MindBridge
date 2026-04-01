@@ -3,6 +3,14 @@
 @theme {
   --font-sans: var(--font-mindbridge), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
+  /* ── Responsive Breakpoints ── */
+  --breakpoint-xs: 20rem;
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 96rem;
+
   /* ── Typography ── */
   --font-size-h1: clamp(2.75rem, 6vw, 3.5rem);
   --font-size-h1--line-height: 1.1;
@@ -28,19 +36,20 @@
   --font-size-h6--line-height: 1.35rem;
   --font-size-h6--letter-spacing: -0.011em;
 
-  --font-size-p: 1.25rem;
+  --font-size-p: clamp(1rem, 2vw, 1.25rem);
   --font-size-p--line-height: 1.5rem;
   --font-size-p--letter-spacing: -0.036em;
 
-  --font-size-button: 1.125rem;
+  --font-size-button: clamp(1rem, 1.5vw, 1.125rem);
   --font-size-button--line-height: 1.35rem;
   --font-size-button--letter-spacing: -0.036em;
 
-  --font-size-label: 1rem;
+  --font-size-label: clamp(0.875rem, 1.5vw, 1rem);
   --font-size-label--line-height: 1.15rem;
   --font-size-label--letter-spacing: -0.011em;
 
-  --font-size-span: 0.875rem;
+  --font-size-span: clamp(0.75rem, 1vw, 0.875rem);
+  --font-size-span--line-height: 1.05rem;
   --font-size-span--line-height: 1.05rem;
   --font-size-span--letter-spacing: -0.011em;
 
@@ -126,6 +135,9 @@
   --shadow-md: 0 4px 12px rgba(45, 41, 38, 0.10);
   --shadow-lg: 0 8px 24px rgba(45, 41, 38, 0.14);
   --shadow-xl: 0 12px 36px rgba(45, 41, 38, 0.18);
+
+  /* ── Touch Targets ── */
+  --spacing-touch-min: 2.75rem;
 }
 
 :root {

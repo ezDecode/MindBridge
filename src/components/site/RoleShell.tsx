@@ -104,23 +104,23 @@ export function RoleShell({
             </div>
           </aside>
 
-          <div className="flex min-w-0 flex-col gap-6">
-            <div className="surface-panel flex items-center justify-between gap-4 rounded-[calc(var(--radius-2xl)*var(--brm))] squircle px-5 py-4 lg:hidden">
-              <div>
+          <div className="flex min-w-0 flex-col gap-5 md:gap-6">
+            <div className="surface-panel flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 rounded-[calc(var(--radius-2xl)*var(--brm))] squircle px-4 md:px-5 py-3 md:py-4 lg:hidden">
+              <div className="min-w-0">
                 <Text as="p" variant="label" weight="bold" color="brand">
                   {roleLabel}
                 </Text>
-                <Text as="p" variant="small" color="secondary" className="mt-1">
+                <Text as="p" variant="small" color="secondary" className="mt-1 truncate max-w-[200px] sm:max-w-none">
                   {roleDescription}
                 </Text>
               </div>
-              <Button href="/" variant="warm" size="sm">
+              <Button href="/" variant="warm" size="sm" className="shrink-0">
                 Home
               </Button>
             </div>
 
-            <div className="overflow-x-auto lg:hidden">
-              <div className="flex min-w-max gap-3">
+            <div className="overflow-x-auto lg:hidden -mx-4 px-4 md:mx-0 md:px-0">
+              <div className="flex min-w-max gap-2 md:gap-3 pb-1">
                 {navItems.map((item) => {
                   const Icon = iconMap[item.icon as keyof typeof iconMap] ?? FiGrid;
                   const isActive = pathname === item.href;
@@ -131,14 +131,14 @@ export function RoleShell({
                       href={item.href}
                       aria-current={isActive ? "page" : undefined}
                       className={cn(
-                        "inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2.5 text-label font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
+                        "inline-flex min-h-11 items-center gap-2 rounded-full border px-3 md:px-4 py-2.5 text-label font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
                         isActive
                           ? "border-[var(--color-primary)] bg-[var(--color-primary-light)] text-[var(--color-text-primary)]"
                           : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-primary-light)]"
                       )}
                     >
                       <Icon className="h-4 w-4" />
-                      {item.label}
+                      <span className="hidden xs:inline">{item.label}</span>
                     </Link>
                   );
                 })}

@@ -7,7 +7,7 @@ export default function StudentLayout({
   return (
     <RoleShell
       roleLabel="Student space"
-      roleDescription="Mood, chat, quizzes, resources, and booking in one calm flow."
+      roleDescription="Mood, chat, resources, and booking in one calm flow."
       navItems={studentNav}
     >
       {children}

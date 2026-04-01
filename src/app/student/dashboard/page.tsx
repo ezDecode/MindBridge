@@ -6,9 +6,8 @@ import {
   actionTiles,
   dashboardMetrics,
   moodHistory,
-  quizHistory,
-  resources,
 } from "@/content/mindbridge";
+import staticResources from "@/content/static-resources.json";
 
 export default function StudentDashboardPage() {
   return (
@@ -26,7 +25,7 @@ export default function StudentDashboardPage() {
         }
       />
 
-      <div className="grid gap-4 xl:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {dashboardMetrics.map((metric) => (
           <Card key={metric.label} variant="default" padding="md">
             <Text as="p" variant="label" weight="medium" color="secondary">
@@ -42,7 +41,7 @@ export default function StudentDashboardPage() {
         ))}
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">
+      <div className="grid gap-4 lg:grid-cols-[1.08fr_0.92fr]">
         <Card variant="elevated" padding="lg">
           <Text as="p" variant="h6" weight="bold">
             Today&apos;s actions
@@ -64,7 +63,7 @@ export default function StudentDashboardPage() {
                       {tile.description}
                     </Text>
                   </div>
-                  <FiArrowRight className="mt-1 h-4 w-4 text-[var(--color-primary)] transition-transform duration-200 group-hover:translate-x-1" />
+                  <FiArrowRight className="mt-1 h-4 w-4 shrink-0 text-[var(--color-primary)] transition-transform duration-200 group-hover:translate-x-1" />
                 </div>
               </Link>
             ))}
@@ -79,16 +78,16 @@ export default function StudentDashboardPage() {
             Enough signal to notice a pattern, without the obsession.
           </Text>
 
-          <div className="chart-shell mt-8 flex h-52 items-end justify-between gap-3 rounded-[calc(var(--radius-lg)*var(--brm))] squircle px-4 pb-4 pt-8">
+          <div className="chart-shell mt-8 flex h-40 sm:h-52 items-end justify-between gap-2 sm:gap-3 rounded-[calc(var(--radius-lg)*var(--brm))] squircle px-3 sm:px-4 pb-3 sm:pb-4 pt-6 sm:pt-8">
             {moodHistory.map((item) => (
-              <div key={item.day} className="flex flex-1 flex-col items-center gap-3">
-                <div className="chart-bar-track flex h-32 w-full items-end justify-center rounded-full">
+              <div key={item.day} className="flex flex-1 flex-col items-center gap-2 sm:gap-3">
+                <div className="chart-bar-track flex h-20 sm:h-32 w-full items-end justify-center rounded-full">
                   <div
                     className="chart-bar-fill w-full rounded-full"
                     style={{ height: `${item.score * 20}%` }}
                   />
                 </div>
-                <Text as="span" variant="label" weight="medium" color="muted">
+                <Text as="span" variant="small" weight="medium" color="muted">
                   {item.day}
                 </Text>
               </div>
@@ -97,45 +96,9 @@ export default function StudentDashboardPage() {
         </Card>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[0.96fr_1.04fr]">
-        <Card variant="default" padding="lg">
-          <div className="flex items-center justify-between">
-            <Text as="p" variant="h6" weight="bold">
-              Recent screenings
-            </Text>
-            <Button href="/student/quizzes" variant="warm" size="sm">
-              View all
-            </Button>
-          </div>
-          <div className="mt-5 space-y-3">
-            {quizHistory.map((entry) => (
-              <div
-                key={`${entry.type}-${entry.date}`}
-                className="flex items-center justify-between rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
-              >
-                <div>
-                  <Text as="p" variant="label" weight="bold">
-                    {entry.type}
-                  </Text>
-                  <Text as="p" variant="small" color="secondary" className="mt-1">
-                    {entry.date}
-                  </Text>
-                </div>
-                <div className="text-right">
-                  <Text as="p" variant="label" weight="bold">
-                    {entry.score}
-                  </Text>
-                  <Text as="p" variant="small" color="muted" className="mt-1">
-                    {entry.severity}
-                  </Text>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-
+      <div>
         <Card variant="elevated" padding="lg">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <Text as="p" variant="h6" weight="bold">
               Saved and suggested
             </Text>
@@ -144,7 +107,7 @@ export default function StudentDashboardPage() {
             </Button>
           </div>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            {resources.slice(0, 4).map((resource, index) => (
+            {staticResources.slice(0, 4).map((resource, index) => (
               <div
                 key={resource.title}
                 className="rounded-[calc(var(--radius-lg)*var(--brm))] squircle border p-4"
@@ -156,13 +119,13 @@ export default function StudentDashboardPage() {
                 <div className="flex items-center gap-2 text-[var(--color-text-secondary)]">
                   {resource.type === "Audio" ? (
                     <FiMessageSquare className="h-4 w-4" />
-                  ) : resource.type === "Video" ? (
+                  ) : resource.type === "YouTube" ? (
                     <FiCalendar className="h-4 w-4" />
                   ) : (
                     <FiBookOpen className="h-4 w-4" />
                   )}
                   <Text as="span" variant="label" weight="medium" color="secondary">
-                    {resource.category}
+                    {resource.type}
                   </Text>
                 </div>
                 <Text as="p" variant="body" weight="bold" className="mt-3">
@@ -172,7 +135,7 @@ export default function StudentDashboardPage() {
                   <Text as="p" variant="label" weight="medium" color="muted">
                     {resource.duration}
                   </Text>
-                  {resource.saved ? <span className="status-pill">Saved</span> : null}
+                  <span className="status-pill">Open</span>
                 </div>
               </div>
             ))}

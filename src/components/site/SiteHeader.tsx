@@ -28,19 +28,19 @@ export function SiteHeader() {
               </div>
             </Link>
 
-            <nav className="hidden items-center gap-2 lg:flex">
+            <nav className="hidden items-center gap-1 lg:gap-2 lg:flex">
               {marketingNav.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-full px-4 py-2 text-label font-medium text-[var(--color-text-secondary)] transition-[color,background-color] duration-200 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
+                  className="rounded-full px-3 lg:px-4 py-2 text-label font-medium text-[var(--color-text-secondary)] transition-[color,background-color] duration-200 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
                 >
                   {item.label}
                 </Link>
               ))}
             </nav>
 
-            <div className="hidden items-center gap-2 sm:flex">
+            <div className="hidden items-center gap-2 lg:flex">
               <Button href="/login" variant="warm" size="sm">
                 Login
               </Button>
@@ -52,7 +52,7 @@ export function SiteHeader() {
             <button
               type="button"
               onClick={() => setIsOpen((open) => !open)}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] transition-colors duration-200 hover:bg-[var(--color-surface-tinted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] sm:hidden"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] transition-colors duration-200 hover:bg-[var(--color-surface-tinted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] lg:hidden"
               aria-expanded={isOpen}
               aria-controls="marketing-menu"
               aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -62,14 +62,14 @@ export function SiteHeader() {
           </div>
 
           {isOpen ? (
-            <div id="marketing-menu" className="mt-4 border-t border-[var(--color-border)] pt-4 sm:hidden">
+            <div id="marketing-menu" className="mt-4 border-t border-[var(--color-border)] pt-4 lg:hidden">
               <div className="grid gap-2">
                 {marketingNav.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsOpen(false)}
-                    className="interactive-panel flex items-center justify-between rounded-[calc(var(--radius-md)*var(--brm))] squircle px-4 py-3 text-label font-medium text-[var(--color-text-primary)]"
+                    className="interactive-panel flex min-h-[3rem] items-center justify-between rounded-[calc(var(--radius-md)*var(--brm))] squircle px-4 py-3 text-label font-medium text-[var(--color-text-primary)]"
                   >
                     <span>{item.label}</span>
                     <FiArrowRight className="h-4 w-4 text-[var(--color-black)]" />
