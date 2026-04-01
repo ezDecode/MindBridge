@@ -106,6 +106,7 @@ Include:
 - Any concerns to be aware of
 - Their communication style
 
+
 Student name: ${history.profile?.name || 'Unknown'}
 Institution: ${history.profile?.institution || 'Unknown'}
 
