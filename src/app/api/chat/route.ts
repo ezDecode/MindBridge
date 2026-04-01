@@ -8,6 +8,20 @@ import { NextResponse } from 'next/server'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
+// Demo fail-safe: warm responses if AI times out
+const DEMO_TIMEOUT_MS = 8000 // 8 seconds
+const FALLBACK_RESPONSES = [
+  "I hear you. Let's take this one step at a time. What feels most pressing right now?",
+  "That sounds really challenging. I'm here with you. Would you like to talk more about it?",
+  "Thanks for sharing that with me. How are you feeling in this moment?",
+  "I appreciate you opening up. Sometimes just naming what we're feeling helps. What comes to mind?",
+  "That makes sense. It's okay to feel that way. What would feel supportive right now?",
+]
+
+function getRandomFallbackResponse(): string {
+  return FALLBACK_RESPONSES[Math.floor(Math.random() * FALLBACK_RESPONSES.length)]
+}
+
 interface ChatRequest {
   message: string
   sessionId: string
@@ -55,19 +69,38 @@ export async function POST(request: Request) {
     // 2. Build the system prompt with memory context
     const systemPrompt = buildSystemPrompt(memoryContext, studentName)
 
-    // 3. Create the streaming response from NIM
-    const stream = await nim.chat.completions.create({
-      ...DEFAULT_CHAT_PARAMS,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        ...history.map(msg => ({
-          role: msg.role as 'user' | 'assistant',
-          content: msg.content,
-        })),
-        { role: 'user', content: message },
-      ],
-      stream: true,
-    })
+    // 3. Create the streaming response from NIM with timeout protection
+    let stream: AsyncIterable<unknown>
+    let usesFallback = false
+    
+    try {
+      // Race between NIM call and timeout
+      const nimPromise = nim.chat.completions.create({
+        ...DEFAULT_CHAT_PARAMS,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ...history.map(msg => ({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content,
+          })),
+          { role: 'user', content: message },
+        ],
+        stream: true,
+      })
+      
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('DEMO_TIMEOUT')), DEMO_TIMEOUT_MS)
+      })
+      
+      stream = await Promise.race([nimPromise, timeoutPromise])
+    } catch (error) {
+      if (error instanceof Error && error.message === 'DEMO_TIMEOUT') {
+        console.warn('[Demo Fail-safe] NIM timeout, using fallback response')
+        usesFallback = true
+      } else {
+        throw error // Re-throw non-timeout errors
+      }
+    }
 
     // 4. Create a readable stream to send to the client
     const encoder = new TextEncoder()
@@ -76,14 +109,30 @@ export async function POST(request: Request) {
         let fullResponse = ''
 
         try {
-          for await (const chunk of stream) {
-            const text = chunk.choices[0]?.delta?.content ?? ''
-            fullResponse += text
+          // If we're using fallback, simulate streaming
+          if (usesFallback) {
+            const fallbackText = getRandomFallbackResponse()
+            fullResponse = fallbackText
             
-            // Send each chunk as SSE
-            controller.enqueue(
-              encoder.encode(`data: ${JSON.stringify({ text })}\n\n`)
-            )
+            // Simulate natural typing by sending character by character
+            for (const char of fallbackText) {
+              controller.enqueue(
+                encoder.encode(`data: ${JSON.stringify({ text: char })}\n\n`)
+              )
+              // Small delay between characters for natural feel
+              await new Promise(resolve => setTimeout(resolve, 25))
+            }
+          } else {
+            // Normal NIM streaming
+            for await (const chunk of stream!) {
+              const text = (chunk as { choices: Array<{ delta?: { content?: string } }> }).choices[0]?.delta?.content ?? ''
+              fullResponse += text
+              
+              // Send each chunk as SSE
+              controller.enqueue(
+                encoder.encode(`data: ${JSON.stringify({ text })}\n\n`)
+              )
+            }
           }
 
           // 5. Parse the complete response

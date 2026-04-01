@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { motion } from "motion/react";
 import { FiArrowRight, FiBookOpen, FiCalendar, FiMessageSquare } from "react-icons/fi";
 import { PageIntro } from "@/components/site";
 import { Button, Card, Text } from "@/components/ui";
@@ -173,102 +174,193 @@ export default function StudentDashboardPage() {
         }
       />
 
-      {/* Proactive message banner */}
+      {/* Proactive message banner - "Jarvis Moment" with breathing pulse */}
       {data?.proactiveMessage && (
-        <Card variant="elevated" padding="md" className="mb-4 border-2 border-[var(--color-primary)]/20">
-          <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-light)]">
-              <FiMessageSquare className="h-5 w-5 text-[var(--color-primary)]" />
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ 
+            opacity: 1, 
+            y: 0,
+            boxShadow: [
+              "0 0 0 0 rgba(var(--color-primary-rgb, 99 102 241) / 0)",
+              "0 0 30px 5px rgba(var(--color-primary-rgb, 99 102 241) / 0.15)",
+              "0 0 0 0 rgba(var(--color-primary-rgb, 99 102 241) / 0)"
+            ]
+          }}
+          transition={{
+            opacity: { duration: 0.3 },
+            y: { duration: 0.3 },
+            boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+          }}
+          className="mb-4"
+        >
+          <Card variant="elevated" padding="md" className="border-2 border-[var(--color-primary)]/20 overflow-hidden relative">
+            {/* Subtle animated gradient background */}
+            <motion.div
+              className="absolute inset-0 opacity-5"
+              animate={{
+                background: [
+                  "radial-gradient(circle at 0% 0%, var(--color-primary) 0%, transparent 50%)",
+                  "radial-gradient(circle at 100% 100%, var(--color-primary) 0%, transparent 50%)",
+                  "radial-gradient(circle at 0% 0%, var(--color-primary) 0%, transparent 50%)"
+                ]
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <div className="flex items-start gap-3 relative">
+              <motion.div 
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-light)]"
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <FiMessageSquare className="h-5 w-5 text-[var(--color-primary)]" />
+              </motion.div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <Text as="p" variant="label" weight="bold" color="brand">
+                    MindBridge checked in
+                  </Text>
+                  <motion.span
+                    className="h-2 w-2 rounded-full bg-[var(--color-primary)]"
+                    animate={{ opacity: [1, 0.4, 1] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  />
+                </div>
+                <Text as="p" variant="body" className="mt-1">
+                  {data.proactiveMessage}
+                </Text>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button href="/student/chat" variant="warm" size="sm" className="mt-3">
+                    Reply now
+                  </Button>
+                </motion.div>
+              </div>
             </div>
-            <div className="flex-1">
-              <Text as="p" variant="label" weight="bold" color="brand">
-                MindBridge checked in
-              </Text>
-              <Text as="p" variant="body" className="mt-1">
-                {data.proactiveMessage}
-              </Text>
-              <Button href="/student/chat" variant="warm" size="sm" className="mt-3">
-                Reply now
-              </Button>
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </motion.div>
       )}
 
+      {/* Metrics with staggered entrance */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {metrics.map((metric) => (
-          <Card key={metric.label} variant="default" padding="md">
-            <Text as="p" variant="label" weight="medium" color="secondary">
-              {metric.label}
-            </Text>
-            <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--color-primary)]">
-              {metric.value}
-            </Text>
-            <Text as="p" variant="small" color="muted" className="mt-2">
-              {metric.note}
-            </Text>
-          </Card>
+        {metrics.map((metric, index) => (
+          <motion.div
+            key={metric.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.4, 
+              delay: index * 0.1,
+              ease: [0.23, 1, 0.32, 1] // ease-out-quint
+            }}
+          >
+            <Card variant="default" padding="md" className="h-full">
+              <Text as="p" variant="label" weight="medium" color="secondary">
+                {metric.label}
+              </Text>
+              <motion.div
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: index * 0.1 + 0.2, type: "spring", stiffness: 200 }}
+              >
+                <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--color-primary)]">
+                  {metric.value}
+                </Text>
+              </motion.div>
+              <Text as="p" variant="small" color="muted" className="mt-2">
+                {metric.note}
+              </Text>
+            </Card>
+          </motion.div>
         ))}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1.08fr_0.92fr]">
-        <Card variant="elevated" padding="lg">
-          <Text as="p" variant="h6" weight="bold">
-            Today&apos;s actions
-          </Text>
-          <div className="mt-5 grid gap-3">
-            {actionTiles.map((tile, index) => (
-              <Link
-                key={tile.title}
-                href={tile.href}
-                className="interactive-panel group rounded-[calc(var(--radius-lg)*var(--brm))] squircle p-4"
-                data-active={index === 0}
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <Text as="p" variant="h6" weight="bold">
-                      {tile.title}
-                    </Text>
-                    <Text as="p" variant="small" color="secondary" className="mt-2 max-w-[42ch]">
-                      {tile.description}
-                    </Text>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+        >
+          <Card variant="elevated" padding="lg">
+            <Text as="p" variant="h6" weight="bold">
+              Today&apos;s actions
+            </Text>
+            <div className="mt-5 grid gap-3">
+              {actionTiles.map((tile, index) => (
+                <motion.div
+                  key={tile.title}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                  whileHover={{ x: 4 }}
+                >
+                  <Link
+                    href={tile.href}
+                    className="interactive-panel group rounded-[calc(var(--radius-lg)*var(--brm))] squircle p-4 block"
+                    data-active={index === 0}
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <Text as="p" variant="h6" weight="bold">
+                          {tile.title}
+                        </Text>
+                        <Text as="p" variant="small" color="secondary" className="mt-2 max-w-[42ch]">
+                          {tile.description}
+                        </Text>
+                      </div>
+                      <FiArrowRight className="mt-1 h-4 w-4 shrink-0 text-[var(--color-primary)] transition-transform duration-200 group-hover:translate-x-1" />
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.4 }}
+        >
+          <Card variant="subtle" padding="lg">
+            <Text as="p" variant="h6" weight="bold">
+              7-day mood rhythm
+            </Text>
+            <Text as="p" variant="small" color="secondary" className="mt-2">
+              Enough signal to notice a pattern, without the obsession.
+            </Text>
+
+            <div className="chart-shell mt-8 flex h-40 sm:h-52 items-end justify-between gap-2 sm:gap-3 rounded-[calc(var(--radius-lg)*var(--brm))] squircle px-3 sm:px-4 pb-3 sm:pb-4 pt-6 sm:pt-8">
+              {(data?.moodHistory || generateEmptyWeek()).map((item, barIndex) => (
+                <div key={item.day} className="flex flex-1 flex-col items-center gap-2 sm:gap-3">
+                  <div className="chart-bar-track flex h-20 sm:h-32 w-full items-end justify-center rounded-full">
+                    <motion.div
+                      initial={{ height: "5%" }}
+                      animate={{ height: item.score > 0 ? `${item.score * 20}%` : "5%" }}
+                      transition={{ 
+                        duration: 0.6, 
+                        delay: 0.5 + barIndex * 0.05,
+                        ease: [0.23, 1, 0.32, 1]
+                      }}
+                      className={`chart-bar-fill w-full rounded-full ${
+                        item.score > 0 ? "" : "!bg-[var(--color-gray-100)]"
+                      }`}
+                    />
                   </div>
-                  <FiArrowRight className="mt-1 h-4 w-4 shrink-0 text-[var(--color-primary)] transition-transform duration-200 group-hover:translate-x-1" />
+                  <Text as="span" variant="small" weight="medium" color="muted">
+                    {item.day}
+                  </Text>
                 </div>
-              </Link>
-            ))}
-          </div>
-        </Card>
-
-        <Card variant="subtle" padding="lg">
-          <Text as="p" variant="h6" weight="bold">
-            7-day mood rhythm
-          </Text>
-          <Text as="p" variant="small" color="secondary" className="mt-2">
-            Enough signal to notice a pattern, without the obsession.
-          </Text>
-
-          <div className="chart-shell mt-8 flex h-40 sm:h-52 items-end justify-between gap-2 sm:gap-3 rounded-[calc(var(--radius-lg)*var(--brm))] squircle px-3 sm:px-4 pb-3 sm:pb-4 pt-6 sm:pt-8">
-            {(data?.moodHistory || generateEmptyWeek()).map((item) => (
-              <div key={item.day} className="flex flex-1 flex-col items-center gap-2 sm:gap-3">
-                <div className="chart-bar-track flex h-20 sm:h-32 w-full items-end justify-center rounded-full">
-                  <div
-                    className={`chart-bar-fill w-full rounded-full transition-all duration-300 ${
-                      item.score > 0 ? "" : "!bg-[var(--color-gray-100)]"
-                    }`}
-                    style={{ height: item.score > 0 ? `${item.score * 20}%` : "5%" }}
-                  />
-                </div>
-                <Text as="span" variant="small" weight="medium" color="muted">
-                  {item.day}
-                </Text>
-              </div>
-            ))}
-          </div>
-        </Card>
+              ))}
+            </div>
+          </Card>
+        </motion.div>
       </div>
 
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.5 }}
+      >
         <Card variant="elevated" padding="lg">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <Text as="p" variant="h6" weight="bold">
@@ -280,11 +372,15 @@ export default function StudentDashboardPage() {
           </div>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {staticResources.slice(0, 4).map((resource, index) => (
-              <a
+              <motion.a
                 key={resource.title}
                 href={resource.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 + index * 0.1 }}
+                whileHover={{ y: -2 }}
                 className="rounded-[calc(var(--radius-lg)*var(--brm))] squircle border p-4 transition-colors hover:border-[var(--color-primary)]/50"
                 style={{
                   borderColor: index === 0 ? "var(--color-primary)" : "var(--color-border)",
@@ -312,11 +408,11 @@ export default function StudentDashboardPage() {
                   </Text>
                   <span className="status-pill">Open</span>
                 </div>
-              </a>
+              </motion.a>
             ))}
           </div>
         </Card>
-      </div>
+      </motion.div>
     </>
   );
 }

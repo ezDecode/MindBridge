@@ -302,20 +302,46 @@ export default function CounselorDashboardPage() {
                 {crisisAlerts.map((alert, index) => (
                   <motion.div
                     key={alert.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
+                    initial={{ 
+                      opacity: 0, 
+                      x: -20, 
+                      scale: 1.08,
+                      backgroundColor: "rgba(239, 68, 68, 0.3)"
+                    }}
+                    animate={{ 
+                      opacity: 1, 
+                      x: 0, 
+                      scale: 1,
+                      backgroundColor: index === 0 
+                        ? "var(--color-danger-soft)" 
+                        : "var(--color-surface)"
+                    }}
+                    exit={{ opacity: 0, x: 20, scale: 0.95 }}
+                    transition={{
+                      duration: 0.4,
+                      scale: { type: "spring", stiffness: 300, damping: 20 },
+                      backgroundColor: { duration: 0.3, delay: 0.3 }
+                    }}
                     className={`rounded-[calc(var(--radius-lg)*var(--brm))] squircle border p-4 ${
                       index === 0
-                        ? "border-[var(--color-danger)]/30 bg-[var(--color-danger-soft)]"
-                        : "border-[var(--color-border)] bg-[var(--color-surface)]"
+                        ? "border-[var(--color-danger)]/30"
+                        : "border-[var(--color-border)]"
                     }`}
                   >
                     <div className="flex items-start justify-between">
                       <div>
-                        <Text as="p" variant="small" weight="medium">
-                          {alert.severity === 'critical' ? '🚨 Crisis Alert' : '⚠️ Warning'}
-                        </Text>
+                        <div className="flex items-center gap-2">
+                          <Text as="p" variant="small" weight="medium">
+                            {alert.severity === 'critical' ? '🚨 Crisis Alert' : '⚠️ Warning'}
+                          </Text>
+                          {index === 0 && (
+                            <motion.span
+                              className="h-2 w-2 rounded-full bg-red-500"
+                              animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
+                              transition={{ duration: 1, repeat: Infinity }}
+                            />
+                          )}
+                        </div>
                         <Text as="p" variant="small" color="secondary" className="mt-1">
                           Student requires immediate attention
                         </Text>
@@ -323,13 +349,15 @@ export default function CounselorDashboardPage() {
                           {getTimeSince(alert.created_at)}
                         </Text>
                       </div>
-                      <Button
-                        variant="ghost"
-                        onClick={() => handleAcknowledgeAlert(alert.id)}
-                        className="shrink-0"
-                      >
-                        Acknowledge
-                      </Button>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button
+                          variant="ghost"
+                          onClick={() => handleAcknowledgeAlert(alert.id)}
+                          className="shrink-0"
+                        >
+                          Acknowledge
+                        </Button>
+                      </motion.div>
                     </div>
                   </motion.div>
                 ))}

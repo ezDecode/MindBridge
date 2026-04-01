@@ -204,26 +204,22 @@ export default function StudentChatPage() {
           {/* Action suggestions */}
           <AnimatePresence>
             {showBooking && (
-              <div className="mt-4">
-                <BookingSuggestion
-                  onConfirm={() => {
-                    setShowBooking(false);
-                    router.push("/student/book");
-                  }}
-                  onCancel={() => setShowBooking(false)}
-                />
-              </div>
+              <BookingSuggestion
+                onConfirm={() => {
+                  setShowBooking(false);
+                  router.push("/student/book");
+                }}
+                onCancel={() => setShowBooking(false)}
+              />
             )}
             {showResources && (
-              <div className="mt-4">
-                <ResourceSuggestion
-                  onShow={() => {
-                    setShowResources(false);
-                    router.push("/student/resources");
-                  }}
-                  onDismiss={() => setShowResources(false)}
-                />
-              </div>
+              <ResourceSuggestion
+                onShow={() => {
+                  setShowResources(false);
+                  router.push("/student/resources");
+                }}
+                onDismiss={() => setShowResources(false)}
+              />
             )}
           </AnimatePresence>
 

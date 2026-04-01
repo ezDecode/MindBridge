@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { FiUser, FiMessageCircle } from 'react-icons/fi'
 import { Text } from '@/components/ui'
@@ -89,9 +89,23 @@ function MessageBubble({ message }: { message: Message }) {
       >
         <Text as="p" variant="body" className="whitespace-pre-wrap">
           {displayContent || (message.isStreaming ? <TypingIndicator /> : '')}
+          {message.isStreaming && displayContent && <TypingCursor />}
         </Text>
       </div>
     </motion.div>
+  )
+}
+
+// Premium typing cursor - blinking caret that shows AI is "thinking"
+function TypingCursor() {
+  return (
+    <motion.span
+      initial={{ opacity: 1 }}
+      animate={{ opacity: [1, 0, 1] }}
+      transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
+      className="inline-block w-0.5 h-4 ml-0.5 bg-[var(--color-primary)] align-middle"
+      aria-hidden="true"
+    />
   )
 }
 

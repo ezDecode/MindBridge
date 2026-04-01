@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, FormEvent, KeyboardEvent } from 'react'
+import { motion } from 'motion/react'
 import { FiSend, FiSquare } from 'react-icons/fi'
 import { Button } from '@/components/ui'
 
@@ -20,6 +21,7 @@ export function ChatInput({
   disabled,
 }: ChatInputProps) {
   const [input, setInput] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   // Auto-resize textarea
@@ -51,8 +53,14 @@ export function ChatInput({
   }
 
   return (
-    <form
+    <motion.form
       onSubmit={handleSubmit}
+      animate={{
+        boxShadow: isFocused 
+          ? '0 0 0 2px var(--color-primary), 0 0 20px 0 rgba(var(--color-primary-rgb, 99 102 241) / 0.15)'
+          : '0 0 0 1px var(--color-border), 0 0 0 0 transparent'
+      }}
+      transition={{ duration: 0.2 }}
       className="flex items-end gap-3 rounded-[calc(var(--radius-xl)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] p-3"
     >
       <textarea
@@ -60,6 +68,8 @@ export function ChatInput({
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         placeholder={placeholder}
         disabled={disabled || isLoading}
         rows={1}
@@ -79,17 +89,22 @@ export function ChatInput({
           <FiSquare className="h-4 w-4" />
         </Button>
       ) : (
-        <Button
-          type="submit"
-          variant="warm"
-          size="sm"
-          disabled={!input.trim() || disabled}
-          className="shrink-0"
-          aria-label="Send message"
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          <FiSend className="h-4 w-4" />
-        </Button>
+          <Button
+            type="submit"
+            variant="warm"
+            size="sm"
+            disabled={!input.trim() || disabled}
+            className="shrink-0"
+            aria-label="Send message"
+          >
+            <FiSend className="h-4 w-4" />
+          </Button>
+        </motion.div>
       )}
-    </form>
+    </motion.form>
   )
 }
