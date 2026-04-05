@@ -12,6 +12,7 @@ import {
   FiSun,
   FiClock,
   FiUser,
+  FiMessageCircle,
 } from "react-icons/fi";
 import {
   BarChart,
@@ -110,6 +111,7 @@ interface BridgeTabProps {
   worstDay: { day: string; score: number } | null;
   trendDirection: string;
   completedDays: number;
+  onSwitchToMind: () => void;
 }
 
 export function BridgeTab({
@@ -122,6 +124,7 @@ export function BridgeTab({
   worstDay,
   trendDirection,
   completedDays,
+  onSwitchToMind,
 }: BridgeTabProps) {
   return (
     <>
@@ -136,9 +139,11 @@ export function BridgeTab({
             Patterns, not pressure. Enough signal to notice a trend.
           </Text>
         </div>
-        <div className="flex gap-3 shrink-0">
-          <Button href="/student/book" size="sm">Book a counselor</Button>
-          <Button href="/student/check-in" variant="warm" size="sm">Log check-in</Button>
+        <div className="flex gap-2 shrink-0">
+          <Button onClick={onSwitchToMind} variant="ghost" size="sm">
+            <FiMessageCircle className="h-4 w-4" />
+            Start chatting
+          </Button>
         </div>
       </div>
 
@@ -147,9 +152,9 @@ export function BridgeTab({
         {metrics.map((metric, index) => (
           <motion.div
             key={metric.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.1, ease: [0.23, 1, 0.32, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
           >
             <Card variant="default" padding="md" className="h-full">
               <div className="flex items-start justify-between">
@@ -161,9 +166,9 @@ export function BridgeTab({
                 </div>
               </div>
               <motion.div
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: index * 0.1 + 0.2, type: "spring", stiffness: 200 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.05 + 0.2, duration: 0.4 }}
               >
                 <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--color-primary)]">
                   {metric.value}
@@ -180,8 +185,8 @@ export function BridgeTab({
       {/* ── Mood Chart + Gauge ── */}
       <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.3 }}
         >
           <Card variant="elevated" padding="lg">
@@ -192,7 +197,7 @@ export function BridgeTab({
               Enough signal to notice a pattern, without the obsession.
             </Text>
             <div className="mt-6 h-52 sm:h-64">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={180}>
                 <BarChart data={moodHistory} barCategoryGap="20%">
                   <CartesianGrid vertical={false} stroke="var(--color-border-light)" strokeDasharray="4 4" />
                   <XAxis
@@ -212,7 +217,7 @@ export function BridgeTab({
                     width={24}
                   />
                   <Tooltip content={<MoodTooltip />} cursor={{ fill: "var(--color-surface-strong)", radius: 6 }} />
-                  <Bar dataKey="score" fill="var(--color-primary)" radius={[6, 6, 2, 2]} maxBarSize={36} animationDuration={800} animationEasing="ease-out" />
+                  <Bar dataKey="score" fill="var(--color-primary)" radius={[6, 6, 2, 2]} maxBarSize={36} animationDuration={400} animationEasing="ease-out" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -220,8 +225,8 @@ export function BridgeTab({
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.4 }}
         >
           <Card variant="subtle" padding="lg" className="h-full">
@@ -275,8 +280,8 @@ export function BridgeTab({
       {/* ── Check-in Calendar + Session Summary ── */}
       <div className="grid gap-4 lg:grid-cols-2">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.5 }}
         >
           <Card variant="default" padding="lg" className="h-full">
@@ -346,8 +351,8 @@ export function BridgeTab({
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.55 }}
         >
           <Card variant="elevated" padding="lg" className="h-full">
@@ -397,8 +402,8 @@ export function BridgeTab({
 
       {/* ── Your Counselors ── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.6 }}
       >
         <Card variant="elevated" padding="lg">
@@ -415,10 +420,9 @@ export function BridgeTab({
             {counselors.map((doc, i) => (
               <motion.div
                 key={doc.name}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 + i * 0.08 }}
-                whileHover={{ y: -2 }}
               >
                 <Link
                   href="/student/book"
@@ -458,8 +462,8 @@ export function BridgeTab({
 
       {/* ── Quick Actions ── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.75 }}
       >
         <Card variant="elevated" padding="lg">
@@ -468,10 +472,9 @@ export function BridgeTab({
             {actionTiles.map((tile, index) => (
               <motion.div
                 key={tile.title}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 + index * 0.08 }}
-                whileHover={{ y: -2 }}
               >
                 <Link
                   href={tile.href}
@@ -493,8 +496,8 @@ export function BridgeTab({
 
       {/* ── Resources ── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.7 }}
       >
         <Card variant="default" padding="lg">
@@ -509,10 +512,9 @@ export function BridgeTab({
                 href={resource.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: 0.8 + index * 0.08 }}
-                whileHover={{ y: -2 }}
                 className="rounded-[calc(var(--radius-lg)*var(--brm))] squircle border p-4 transition-colors hover:border-[var(--color-primary)]/50"
                 style={{
                   borderColor: index === 0 ? "var(--color-primary)" : "var(--color-border)",

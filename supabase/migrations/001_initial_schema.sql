@@ -29,14 +29,7 @@ create policy "Users can insert own profile"
 
 -- Counselors can view their assigned students
 create policy "Counselors can view assigned students"
-  on profiles for select using (
-    exists (
-      select 1 from profiles p 
-      where p.id = auth.uid() 
-      and p.role = 'counselor'
-    )
-    and counselor_id = auth.uid()
-  );
+  on profiles for select using (counselor_id = auth.uid());
 
 -- ============================================
 -- MOOD LOGS
@@ -137,14 +130,7 @@ create policy "Counselors own their slots"
 
 -- Students can read available slots
 create policy "Students read available slots"
-  on counselor_slots for select using (
-    available = true 
-    or exists (
-      select 1 from profiles p 
-      where p.id = auth.uid() 
-      and p.role = 'student'
-    )
-  );
+  on counselor_slots for select using (available = true);
 
 -- Index for finding available slots
 create index idx_counselor_slots_available on counselor_slots(available, slot_start) 

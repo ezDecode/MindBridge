@@ -1,134 +1,191 @@
-"use client";
+'use client'
 
-import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "motion/react";
-import { FiActivity, FiCalendar, FiMessageSquare, FiArrowLeft } from "react-icons/fi";
-import { Button, Text } from "@/components/ui";
-import { useChat } from "@/hooks/useChat";
-import { getClient } from "@/lib/supabase/client";
+import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
+import { motion, AnimatePresence } from 'motion/react'
+import { FiCalendar, FiMessageSquare, FiTrendingUp } from 'react-icons/fi'
+import { Button, Text } from '@/components/ui'
+import { useChat } from '@/hooks/useChat'
+import { getClient } from '@/lib/supabase/client'
 
-import { PillToggle } from "./_components/PillToggle";
-import { MindTab } from "./_components/MindTab";
-import { BridgeTab } from "./_components/BridgeTab";
-import {
-  generateWeekMoodHistory,
-  generateEmptyWeek,
-  formatSessionTime,
-  generateSessionId,
-} from "./_components/types";
-import type { DashboardData, TabId } from "./_components/types";
+import { PillToggle } from './_components/PillToggle'
+import { MindTab } from './_components/MindTab'
+import { BridgeTab } from './_components/BridgeTab'
+import { generateSessionId, generateWeekMoodHistory, generateEmptyWeek, formatSessionTime } from './_components/types'
+import type { DashboardData, TabId } from './_components/types'
+
+interface Slot {
+  id: string
+  counselor_id: string
+  slot_start: string
+  slot_end: string
+  counselor: { name: string }
+}
 
 export default function StudentDashboardPage() {
-  const router = useRouter();
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [userName, setUserName] = useState("");
-  const [activeTab, setActiveTab] = useState<TabId>("mind");
-
-  /* ── Chat state ── */
-  const [sessionId, setSessionId] = useState("");
-  const [showBooking, setShowBooking] = useState(false);
-  const [showResources, setShowResources] = useState(false);
+  const router = useRouter()
+  const [data, setData] = useState<DashboardData | null>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+  const [userName, setUserName] = useState('')
+  const [activeTab, setActiveTab] = useState<TabId>('mind')
+  
+  const [sessionId, setSessionId] = useState('')
+  const [showBooking, setShowBooking] = useState(false)
+  const [showResources, setShowResources] = useState(false)
+  
+  const [nextSlot, setNextSlot] = useState<Slot | null>(null)
+  const [isBooking, setIsBooking] = useState(false)
+  const [bookingConfirmed, setBookingConfirmed] = useState(false)
 
   const handleAction = useCallback(
     (action: { type: string; context: string | null }) => {
-      if (action.type === "book_counselor") setShowBooking(true);
-      else if (action.type === "show_resources") setShowResources(true);
+      if (action.type === 'book_counselor') setShowBooking(true)
+      else if (action.type === 'show_resources') setShowResources(true)
     },
     []
-  );
+  )
 
   const handleCrisis = useCallback(() => {
-    console.log("Crisis detected - alert sent to counselor");
-  }, []);
+    console.log('Crisis detected - alert sent to counselor')
+  }, [])
 
   const { messages, sendMessage, isLoading, error, stopGenerating } = useChat({
     sessionId,
     onAction: handleAction,
     onCrisis: handleCrisis,
-  });
+  })
 
   const startNewSession = () => {
-    const newId = generateSessionId();
-    setSessionId(newId);
-    sessionStorage.setItem("currentChatSession", newId);
-    window.location.reload();
-  };
+    const newId = generateSessionId()
+    setSessionId(newId)
+    sessionStorage.setItem('currentChatSession', newId)
+    window.location.reload()
+  }
 
-  /* ── Data fetching ── */
   useEffect(() => {
     const init = async () => {
-      const supabase = getClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const supabase = getClient()
+      const { data: { user } } = await supabase.auth.getUser()
 
       if (!user) {
-        setIsAuthenticated(false);
-        return;
+        setIsAuthenticated(false)
+        return
       }
 
-      setIsAuthenticated(true);
+      setIsAuthenticated(true)
 
-      const stored = sessionStorage.getItem("currentChatSession");
+      const stored = sessionStorage.getItem('currentChatSession')
       if (stored) {
-        setSessionId(stored);
+        setSessionId(stored)
       } else {
-        const newId = generateSessionId();
-        setSessionId(newId);
-        sessionStorage.setItem("currentChatSession", newId);
+        const newId = generateSessionId()
+        setSessionId(newId)
+        sessionStorage.setItem('currentChatSession', newId)
       }
 
       const [moodResponse, profileResult, sessionsResult, bookingsResult] =
         await Promise.all([
-          fetch("/api/mood?days=7"),
-          supabase.from("profiles").select("name").eq("id", user.id).single(),
+          fetch('/api/mood?days=7'),
+          supabase.from('profiles').select('name').eq('id', user.id).single(),
           supabase
-            .from("chat_sessions")
-            .select("id")
-            .eq("user_id", user.id)
-            .gte("last_message_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+            .from('chat_sessions')
+            .select('id')
+            .eq('user_id', user.id)
+            .gte('last_message_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
           supabase
-            .from("bookings")
-            .select("slot_start")
-            .eq("student_id", user.id)
-            .eq("status", "confirmed")
-            .gte("slot_start", new Date().toISOString())
-            .order("slot_start", { ascending: true })
+            .from('bookings')
+            .select('slot_start, type, status, counselor:profiles!counselor_id(name)')
+            .eq('student_id', user.id)
+            .in('status', ['pending_confirmation', 'confirmed'])
+            .gte('slot_start', new Date().toISOString())
+            .order('slot_start', { ascending: true })
             .limit(1),
-        ]);
+        ])
 
-      let moodData = { moods: [], streak: 0 };
-      if (moodResponse.ok) moodData = await moodResponse.json();
+      let moodData = { moods: [], streak: 0, average: null }
+      if (moodResponse.ok) moodData = await moodResponse.json()
 
       const { data: proactiveMsg } = await supabase
-        .from("chat_messages")
-        .select("content")
-        .eq("user_id", user.id)
-        .eq("proactive", true)
-        .order("sent_at", { ascending: false })
+        .from('chat_messages')
+        .select('content')
+        .eq('user_id', user.id)
+        .eq('proactive', true)
+        .order('sent_at', { ascending: false })
         .limit(1)
-        .single();
+        .single()
 
-      setUserName(profileResult.data?.name || "there");
+      setUserName(profileResult.data?.name || 'there')
+
+      let nextAvailableSlot: Slot | null = null
+      try {
+        const slotsResult = await fetch('/api/bookings')
+        if (slotsResult.ok) {
+          const slotsData = await slotsResult.json()
+          if (slotsData.slots && slotsData.slots.length > 0) {
+            nextAvailableSlot = slotsData.slots[0]
+          }
+        }
+      } catch (slotError) {
+        nextAvailableSlot = {
+          id: 'demo-slot-1',
+          counselor_id: 'demo-counselor',
+          slot_start: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+          slot_end: new Date(Date.now() + 24 * 60 * 60 * 1000 + 30 * 60 * 1000).toISOString(),
+          counselor: { name: 'Dr. Priya Sharma' }
+        }
+      }
+
+      const existingBooking = bookingsResult.data?.[0]
+
+      const moodHistory = generateWeekMoodHistory(moodData.moods || [])
+      const scored = moodHistory.filter((m) => m.score > 0)
+      const averageMood = scored.length ? scored.reduce((a, b) => a + b.score, 0) / scored.length : 0
 
       setData({
         streak: moodData.streak || 0,
-        nextSession: bookingsResult.data?.[0]?.slot_start
-          ? formatSessionTime(new Date(bookingsResult.data[0].slot_start))
+        nextSession: existingBooking
+          ? formatSessionTime(new Date(existingBooking.slot_start))
           : null,
         activeChats: sessionsResult.data?.length || 0,
-        moodHistory: generateWeekMoodHistory(moodData.moods || []),
+        moodHistory,
         proactiveMessage: proactiveMsg?.content || null,
-      });
-    };
+      })
+      
+      setNextSlot(nextAvailableSlot)
+    }
 
-    init();
-  }, []);
+    init()
+  }, [])
 
-  /* ── Loading ── */
+  const handleOneTapBooking = async () => {
+    if (!nextSlot || isBooking) return
+    
+    setIsBooking(true)
+    
+    try {
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          slotId: nextSlot.id,
+          counselorId: nextSlot.counselor_id,
+          type: 'anonymous',
+          slotStart: nextSlot.slot_start,
+          slotEnd: nextSlot.slot_end,
+        }),
+      })
+
+      if (res.ok) {
+        setBookingConfirmed(true)
+        setNextSlot(null)
+      }
+    } catch (error) {
+      console.error('Booking error:', error)
+    } finally {
+      setIsBooking(false)
+    }
+  }
+
   if (isAuthenticated === null) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
@@ -137,10 +194,9 @@ export default function StudentDashboardPage() {
           <Text as="p" variant="body" color="secondary" className="mt-4">Loading...</Text>
         </div>
       </div>
-    );
+    )
   }
 
-  /* ── Not authenticated ── */
   if (!isAuthenticated) {
     return (
       <div className="flex min-h-[50vh] flex-col items-center justify-center text-center">
@@ -153,67 +209,54 @@ export default function StudentDashboardPage() {
           <Button href="/student/resources" variant="warm">Browse resources</Button>
         </div>
       </div>
-    );
+    )
   }
 
-  /* ── Computed analytics ── */
-  const moodHistory = data?.moodHistory || generateEmptyWeek();
-  const scored = moodHistory.filter((m) => m.score > 0);
-  const averageMood = scored.length ? scored.reduce((a, b) => a + b.score, 0) / scored.length : 0;
-  const bestDay = scored.length ? scored.reduce((a, b) => (b.score > a.score ? b : a)) : null;
-  const worstDay = scored.length ? scored.reduce((a, b) => (b.score < a.score ? b : a)) : null;
+  const moodHistory = data?.moodHistory || generateEmptyWeek()
+  const scored = moodHistory.filter((m) => m.score > 0)
+  const averageMood = scored.length ? scored.reduce((a, b) => a + b.score, 0) / scored.length : 0
+  const bestDay = scored.length ? scored.reduce((a, b) => (b.score > a.score ? b : a)) : null
+  const worstDay = scored.length ? scored.reduce((a, b) => (b.score < a.score ? b : a)) : null
 
   const trendDirection = (() => {
-    if (scored.length < 2) return "steady";
-    const half = Math.ceil(scored.length / 2);
-    const avgFirst = scored.slice(0, half).reduce((a, b) => a + b.score, 0) / half;
-    const avgSecond = scored.slice(half).reduce((a, b) => a + b.score, 0) / scored.slice(half).length;
-    if (avgSecond - avgFirst > 0.3) return "improving";
-    if (avgFirst - avgSecond > 0.3) return "declining";
-    return "steady";
-  })();
+    if (scored.length < 2) return 'steady'
+    const half = Math.ceil(scored.length / 2)
+    const avgFirst = scored.slice(0, half).reduce((a, b) => a + b.score, 0) / half
+    const avgSecond = scored.slice(half).reduce((a, b) => a + b.score, 0) / scored.slice(half).length
+    if (avgSecond - avgFirst > 0.3) return 'improving'
+    if (avgFirst - avgSecond > 0.3) return 'declining'
+    return 'steady'
+  })()
 
   const metrics = [
     {
-      label: "Check-in streak",
+      label: 'Check-in streak',
       value: `${data?.streak || 0} days`,
-      note: data?.streak ? "Keep it going! 🔥" : "Start your streak today",
-      icon: <FiActivity className="h-5 w-5 text-[var(--color-primary)]" />,
+      note: data?.streak ? 'Keep it going! 🔥' : 'Start your streak today',
+      icon: <FiTrendingUp className="h-5 w-5 text-[var(--color-primary)]" />,
     },
     {
-      label: "Next session",
-      value: data?.nextSession || "None",
-      note: data?.nextSession ? "Upcoming booking" : "Book when ready",
+      label: 'Next session',
+      value: data?.nextSession || 'None',
+      note: data?.nextSession ? 'Upcoming booking' : 'Book when ready',
       icon: <FiCalendar className="h-5 w-5 text-[var(--color-info)]" />,
     },
     {
-      label: "Active chats",
+      label: 'Active chats',
       value: `${data?.activeChats || 0}`,
-      note: "This week",
+      note: 'This week',
       icon: <FiMessageSquare className="h-5 w-5 text-[var(--color-success)]" />,
     },
-  ];
+  ]
 
   return (
     <>
-      {/* ── Top bar ── */}
-      <div className="flex items-center justify-between">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-label font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
-        >
-          <FiArrowLeft className="h-4 w-4" />
-          Home
-        </Link>
+      <div className="flex items-center justify-center">
         <PillToggle active={activeTab} onChange={setActiveTab} />
-        <Text as="p" variant="label" weight="bold" color="brand" className="hidden sm:block">
-          MindBridge
-        </Text>
-        <span className="sm:hidden" />
       </div>
 
       <AnimatePresence mode="wait">
-        {activeTab === "mind" ? (
+        {activeTab === 'mind' ? (
           <motion.div
             key="mind"
             initial={{ opacity: 0, x: -30 }}
@@ -236,6 +279,7 @@ export default function StudentDashboardPage() {
               setShowBooking={setShowBooking}
               setShowResources={setShowResources}
               router={router}
+              onSwitchToBridge={() => setActiveTab('bridge')}
             />
           </motion.div>
         ) : (
@@ -257,10 +301,11 @@ export default function StudentDashboardPage() {
               worstDay={worstDay}
               trendDirection={trendDirection}
               completedDays={scored.length}
+              onSwitchToMind={() => setActiveTab('mind')}
             />
           </motion.div>
         )}
       </AnimatePresence>
     </>
-  );
+  )
 }

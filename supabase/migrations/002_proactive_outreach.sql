@@ -25,14 +25,9 @@ create policy "Students view own outreach logs"
 create policy "Counselors view student outreach logs"
   on proactive_outreach_logs for select using (
     exists (
-      select 1 from profiles p 
-      where p.id = auth.uid() 
-      and p.role = 'counselor'
-      and exists (
-        select 1 from profiles s 
-        where s.id = proactive_outreach_logs.student_id 
-        and s.counselor_id = auth.uid()
-      )
+      select 1 from profiles s 
+      where s.id = proactive_outreach_logs.student_id 
+      and s.counselor_id = auth.uid()
     )
   );
 
