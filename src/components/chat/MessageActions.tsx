@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'motion/react'
-import { FiArrowRight, FiBookOpen, FiCalendar } from 'react-icons/fi'
+import { Icon } from '@iconify/react';
 
 interface MessageActionsProps {
   action: 'book_counselor' | 'show_resources' | 'send_crisis_alert' | null
@@ -17,7 +17,7 @@ export function MessageActions({
   if (!action || action === 'send_crisis_alert') return null
 
   const primaryLabel = action === 'book_counselor' ? 'Book session' : 'View resources'
-  const PrimaryIcon = action === 'book_counselor' ? FiCalendar : FiBookOpen
+  const primaryIconName = action === 'book_counselor' ? 'solar:calendar-linear' : 'solar:book-linear'
 
   return (
     <motion.div
@@ -33,7 +33,7 @@ export function MessageActions({
         onClick={() => onAction(action)}
         className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-[var(--color-primary-dark)] hover:shadow-md"
       >
-        <PrimaryIcon className="h-4 w-4" />
+        <Icon icon={primaryIconName} className="h-4 w-4" />
         <span>{primaryLabel}</span>
       </motion.button>
 
@@ -42,10 +42,10 @@ export function MessageActions({
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={onDismiss}
-        className="inline-flex min-h-9 items-center gap-2 rounded-full border border-[var(--color-border)] bg-white/80 px-3.5 py-2 text-sm font-medium text-[var(--color-text-muted)] shadow-sm transition-all duration-150 hover:border-[var(--color-border-strong)] hover:bg-white hover:text-[var(--color-text-secondary)]"
+        className="inline-flex min-h-9 items-center gap-2 rounded-full bg-white/80 px-3.5 py-2 text-sm font-medium text-[var(--color-text-muted)] shadow-sm transition-all duration-150 hover:bg-white hover:text-[var(--color-text-secondary)]"
       >
         <span>Not now</span>
-        <FiArrowRight className="h-3.5 w-3.5" />
+        <Icon icon="solar:arrow-right-linear" className="h-3.5 w-3.5" />
       </motion.button>
     </motion.div>
   )

@@ -3,10 +3,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'motion/react'
-import { FiActivity, FiCalendar, FiMessageSquare, FiTrendingUp } from 'react-icons/fi'
+import { Icon } from '@iconify/react';
 import { Button, Text } from '@/components/ui'
 import { useChat } from '@/hooks/useChat'
 import { getClient } from '@/lib/supabase/client'
+
+import { getAssessmentLabel } from '@/lib/question-bank'
 
 import { MindTab } from './_components/MindTab'
 import { BridgeTab } from './_components/BridgeTab'
@@ -47,7 +49,16 @@ export default function StudentDashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [userName, setUserName] = useState('')
-  const [activeTab, setActiveTab] = useState<TabId>(initialView.activeTab)
+  const [activeTab, setActiveTabState] = useState<TabId>(initialView.activeTab)
+  
+  const setActiveTab = useCallback((newTab: TabId) => {
+    setActiveTabState(newTab)
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href)
+      url.searchParams.set('tab', newTab)
+      router.replace(url.pathname + url.search, { scroll: false })
+    }
+  }, [router])
   const [pendingCheckInOpen, setPendingCheckInOpen] = useState(initialView.pendingCheckInOpen)
   const [pendingQuestionnaireOpen, setPendingQuestionnaireOpen] = useState(initialView.pendingQuestionnaireOpen)
   const [showQuestionnaire, setShowQuestionnaire] = useState(initialView.showQuestionnaire)
@@ -270,9 +281,7 @@ export default function StudentDashboardPage() {
   })()
 
   const latestAssessmentLabel = data?.latestAssessment
-    ? data.latestAssessment.severity === 'none'
-      ? 'Stable'
-      : data.latestAssessment.severity[0].toUpperCase() + data.latestAssessment.severity.slice(1)
+    ? getAssessmentLabel(data.latestAssessment.severity)
     : 'Pending'
 
   const latestAssessmentNote = data?.latestAssessment
@@ -289,25 +298,25 @@ export default function StudentDashboardPage() {
       label: 'Check-in streak',
       value: `${data?.streak || 0} days`,
       note: data?.streak ? 'Keep it going! 🔥' : 'Start your streak today',
-      icon: <FiTrendingUp className="h-5 w-5 text-[var(--color-primary)]" />,
+      icon: <Icon icon="solar:graph-up-linear" className="h-5 w-5 text-[var(--color-primary)]" />,
     },
     {
       label: 'Next session',
       value: data?.nextSession || 'None',
       note: data?.nextSession ? 'Upcoming booking' : 'Book when ready',
-      icon: <FiCalendar className="h-5 w-5 text-[var(--color-info)]" />,
+      icon: <Icon icon="solar:calendar-linear" className="h-5 w-5 text-[var(--color-info)]" />,
     },
     {
       label: 'Latest scan',
       value: latestAssessmentLabel,
       note: latestAssessmentNote,
-      icon: <FiActivity className="h-5 w-5 text-[var(--color-primary)]" />,
+      icon: <Icon icon="solar:pulse-linear" className="h-5 w-5 text-[var(--color-primary)]" />,
     },
     {
       label: 'Active chats',
       value: `${data?.activeChats || 0}`,
       note: 'This week',
-      icon: <FiMessageSquare className="h-5 w-5 text-[var(--color-success)]" />,
+      icon: <Icon icon="solar:chat-round-linear" className="h-5 w-5 text-[var(--color-success)]" />,
     },
   ]
 

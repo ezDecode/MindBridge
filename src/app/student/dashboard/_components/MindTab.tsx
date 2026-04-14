@@ -3,22 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import {
-  FiActivity,
-  FiAlertCircle,
-  FiArrowUpRight,
-  FiCalendar,
-  FiCompass,
-  FiHeart,
-  FiMenu,
-  FiMessageSquare,
-  FiPlus,
-  FiShield,
-  FiTrendingUp,
-  FiX,
-  FiZap,
-} from "react-icons/fi";
+import { Icon } from '@iconify/react';
 import { Text } from "@/components/ui";
+import { getAssessmentLabel } from "@/lib/question-bank";
 import { ChatInput, ChatWindow } from "@/components/chat";
 import type { Message } from "@/hooks/useChat";
 import { CheckInModal } from "./CheckInModal";
@@ -42,13 +29,6 @@ interface MindTabProps {
   activeTab: TabId;
   setActiveTab: (tab: TabId) => void;
 }
-
-const assessmentLabels: Record<NonNullable<DashboardData["latestAssessment"]>["severity"], string> = {
-  none: "Stable",
-  mild: "Gentle watch",
-  moderate: "Needs attention",
-  severe: "Needs support",
-};
 
 export function MindTab({
   userName,
@@ -74,7 +54,7 @@ export function MindTab({
   const isCheckInOpen = showCheckIn || Boolean(autoOpenCheckIn);
 
   const latestAssessmentLabel = data?.latestAssessment
-    ? assessmentLabels[data.latestAssessment.severity]
+    ? getAssessmentLabel(data.latestAssessment.severity)
     : "No guided check-in yet";
 
   const assessmentNote = data?.latestAssessment?.criteriaFlagged.length
@@ -111,103 +91,99 @@ export function MindTab({
           }`}
         >
           <div className="flex h-full flex-col gap-4">
-            <div className="rounded-[1.4rem] border border-[var(--color-border)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-primary-light),white_12%)_0%,var(--color-surface)_100%)] p-4">
+            <div className="rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.8)_0%,var(--color-surface)_100%)] p-4 shadow-sm shadow-[var(--color-primary)]/5">
               <div className="flex items-center justify-between gap-3">
-                <span className="rounded-full border border-[var(--color-border)] bg-white px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--color-text-muted)]">
-                  Mind Space
-                </span>
-                <div className="flex items-center gap-2">
+                <Text as="h2" variant="h6" weight="bold" className="text-[var(--color-text-primary)]">
+                  Hi {userName}
+                </Text>
+                <div className="flex items-center gap-1.5">
                   <button
                     type="button"
                     onClick={startNewSession}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-text-primary)] text-white transition-transform hover:scale-[0.98]"
+                    title="Start new chat"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-text-primary)] text-white transition-transform active:scale-[0.92]"
                   >
-                    <FiPlus className="h-4 w-4" />
+                    <Icon icon="solar:add-circle-linear" className="h-4 w-4" />
                   </button>
                   <button
                     type="button"
                     onClick={() => setSidebarOpen(false)}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border)] bg-white text-[var(--color-text-secondary)] lg:hidden"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-surface-warm)] lg:hidden"
                   >
-                    <FiX className="h-4 w-4" />
+                    <Icon icon="solar:close-circle-linear" className="h-4 w-4" />
                   </button>
                 </div>
               </div>
 
-              <Text as="h2" variant="h6" weight="bold" className="mt-3 text-[var(--color-text-primary)]">
-                Hi {userName}
-              </Text>
-
-              <div className="mt-4 grid grid-cols-2 gap-2">
-                <div className="rounded-[1rem] bg-white/80 px-3 py-2">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--color-text-muted)]">
-                    Streak
-                  </p>
-                  <p className="mt-1 text-lg font-bold tracking-[-0.03em] text-[var(--color-text-primary)]">
-                    {data?.streak || 0}d
-                  </p>
+              <div className="mt-4 flex items-center divide-x divide-[var(--color-border-light)] rounded-[calc(var(--radius-sm)*var(--brm))] squircle border border-[var(--color-border-light)] bg-white/50 py-2.5">
+                <div className="flex flex-1 items-center justify-center gap-2.5 px-3">
+                  <Icon icon="solar:graph-up-linear" className="h-3.5 w-3.5 text-[var(--color-primary)]" />
+                  <div className="min-w-0">
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Streak</p>
+                    <p className="text-sm font-bold tracking-tight text-[var(--color-text-primary)]">{data?.streak || 0}d</p>
+                  </div>
                 </div>
-                <div className="rounded-[1rem] bg-white/80 px-3 py-2">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--color-text-muted)]">
-                    Scan
-                  </p>
-                  <p className="mt-1 text-xs font-semibold text-[var(--color-text-primary)] truncate">
-                    {latestAssessmentLabel}
-                  </p>
+                <div className="flex flex-1 items-center justify-center gap-2.5 px-3">
+                  <Icon icon="solar:pulse-linear" className="h-3.5 w-3.5 text-[var(--color-info)]" />
+                  <div className="min-w-0 flex flex-col justify-center">
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Scan</p>
+                    <p className="truncate text-sm font-bold tracking-tight text-[var(--color-text-primary)]">{latestAssessmentLabel}</p>
+                    {assessmentNote && assessmentNote !== "No urgent flags" && (
+                      <p className="mt-0.5 truncate text-[10px] text-[var(--color-text-secondary)]" title={assessmentNote}>
+                        {assessmentNote}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-[1.25rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
+            <div className="rounded-[calc(var(--radius-sm)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
               <Text as="p" variant="small" weight="bold" className="px-1 text-[var(--color-text-primary)]">
                 Quick actions
               </Text>
 
               <div className="mt-3 grid gap-2">
                 <ActionButton
-                  icon={<FiZap className="h-4 w-4" />}
+                  icon={<Icon icon="solar:bolt-linear" className="h-4 w-4" />}
                   title="Guided check-in"
                   onClick={onOpenQuestionnaire}
                   highlighted
                 />
                 <ActionButton
-                  icon={<FiHeart className="h-4 w-4" />}
+                  icon={<Icon icon="solar:heart-linear" className="h-4 w-4" />}
                   title="Quick mood log"
                   onClick={() => setShowCheckIn(true)}
                 />
                 <ActionButton
-                  icon={<FiCalendar className="h-4 w-4" />}
+                  icon={<Icon icon="solar:calendar-linear" className="h-4 w-4" />}
                   title="Book counselor"
                   onClick={() => setShowBookingModal(true)}
                 />
                 <ActionButton
-                  icon={<FiTrendingUp className="h-4 w-4" />}
+                  icon={<Icon icon="solar:graph-up-linear" className="h-4 w-4" />}
                   title="Dashboard"
                   onClick={onSwitchToBridge}
                 />
               </div>
             </div>
 
-            <div className="rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--color-surface-warm)] text-[var(--color-primary)]">
-                  <FiCompass className="h-5 w-5" />
-                </div>
-                <div>
-                  <Text as="p" variant="small" weight="bold" className="text-[var(--color-text-primary)]">
-                    Latest support signal
-                  </Text>
-                  <Text as="p" variant="small" className="mt-2 leading-6 text-[var(--color-text-secondary)]">
-                    {assessmentNote}
-                  </Text>
-                </div>
+            <div className="flex flex-col gap-3 rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-warning)]/20 bg-[var(--color-warning-soft)] p-4 shadow-sm">
+              <div className="flex items-center gap-2">
+                <Icon icon="solar:danger-circle-linear" className="h-5 w-5 shrink-0 text-[var(--color-warning)]" />
+                <span className="text-sm font-medium text-[var(--color-text-primary)]">
+                  Urgent support:{" "}
+                  <a href="tel:9152987821" className="font-bold underline underline-offset-2">
+                    9152987821
+                  </a>
+                </span>
               </div>
             </div>
 
-            <div className="rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+            <div className="rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--color-info-soft)] text-[var(--color-info)]">
-                  <FiShield className="h-5 w-5" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-[calc(var(--radius-sm)*var(--brm))] squircle bg-[var(--color-info-soft)] text-[var(--color-info)]">
+                  <Icon icon="solar:shield-linear" className="h-5 w-5" />
                 </div>
                 <div>
                   <Text as="p" variant="small" weight="bold" className="text-[var(--color-text-primary)]">
@@ -223,32 +199,29 @@ export function MindTab({
         </aside>
 
         <section className="relative flex min-h-0 min-w-0 flex-1 flex-col">
-          <header className="border-b border-[var(--color-border)] px-4 py-4 sm:px-6">
+          <header className="px-4 py-4 sm:px-6">
             <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
               <div className="flex items-start gap-3">
                 <button
                   type="button"
                   onClick={() => setSidebarOpen(true)}
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-white text-[var(--color-text-primary)] lg:hidden"
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-surface-warm)] lg:hidden shadow-sm"
                 >
-                  <FiMenu className="h-5 w-5" />
+                  <Icon icon="solar:hamburger-menu-linear" className="h-5 w-5" />
                 </button>
 
                 <div>
                   <Text as="p" variant="small" className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--color-text-muted)]">
                     Companion
                   </Text>
-                  <Text as="h1" variant="h6" weight="bold" className="mt-2 text-[var(--color-text-primary)]">
-                    Talk it through or start a guided check-in
-                  </Text>
-                  <Text as="p" variant="small" className="mt-1 max-w-xl leading-6 text-[var(--color-text-secondary)]">
-                    Keep it quick, honest, and low-pressure. We can build clarity one step at a time.
+                  <Text as="h1" variant="h6" weight="bold" className="mt-1 text-[var(--color-text-primary)]">
+                    Mind Space
                   </Text>
                 </div>
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-1 rounded-full border border-[var(--color-border)] bg-white p-1">
+                <div className="flex items-center gap-1 rounded-full bg-white p-1 shadow-sm">
                   <button
                     onClick={() => setActiveTab("mind")}
                     className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
@@ -279,7 +252,7 @@ export function MindTab({
                   onClick={onOpenQuestionnaire}
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[var(--color-primary)] px-5 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(244,125,75,0.24)] transition-transform hover:scale-[0.99]"
                 >
-                  <FiZap className="h-4 w-4" />
+                  <Icon icon="solar:bolt-linear" className="h-4 w-4" />
                   Guided questions
                 </button>
               </div>
@@ -337,7 +310,7 @@ export function MindTab({
             </div>
           </div>
 
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 border-t border-[var(--color-border)] bg-[color:rgba(255,255,255,0.92)] px-4 pb-3 pt-2 backdrop-blur-sm sm:px-6">
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-[color:rgba(255,255,255,0.92)] px-4 pb-3 pt-2 backdrop-blur-sm sm:px-6">
             <div className="pointer-events-auto mx-auto max-w-3xl">
               <AnimatePresence>
                 {error && (
@@ -352,28 +325,7 @@ export function MindTab({
                 )}
               </AnimatePresence>
 
-              <div className="mb-2.5 flex flex-wrap items-center justify-between gap-3 rounded-[1.1rem] border border-[var(--color-warning)]/20 bg-[var(--color-warning-soft)] px-3.5 py-2.5">
-                <div className="flex items-center gap-2">
-                  <FiAlertCircle className="h-4 w-4 text-[var(--color-warning)]" />
-                  <span className="text-sm text-[var(--color-text-primary)]">
-                    Urgent support:{" "}
-                    <a href="tel:9152987821" className="font-semibold underline underline-offset-2">
-                      9152987821
-                    </a>
-                  </span>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={onOpenQuestionnaire}
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-[var(--color-text-primary)]"
-                >
-                  <FiActivity className="h-4 w-4" />
-                  Guided check-in
-                </button>
-              </div>
-
-              <div className="rounded-[1.5rem] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-sm">
+              <div className="rounded-[1.5rem] bg-[var(--color-surface)] shadow-sm">
                 <ChatInput
                   onSend={sendMessage}
                   isLoading={isLoading}
@@ -407,13 +359,13 @@ function ActionButton({
     <button
       type="button"
       onClick={onClick}
-      className={`flex items-center gap-2.5 rounded-[1.1rem] border px-3 py-2.5 text-left transition-all duration-200 ease-[var(--ease-out)] active:scale-[0.97] ${
+      className={`flex items-center gap-2.5 rounded-[calc(var(--radius-sm)*var(--brm))] px-3 py-2.5 text-left transition-all duration-200 ease-[var(--ease-out)] active:scale-[0.97] ${
         highlighted
-          ? "border-[var(--color-primary)] bg-[var(--color-primary-light)] shadow-sm hover:shadow-[0_8px_16px_rgba(244,125,75,0.08)]"
-          : "border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-warm)]"
+          ? "bg-[var(--color-primary-light)] shadow-sm hover:shadow-md hover:bg-[#fff0eb]"
+          : "bg-black/[0.03] hover:bg-black/[0.06]"
       }`}
     >
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-[var(--color-primary)] shadow-sm">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[calc(var(--radius-sm)*var(--brm)-4px)] bg-white text-[var(--color-primary)] shadow-sm">
         {icon}
       </span>
       <span className="min-w-0">
@@ -441,76 +393,37 @@ function EmptyState({
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-      className="pt-4"
+      className="pt-6 sm:pt-10"
     >
-      <div className="flex flex-col gap-6">
-        <div className="rounded-[1.9rem] border border-[var(--color-border)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-primary-light),white_30%)_0%,var(--color-surface)_100%)] p-6 sm:p-7 shadow-sm">
-          <div className="flex h-12 w-12 items-center justify-center rounded-[1.2rem] bg-white text-[var(--color-primary)] shadow-sm">
-            <FiMessageSquare className="h-6 w-6" />
-          </div>
+      <div className="flex flex-col gap-8 max-w-2xl px-1">
+        <Text as="h2" variant="h3" weight="bold" className="tracking-tight text-[var(--color-text-primary)]">
+          Welcome back, {userName}.
+        </Text>
 
-          <Text as="h2" variant="h4" weight="bold" className="mt-6 text-[var(--color-text-primary)]">
-            Start where it feels easiest, {userName}
-          </Text>
-          <Text as="p" variant="body" className="mt-3 max-w-xl leading-7 text-[var(--color-text-secondary)]">
-            You can talk freely in chat, or let a rotating question set help name the pattern underneath what you are feeling.
-          </Text>
-
-          <div className="mt-8 flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={onOpenQuestionnaire}
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-white shadow-[0_14px_28px_rgba(244,125,75,0.24)] transition-all duration-200 hover:scale-[1.02] active:scale-[0.96]"
-            >
-              <FiZap className="h-4 w-4" />
-              Start guided questions
-            </button>
-            <button
-              type="button"
-              onClick={onCheckIn}
-              className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white px-6 py-3 text-sm font-bold text-[var(--color-text-primary)] transition-all duration-200 hover:bg-[var(--color-surface-warm)] active:scale-[0.96]"
-            >
-              <FiHeart className="h-4 w-4" />
-              Quick mood log
-            </button>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2.5">
-          <PillAction
-            icon={<FiCalendar className="h-4 w-4" />}
-            label="Book session"
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[34rem]">
+          <ActionButton
+            icon={<Icon icon="solar:bolt-linear" className="h-4 w-4" />}
+            title="Start guided questions"
+            onClick={onOpenQuestionnaire}
+            highlighted
+          />
+          <ActionButton
+            icon={<Icon icon="solar:heart-linear" className="h-4 w-4" />}
+            title="Quick mood log"
+            onClick={onCheckIn}
+          />
+          <ActionButton
+            icon={<Icon icon="solar:calendar-linear" className="h-4 w-4" />}
+            title="Book session"
             onClick={onBookSession}
           />
-          <PillAction
-            icon={<FiTrendingUp className="h-4 w-4" />}
-            label="View analytics"
+          <ActionButton
+            icon={<Icon icon="solar:graph-up-linear" className="h-4 w-4" />}
+            title="View analytics"
             onClick={onSwitchToBridge}
           />
         </div>
       </div>
     </motion.div>
-  );
-}
-
-function PillAction({
-  icon,
-  label,
-  onClick,
-}: {
-  icon: ReactNode;
-  label: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="inline-flex h-11 items-center gap-2.5 rounded-full border border-[var(--color-border)] bg-white px-4 py-2.5 text-sm font-bold text-[var(--color-text-primary)] shadow-sm transition-all duration-200 hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-warm)] active:scale-[0.97]"
-    >
-      <span className="text-[var(--color-primary)]">{icon}</span>
-      <span>{label}</span>
-      <FiArrowUpRight className="h-3.5 w-3.5 text-[var(--color-text-muted)]" />
-    </button>
   );
 }

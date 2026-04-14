@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from "motion/react";
-import { FiMessageSquare, FiBarChart2 } from "react-icons/fi";
+import { Icon } from '@iconify/react';
 import type { TabId } from "./types";
 
 const tabs: { id: TabId; label: string; icon: React.ReactNode }[] = [
-  { id: "mind", label: "Chat", icon: <FiMessageSquare className="h-4 w-4" /> },
-  { id: "bridge", label: "Analytics", icon: <FiBarChart2 className="h-4 w-4" /> },
+  { id: "mind", label: "Chat", icon: <Icon icon="solar:chat-round-linear" className="h-4 w-4" /> },
+  { id: "bridge", label: "Analytics", icon: <Icon icon="solar:chart-square-linear" className="h-4 w-4" /> },
 ];
 
 export function PillToggle({

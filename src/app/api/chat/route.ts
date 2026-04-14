@@ -81,11 +81,7 @@ function buildSuggestions({
     ]
   }
 
-  return [
-    'Can you help me unpack that?',
-    'Give me one small next step',
-    'What might help tonight?',
-  ]
+  return []
 }
 
 interface ChatRequest {

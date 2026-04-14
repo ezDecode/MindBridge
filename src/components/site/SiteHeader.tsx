@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { FiArrowRight, FiMenu, FiX } from "react-icons/fi";
+import { Icon } from '@iconify/react';
 import { Button, Container, Text } from "@/components/ui";
 import { marketingNav } from "@/content/mindbridge";
 
@@ -57,7 +57,7 @@ export function SiteHeader() {
               aria-controls="marketing-menu"
               aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
             >
-              {isOpen ? <FiX className="h-5 w-5" /> : <FiMenu className="h-5 w-5" />}
+              {isOpen ? <Icon icon="solar:close-circle-linear" className="h-5 w-5" /> : <Icon icon="solar:hamburger-menu-linear" className="h-5 w-5" />}
             </button>
           </div>
 
@@ -72,7 +72,7 @@ export function SiteHeader() {
                     className="interactive-panel flex min-h-[3rem] items-center justify-between rounded-[calc(var(--radius-md)*var(--brm))] squircle px-4 py-3 text-label font-medium text-[var(--color-text-primary)]"
                   >
                     <span>{item.label}</span>
-                    <FiArrowRight className="h-4 w-4 text-[var(--color-black)]" />
+                    <Icon icon="solar:arrow-right-linear" className="h-4 w-4 text-[var(--color-black)]" />
                   </Link>
                 ))}
               </div>
@@ -80,7 +80,7 @@ export function SiteHeader() {
               <div className="mt-4 grid gap-2">
                 <Button href="/student/dashboard" className="w-full justify-between">
                   Explore student flow
-                  <FiArrowRight className="h-4 w-4" />
+                  <Icon icon="solar:arrow-right-linear" className="h-4 w-4" />
                 </Button>
                 <Button href="/login" variant="warm" className="w-full">
                   Continue with college email

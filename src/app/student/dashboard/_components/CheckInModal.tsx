@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { FiX, FiCheck, FiLoader, FiHeart } from "react-icons/fi";
+import { Icon } from '@iconify/react';
 import { Button, Text } from "@/components/ui";
 
 const moodOptions = [
@@ -93,15 +93,15 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
                   transition={{ duration: 2, repeat: Infinity }}
                   className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--color-danger-soft)] shadow-sm"
                 >
-                  <FiHeart className="h-5 w-5 text-[var(--color-danger)]" />
+                  <Icon icon="solar:heart-linear" className="h-5 w-5 text-[var(--color-danger)]" />
                 </motion.div>
                 <Text as="p" variant="h6" weight="bold">How are you feeling?</Text>
               </div>
               <button
                 onClick={onClose}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border)] bg-white text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)]"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-text-primary)]"
               >
-                <FiX className="h-5 w-5" />
+                <Icon icon="solar:close-circle-linear" className="h-5 w-5" />
               </button>
             </div>
 
@@ -147,8 +147,8 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
                   onClick={() => setSelectedMood(option.score)}
                   className={`group relative flex flex-col items-center gap-1 rounded-[1.2rem] p-3 transition-all duration-200 ease-[var(--ease-out)] ${
                     selectedMood === option.score
-                      ? "bg-[var(--color-primary-light)] border border-[var(--color-primary)]/20 shadow-md"
-                      : "bg-[var(--color-surface-warm)] border border-transparent hover:border-[var(--color-border)] hover:bg-[var(--color-surface-warm-hover)]"
+                      ? "bg-[var(--color-primary-light)] shadow-md"
+                      : "bg-[var(--color-surface-warm)] hover:bg-[var(--color-surface-warm-hover)]"
                   }`}
                 >
                   <span className={`text-2xl transition-transform duration-300 ${selectedMood === option.score ? 'scale-125' : ''}`}>
@@ -162,7 +162,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
                         exit={{ scale: 0, opacity: 0 }}
                         className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-md"
                       >
-                        <FiCheck className="h-3 w-3" />
+                        <Icon icon="solar:check-circle-linear" className="h-3 w-3" />
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -188,12 +188,12 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
               >
                 {isLoading ? (
                   <>
-                    <FiLoader className="h-4 w-4 animate-spin" />
+                    <Icon icon="solar:restart-circle-linear" className="h-4 w-4 animate-spin" />
                     Saving...
                   </>
                 ) : isSaved ? (
                   <>
-                    <FiCheck className="h-4 w-4" />
+                    <Icon icon="solar:check-circle-linear" className="h-4 w-4" />
                     Saved!
                   </>
                 ) : (

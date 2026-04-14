@@ -3,14 +3,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import {
-  FiArrowRight,
-  FiBookOpen,
-  FiCalendar,
-  FiCompass,
-  FiMessageSquare,
-  FiZap,
-} from "react-icons/fi";
+import { Icon } from '@iconify/react';
 import {
   BarChart,
   Bar,
@@ -109,16 +102,13 @@ export function BridgeTab({
             <Text as="p" variant="small" className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--color-text-muted)]">
               Dashboard
             </Text>
-            <Text as="h1" variant="h5" weight="bold" className="mt-2 text-[var(--color-text-primary)]">
-              A compact view of your support rhythm
-            </Text>
-            <Text as="p" variant="small" className="mt-1 leading-6 text-[var(--color-text-secondary)]">
-              Keep an eye on patterns, then jump back into chat or a guided check-in when you want more context.
+            <Text as="h1" variant="h5" weight="bold" className="mt-1 text-[var(--color-text-primary)]">
+              Support Rhythm
             </Text>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-1 rounded-full border border-[var(--color-border)] bg-white p-1">
+            <div className="flex items-center gap-1 rounded-full bg-white p-1 shadow-sm">
               <button
                 onClick={() => {
                   setActiveTab("mind");
@@ -149,7 +139,7 @@ export function BridgeTab({
               onClick={onOpenQuestionnaire}
               className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[var(--color-primary)] px-5 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(244,125,75,0.24)]"
             >
-              <FiZap className="h-4 w-4" />
+              <Icon icon="solar:bolt-linear" className="h-4 w-4" />
               Guided questions
             </button>
           </div>
@@ -173,11 +163,11 @@ export function BridgeTab({
 
                 <div className="mt-5 flex flex-wrap gap-3">
                   <Button onClick={onSwitchToMind} size="sm" className="gap-2">
-                    <FiMessageSquare className="h-4 w-4" />
+                    <Icon icon="solar:chat-round-linear" className="h-4 w-4" />
                     Open chat
                   </Button>
                   <Button onClick={onOpenQuestionnaire} variant="warm" size="sm" className="gap-2">
-                    <FiZap className="h-4 w-4" />
+                    <Icon icon="solar:bolt-linear" className="h-4 w-4" />
                     Start question set
                   </Button>
                 </div>
@@ -186,7 +176,7 @@ export function BridgeTab({
               <div className="rounded-[1.5rem] border border-[var(--color-border)] bg-white/85 p-5">
                 <div className="flex items-start gap-3">
                   <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--color-surface-warm)] text-[var(--color-primary)]">
-                    <FiCompass className="h-5 w-5" />
+                    <Icon icon="solar:compass-linear" className="h-5 w-5" />
                   </div>
                   <div className="min-w-0">
                     <Text as="p" variant="small" weight="bold" className="text-[var(--color-text-primary)]">
@@ -204,9 +194,9 @@ export function BridgeTab({
                 <button
                   type="button"
                   onClick={onOpenQuestionnaire}
-                  className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 text-sm font-semibold text-[var(--color-text-primary)]"
+                  className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[var(--color-surface)] px-4 text-sm font-semibold text-[var(--color-text-primary)] shadow-sm hover:bg-[var(--color-surface-warm)] transition-colors"
                 >
-                  <FiZap className="h-4 w-4" />
+                  <Icon icon="solar:bolt-linear" className="h-4 w-4" />
                   Refresh question set
                 </button>
               </div>
@@ -326,14 +316,14 @@ export function BridgeTab({
 
               <div className="mt-5 grid gap-3">
                 <CompactAction
-                  icon={<FiZap className="h-4 w-4" />}
+                  icon={<Icon icon="solar:bolt-linear" className="h-4 w-4" />}
                   title="Guided question check-in"
                   copy="Fresh mixed-category questions and a saved assessment."
                   action="Start now"
                   onClick={onOpenQuestionnaire}
                 />
                 <CompactAction
-                  icon={<FiMessageSquare className="h-4 w-4" />}
+                  icon={<Icon icon="solar:chat-round-linear" className="h-4 w-4" />}
                   title="Talk in chat"
                   copy="Use the companion when you want to unpack something in real time."
                   action="Open chat"
@@ -345,7 +335,7 @@ export function BridgeTab({
                 >
                   <div className="flex items-start gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--color-surface-warm)] text-[var(--color-primary)]">
-                      <FiCalendar className="h-4 w-4" />
+                      <Icon icon="solar:calendar-linear" className="h-4 w-4" />
                     </div>
                     <div className="min-w-0">
                       <Text as="p" variant="small" weight="bold" className="text-[var(--color-text-primary)]">
@@ -356,7 +346,7 @@ export function BridgeTab({
                       </Text>
                       <span className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-text-primary)]">
                         Open booking
-                        <FiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                        <Icon icon="solar:arrow-right-linear" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                       </span>
                     </div>
                   </div>
@@ -375,7 +365,7 @@ export function BridgeTab({
                   </Text>
                 </div>
                 <Button href="/student/resources" variant="ghost" size="sm" className="gap-1">
-                  View all <FiArrowRight className="h-4 w-4" />
+                  View all <Icon icon="solar:arrow-right-linear" className="h-4 w-4" />
                 </Button>
               </div>
 
@@ -389,7 +379,7 @@ export function BridgeTab({
                     className="group rounded-[1.25rem] border border-[var(--color-border)] bg-white p-4 transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-warm)]"
                   >
                     <div className="flex items-center gap-2 text-[var(--color-text-muted)]">
-                      <FiBookOpen className="h-4 w-4" />
+                      <Icon icon="solar:book-linear" className="h-4 w-4" />
                       <Text as="span" variant="small" className="text-[var(--color-text-secondary)]">
                         {resource.type}
                       </Text>
@@ -403,7 +393,7 @@ export function BridgeTab({
                       </Text>
                       <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--color-text-primary)]">
                         Open
-                        <FiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                        <Icon icon="solar:arrow-right-linear" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                       </span>
                     </div>
                   </a>
@@ -462,7 +452,7 @@ function CompactAction({
           </Text>
           <span className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[var(--color-text-primary)]">
             {action}
-            <FiArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+            <Icon icon="solar:arrow-right-linear" className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
           </span>
         </div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { FiChevronRight } from "react-icons/fi";
+import { Icon as IconifyIcon } from '@iconify/react';
 import { Container, Text } from "@/components/ui";
 import { mindbridgeCategories } from "@/content/mindbridge";
 import { sectionReveal, stagger, item } from "./motion";
@@ -130,7 +130,7 @@ export function CategoriesSection() {
                   <div className="flex items-center gap-2">
                     {Icon && <Icon />}
                     <div className="p-2 text-[var(--color-text-secondary)] transition-colors group-hover:text-[var(--color-text-primary)]">
-                      <FiChevronRight className="h-5 w-5" />
+                      <IconifyIcon icon="solar:alt-arrow-right-linear" className="h-5 w-5" />
                     </div>
                   </div>
                 </motion.button>

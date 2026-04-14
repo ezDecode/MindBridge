@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'motion/react'
-import { FiMessageCircle } from 'react-icons/fi'
+import { Icon } from '@iconify/react';
 
 interface SuggestionChipsProps {
   suggestions: string[]
@@ -37,9 +37,9 @@ export function SuggestionChips({
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => onSelect(suggestion)}
-          className="inline-flex min-h-9 items-center gap-2 rounded-full border border-[var(--color-border)] bg-white/80 px-3.5 py-2 text-sm font-medium text-[var(--color-text-secondary)] shadow-sm transition-all duration-150 hover:border-[var(--color-primary)]/40 hover:bg-white hover:text-[var(--color-text-primary)] hover:shadow-md"
+          className="inline-flex min-h-9 items-center gap-2 rounded-full bg-white/80 px-3.5 py-2 text-sm font-medium text-[var(--color-text-secondary)] shadow-sm transition-all duration-150 hover:bg-white hover:text-[var(--color-text-primary)] hover:shadow-md"
         >
-          <FiMessageCircle className="h-3.5 w-3.5 text-[var(--color-primary)]" />
+          <Icon icon="solar:chat-round-linear" className="h-3.5 w-3.5 text-[var(--color-primary)]" />
           <span>{suggestion}</span>
         </motion.button>
       ))}

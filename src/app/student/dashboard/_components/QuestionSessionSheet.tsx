@@ -4,19 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
-import {
-  FiAlertTriangle,
-  FiArrowLeft,
-  FiArrowRight,
-  FiCalendar,
-  FiCheck,
-  FiClock,
-  FiLoader,
-  FiMessageSquare,
-  FiRefreshCw,
-  FiShield,
-  FiX,
-} from "react-icons/fi";
+import { Icon } from '@iconify/react';
 
 interface SessionQuestionOption {
   label: string;
@@ -276,7 +264,7 @@ export function QuestionSessionSheet({
                       {categoryLabels[currentQuestion.category] || currentQuestion.category}
                     </span>
                     <span className="text-xs font-semibold text-[var(--color-text-muted)]">
-                      {step + 1} of {session.questions.length}
+                      {step + 1} of {session?.questions.length || 0}
                     </span>
                   </>
                 ) : (
@@ -291,7 +279,7 @@ export function QuestionSessionSheet({
                 onClick={onClose}
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-surface-warm)] text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-surface-strong)] hover:text-[var(--color-text-primary)]"
               >
-                <FiX className="h-4 w-4" />
+                <Icon icon="solar:close-circle-linear" className="h-4 w-4" />
               </button>
             </div>
 
@@ -301,7 +289,7 @@ export function QuestionSessionSheet({
                 <div className="flex h-full min-h-[30vh] items-center justify-center">
                   <div className="text-center">
                     <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--color-surface-warm)] text-[var(--color-primary)]">
-                      <FiLoader className="h-6 w-6 animate-spin" />
+                      <Icon icon="solar:restart-circle-linear" className="h-6 w-6 animate-spin" />
                     </div>
                     <p className="mt-4 text-base font-bold text-[var(--color-text-primary)]">
                       Curating your mix...
@@ -311,7 +299,7 @@ export function QuestionSessionSheet({
               ) : error && !session && !summary ? (
                 <div className="mx-auto flex h-full min-h-[30vh] max-w-xs flex-col items-center justify-center text-center">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--color-danger-soft)] text-[var(--color-danger)]">
-                    <FiAlertTriangle className="h-6 w-6" />
+                    <Icon icon="solar:danger-triangle-linear" className="h-6 w-6" />
                   </div>
                   <p className="mt-4 text-lg font-bold text-[var(--color-text-primary)]">
                     We hit a small bump
@@ -324,7 +312,7 @@ export function QuestionSessionSheet({
                     onClick={() => void loadSession()}
                     className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-full bg-black px-5 text-xs font-bold text-white transition-opacity hover:opacity-90 active:scale-95"
                   >
-                    <FiRefreshCw className="h-3.5 w-3.5" />
+                    <Icon icon="solar:refresh-circle-linear" className="h-3.5 w-3.5" />
                     Try again
                   </button>
                 </div>
@@ -364,15 +352,15 @@ export function QuestionSessionSheet({
                         onClick={() => { onChatRequested?.(); onClose(); }}
                         className="inline-flex h-9 items-center justify-center gap-2 rounded-full bg-black px-4 text-xs font-bold text-white transition-opacity hover:opacity-90 active:scale-95"
                       >
-                        <FiMessageSquare className="h-3.5 w-3.5" />
+                        <Icon icon="solar:chat-round-linear" className="h-3.5 w-3.5" />
                         Chat
                       </button>
                       <button
                         type="button"
                         onClick={() => router.push("/student/book")}
-                        className="inline-flex h-9 items-center justify-center gap-2 rounded-full border border-[var(--color-border)] bg-white px-4 text-xs font-bold text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-surface-warm)] active:scale-95"
+                        className="inline-flex h-9 items-center justify-center gap-2 rounded-full bg-white px-4 text-xs font-bold text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-surface-warm)] active:scale-95"
                       >
-                        <FiCalendar className="h-3.5 w-3.5" />
+                        <Icon icon="solar:calendar-linear" className="h-3.5 w-3.5" />
                         Support
                       </button>
                     </div>
@@ -382,7 +370,7 @@ export function QuestionSessionSheet({
                     <div className="mt-4 rounded-xl border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] p-4">
                       <div className="flex items-start gap-3">
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[var(--color-danger)]">
-                          <FiAlertTriangle className="h-4.5 w-4.5" />
+                          <Icon icon="solar:danger-triangle-linear" className="h-4.5 w-4.5" />
                         </div>
                         <div>
                           <p className="text-sm font-bold text-[var(--color-text-primary)]">
@@ -470,7 +458,7 @@ export function QuestionSessionSheet({
                             "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-1.5 transition-all",
                             selected ? "border-[var(--color-primary)] bg-[var(--color-primary)]" : "border-[var(--color-border)] group-hover:border-[var(--color-border-strong)]"
                           )}>
-                            {selected && <FiCheck className="h-3 w-3 text-white stroke-[3]" />}
+                            {selected && <Icon icon="solar:check-circle-linear" className="h-3 w-3 text-white stroke-[3]" />}
                           </div>
                         </motion.button>
                       );
@@ -497,11 +485,11 @@ export function QuestionSessionSheet({
                     className="inline-flex h-10 min-w-[7rem] items-center justify-center gap-2 rounded-full bg-black px-5 text-xs font-bold text-white transition-opacity hover:opacity-90 active:scale-95 disabled:pointer-events-none disabled:opacity-30"
                   >
                     {isSubmitting ? (
-                      <FiLoader className="h-3.5 w-3.5 animate-spin" />
+                      <Icon icon="solar:restart-circle-linear" className="h-3.5 w-3.5 animate-spin" />
                     ) : (
                       <>
                         {step === session.questions.length - 1 ? "Complete" : "Continue"}
-                        <FiArrowRight className="h-3.5 w-3.5" />
+                        <Icon icon="solar:arrow-right-linear" className="h-3.5 w-3.5" />
                       </>
                     )}
                   </button>
@@ -512,7 +500,7 @@ export function QuestionSessionSheet({
                     disabled={step === 0}
                     className="inline-flex h-10 items-center justify-center gap-1.5 rounded-full px-2 text-xs font-bold text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)] disabled:invisible"
                   >
-                    <FiArrowLeft className="h-3.5 w-3.5" />
+                    <Icon icon="solar:arrow-left-linear" className="h-3.5 w-3.5" />
                     Back
                   </button>
                 </div>

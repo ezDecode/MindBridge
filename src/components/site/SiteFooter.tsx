@@ -1,17 +1,17 @@
 import Link from "next/link";
-import { FiHeart, FiMessageCircle, FiCalendar, FiShield, FiArrowRight, FiBook, FiInfo, FiActivity } from "react-icons/fi";
+import { Icon } from '@iconify/react';
 import { Container, Text } from "@/components/ui";
 
 const footerNavigation = {
   tools: [
-    { href: "/student/chat", label: "AI Chat Support", icon: FiMessageCircle },
-    { href: "/student/check-in", label: "Mood Check-in", icon: FiActivity },
-    { href: "/student/resources", label: "Resource Library", icon: FiBook },
-    { href: "/student/book", label: "Counselor Booking", icon: FiCalendar },
+    { href: "/student/chat", label: "AI Chat Support", icon: "solar:chat-round-linear" },
+    { href: "/student/check-in", label: "Mood Check-in", icon: "solar:pulse-2-linear" },
+    { href: "/student/resources", label: "Resource Library", icon: "solar:book-linear" },
+    { href: "/student/book", label: "Counselor Booking", icon: "solar:calendar-linear" },
   ],
   support: [
-    { href: "/#faq", label: "Help Center", icon: FiInfo },
-    { href: "/counselor/dashboard", label: "Counselor Portal", icon: FiShield },
+    { href: "/#faq", label: "Help Center", icon: "solar:info-circle-linear" },
+    { href: "/counselor/dashboard", label: "Counselor Portal", icon: "solar:shield-linear" },
   ],
 };
 
@@ -25,7 +25,7 @@ export function SiteFooter() {
               {/* Brand & Mission */}
               <div className="max-w-[42rem]">
                 <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-sm border border-[var(--color-border-warm)]">
-                  <FiHeart className="h-4 w-4 text-[var(--color-primary)]" />
+                  <Icon icon="solar:heart-linear" className="h-4 w-4 text-[var(--color-primary)]" />
                   <Text as="span" variant="label" weight="bold" className="text-[var(--color-text-primary)] uppercase tracking-wide">
                     MindBridge
                   </Text>
@@ -52,7 +52,7 @@ export function SiteFooter() {
                         className="group flex min-h-[2.5rem] items-center gap-2 text-label font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)]"
                       >
                         {item.label}
-                        <FiArrowRight className="h-3.5 w-3.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                        <Icon icon="solar:arrow-right-linear" className="h-3.5 w-3.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                       </Link>
                     ))}
                   </div>
@@ -69,7 +69,7 @@ export function SiteFooter() {
                         className="group flex min-h-[2.5rem] items-center gap-2 text-label font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)]"
                       >
                         {item.label}
-                        <FiArrowRight className="h-3.5 w-3.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                        <Icon icon="solar:arrow-right-linear" className="h-3.5 w-3.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                       </Link>
                     ))}
                   </div>
@@ -81,7 +81,7 @@ export function SiteFooter() {
             <div className="mt-10 md:mt-14 rounded-[calc(var(--radius-md)*var(--brm))] squircle bg-white/60 border border-[var(--color-warning)]/20 px-4 py-4 md:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 md:gap-4 backdrop-blur-sm">
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--color-warning-soft)]">
-                  <FiHeart className="h-4.5 w-4.5 text-[var(--color-warning)]" />
+                  <Icon icon="solar:heart-linear" className="h-4.5 w-4.5 text-[var(--color-warning)]" />
                 </div>
                 <div>
                   <Text as="p" variant="label" weight="bold" className="text-[var(--color-text-primary)]">
@@ -105,7 +105,7 @@ export function SiteFooter() {
                 © 2026 MindBridge. Built with care for campus wellness.
               </Text>
               <div className="flex items-center gap-2 opacity-80">
-                <FiHeart className="h-4 w-4 text-[(--color-primary)]" />
+                <Icon icon="solar:heart-linear" className="h-4 w-4 text-[(--color-primary)]" />
                 <Text as="span" variant="small" className="text-[var(--color-text-muted)]">
                   Made for students, by students
                 </Text>

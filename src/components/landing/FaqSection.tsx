@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
-import { FiChevronDown } from "react-icons/fi";
+import { Icon } from '@iconify/react';
 import { Container, Text } from "@/components/ui";
 import { faqItems } from "@/content/mindbridge";
 import { sectionReveal, stagger, item } from "./motion";
@@ -62,7 +62,7 @@ export function FaqSection() {
                         ? "bg-[var(--color-primary-light)] text-[var(--color-primary)] rotate-180" 
                         : "bg-[var(--color-surface-warm)] text-[var(--color-text-secondary)]"
                     }`}>
-                      <FiChevronDown className="h-5 w-5" />
+                      <Icon icon="solar:alt-arrow-down-linear" className="h-5 w-5" />
                     </div>
                   </button>
                   

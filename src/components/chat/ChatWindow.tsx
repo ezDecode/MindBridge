@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { FiMessageCircle, FiUser } from 'react-icons/fi'
+import { Icon } from '@iconify/react';
 import { Text } from '@/components/ui'
 import { cleanMessageContent, type Message } from '@/hooks/useChat'
 import { MessageActions } from './MessageActions'
@@ -83,7 +83,7 @@ export function ChatWindow({
             className="mt-6 flex items-end gap-2.5"
           >
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.85rem] bg-[var(--color-primary-light)] text-[var(--color-primary)] ring-1 ring-black/5">
-              <FiMessageCircle className="h-3.5 w-3.5" />
+              <Icon icon="solar:chat-round-linear" className="h-3.5 w-3.5" />
             </div>
             <div className="rounded-[1.25rem] rounded-bl-[0.45rem] border border-[var(--color-border)] bg-[var(--color-surface-warm)] px-4 py-2.5 shadow-sm">
               <TypingIndicator />
@@ -147,9 +147,9 @@ function MessageBubble({
             }`}
           >
             {isUser ? (
-              <FiUser className="h-3.5 w-3.5" />
+              <Icon icon="solar:user-linear" className="h-3.5 w-3.5" />
             ) : (
-              <FiMessageCircle className="h-3.5 w-3.5" />
+              <Icon icon="solar:chat-round-linear" className="h-3.5 w-3.5" />
             )}
           </motion.div>
         )}

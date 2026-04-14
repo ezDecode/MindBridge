@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'motion/react'
-import { FiCalendar, FiBook, FiX, FiCheck, FiArrowRight } from 'react-icons/fi'
+import { Icon } from '@iconify/react';
 import { Button, Card, Text } from '@/components/ui'
 
 interface BookingSuggestionProps {
@@ -32,7 +32,7 @@ export function BookingSuggestion({
     >
       <div className="flex flex-wrap items-center gap-2 rounded-[1.4rem] border border-[var(--color-primary)]/20 bg-[var(--color-primary)]/5 p-2 pr-3.5 shadow-sm">
         <div className="flex h-10 items-center gap-2.5 rounded-full bg-white px-3.5 py-1.5 shadow-sm">
-          <FiCalendar className="h-4 w-4 text-[var(--color-primary)]" />
+          <Icon icon="solar:calendar-linear" className="h-4 w-4 text-[var(--color-primary)]" />
           <Text as="span" variant="small" weight="bold" className="whitespace-nowrap text-[var(--color-text-primary)]">
             Slot with {counselorName} • {slotTime}
           </Text>
@@ -45,7 +45,7 @@ export function BookingSuggestion({
             disabled={isLoading}
             className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--color-primary)] px-4 py-2 text-xs font-bold text-white transition-all hover:bg-[var(--color-primary-dark)] active:scale-[0.96] disabled:opacity-50"
           >
-            <FiCheck className="h-3.5 w-3.5" />
+            <Icon icon="solar:check-circle-linear" className="h-3.5 w-3.5" />
             Confirm
           </button>
           <button
@@ -86,7 +86,7 @@ export function ResourceSuggestion({
     >
       <div className="flex flex-wrap items-center gap-2 rounded-[1.4rem] border border-[var(--color-success)]/20 bg-[var(--color-success)]/5 p-2 pr-3.5 shadow-sm">
         <div className="flex h-10 items-center gap-2.5 rounded-full bg-white px-3.5 py-1.5 shadow-sm">
-          <FiBook className="h-4 w-4 text-[var(--color-success)]" />
+          <Icon icon="solar:book-linear" className="h-4 w-4 text-[var(--color-success)]" />
           <Text as="span" variant="small" weight="bold" className="whitespace-nowrap text-[var(--color-text-primary)]">
             Suggested: {resourceType}
           </Text>
@@ -98,13 +98,13 @@ export function ResourceSuggestion({
             onClick={onShow}
             className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--color-success)] px-4 py-2 text-xs font-bold text-white transition-all hover:bg-[var(--color-success-dark)] active:scale-[0.96]"
           >
-            <FiArrowRight className="h-3.5 w-3.5" />
+            <Icon icon="solar:arrow-right-linear" className="h-3.5 w-3.5" />
             Show me
           </button>
           <button
             type="button"
             onClick={onDismiss}
-            className="inline-flex h-9 items-center justify-center rounded-full border border-[var(--color-border)] bg-white px-3 text-xs font-bold text-[var(--color-text-secondary)] transition-all hover:bg-[var(--color-surface-warm)] active:scale-[0.96]"
+            className="inline-flex h-9 items-center justify-center rounded-full bg-white px-3 text-xs font-bold text-[var(--color-text-secondary)] transition-all hover:bg-[var(--color-surface-warm)] active:scale-[0.96]"
           >
             Maybe later
           </button>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FiCheckCircle, FiMessageCircle, FiClipboard, FiUser, FiBookOpen, FiMoon } from "react-icons/fi";
+import { Icon } from '@iconify/react';
 import { motion } from "motion/react";
 import { Button, Card, Container, Text } from "@/components/ui";
 import { beKindCTA, counselors } from "@/content/mindbridge";
@@ -88,7 +88,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
                         <div className="relative bg-[var(--color-primary-light)] flex items-center justify-center p-8">
                           <div className="text-center">
                             <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white shadow-sm mb-4">
-                              <FiMessageCircle className="w-10 h-10 text-[var(--color-primary)]" />
+                              <Icon icon="solar:chat-round-linear" className="w-10 h-10 text-[var(--color-primary)]" />
                             </div>
                             <Text as="h3" variant="h3" weight="bold" className="text-[var(--color-text-primary)]">AI Companion</Text>
                             <Text as="p" variant="small" className="text-[var(--color-text-secondary)] mt-2">Talk anytime, anonymously</Text>
@@ -100,7 +100,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
                           <div className="mt-6 space-y-3">
                             {beKindCTA.features.map((f) => (
                               <div key={f} className="flex items-center gap-3">
-                                <FiCheckCircle className="h-4 w-4 shrink-0 text-[var(--color-primary)]" />
+                                <Icon icon="solar:check-circle-linear" className="h-4 w-4 shrink-0 text-[var(--color-primary)]" />
                                 <Text as="p" variant="small" className="text-[var(--color-text-secondary)]">{f}</Text>
                               </div>
                             ))}
@@ -119,7 +119,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
                         <div className="relative bg-[var(--color-primary-light)] flex items-center justify-center p-8">
                           <div className="text-center">
                             <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white shadow-sm mb-4">
-                              <FiClipboard className="w-10 h-10 text-[var(--color-primary)]" />
+                              <Icon icon="solar:clipboard-linear" className="w-10 h-10 text-[var(--color-primary)]" />
                             </div>
                             <Text as="h3" variant="h3" weight="bold" className="text-[var(--color-text-primary)]">Wellness Check</Text>
                             <Text as="p" variant="small" className="text-[var(--color-text-secondary)] mt-2">PHQ-9 & GAD-7 validated tools</Text>
@@ -130,14 +130,14 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
                           <Text as="p" variant="body" className="mt-3.5 text-[var(--color-text-secondary)] leading-relaxed">Track your mental wellness with simple, thoughtful tools designed for students.</Text>
                           <div className="mt-6 space-y-4">
                             <div className="flex items-start gap-3">
-                              <FiCheckCircle className="h-4.5 w-4.5 shrink-0 text-[var(--color-primary)] mt-1" />
+                              <Icon icon="solar:check-circle-linear" className="h-4.5 w-4.5 shrink-0 text-[var(--color-primary)] mt-1" />
                               <div>
                                 <Text as="p" variant="h6" weight="bold" className="text-[var(--color-text-primary)]">Daily mood check-ins</Text>
                                 <Text as="p" variant="small" className="text-[var(--color-text-secondary)] mt-0.5">Track patterns and build consistent self-awareness</Text>
                               </div>
                             </div>
                             <div className="flex items-start gap-3">
-                              <FiCheckCircle className="h-4.5 w-4.5 shrink-0 text-[var(--color-primary)] mt-1" />
+                              <Icon icon="solar:check-circle-linear" className="h-4.5 w-4.5 shrink-0 text-[var(--color-primary)] mt-1" />
                               <div>
                                 <Text as="p" variant="h6" weight="bold" className="text-[var(--color-text-primary)]">Wellness resources</Text>
                                 <Text as="p" variant="small" className="text-[var(--color-text-secondary)] mt-0.5">Curated videos and audio for mental health support</Text>
@@ -155,7 +155,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
                         <div className="relative bg-[var(--color-primary-light)] flex items-center justify-center p-8">
                           <div className="text-center">
                             <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white shadow-sm mb-4">
-                              <FiUser className="w-10 h-10 text-[var(--color-primary)]" />
+                              <Icon icon="solar:user-linear" className="w-10 h-10 text-[var(--color-primary)]" />
                             </div>
                             <Text as="h3" variant="h3" weight="bold" className="text-[var(--color-text-primary)]">Expert Support</Text>
                             <Text as="p" variant="small" className="text-[var(--color-text-secondary)] mt-2">Book in under 2 minutes</Text>
@@ -187,14 +187,14 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
                       <div className={`grid lg:grid-cols-2 ${CARD_HEIGHT}`}>
                         <div className="relative bg-[var(--color-primary-light)] flex flex-col items-center justify-center p-12 text-center border-r border-white/20">
                           <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white shadow-sm mb-6">
-                            <FiBookOpen className="w-10 h-10 text-[var(--color-primary)]" />
+                            <Icon icon="solar:book-linear" className="w-10 h-10 text-[var(--color-primary)]" />
                           </div>
                           <Text as="h3" variant="h3" weight="bold" className="text-[var(--color-text-primary)]">Feel-good Library</Text>
                           <Text as="p" variant="body" className="text-[var(--color-text-secondary)] mt-3 leading-relaxed">Curated collection of guided meditations and mindfulness exercises.</Text>
                         </div>
                         <div className="relative bg-[var(--color-surface-warm)] flex flex-col items-center justify-center p-12 text-center">
                           <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white shadow-sm mb-6">
-                            <FiMoon className="w-10 h-10 text-[var(--color-primary)]" />
+                            <Icon icon="solar:moon-linear" className="w-10 h-10 text-[var(--color-primary)]" />
                           </div>
                           <Text as="h3" variant="h3" weight="bold" className="text-[var(--color-text-primary)]">Breathe & Sleep</Text>
                           <Text as="p" variant="body" className="text-[var(--color-text-secondary)] mt-3 leading-relaxed">Calm your mind and improve your sleep with specialized campus routines.</Text>

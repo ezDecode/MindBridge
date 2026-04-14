@@ -2,32 +2,21 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  FiAlertCircle,
-  FiBookOpen,
-  FiCalendar,
-  FiGrid,
-  FiHeart,
-  FiMessageSquare,
-  FiPieChart,
-  FiShield,
-  FiClipboard,
-  FiArrowLeft,
-} from "react-icons/fi";
+import { Icon } from '@iconify/react';
 import { Button, Container, Text } from "@/components/ui";
 import type { NavItem } from "@/content/mindbridge";
 import { cn } from "@/lib/utils";
 
 const iconMap = {
-  grid: FiGrid,
-  chat: FiMessageSquare,
-  heart: FiHeart,
-  quiz: FiClipboard,
-  library: FiBookOpen,
-  calendar: FiCalendar,
-  shield: FiShield,
-  chart: FiPieChart,
-  alert: FiAlertCircle,
+  grid: "solar:widget-linear",
+  chat: "solar:chat-round-linear",
+  heart: "solar:heart-linear",
+  quiz: "solar:notes-linear",
+  library: "solar:book-linear",
+  calendar: "solar:calendar-linear",
+  shield: "solar:shield-linear",
+  chart: "solar:pie-chart-linear",
+  alert: "solar:danger-circle-linear",
 };
 
 interface RoleShellProps {
@@ -54,7 +43,7 @@ export function RoleShell({
               href="/"
               className="inline-flex items-center gap-2 text-span font-medium text-[var(--color-text-secondary)] transition-colors duration-200 hover:text-[var(--color-text-primary)]"
             >
-              <FiArrowLeft className="h-4 w-4" />
+              <Icon icon="solar:arrow-left-linear" className="h-4 w-4" />
               Back to home
             </Link>
 
@@ -69,7 +58,7 @@ export function RoleShell({
 
             <nav className="mt-6 flex flex-col gap-2">
               {navItems.map((item) => {
-                const Icon = iconMap[item.icon as keyof typeof iconMap] ?? FiGrid;
+                const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "solar:widget-linear";
                 const isActive = pathname === item.href;
 
                 return (
@@ -84,7 +73,7 @@ export function RoleShell({
                         : "border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border)] hover:bg-[var(--color-primary-light)] hover:text-[var(--color-text-primary)]"
                     )}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon icon={iconName} className="h-4 w-4" />
                     {item.label}
                   </Link>
                 );
@@ -119,7 +108,7 @@ export function RoleShell({
             <div className="overflow-x-auto lg:hidden -mx-4 px-4 md:mx-0 md:px-0">
               <div className="flex min-w-max gap-2 md:gap-3 pb-1">
                 {navItems.map((item) => {
-                  const Icon = iconMap[item.icon as keyof typeof iconMap] ?? FiGrid;
+                  const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "solar:widget-linear";
                   const isActive = pathname === item.href;
 
                   return (
@@ -134,7 +123,7 @@ export function RoleShell({
                           : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-primary-light)]"
                       )}
                     >
-                      <Icon className="h-4 w-4" />
+                      <Icon icon={iconName} className="h-4 w-4" />
                       <span className="hidden xs:inline">{item.label}</span>
                     </Link>
                   );

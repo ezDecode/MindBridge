@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState, useRef } from "react";
-import { FiLoader, FiCheckCircle, FiAlertCircle, FiArrowLeft } from "react-icons/fi";
+import { Icon } from '@iconify/react';
 import { Button, Card, Container, Text } from "@/components/ui";
 import { SiteFooter, SiteHeader } from "@/components/site";
 import { verifyOtp, type AuthState } from "@/lib/auth/actions";
@@ -74,7 +74,7 @@ export default function VerifyPage() {
 
       <section className="w-full py-10 sm:py-14">
         <Container size="sm">
-          <Card variant="elevated" padding="lg" className="rounded-[calc(var(--radius-2xl)*var(--brm))] squircle text-center">
+          <Card variant="elevated" padding="lg" className="rounded-2xl text-center">
             <Text as="p" variant="label" color="brand">
               Verify OTP
             </Text>
@@ -105,16 +105,16 @@ export default function VerifyPage() {
                     onChange={(e) => handleChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
                     disabled={isPending}
-                    className="flex h-14 w-12 items-center justify-center rounded-[calc(var(--radius-sm)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] text-center text-h4 font-bold text-[var(--color-text-primary)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] disabled:opacity-50"
+                    className="flex h-14 w-12 items-center justify-center rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] text-center text-h4 font-bold text-[var(--color-text-primary)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-light)] disabled:opacity-50"
                     autoFocus={index === 0}
                   />
                 ))}
               </div>
 
               {state.error && (
-                <div className="mt-6 rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-danger)] bg-red-50 p-4">
+                <div className="mt-6 rounded-md border border-[var(--color-danger)] bg-red-50 p-4">
                   <div className="flex items-center justify-center gap-3">
-                    <FiAlertCircle className="h-4 w-4 shrink-0 text-[var(--color-danger)]" />
+                    <Icon icon="solar:danger-circle-linear" className="h-4 w-4 shrink-0 text-[var(--color-danger)]" />
                     <Text as="p" variant="small" className="text-[var(--color-danger)]">
                       {state.error}
                     </Text>
@@ -123,9 +123,9 @@ export default function VerifyPage() {
               )}
 
               {state.success && (
-                <div className="mt-6 rounded-[calc(var(--radius-md)*var(--brm))] squircle border border-[var(--color-success)] bg-green-50 p-4">
+                <div className="mt-6 rounded-md border border-[var(--color-success)] bg-green-50 p-4">
                   <div className="flex items-center justify-center gap-3">
-                    <FiCheckCircle className="h-4 w-4 shrink-0 text-[var(--color-success)]" />
+                    <Icon icon="solar:check-circle-linear" className="h-4 w-4 shrink-0 text-[var(--color-success)]" />
                     <Text as="p" variant="small" className="text-[var(--color-success)]">
                       Verified! Redirecting...
                     </Text>
@@ -142,7 +142,7 @@ export default function VerifyPage() {
                 >
                   {isPending ? (
                     <>
-                      <FiLoader className="h-4 w-4 animate-spin" />
+                      <Icon icon="solar:restart-circle-linear" className="h-4 w-4 animate-spin" />
                       Verifying...
                     </>
                   ) : (
@@ -150,7 +150,7 @@ export default function VerifyPage() {
                   )}
                 </Button>
                 <Button href="/login" variant="warm" size="md">
-                  <FiArrowLeft className="h-4 w-4" />
+                  <Icon icon="solar:arrow-left-linear" className="h-4 w-4" />
                   Back to login
                 </Button>
               </div>

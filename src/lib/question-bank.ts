@@ -1,5 +1,4 @@
-import { readFile } from 'fs/promises'
-import path from 'path'
+import QUESTION_BANK_DATA from './question-bank-data.json'
 
 export interface QuestionBankFlag {
   safety: boolean
@@ -67,7 +66,6 @@ export interface QuestionSummary {
   nextSteps: string[]
 }
 
-const DOCS_PATH = path.join(process.cwd(), 'docs', 'questions.md')
 const SESSION_COUNT = 8
 
 const CORE_CATEGORIES = ['wellbeing', 'stress', 'anxiety', 'depression'] as const
@@ -103,16 +101,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const REVERSE_DISTRESS_IDS = new Set([73, 74, 76, 77])
 
-let cachedQuestionBank: QuestionBankDocument | null = null
-
-function extractJsonBlock(markdown: string) {
-  const matched = markdown.match(/```json\s*([\s\S]*?)\s*```/)
-  if (!matched?.[1]) {
-    throw new Error('Question bank JSON block was not found in docs/questions.md')
-  }
-
-  return matched[1]
-}
+const cachedQuestionBank = QUESTION_BANK_DATA as unknown as QuestionBankDocument
 
 function shuffle<T>(items: T[]) {
   const cloned = [...items]
@@ -149,10 +138,6 @@ function categoryLabel(category: string) {
 }
 
 export async function getQuestionBank() {
-  if (cachedQuestionBank) return cachedQuestionBank
-
-  const markdown = await readFile(DOCS_PATH, 'utf8')
-  cachedQuestionBank = JSON.parse(extractJsonBlock(markdown)) as QuestionBankDocument
   return cachedQuestionBank
 }
 
@@ -354,6 +339,17 @@ export async function analyzeQuestionResponses(responses: QuestionResponseInput[
     answeredCount: responses.length,
     nextSteps,
   } satisfies QuestionSummary
+}
+
+export const ASSESSMENT_LABELS: Record<QuestionSummary['severity'], string> = {
+  none: 'Stable',
+  mild: 'Gentle watch',
+  moderate: 'Needs attention',
+  severe: 'Needs support',
+}
+
+export function getAssessmentLabel(severity: QuestionSummary['severity']) {
+  return ASSESSMENT_LABELS[severity]
 }
 
 export function formatAssessmentNote(summary: QuestionSummary) {
