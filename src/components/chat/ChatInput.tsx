@@ -53,10 +53,10 @@ export function ChatInput({
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className={`relative flex items-end gap-2 rounded-[2rem] border bg-[var(--color-surface)]/80 backdrop-blur-md p-1.5 transition-all duration-300 mx-auto w-full max-w-3xl ${
+      className={`relative mx-auto flex w-full max-w-3xl items-end gap-2 rounded-lg border bg-[var(--color-surface)] p-2 transition-all duration-300 ${
         isFocused 
-          ? 'border-[var(--color-primary)]/50 ring-4 ring-[var(--color-primary)]/10 shadow-lg' 
-          : 'border-[var(--color-border)] shadow-md hover:shadow-lg hover:border-[var(--color-border-strong)]'
+          ? 'border-[var(--color-primary)]/45 ring-2 ring-[var(--color-primary)]/10 shadow-[var(--shadow-md)]' 
+          : 'border-[var(--color-border)] shadow-[var(--shadow-sm)] hover:border-[var(--color-border-strong)]'
       }`}
     >
       <div className="relative z-10 flex flex-1 items-center px-3">
@@ -75,7 +75,7 @@ export function ChatInput({
         />
       </div>
 
-      <div className="relative z-10 flex items-center gap-1.5 shrink-0 pr-1 pb-1">
+      <div className="relative z-10 flex shrink-0 items-center gap-1.5 pr-1 pb-1">
         <AnimatePresence mode="wait">
           {isLoading ? (
             <motion.div
@@ -90,7 +90,7 @@ export function ChatInput({
                 variant="warm"
                 size="sm"
                 onClick={onStop}
-                className="h-10 w-10 rounded-full border border-[var(--color-danger)]/30 bg-[var(--color-danger-soft)] text-[var(--color-danger)] hover:bg-[var(--color-danger-light)] transition-colors duration-200"
+                className="h-10 w-10 rounded-md border border-[var(--color-danger)]/30 bg-[var(--color-danger-soft)] text-[var(--color-danger)] transition-colors duration-200 hover:bg-[var(--color-danger-light)]"
                 aria-label="Stop generating"
               >
                 <FiSquare className="h-4 w-4" />
@@ -109,10 +109,10 @@ export function ChatInput({
                 variant="warm"
                 size="sm"
                 disabled={!input.trim() || disabled}
-                className={`h-10 w-10 rounded-full transition-all duration-200 ease-out ${
+                className={`h-10 w-10 rounded-md border transition-all duration-200 ease-out ${
                   input.trim() 
-                    ? 'bg-[var(--color-primary)] text-white shadow-sm hover:bg-[var(--color-primary-dark)] hover:shadow-md' 
-                    : 'bg-[var(--color-surface-strong)] text-[var(--color-text-muted)]'
+                    ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-white shadow-sm hover:bg-[var(--color-primary-dark)]' 
+                    : 'border-[var(--color-border)] bg-[var(--color-surface-strong)] text-[var(--color-text-muted)]'
                 }`}
                 aria-label="Send message"
               >

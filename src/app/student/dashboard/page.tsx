@@ -28,6 +28,7 @@ export default function StudentDashboardPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [userName, setUserName] = useState('')
   const [activeTab, setActiveTab] = useState<TabId>('mind')
+  const [pendingCheckInOpen, setPendingCheckInOpen] = useState(false)
   
   const [sessionId, setSessionId] = useState('')
   const [showBooking, setShowBooking] = useState(false)
@@ -47,6 +48,49 @@ export default function StudentDashboardPage() {
 
   const handleCrisis = useCallback(() => {
     console.log('Crisis detected - alert sent to counselor')
+  }, [])
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const tab = params.get('tab')
+    if (tab === 'mind' || tab === 'bridge') {
+      setActiveTab(tab)
+    }
+
+    if (params.get('open') === 'check-in') {
+      setActiveTab('mind')
+      setPendingCheckInOpen(true)
+    }
+  }, [])
+
+  const handleAutoOpenCheckInHandled = useCallback(() => {
+    setPendingCheckInOpen(false)
+    const params = new URLSearchParams(window.location.search)
+    params.delete('open')
+    const query = params.toString()
+    router.replace(query ? `/student/dashboard?${query}` : '/student/dashboard')
+  }, [router])
+
+  const refreshMoodData = useCallback(async () => {
+    try {
+      const moodResponse = await fetch('/api/mood?days=7')
+      if (!moodResponse.ok) return
+
+      const moodData = await moodResponse.json()
+      const updatedMoodHistory = generateWeekMoodHistory(moodData.moods || [])
+
+      setData((prev) =>
+        prev
+          ? {
+              ...prev,
+              streak: moodData.streak || 0,
+              moodHistory: updatedMoodHistory,
+            }
+          : prev
+      )
+    } catch (error) {
+      console.error('Failed to refresh mood data:', error)
+    }
   }, [])
 
   const { messages, sendMessage, isLoading, error, stopGenerating } = useChat({
@@ -73,6 +117,21 @@ export default function StudentDashboardPage() {
       }
 
       setIsAuthenticated(true)
+
+      let generatedName = profileResult.data?.name
+      if (!generatedName && user.email) {
+        const randomAdjectives = ['Calm', 'Bright', 'Gentle', 'Warm', 'Peaceful', 'Serene', 'Kind', 'Happy', 'Mellow', 'Quiet']
+        const randomNouns = ['Mind', 'Heart', 'Soul', 'Spirit', 'Wave', 'Leaf', 'Star', 'Moon', 'Cloud', 'River']
+        const adj = randomAdjectives[Math.floor(Math.random() * randomAdjectives.length)]
+        const noun = randomNouns[Math.floor(Math.random() * randomNouns.length)]
+        generatedName = `${adj}${noun}`
+        
+        await supabase.from('profiles').upsert({
+          id: user.id,
+          name: generatedName,
+          email: user.email,
+        })
+      }
 
       const stored = sessionStorage.getItem('currentChatSession')
       if (stored) {
@@ -114,7 +173,7 @@ export default function StudentDashboardPage() {
         .limit(1)
         .single()
 
-      setUserName(profileResult.data?.name || 'there')
+      setUserName(generatedName || 'there')
 
       let nextAvailableSlot: Slot | null = null
       try {
@@ -250,11 +309,7 @@ export default function StudentDashboardPage() {
   ]
 
   return (
-    <>
-      <div className="flex items-center justify-center">
-        <PillToggle active={activeTab} onChange={setActiveTab} />
-      </div>
-
+    <div className="[--brm:0.78] h-full">
       <AnimatePresence mode="wait">
         {activeTab === 'mind' ? (
           <motion.div
@@ -263,7 +318,7 @@ export default function StudentDashboardPage() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -30 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col gap-5 md:gap-6"
+            className="h-full"
           >
             <MindTab
               userName={userName}
@@ -278,7 +333,12 @@ export default function StudentDashboardPage() {
               showResources={showResources}
               setShowBooking={setShowBooking}
               setShowResources={setShowResources}
+              autoOpenCheckIn={pendingCheckInOpen}
+              onAutoOpenCheckInHandled={handleAutoOpenCheckInHandled}
+              onMoodLogged={refreshMoodData}
               router={router}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
               onSwitchToBridge={() => setActiveTab('bridge')}
             />
           </motion.div>
@@ -289,7 +349,7 @@ export default function StudentDashboardPage() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 30 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col gap-5 md:gap-6"
+            className="h-full"
           >
             <BridgeTab
               data={data}
@@ -302,10 +362,12 @@ export default function StudentDashboardPage() {
               trendDirection={trendDirection}
               completedDays={scored.length}
               onSwitchToMind={() => setActiveTab('mind')}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
             />
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   )
 }

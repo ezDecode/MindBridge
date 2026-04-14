@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, AnimatePresence } from 'motion/react'
+import { motion } from 'motion/react'
 import { FiCalendar, FiBook, FiX, FiCheck, FiArrowRight } from 'react-icons/fi'
 import { Button, Card, Text } from '@/components/ui'
 
@@ -33,7 +33,7 @@ export function BookingSuggestion({
       <Card
         variant="elevated"
         padding="md"
-        className="squircle border border-[var(--color-primary)]/20 bg-[var(--color-primary)]/5 backdrop-blur-sm shadow-sm"
+        className="rounded-lg border border-[var(--color-primary)]/20 bg-[var(--color-primary)]/5 shadow-sm"
       >
         <motion.div 
           className="flex items-start gap-3"
@@ -41,7 +41,7 @@ export function BookingSuggestion({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.3 }}
         >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center squircle bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-primary)]/20 text-[var(--color-primary)]">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-primary)]/20 text-[var(--color-primary)]">
             <FiCalendar className="h-5 w-5" />
           </div>
 
@@ -64,7 +64,7 @@ export function BookingSuggestion({
                 size="sm"
                 onClick={onConfirm}
                 disabled={isLoading}
-                className="gap-1.5 squircle"
+                className="gap-1.5 rounded-md"
               >
                 <FiCheck className="h-4 w-4" />
                 Confirm
@@ -74,7 +74,7 @@ export function BookingSuggestion({
                 size="sm"
                 onClick={onCancel}
                 disabled={isLoading}
-                className="text-[var(--color-text-muted)] squircle"
+                className="rounded-md text-[var(--color-text-muted)]"
               >
                 <FiX className="h-4 w-4" />
                 Not now
@@ -112,7 +112,7 @@ export function ResourceSuggestion({
       <Card
         variant="elevated"
         padding="md"
-        className="squircle border border-[var(--color-success)]/20 bg-[var(--color-success)]/5 backdrop-blur-sm shadow-sm"
+        className="rounded-lg border border-[var(--color-success)]/20 bg-[var(--color-success)]/5 shadow-sm"
       >
         <motion.div 
           className="flex items-start gap-3"
@@ -120,7 +120,7 @@ export function ResourceSuggestion({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.3 }}
         >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center squircle bg-gradient-to-br from-[var(--color-success-soft)] to-[var(--color-success)]/20 text-[var(--color-success)]">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-[var(--color-success-soft)] to-[var(--color-success)]/20 text-[var(--color-success)]">
             <FiBook className="h-5 w-5" />
           </div>
 
@@ -142,7 +142,7 @@ export function ResourceSuggestion({
                 variant="warm"
                 size="sm"
                 onClick={onShow}
-                className="gap-1.5 squircle"
+                className="gap-1.5 rounded-md"
               >
                 <FiArrowRight className="h-4 w-4" />
                 Show me
@@ -151,7 +151,7 @@ export function ResourceSuggestion({
                 variant="ghost"
                 size="sm"
                 onClick={onDismiss}
-                className="text-[var(--color-text-muted)] squircle"
+                className="rounded-md text-[var(--color-text-muted)]"
               >
                 <FiX className="h-4 w-4" />
                 Maybe later

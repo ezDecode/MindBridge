@@ -5,8 +5,8 @@ import { FiMessageSquare, FiBarChart2 } from "react-icons/fi";
 import type { TabId } from "./types";
 
 const tabs: { id: TabId; label: string; icon: React.ReactNode }[] = [
-  { id: "mind", label: "Mind", icon: <FiMessageSquare className="h-[18px] w-[18px]" /> },
-  { id: "bridge", label: "Bridge", icon: <FiBarChart2 className="h-[18px] w-[18px]" /> },
+  { id: "mind", label: "Chat", icon: <FiMessageSquare className="h-4 w-4" /> },
+  { id: "bridge", label: "Analytics", icon: <FiBarChart2 className="h-4 w-4" /> },
 ];
 
 export function PillToggle({
@@ -17,56 +17,33 @@ export function PillToggle({
   onChange: (id: TabId) => void;
 }) {
   return (
-    <div className="flex items-center justify-center">
-      <div className="relative flex items-center gap-1 rounded-full border border-[var(--color-border)] bg-[var(--color-primary-light)] p-1">
-        {tabs.map((tab) => {
-          const isActive = active === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => onChange(tab.id)}
-              className="group relative rounded-full px-5 py-2.5 outline-none"
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="active-pill"
-                  transition={{
-                    type: "spring",
-                    stiffness: 320,
-                    damping: 28,
-                    mass: 0.8,
-                  }}
-                  className="absolute inset-0 rounded-full border border-[var(--color-border-light)] bg-[var(--color-surface)] shadow-[var(--shadow-sm)]"
-                />
-              )}
+    <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1">
+      {tabs.map((tab) => {
+        const isActive = active === tab.id;
+        return (
+          <button
+            key={tab.id}
+            onClick={() => onChange(tab.id)}
+            className="relative rounded-md px-4 py-1.5 text-sm font-medium transition-colors"
+          >
+            {isActive && (
               <motion.div
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                animate={{
-                  filter: isActive
-                    ? ["blur(0px)", "blur(3px)", "blur(0px)"]
-                    : "blur(0px)",
+                layoutId="active-pill"
+                transition={{
+                  type: "spring",
+                  stiffness: 320,
+                  damping: 28,
                 }}
-                className={`relative z-10 flex items-center gap-2 transition-colors duration-200 ${
-                  isActive
-                    ? "font-bold text-[var(--color-text-primary)]"
-                    : "font-semibold text-[var(--color-text-muted)] group-hover:text-[var(--color-text-secondary)]"
-                }`}
-              >
-                <motion.div
-                  animate={{ scale: isActive ? 1.05 : 1 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                  className="flex shrink-0 items-center justify-center"
-                >
-                  {tab.icon}
-                </motion.div>
-                <span className="text-label tracking-tight whitespace-nowrap">
-                  {tab.label}
-                </span>
-              </motion.div>
-            </button>
-          );
-        })}
-      </div>
+                className="absolute inset-0 rounded-md bg-white shadow-sm"
+              />
+            )}
+            <span className={`relative z-10 flex items-center gap-1.5 ${isActive ? "text-gray-900" : "text-gray-500 hover:text-gray-700"}`}>
+              {tab.icon}
+              {tab.label}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }

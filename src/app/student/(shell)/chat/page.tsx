@@ -1,14 +1,5 @@
-"use client";
+import { StudentChatWorkspace } from "./_components/StudentChatWorkspace";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-
-export default function RedirectPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.replace("/student/dashboard");
-  }, [router]);
-
-  return null;
+export default function StudentChatPage() {
+  return <StudentChatWorkspace />;
 }

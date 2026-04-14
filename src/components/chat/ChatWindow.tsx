@@ -62,10 +62,10 @@ export function ChatWindow({ messages, isLoading }: ChatWindowProps) {
             transition={{ duration: 0.25 }}
             className="flex items-end gap-2 mt-3"
           >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-primary)]/10 text-[var(--color-primary)] ring-1 ring-black/5">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[var(--color-primary-light)] text-[var(--color-primary)] ring-1 ring-black/5">
               <FiMessageCircle className="h-4 w-4" />
             </div>
-            <div className="rounded-tr-2xl rounded-tl-2xl rounded-br-2xl rounded-bl-md bg-[var(--color-primary)]/5 backdrop-blur-md px-4 py-3 border border-[var(--color-primary)]/10 squircle shadow-sm">
+            <div className="rounded-lg rounded-bl-sm border border-[var(--color-border)] bg-[var(--color-surface-warm)] px-4 py-3 shadow-sm">
               <TypingIndicator />
             </div>
           </motion.div>
@@ -99,10 +99,10 @@ function MessageBubble({ message, isFirst, isLast }: { message: Message; isFirst
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.25 }}
-            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm ${
+            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md shadow-sm ${
               isUser
-                ? 'bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-dark)] text-white'
-                : 'bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-primary)]/10 text-[var(--color-primary)] ring-1 ring-black/5'
+                ? 'bg-[var(--color-primary)] text-white'
+                : 'bg-[var(--color-primary-light)] text-[var(--color-primary)] ring-1 ring-black/5'
             }`}
           >
             {isUser ? (
@@ -121,28 +121,16 @@ function MessageBubble({ message, isFirst, isLast }: { message: Message; isFirst
         }`}
       >
         <div
-          className={`relative px-4 py-2.5 shadow-sm squircle transition-colors duration-200 ${
+          className={`relative rounded-lg px-4 py-2.5 shadow-sm transition-colors duration-200 ${
             isUser
-              ? `bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-dark)] text-white ${
-                  isLast && isFirst ? 'rounded-2xl rounded-br-md' : isLast ? 'rounded-2xl rounded-br-md rounded-tr-md' : isFirst ? 'rounded-2xl rounded-br-md' : 'rounded-2xl rounded-tr-md rounded-br-md'
-                }`
-              : `bg-[var(--color-primary)]/5 backdrop-blur-md text-[var(--color-text-primary)] border border-[var(--color-primary)]/10 ${
-                  isLast && isFirst ? 'rounded-2xl rounded-bl-md' : isLast ? 'rounded-2xl rounded-bl-md rounded-tl-md' : isFirst ? 'rounded-2xl rounded-bl-md' : 'rounded-2xl rounded-tl-md rounded-bl-md'
-                }`
+              ? 'rounded-br-sm bg-[var(--color-primary)] text-white'
+              : 'rounded-bl-sm border border-[var(--color-border)] bg-[var(--color-surface-warm)] text-[var(--color-text-primary)]'
           }`}
-          style={
-            isUser && !isLast && !isFirst ? { borderTopRightRadius: '0.375rem', borderBottomRightRadius: '0.375rem', borderRadius: '1rem' } :
-            isUser && isLast && !isFirst ? { borderTopRightRadius: '0.375rem', borderBottomRightRadius: '0.375rem', borderBottomLeftRadius: '1rem', borderTopLeftRadius: '1rem' } :
-            !isUser && !isLast && !isFirst ? { borderTopLeftRadius: '0.375rem', borderBottomLeftRadius: '0.375rem', borderRadius: '1rem' } :
-            !isUser && isLast && !isFirst ? { borderTopLeftRadius: '0.375rem', borderBottomLeftRadius: '0.375rem', borderBottomRightRadius: '1rem', borderTopRightRadius: '1rem' } :
-            {}
-          }
         >
           <Text 
             as="p" 
             variant="body" 
-            className="whitespace-pre-wrap leading-relaxed"
-            style={{ color: isUser ? 'inherit' : 'var(--color-text-secondary)' }}
+            className={`whitespace-pre-wrap leading-relaxed ${isUser ? 'text-white' : 'text-[var(--color-text-secondary)]'}`}
           >
             {displayContent || (message.isStreaming ? <TypingIndicator /> : '')}
             {message.isStreaming && displayContent && <TypingCursor />}

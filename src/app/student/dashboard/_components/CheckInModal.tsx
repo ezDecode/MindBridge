@@ -83,7 +83,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-2xl"
+            className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-2xl"
           >
             {/* Header */}
             <div className="flex items-center justify-between">
@@ -118,7 +118,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
                   <motion.div 
                     initial={{ scale: 0.9 }}
                     animate={{ scale: 1 }}
-                    className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[var(--color-primary-light)]/50 to-[var(--color-primary-light)]/20 px-3 py-2"
+                    className="flex items-center gap-2 rounded-md bg-gradient-to-r from-[var(--color-primary-light)]/50 to-[var(--color-primary-light)]/20 px-3 py-2"
                   >
                     <span className="text-xl">{selectedMoodData.emoji}</span>
                     <div>
@@ -145,7 +145,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
                   whileHover={{ scale: 1.08, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedMood(option.score)}
-                  className={`group relative flex flex-col items-center gap-1 rounded-xl p-2 transition-all ${
+                  className={`group relative flex flex-col items-center gap-1 rounded-md p-2 transition-all ${
                     selectedMood === option.score
                       ? "bg-[var(--color-primary-light)] shadow-lg shadow-[var(--color-primary)]/15"
                       : "bg-[var(--color-surface-strong)] hover:bg-[var(--color-border)]"
@@ -171,7 +171,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="What's on your mind? (optional)"
-              className="mt-4 w-full resize-none rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-text-primary)] outline-none transition-[border-color,box-shadow] focus:border-[var(--color-primary)] focus:shadow-[0_0_0_3px_var(--color-primary-light)] placeholder:text-[var(--color-text-muted)]"
+              className="mt-4 w-full resize-none rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-text-primary)] outline-none transition-[border-color,box-shadow] focus:border-[var(--color-primary)] focus:shadow-[0_0_0_3px_var(--color-primary-light)] placeholder:text-[var(--color-text-muted)]"
             />
 
             {/* Actions */}
@@ -179,7 +179,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
               <Button 
                 onClick={handleSave} 
                 disabled={!selectedMood || isLoading} 
-                className="flex-1 gap-2"
+                className="flex-1 gap-2 rounded-md"
               >
                 {isLoading ? (
                   <>
@@ -198,7 +198,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
               <Button 
                 onClick={onClose} 
                 variant="ghost"
-                className="text-[var(--color-text-muted)]"
+                className="rounded-md text-[var(--color-text-muted)]"
               >
                 Skip
               </Button>

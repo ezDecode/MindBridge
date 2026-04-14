@@ -137,7 +137,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-2xl"
+            className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-2xl"
           >
             {/* Header */}
             <div className="flex items-center justify-between">
@@ -187,7 +187,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0 }}
-                      className="mt-3 rounded-lg border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] px-3 py-2"
+                      className="mt-3 rounded-md border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] px-3 py-2"
                     >
                       <Text as="p" variant="small" className="text-[var(--color-danger)]">
                         {error}
@@ -230,7 +230,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                         key={i}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="h-10 animate-pulse rounded-xl bg-[var(--color-surface-strong)]" 
+                        className="h-10 animate-pulse rounded-md bg-[var(--color-surface-strong)]" 
                       />
                     ))}
                   </div>
@@ -247,7 +247,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => setSelectedSlot(slot)}
-                          className={`group relative rounded-xl px-3 py-2.5 text-center text-sm transition-all ${
+                          className={`group relative rounded-md px-3 py-2.5 text-center text-sm transition-all ${
                             selectedSlot?.id === slot.id
                               ? "border-2 border-[var(--color-primary)] bg-[var(--color-primary-light)] shadow-md shadow-[var(--color-primary)]/15"
                               : "border border-[var(--color-border)] bg-[var(--color-surface-strong)] hover:border-[var(--color-primary)]/50 hover:shadow-sm"
@@ -262,7 +262,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                     </AnimatePresence>
                   </div>
                 ) : (
-                  <div className="mt-2 rounded-xl border border-dashed border-[var(--color-border)] p-4 text-center">
+                  <div className="mt-2 rounded-md border border-dashed border-[var(--color-border)] p-4 text-center">
                     <Text as="p" variant="small" color="muted">
                       No slots available right now
                     </Text>
@@ -278,7 +278,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                       exit={{ opacity: 0, y: 10, height: 0 }}
                       className="mt-3 overflow-hidden"
                     >
-                      <div className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-[var(--color-primary-light)]/30 to-[var(--color-primary-light)]/10 px-3 py-2.5">
+                      <div className="flex items-center gap-3 rounded-md bg-gradient-to-r from-[var(--color-primary-light)]/30 to-[var(--color-primary-light)]/10 px-3 py-2.5">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--color-primary-light)]">
                           <FiUser className="h-5 w-5 text-[var(--color-primary)]" />
                         </div>
@@ -307,7 +307,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                   <Button 
                     onClick={handleSubmit} 
                     disabled={!canSubmit} 
-                    className="flex-1 gap-2"
+                    className="flex-1 gap-2 rounded-md"
                   >
                     {submitting ? (
                       <>

@@ -43,23 +43,20 @@ export function HeroSection() {
             <Card 
               variant="elevated" 
               padding="none"
-              className="group relative flex flex-col justify-between overflow-hidden rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none bg-[var(--color-primary-light)] pt-5 sm:pt-6 pb-4 sm:pb-0 md:pt-[1.6rem] min-h-[260px] sm:min-h-[290px]"
+              className="flex flex-col overflow-hidden rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none bg-[var(--color-primary-light)] h-[420px] sm:h-[476px]"
             >
-              <div className="absolute inset-0 bg-[var(--color-primary-light)]" />
-              <div className="relative z-10 flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 px-4 sm:px-6">
-                <div className="text-center">
-                  <Text as="h3" weight="semibold" className="text-[clamp(1rem,2.5vw,1.75rem)] leading-[1.2] tracking-tight text-[var(--color-text-primary)]">
-                    <span className="block">Your mental health matters —</span>
-                    <span className="block">we help you thrive every day</span>
-                  </Text>
-                </div>
+              <div className="flex flex-col items-center gap-4 p-6 sm:p-8">
+                <Text as="h3" weight="semibold" className="text-center text-[clamp(1.125rem,2.5vw,1.5rem)] leading-[1.2] tracking-tight text-[var(--color-text-primary)]">
+                  <span className="block">Your mental health matters —</span>
+                  <span className="block">we help you thrive every day</span>
+                </Text>
                 <Button href="/student/dashboard" size="sm" className="w-fit">
                   Start for free
                   <FiArrowRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Button>
               </div>
-              <div className="absolute bottom-0 left-0 right-0">
-                <svg viewBox="0 0 400 180" fill="none" className="w-full h-auto max-h-[100px] sm:max-h-none">
+              <div className="mt-auto">
+                <svg viewBox="0 0 400 180" fill="none" className="w-full h-auto">
                   <rect x="40" y="20" width="320" height="140" rx="10" fill="var(--color-surface)" />
                   <rect x="60" y="40" width="280" height="14" rx="4" fill="var(--color-primary-light)" />
                   <rect x="60" y="62" width="200" height="9" rx="3" fill="var(--color-primary-light)" />
@@ -74,23 +71,20 @@ export function HeroSection() {
             <Card 
               variant="elevated" 
               padding="none"
-              className="group relative flex flex-col justify-between overflow-hidden rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none bg-[var(--color-primary-light)] pt-5 sm:pt-6 pb-4 sm:pb-0 md:pt-[1.6rem] min-h-[260px] sm:min-h-[290px]"
+              className="flex flex-col overflow-hidden rounded-[calc(var(--radius-lg)*var(--brm))] squircle border-none bg-[var(--color-primary-light)] h-[420px] sm:h-[476px]"
             >
-              <div className="absolute inset-0 bg-[var(--color-primary-light)]" />
-              <div className="relative z-10 flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 px-4 sm:px-6">
-                <div className="text-center">
-                  <Text as="h3" weight="semibold" className="text-[clamp(1rem,2.5vw,1.75rem)] leading-[1.2] tracking-tight text-[var(--color-text-primary)]">
-                    <span className="block">Someone to talk to, anytime</span>
-                    <span className="block">Your safe space</span>
-                  </Text>
-                </div>
+              <div className="flex flex-col items-center gap-4 p-6 sm:p-8">
+                <Text as="h3" weight="semibold" className="text-center text-[clamp(1.125rem,2.5vw,1.5rem)] leading-[1.2] tracking-tight text-[var(--color-text-primary)]">
+                  <span className="block">Someone to talk to, anytime</span>
+                  <span className="block">Your safe space</span>
+                </Text>
                 <Button href="/student/chat" size="sm" className="w-fit">
                   Chat now
                   <FiArrowRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Button>
               </div>
-              <div className="absolute bottom-0 left-0 right-0">
-                <svg viewBox="0 0 400 180" fill="none" className="w-full h-auto max-h-[100px] sm:max-h-none">
+              <div className="mt-auto">
+                <svg viewBox="0 0 400 180" fill="none" className="w-full h-auto">
                   <rect x="40" y="20" width="320" height="140" rx="10" fill="var(--color-surface)" />
                   <rect x="60" y="40" width="90" height="22" rx="5" fill="var(--color-primary-light)" />
                   <rect x="160" y="40" width="170" height="22" rx="5" fill="var(--color-primary-light)" />
