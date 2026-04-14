@@ -4,6 +4,11 @@ export interface DashboardData {
   activeChats: number;
   moodHistory: { day: string; score: number }[];
   proactiveMessage: string | null;
+  latestAssessment: {
+    severity: 'none' | 'mild' | 'moderate' | 'severe';
+    criteriaFlagged: string[];
+    assessedAt: string;
+  } | null;
 }
 
 export type TabId = "mind" | "bridge";

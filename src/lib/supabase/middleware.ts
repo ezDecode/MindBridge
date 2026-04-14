@@ -37,12 +37,6 @@ export async function updateSession(request: NextRequest) {
   const url = request.nextUrl.clone()
   const pathname = url.pathname
 
-  // Public routes - accessible without auth
-  const publicRoutes = ['/', '/login', '/verify', '/resources']
-  const isPublicRoute = publicRoutes.some(
-    (route) => pathname === route || pathname.startsWith('/api/public')
-  )
-
   // Protected routes
   const studentRoutes = pathname.startsWith('/student')
   const counselorRoutes = pathname.startsWith('/counselor')

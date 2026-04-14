@@ -48,7 +48,7 @@ export function RoleShell({
   return (
     <main id="main-content" className="w-full py-6 sm:py-8">
       <Container size="md">
-        <div className="grid gap-6 lg:grid-cols-[17.25rem_minmax(0,1fr)]">
+        <div className="grid gap-6 lg:grid-cols-[22.5rem_minmax(0,1fr)]">
           <aside className="surface-panel hidden self-start rounded-[calc(var(--radius-2xl)*var(--brm))] squircle p-5 lg:sticky lg:top-6 lg:block">
             <Link
               href="/"
@@ -58,15 +58,12 @@ export function RoleShell({
               Back to home
             </Link>
 
-            <div className="mt-6 rounded-[calc(var(--radius-xl)*var(--brm))] squircle bg-[var(--color-surface-tinted)] p-5">
+            <div className="mt-6 rounded-[calc(var(--radius-xl)*var(--brm))] squircle bg-[var(--color-surface-tinted)] p-4">
               <Text as="p" variant="label" weight="bold" color="brand">
                 {roleLabel}
               </Text>
-              <Text as="p" variant="h3" weight="bold" className="mt-3">
+              <Text as="p" variant="h4" weight="bold" className="mt-1">
                 MindBridge
-              </Text>
-              <Text as="p" variant="small" color="secondary" className="mt-2">
-                {roleDescription}
               </Text>
             </div>
 
@@ -110,8 +107,8 @@ export function RoleShell({
                 <Text as="p" variant="label" weight="bold" color="brand">
                   {roleLabel}
                 </Text>
-                <Text as="p" variant="small" color="secondary" className="mt-1 truncate max-w-[200px] sm:max-w-none">
-                  {roleDescription}
+                <Text as="p" variant="h6" weight="bold" className="mt-0.5 truncate max-w-[200px] sm:max-w-none">
+                  MindBridge
                 </Text>
               </div>
               <Button href="/" variant="warm" size="sm" className="shrink-0">

@@ -1,3 +1,5 @@
 export { ChatWindow } from './ChatWindow'
 export { ChatInput } from './ChatInput'
 export { BookingSuggestion, ResourceSuggestion } from './ActionChips'
+export { SuggestionChips } from './SuggestionChips'
+export { MessageActions } from './MessageActions'

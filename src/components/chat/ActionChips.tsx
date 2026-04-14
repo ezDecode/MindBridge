@@ -21,68 +21,43 @@ export function BookingSuggestion({
 }: BookingSuggestionProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: 'auto' }}
-      exit={{ opacity: 0, height: 0 }}
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -4 }}
       transition={{ 
-        duration: 0.3,
-        ease: "easeOut"
+        duration: 0.24,
+        ease: [0.16, 1, 0.3, 1]
       }}
-      className="overflow-hidden mt-2 mb-1 px-4"
+      className="mt-2.5 mb-1"
     >
-      <Card
-        variant="elevated"
-        padding="md"
-        className="rounded-lg border border-[var(--color-primary)]/20 bg-[var(--color-primary)]/5 shadow-sm"
-      >
-        <motion.div 
-          className="flex items-start gap-3"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1, duration: 0.3 }}
-        >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-primary)]/20 text-[var(--color-primary)]">
-            <FiCalendar className="h-5 w-5" />
-          </div>
+      <div className="flex flex-wrap items-center gap-2 rounded-[1.4rem] border border-[var(--color-primary)]/20 bg-[var(--color-primary)]/5 p-2 pr-3.5 shadow-sm">
+        <div className="flex h-10 items-center gap-2.5 rounded-full bg-white px-3.5 py-1.5 shadow-sm">
+          <FiCalendar className="h-4 w-4 text-[var(--color-primary)]" />
+          <Text as="span" variant="small" weight="bold" className="whitespace-nowrap text-[var(--color-text-primary)]">
+            Slot with {counselorName} • {slotTime}
+          </Text>
+        </div>
 
-          <div className="flex-1">
-            <Text as="p" variant="label" weight="bold" color="brand">
-              Session Available
-            </Text>
-            <Text as="p" variant="body" color="secondary" className="mt-0.5 text-sm">
-              Found a slot with <span className="font-semibold text-[var(--color-text-primary)]">{counselorName}</span> — {slotTime}
-            </Text>
-
-            <motion.div 
-              className="mt-3 flex flex-wrap gap-2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.3 }}
-            >
-              <Button
-                variant="warm"
-                size="sm"
-                onClick={onConfirm}
-                disabled={isLoading}
-                className="gap-1.5 rounded-md"
-              >
-                <FiCheck className="h-4 w-4" />
-                Confirm
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onCancel}
-                disabled={isLoading}
-                className="rounded-md text-[var(--color-text-muted)]"
-              >
-                <FiX className="h-4 w-4" />
-                Not now
-              </Button>
-            </motion.div>
-          </div>
-        </motion.div>
-      </Card>
+        <div className="flex items-center gap-1.5 ml-auto">
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={isLoading}
+            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--color-primary)] px-4 py-2 text-xs font-bold text-white transition-all hover:bg-[var(--color-primary-dark)] active:scale-[0.96] disabled:opacity-50"
+          >
+            <FiCheck className="h-3.5 w-3.5" />
+            Confirm
+          </button>
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isLoading}
+            className="inline-flex h-9 items-center justify-center rounded-full border border-[var(--color-border)] bg-white px-3 text-xs font-bold text-[var(--color-text-secondary)] transition-all hover:bg-[var(--color-surface-warm)] active:scale-[0.96] disabled:opacity-50"
+          >
+            Not now
+          </button>
+        </div>
+      </div>
     </motion.div>
   )
 }
@@ -100,66 +75,41 @@ export function ResourceSuggestion({
 }: ResourceSuggestionProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: 'auto' }}
-      exit={{ opacity: 0, height: 0 }}
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -4 }}
       transition={{ 
-        duration: 0.3,
-        ease: "easeOut"
+        duration: 0.24,
+        ease: [0.16, 1, 0.3, 1]
       }}
-      className="overflow-hidden mt-2 mb-1 px-4"
+      className="mt-2.5 mb-1"
     >
-      <Card
-        variant="elevated"
-        padding="md"
-        className="rounded-lg border border-[var(--color-success)]/20 bg-[var(--color-success)]/5 shadow-sm"
-      >
-        <motion.div 
-          className="flex items-start gap-3"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1, duration: 0.3 }}
-        >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-[var(--color-success-soft)] to-[var(--color-success)]/20 text-[var(--color-success)]">
-            <FiBook className="h-5 w-5" />
-          </div>
+      <div className="flex flex-wrap items-center gap-2 rounded-[1.4rem] border border-[var(--color-success)]/20 bg-[var(--color-success)]/5 p-2 pr-3.5 shadow-sm">
+        <div className="flex h-10 items-center gap-2.5 rounded-full bg-white px-3.5 py-1.5 shadow-sm">
+          <FiBook className="h-4 w-4 text-[var(--color-success)]" />
+          <Text as="span" variant="small" weight="bold" className="whitespace-nowrap text-[var(--color-text-primary)]">
+            Suggested: {resourceType}
+          </Text>
+        </div>
 
-          <div className="flex-1">
-            <Text as="p" variant="label" weight="bold" color="success">
-              Resource Found
-            </Text>
-            <Text as="p" variant="body" color="secondary" className="mt-0.5 text-sm">
-              Want me to show {resourceType}?
-            </Text>
-
-            <motion.div 
-              className="mt-3 flex flex-wrap gap-2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.3 }}
-            >
-              <Button
-                variant="warm"
-                size="sm"
-                onClick={onShow}
-                className="gap-1.5 rounded-md"
-              >
-                <FiArrowRight className="h-4 w-4" />
-                Show me
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onDismiss}
-                className="rounded-md text-[var(--color-text-muted)]"
-              >
-                <FiX className="h-4 w-4" />
-                Maybe later
-              </Button>
-            </motion.div>
-          </div>
-        </motion.div>
-      </Card>
+        <div className="flex items-center gap-1.5 ml-auto">
+          <button
+            type="button"
+            onClick={onShow}
+            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--color-success)] px-4 py-2 text-xs font-bold text-white transition-all hover:bg-[var(--color-success-dark)] active:scale-[0.96]"
+          >
+            <FiArrowRight className="h-3.5 w-3.5" />
+            Show me
+          </button>
+          <button
+            type="button"
+            onClick={onDismiss}
+            className="inline-flex h-9 items-center justify-center rounded-full border border-[var(--color-border)] bg-white px-3 text-xs font-bold text-[var(--color-text-secondary)] transition-all hover:bg-[var(--color-surface-warm)] active:scale-[0.96]"
+          >
+            Maybe later
+          </button>
+        </div>
+      </div>
     </motion.div>
   )
 }

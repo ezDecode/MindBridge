@@ -22,6 +22,72 @@ function getRandomFallbackResponse(): string {
   return FALLBACK_RESPONSES[Math.floor(Math.random() * FALLBACK_RESPONSES.length)]
 }
 
+function buildSuggestions({
+  message,
+  action,
+  crisis,
+}: {
+  message: string
+  action: 'book_counselor' | 'show_resources' | 'send_crisis_alert' | null
+  crisis: boolean
+}) {
+  if (crisis) {
+    return [
+      'Stay with me for a minute',
+      'Help me contact support',
+      'What should I do right now?',
+    ]
+  }
+
+  if (action === 'book_counselor') {
+    return [
+      'Book a session',
+      'What should I say in counseling?',
+      'Can we talk a little more first?',
+    ]
+  }
+
+  if (action === 'show_resources') {
+    return [
+      'Show me resources',
+      'Give me a grounding exercise',
+      'What can help tonight?',
+    ]
+  }
+
+  const lower = message.toLowerCase()
+
+  if (/sleep|rest|tired|exhausted/.test(lower)) {
+    return [
+      'How can I sleep better tonight?',
+      'Give me a short wind-down plan',
+      'What if my mind will not slow down?',
+    ]
+  }
+
+  if (/anx|panic|overwhelm|stress|nervous/.test(lower)) {
+    return [
+      'Help me calm down right now',
+      'Give me a 2-minute grounding exercise',
+      'What should I do next today?',
+    ]
+  }
+
+  if (/sad|heavy|down|hopeless|alone|lonely/.test(lower)) {
+    return [
+      'Can we unpack that a bit more?',
+      'What is one gentle next step?',
+      'Help me name what I am feeling',
+    ]
+  }
+
+  return [
+    'Can you help me unpack that?',
+    'Give me one small next step',
+    'What might help tonight?',
+  ]
+}
+
 interface ChatRequest {
   message: string
   sessionId: string
@@ -159,12 +225,21 @@ export async function POST(request: Request) {
           }
 
           // 9. Send final metadata
+          const suggestions = parsed?.suggestions?.length
+            ? parsed.suggestions.slice(0, 3)
+            : buildSuggestions({
+                message: parsed?.message ?? fullResponse,
+                action: parsed?.suggested_action ?? null,
+                crisis: parsed?.crisis ?? false,
+              })
+
           controller.enqueue(
             encoder.encode(
               `data: ${JSON.stringify({
                 done: true,
                 action: parsed?.suggested_action ?? null,
                 actionContext: parsed?.action_context ?? null,
+                suggestions,
                 crisis: parsed?.crisis ?? false,
               })}\n\n`
             )

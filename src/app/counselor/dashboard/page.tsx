@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
+import type { User } from '@supabase/supabase-js'
 import { PageIntro } from "@/components/site"
 import { Button, Card, Text, SkeletonText } from "@/components/ui"
 import { createClient } from '@/lib/supabase/client'
@@ -12,6 +12,7 @@ interface CrisisAlert {
   created_at: string
   severity: string
   student_id: string
+  relativeTime: string
 }
 
 interface Booking {
@@ -29,9 +30,20 @@ interface Metrics {
   todaySessions: number
 }
 
+function formatRelativeTime(date: string, referenceNow: number) {
+  const diff = referenceNow - new Date(date).getTime()
+  const minutes = Math.max(0, Math.floor(diff / 60000))
+
+  if (minutes < 60) return `${minutes}m ago`
+
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours}h ago`
+
+  return `${Math.floor(hours / 24)}d ago`
+}
+
 export default function CounselorDashboardPage() {
-  const router = useRouter()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [isCounselor, setIsCounselor] = useState(false)
   
@@ -68,6 +80,7 @@ export default function CounselorDashboardPage() {
     }
     
     setIsCounselor(true)
+    const referenceNow = Date.now()
 
     // Fetch crisis alerts (last 24h)
     const { data: alerts } = await supabase
@@ -83,15 +96,18 @@ export default function CounselorDashboardPage() {
         created_at: a.triggered_at,
         severity: a.severity,
         student_id: a.student_id,
+        relativeTime: formatRelativeTime(a.triggered_at, referenceNow),
       })))
     }
 
     // Fetch bookings from slots API
+    let nextBookings: Booking[] = []
     try {
       const res = await fetch('/api/counselor/slots')
       if (res.ok) {
         const data = await res.json()
-        setBookings(data.bookings || [])
+        nextBookings = data.bookings || []
+        setBookings(nextBookings)
       }
     } catch (err) {
       console.error('Failed to fetch bookings:', err)
@@ -113,7 +129,7 @@ export default function CounselorDashboardPage() {
 
     setMetrics({
       activeAlerts: alerts?.length || 0,
-      pendingBookings: bookings.filter(b => b.status === 'pending_confirmation').length,
+      pendingBookings: nextBookings.filter(b => b.status === 'pending_confirmation').length,
       todaySessions: todayCount || 0,
     })
 
@@ -122,7 +138,9 @@ export default function CounselorDashboardPage() {
 
   // Setup realtime subscription for crisis alerts
   useEffect(() => {
-    fetchData()
+    const fetchTimer = window.setTimeout(() => {
+      void fetchData()
+    }, 0)
 
     // Subscribe to new crisis alerts
     const channel = supabase
@@ -135,7 +153,19 @@ export default function CounselorDashboardPage() {
           table: 'crisis_logs',
         },
         (payload) => {
-          const newAlert = payload.new as CrisisAlert
+          const newAlertPayload = payload.new as {
+            id: string
+            triggered_at: string
+            severity: string
+            student_id: string
+          }
+          const newAlert: CrisisAlert = {
+            id: newAlertPayload.id,
+            created_at: newAlertPayload.triggered_at,
+            severity: newAlertPayload.severity,
+            student_id: newAlertPayload.student_id,
+            relativeTime: 'Just now',
+          }
           setCrisisAlerts(prev => [newAlert, ...prev])
           setMetrics(prev => ({ ...prev, activeAlerts: prev.activeAlerts + 1 }))
           
@@ -166,6 +196,7 @@ export default function CounselorDashboardPage() {
       .subscribe()
 
     return () => {
+      window.clearTimeout(fetchTimer)
       supabase.removeChannel(channel)
       supabase.removeChannel(bookingChannel)
     }
@@ -197,15 +228,6 @@ export default function CounselorDashboardPage() {
       hour: 'numeric',
       minute: '2-digit',
     })
-  }
-
-  const getTimeSince = (date: string) => {
-    const diff = Date.now() - new Date(date).getTime()
-    const minutes = Math.floor(diff / 60000)
-    if (minutes < 60) return `${minutes}m ago`
-    const hours = Math.floor(minutes / 60)
-    if (hours < 24) return `${hours}h ago`
-    return `${Math.floor(hours / 24)}d ago`
   }
 
   if (!loading && !user) {
@@ -267,7 +289,7 @@ export default function CounselorDashboardPage() {
         </Card>
         <Card variant="default" padding="md">
           <Text as="p" variant="small" color="secondary">
-            Today's sessions
+            Today&apos;s sessions
           </Text>
           <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--color-primary)]">
             {loading ? '-' : metrics.todaySessions}
@@ -346,7 +368,7 @@ export default function CounselorDashboardPage() {
                           Student requires immediate attention
                         </Text>
                         <Text as="p" variant="small" color="muted" className="mt-2">
-                          {getTimeSince(alert.created_at)}
+                          {alert.relativeTime}
                         </Text>
                       </div>
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>

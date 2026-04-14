@@ -10,23 +10,23 @@ import { useRouter } from "next/navigation";
 const initialState: AuthState = {};
 const OTP_LENGTH = 6;
 
+function getPendingEmail() {
+  if (typeof window === "undefined") return "";
+  return sessionStorage.getItem("pendingEmail") || "";
+}
+
 export default function VerifyPage() {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(verifyOtp, initialState);
-  const [email, setEmail] = useState("");
+  const [email] = useState(getPendingEmail);
   const [otp, setOtp] = useState<string[]>(new Array(OTP_LENGTH).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    // Get email from session storage
-    const pendingEmail = sessionStorage.getItem("pendingEmail");
-    if (pendingEmail) {
-      setEmail(pendingEmail);
-    } else {
-      // No email found, redirect to login
+    if (!email) {
       router.push("/login");
     }
-  }, [router]);
+  }, [email, router]);
 
   const handleChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return; // Only allow digits

@@ -7,7 +7,7 @@ export default function DashboardLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ToastProvider>
-      <main className="min-h-screen w-full">
+      <main className="h-[100svh] w-full overflow-hidden">
         {children}
       </main>
     </ToastProvider>

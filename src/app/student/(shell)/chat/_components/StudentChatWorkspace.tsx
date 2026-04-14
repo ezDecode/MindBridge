@@ -384,20 +384,20 @@ export function StudentChatWorkspace() {
   return (
     <section className="w-full pt-4 sm:pt-6 px-4 sm:px-6 lg:px-8 h-[calc(100svh-4.75rem)] flex flex-col justify-end pb-0">
       <div className="mx-auto flex h-full w-full max-w-[100rem] overflow-hidden rounded-t-[28px] border border-b-0 border-black/10 bg-white shadow-[0_24px_72px_rgba(15,23,42,0.08)]">
-        <aside className="flex w-full shrink-0 flex-col border-b border-black/8 bg-[#fcfcfc] md:w-[282px] md:border-b-0 md:border-r">
-          <div className="space-y-1 p-4">
+        <aside className="flex w-full shrink-0 flex-col border-b border-black/8 bg-[#fcfcfc] md:w-[312px] md:border-b-0 md:border-r">
+          <div className="space-y-1 p-3">
             <button
               type="button"
               onClick={startNewChat}
-              className="flex h-11 w-full items-center justify-center gap-2 rounded-[12px] bg-black px-4 text-sm font-medium text-white transition-transform duration-150 hover:scale-[0.995] disabled:opacity-60"
+              className="group flex h-10 w-full items-center justify-center gap-2 rounded-[12px] bg-black px-4 text-xs font-bold text-white transition-all duration-200 ease-[var(--ease-out)] hover:bg-black/90 active:scale-[0.96] disabled:opacity-60"
               disabled={isBusy}
             >
-              <FiPlus className="h-4 w-4" />
+              <FiPlus className="h-3.5 w-3.5 transition-transform group-hover:rotate-90" />
               New chat
             </button>
           </div>
 
-          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pb-4">
+          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3">
             <div className="space-y-1">
               {displaySessionPreviews.map((session) => (
                 <button
@@ -406,37 +406,37 @@ export function StudentChatWorkspace() {
                   onClick={() => void openSession(session.id)}
                   disabled={isBusy}
                   className={cn(
-                    "flex w-full items-center gap-2 rounded-[12px] px-3 py-3 text-left text-sm text-black transition-colors duration-150",
-                    session.active ? "bg-black text-white" : "hover:bg-black/[0.03]"
+                    "flex w-full items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-left text-xs transition-all duration-200 ease-[var(--ease-out)] active:scale-[0.98]",
+                    session.active ? "bg-black font-bold text-white shadow-md" : "text-black/70 hover:bg-black/[0.04] hover:text-black"
                   )}
                 >
-                  <FiMessageSquare className={cn("h-4 w-4 shrink-0", session.active ? "text-white" : "text-black/70")} />
+                  <FiMessageSquare className={cn("h-3.5 w-3.5 shrink-0 transition-colors", session.active ? "text-white" : "text-black/40")} />
                   <span className="truncate">{session.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="border-t border-black/8 px-4 py-4">
-            <div className="space-y-1">
+          <div className="border-t border-black/8 px-3 py-3">
+            <div className="space-y-0.5">
               <SidebarUtilityButton
-                icon={<FiTrash2 className="h-4 w-4" />}
-                label="Clear conversations"
+                icon={<FiTrash2 className="h-3.5 w-3.5" />}
+                label="Clear"
                 onClick={() => void handleSidebarAction("clear")}
               />
-              <SidebarUtilityButton icon={<FiSun className="h-4 w-4" />} label="Light mode" onClick={() => void handleSidebarAction("light")} />
+              <SidebarUtilityButton icon={<FiSun className="h-3.5 w-3.5" />} label="Light mode" onClick={() => void handleSidebarAction("light")} />
               <SidebarUtilityButton
-                icon={<FiUser className="h-4 w-4" />}
-                label="My account"
+                icon={<FiUser className="h-3.5 w-3.5" />}
+                label="Account"
                 onClick={() => void handleSidebarAction("account")}
               />
               <SidebarUtilityButton
-                icon={<FiArrowUpRight className="h-4 w-4" />}
-                label="Updates & FAQ"
+                icon={<FiArrowUpRight className="h-3.5 w-3.5" />}
+                label="FAQ"
                 onClick={() => void handleSidebarAction("faq")}
               />
               <SidebarUtilityButton
-                icon={<FiLogOut className="h-4 w-4" />}
+                icon={<FiLogOut className="h-3.5 w-3.5" />}
                 label="Log out"
                 onClick={() => void handleSidebarAction("logout")}
               />
@@ -512,41 +512,52 @@ function EmptyState({
   disabled: boolean;
 }) {
   return (
-    <div className="mx-auto flex min-h-full w-full max-w-[920px] flex-col items-center justify-center pb-8 text-center">
-      <div className="flex items-center gap-3">
-        <div className="flex h-16 w-16 items-center justify-center rounded-[20px] border border-black/10 bg-white shadow-[0_12px_28px_rgba(15,23,42,0.06)]">
+    <div className="mx-auto flex min-h-full w-full max-w-[840px] flex-col items-center justify-center pb-12 text-center">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col items-center"
+      >
+        <div className="flex h-16 w-16 items-center justify-center rounded-[20px] border border-black/10 bg-white shadow-[0_12px_28px_rgba(15,23,42,0.08)]">
           <FiMessageSquare className="h-8 w-8 text-black" />
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[2rem] font-semibold tracking-[-0.04em] text-black sm:text-[2.4rem]">MindBridge</span>
-          <span className="rounded-[6px] bg-[#d9d3ff] px-2 py-0.5 text-[11px] font-medium text-[#6b64e8]">Care</span>
+        <div className="mt-6 flex items-center gap-2.5">
+          <span className="text-[1.8rem] font-bold tracking-[-0.04em] text-black sm:text-[2.2rem]">MindBridge</span>
+          <span className="rounded-full bg-[#d9d3ff] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#6b64e8]">Companion</span>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="mt-16 grid w-full gap-x-10 gap-y-8 md:grid-cols-3">
-        {emptyStateColumns.map((column) => {
+      <div className="mt-14 grid w-full gap-x-8 gap-y-8 md:grid-cols-3">
+        {emptyStateColumns.map((column, colIdx) => {
           const Icon = column.icon;
 
           return (
-            <div key={column.title} className="flex flex-col items-center">
-              <div className="flex h-8 w-8 items-center justify-center text-black">
-                <Icon className="h-6 w-6" />
+            <motion.div
+              key={column.title}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.15 + colIdx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col items-center"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-black/5 text-black">
+                <Icon className="h-5 w-5" />
               </div>
-              <h2 className="mt-2 text-[18px] font-semibold leading-7 tracking-[-0.02em] text-black">{column.title}</h2>
-              <div className="mt-5 flex w-full flex-col gap-3">
+              <h2 className="mt-3 text-[15px] font-bold tracking-tight text-black">{column.title}</h2>
+              <div className="mt-5 flex w-full flex-col gap-2">
                 {column.items.map((item) => (
                   <button
                     key={item}
                     type="button"
                     onClick={() => onPromptSelect(item.replaceAll("\"", ""))}
                     disabled={disabled}
-                    className="rounded-[8px] bg-[#f7f7f8] px-3 py-2.5 text-left text-[14px] leading-5 text-black/85 transition-colors hover:bg-[#f1f1f3] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="rounded-[10px] bg-[#f7f7f8] px-3.5 py-2.5 text-left text-[13px] font-medium leading-5 text-black/80 transition-all duration-200 hover:bg-[#efeff1] hover:text-black active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {item}
                   </button>
                 ))}
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
@@ -568,23 +579,34 @@ function ConversationPane({
   }, [isLoading, messages]);
 
   return (
-    <div className="mx-auto flex w-full max-w-[760px] flex-col gap-6">
-      {messages.map((message) => {
+    <div className="mx-auto flex w-full max-w-[760px] flex-col gap-8">
+      {messages.map((message, idx) => {
         const isUser = message.role === "user";
         const content = cleanMessageContent(message.content);
 
         return (
-          <div key={message.id} className={cn("flex items-start gap-3", isUser ? "justify-end" : "justify-start")}>
-            {!isUser ? (
-              <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-[12px] bg-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.12)]">
-                <FiMessageSquare className="h-4 w-4" />
-              </div>
-            ) : null}
+          <motion.div
+            key={message.id}
+            initial={{ opacity: 0, y: 12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className={cn("flex items-end gap-3", isUser ? "flex-row-reverse" : "flex-row")}
+          >
+            <div
+              className={cn(
+                "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white shadow-md transition-transform duration-200 hover:scale-110",
+                isUser ? "bg-black" : "bg-black"
+              )}
+            >
+              {isUser ? <FiUser className="h-4 w-4" /> : <FiMessageSquare className="h-4 w-4" />}
+            </div>
 
             <div
               className={cn(
-                "max-w-[min(42rem,88%)] rounded-[20px] px-4 py-3 text-[15px] leading-7 shadow-[0_12px_24px_rgba(15,23,42,0.04)]",
-                isUser ? "rounded-br-[8px] bg-[#f4f4f5] text-black" : "rounded-bl-[8px] border border-black/6 bg-white text-black"
+                "max-w-[min(42rem,85%)] px-5 py-4 text-[15px] leading-7 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300",
+                isUser
+                  ? "rounded-[22px] rounded-br-[4px] bg-black text-white"
+                  : "rounded-[22px] rounded-bl-[4px] border border-black/5 bg-white text-black"
               )}
             >
               {content ? (
@@ -593,13 +615,7 @@ function ConversationPane({
                 <TypingDots />
               ) : null}
             </div>
-
-            {isUser ? (
-              <div className="mt-1 hidden h-9 w-9 shrink-0 items-center justify-center rounded-[12px] bg-[#f4f4f5] text-[11px] font-semibold text-black/70 sm:flex">
-                You
-              </div>
-            ) : null}
-          </div>
+          </motion.div>
         );
       })}
 
@@ -620,12 +636,13 @@ function WorkspaceComposer({
   onStop: () => void;
 }) {
   const [value, setValue] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (!textareaRef.current) return;
-    textareaRef.current.style.height = "20px";
-    textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 160)}px`;
+    textareaRef.current.style.height = "24px";
+    textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`;
   }, [value]);
 
   const submitValue = () => {
@@ -635,7 +652,7 @@ function WorkspaceComposer({
     setValue("");
 
     if (textareaRef.current) {
-      textareaRef.current.style.height = "20px";
+      textareaRef.current.style.height = "24px";
     }
   };
 
@@ -654,45 +671,56 @@ function WorkspaceComposer({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex min-h-14 items-end gap-1 rounded-[16px] border border-black/15 bg-white/80 px-3 py-3 shadow-[0_16px_36px_rgba(15,23,42,0.08)] backdrop-blur-[20px]"
+      className={cn(
+        "flex min-h-16 items-end gap-2 rounded-[24px] border bg-white px-4 py-3.5 transition-all duration-300 ease-[var(--ease-out)]",
+        isFocused
+          ? "border-black shadow-[0_20px_50px_rgba(0,0,0,0.12)]"
+          : "border-black/10 shadow-[0_12px_40px_rgba(0,0,0,0.06)]"
+      )}
     >
-      <IconButton ariaLabel="Voice input" disabled>
-        <FiMic className="h-4 w-4" />
-      </IconButton>
-      <IconButton ariaLabel="Attach image" disabled>
-        <FiImage className="h-4 w-4" />
-      </IconButton>
+      <div className="mb-0.5 flex items-center gap-1">
+        <IconButton ariaLabel="Voice input" disabled>
+          <FiMic className="h-4 w-4" />
+        </IconButton>
+        <IconButton ariaLabel="Attach image" disabled>
+          <FiImage className="h-4 w-4" />
+        </IconButton>
+      </div>
 
       <textarea
         ref={textareaRef}
         rows={1}
         value={value}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         onChange={(event) => setValue(event.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Type message"
+        placeholder="How are you feeling today?"
         disabled={disabled || isLoading}
-        className="min-h-5 flex-1 resize-none bg-transparent px-2 py-1 text-[14px] leading-5 text-black placeholder:text-black/25 focus:outline-none disabled:cursor-not-allowed"
+        className="min-h-6 flex-1 resize-none bg-transparent px-2 py-1 text-[15px] leading-6 text-black placeholder:text-black/30 focus:outline-none disabled:cursor-not-allowed"
       />
 
-      {isLoading ? (
-        <button
-          type="button"
-          onClick={onStop}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-black/85"
-          aria-label="Stop generating"
-        >
-          <span className="h-3 w-3 rounded-[3px] bg-white" />
-        </button>
-      ) : (
-        <button
-          type="submit"
-          disabled={!value.trim() || disabled}
-          className="flex h-8 w-8 items-center justify-center rounded-full transition-colors disabled:text-black/25 enabled:bg-black enabled:text-white enabled:hover:bg-black/85"
-          aria-label="Send message"
-        >
-          <FiSend className="h-4 w-4" />
-        </button>
-      )}
+      <div className="mb-0.5">
+        {isLoading ? (
+          <button
+            type="button"
+            onClick={onStop}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white transition-all duration-200 hover:scale-105 active:scale-90"
+            aria-label="Stop generating"
+          >
+            <span className="h-3.5 w-3.5 rounded-[3px] bg-white" />
+          </button>
+        ) : (
+          <button
+            type="submit"
+            disabled={!value.trim() || disabled}
+            className="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 disabled:bg-black/5 disabled:text-black/20 enabled:bg-black enabled:text-white enabled:hover:scale-105 enabled:active:scale-90"
+            aria-label="Send message"
+          >
+            <FiSend className="h-5 w-5" />
+          </button>
+        )}
+      </div>
     </form>
   );
 }

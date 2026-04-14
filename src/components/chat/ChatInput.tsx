@@ -53,10 +53,10 @@ export function ChatInput({
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className={`relative mx-auto flex w-full max-w-3xl items-end gap-2 rounded-lg border bg-[var(--color-surface)] p-2 transition-all duration-300 ${
+      className={`relative mx-auto flex w-full max-w-[52rem] items-end gap-2 rounded-[1.4rem] border bg-[linear-gradient(180deg,var(--color-surface)_0%,color-mix(in_srgb,var(--color-surface-warm),white_36%)_100%)] px-2 pb-7 pt-2 transition-all duration-300 ${
         isFocused 
-          ? 'border-[var(--color-primary)]/45 ring-2 ring-[var(--color-primary)]/10 shadow-[var(--shadow-md)]' 
-          : 'border-[var(--color-border)] shadow-[var(--shadow-sm)] hover:border-[var(--color-border-strong)]'
+          ? 'border-[var(--color-primary)]/45 ring-2 ring-[var(--color-primary)]/10 shadow-[0_20px_40px_rgba(45,41,38,0.1)]' 
+          : 'border-[var(--color-border)] shadow-[0_14px_30px_rgba(45,41,38,0.07)] hover:border-[var(--color-border-strong)]'
       }`}
     >
       <div className="relative z-10 flex flex-1 items-center px-3">
@@ -70,12 +70,12 @@ export function ChatInput({
           placeholder={placeholder}
           disabled={disabled || isLoading}
           rows={1}
-          className="max-h-[150px] min-h-[44px] w-full flex-1 resize-none bg-transparent py-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none disabled:opacity-50"
+          className="max-h-[150px] min-h-[44px] w-full flex-1 resize-none bg-transparent py-3 text-[0.98rem] leading-7 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none disabled:opacity-50"
           aria-label="Message input"
         />
       </div>
 
-      <div className="relative z-10 flex shrink-0 items-center gap-1.5 pr-1 pb-1">
+      <div className="relative z-10 flex shrink-0 items-center gap-2 pb-1 pr-1">
         <AnimatePresence mode="wait">
           {isLoading ? (
             <motion.div
@@ -90,7 +90,7 @@ export function ChatInput({
                 variant="warm"
                 size="sm"
                 onClick={onStop}
-                className="h-10 w-10 rounded-md border border-[var(--color-danger)]/30 bg-[var(--color-danger-soft)] text-[var(--color-danger)] transition-colors duration-200 hover:bg-[var(--color-danger-light)]"
+                className="h-10 w-10 rounded-full border border-[var(--color-danger)]/30 bg-[var(--color-danger-soft)] text-[var(--color-danger)] transition-colors duration-200 hover:bg-[var(--color-danger-soft)]"
                 aria-label="Stop generating"
               >
                 <FiSquare className="h-4 w-4" />
@@ -109,9 +109,9 @@ export function ChatInput({
                 variant="warm"
                 size="sm"
                 disabled={!input.trim() || disabled}
-                className={`h-10 w-10 rounded-md border transition-all duration-200 ease-out ${
+                className={`h-10 w-10 rounded-full border transition-all duration-200 ease-out ${
                   input.trim() 
-                    ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-white shadow-sm hover:bg-[var(--color-primary-dark)]' 
+                    ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-white shadow-[0_12px_22px_rgba(244,125,75,0.24)] hover:bg-[var(--color-primary-dark)]' 
                     : 'border-[var(--color-border)] bg-[var(--color-surface-strong)] text-[var(--color-text-muted)]'
                 }`}
                 aria-label="Send message"
@@ -121,6 +121,11 @@ export function ChatInput({
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
+
+      <div className="pointer-events-none absolute inset-x-4 bottom-1 flex items-center justify-between px-2 text-[11px] font-medium tracking-[0.02em] text-[var(--color-text-muted)]">
+        <span>Press Enter to send</span>
+        <span>Shift + Enter for a new line</span>
       </div>
     </motion.form>
   )

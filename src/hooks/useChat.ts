@@ -1,10 +1,13 @@
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef } from 'react'
 
-interface Message {
+export interface Message {
   id: string
   role: 'user' | 'assistant'
   content: string
   isStreaming?: boolean
+  suggestions?: string[]
+  action?: 'book_counselor' | 'show_resources' | 'send_crisis_alert' | null
+  actionContext?: string | null
 }
 
 interface ChatAction {
@@ -99,6 +102,21 @@ export function useChat({ sessionId, initialMessages = [], onAction, onCrisis }:
                 )
               }
 
+              if (data.suggestions || typeof data.action !== 'undefined' || typeof data.actionContext !== 'undefined') {
+                setMessages(prev =>
+                  prev.map(msg =>
+                    msg.id === assistantId
+                      ? {
+                          ...msg,
+                          suggestions: data.suggestions ?? msg.suggestions,
+                          action: typeof data.action !== 'undefined' ? data.action : msg.action,
+                          actionContext: typeof data.actionContext !== 'undefined' ? data.actionContext : msg.actionContext,
+                        }
+                      : msg
+                  )
+                )
+              }
+
               if (data.done) {
                 // Mark streaming as complete
                 setMessages(prev =>
@@ -171,14 +189,26 @@ export function useChat({ sessionId, initialMessages = [], onAction, onCrisis }:
 
 // Helper to extract clean message text (remove JSON if present)
 export function cleanMessageContent(content: string): string {
+  if (!content) return ''
+
   try {
+    const jsonBlockMatch = content.match(/```json\s*([\s\S]*?)\s*```/i)
+    if (jsonBlockMatch?.[1]) {
+      const parsed = JSON.parse(jsonBlockMatch[1])
+      return parsed.message || parsed.text || content
+    }
+
     const jsonMatch = content.match(/\{[\s\S]*\}/)
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0])
-      return parsed.message || content
+      return parsed.message || parsed.text || content
     }
   } catch {
     // Not JSON, return as-is
   }
+
   return content
+    .trim()
+    .replace(/^["']|["']$/g, '')
+    .replace(/\\n/g, '\n')
 }

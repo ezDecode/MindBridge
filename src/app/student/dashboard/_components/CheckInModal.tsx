@@ -83,7 +83,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-2xl"
+            className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-[2rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[0_24px_72px_rgba(45,41,38,0.22)] squircle"
           >
             {/* Header */}
             <div className="flex items-center justify-between">
@@ -91,17 +91,17 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--color-danger-soft)]"
+                  className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--color-danger-soft)] shadow-sm"
                 >
-                  <FiHeart className="h-4 w-4 text-[var(--color-danger)]" />
+                  <FiHeart className="h-5 w-5 text-[var(--color-danger)]" />
                 </motion.div>
                 <Text as="p" variant="h6" weight="bold">How are you feeling?</Text>
               </div>
               <button
                 onClick={onClose}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-strong)] hover:text-[var(--color-text-primary)]"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border)] bg-white text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)]"
               >
-                <FiX className="h-4 w-4" />
+                <FiX className="h-5 w-5" />
               </button>
             </div>
 
@@ -111,21 +111,21 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
                 <motion.div
                   key={selectedMood}
                   initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                  animate={{ opacity: 1, height: "auto", marginTop: 12 }}
+                  animate={{ opacity: 1, height: "auto", marginTop: 16 }}
                   exit={{ opacity: 0, height: 0, marginTop: 0 }}
                   className="overflow-hidden"
                 >
                   <motion.div 
                     initial={{ scale: 0.9 }}
                     animate={{ scale: 1 }}
-                    className="flex items-center gap-2 rounded-md bg-gradient-to-r from-[var(--color-primary-light)]/50 to-[var(--color-primary-light)]/20 px-3 py-2"
+                    className="flex items-center gap-3 rounded-[1.2rem] bg-[linear-gradient(135deg,var(--color-primary-light)_0%,white_100%)] border border-[var(--color-primary)]/10 px-4 py-3 shadow-sm"
                   >
-                    <span className="text-xl">{selectedMoodData.emoji}</span>
+                    <span className="text-2xl">{selectedMoodData.emoji}</span>
                     <div>
                       <Text as="span" variant="label" weight="bold" color="brand">
                         {selectedMoodData.label}
                       </Text>
-                      <Text as="span" variant="small" color="secondary" className="ml-2">
+                      <Text as="p" variant="small" color="secondary" className="mt-0.5 leading-5">
                         {selectedMoodData.note}
                       </Text>
                     </div>
@@ -135,32 +135,37 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
             </AnimatePresence>
 
             {/* Mood emoji selector */}
-            <div className="mt-4 grid grid-cols-5 gap-2">
+            <div className="mt-6 grid grid-cols-5 gap-3">
               {moodOptions.map((option, index) => (
                 <motion.button
                   key={option.score}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  whileHover={{ scale: 1.08, y: -2 }}
+                  whileHover={{ scale: 1.08 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedMood(option.score)}
-                  className={`group relative flex flex-col items-center gap-1 rounded-md p-2 transition-all ${
+                  className={`group relative flex flex-col items-center gap-1 rounded-[1.2rem] p-3 transition-all duration-200 ease-[var(--ease-out)] ${
                     selectedMood === option.score
-                      ? "bg-[var(--color-primary-light)] shadow-lg shadow-[var(--color-primary)]/15"
-                      : "bg-[var(--color-surface-strong)] hover:bg-[var(--color-border)]"
+                      ? "bg-[var(--color-primary-light)] border border-[var(--color-primary)]/20 shadow-md"
+                      : "bg-[var(--color-surface-warm)] border border-transparent hover:border-[var(--color-border)] hover:bg-[var(--color-surface-warm-hover)]"
                   }`}
                 >
-                  <span className={`text-2xl transition-transform ${selectedMood === option.score ? 'scale-110' : ''}`}>
+                  <span className={`text-2xl transition-transform duration-300 ${selectedMood === option.score ? 'scale-125' : ''}`}>
                     {option.emoji}
                   </span>
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: selectedMood === option.score ? 1 : 0 }}
-                    className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-primary)]"
-                  >
-                    <FiCheck className="h-2.5 w-2.5 text-white" />
-                  </motion.div>
+                  <AnimatePresence>
+                    {selectedMood === option.score && (
+                      <motion.div
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0, opacity: 0 }}
+                        className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-md"
+                      >
+                        <FiCheck className="h-3 w-3" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.button>
               ))}
             </div>
@@ -171,15 +176,15 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="What's on your mind? (optional)"
-              className="mt-4 w-full resize-none rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-text-primary)] outline-none transition-[border-color,box-shadow] focus:border-[var(--color-primary)] focus:shadow-[0_0_0_3px_var(--color-primary-light)] placeholder:text-[var(--color-text-muted)]"
+              className="mt-6 w-full resize-none rounded-[1.2rem] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-sm text-[var(--color-text-primary)] outline-none transition-all duration-200 focus:border-[var(--color-primary)] focus:shadow-[0_0_0_4px_rgba(244,125,75,0.08)] placeholder:text-[var(--color-text-muted)]"
             />
 
             {/* Actions */}
-            <div className="mt-4 flex gap-2.5">
+            <div className="mt-6 flex gap-3">
               <Button 
                 onClick={handleSave} 
                 disabled={!selectedMood || isLoading} 
-                className="flex-1 gap-2 rounded-md"
+                className="flex-1 gap-2 rounded-full h-11"
               >
                 {isLoading ? (
                   <>
@@ -198,7 +203,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
               <Button 
                 onClick={onClose} 
                 variant="ghost"
-                className="rounded-md text-[var(--color-text-muted)]"
+                className="rounded-full h-11 text-[var(--color-text-secondary)] px-6"
               >
                 Skip
               </Button>

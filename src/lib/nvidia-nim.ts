@@ -60,6 +60,7 @@ export interface CompanionResponse {
   }
   suggested_action: 'book_counselor' | 'show_resources' | 'send_crisis_alert' | null
   action_context: string | null
+  suggestions?: string[]
 }
 
 export interface MemoryContext {
@@ -73,6 +74,11 @@ export interface MemoryContext {
 // Parse JSON response safely, with fallback
 export function parseCompanionResponse(text: string): CompanionResponse | null {
   try {
+    const jsonBlockMatch = text.match(/```json\s*([\s\S]*?)\s*```/i)
+    if (jsonBlockMatch?.[1]) {
+      return JSON.parse(jsonBlockMatch[1])
+    }
+
     // Try to find JSON in the response
     const jsonMatch = text.match(/\{[\s\S]*\}/)
     if (jsonMatch) {

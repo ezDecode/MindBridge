@@ -7,7 +7,7 @@ export default function RedirectPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace("/student/dashboard?tab=mind&open=check-in");
+    router.replace("/student/dashboard?tab=mind&open=questions");
   }, [router]);
 
   return null;

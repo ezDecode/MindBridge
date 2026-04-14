@@ -3,64 +3,58 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'motion/react'
-import { FiCalendar, FiMessageSquare, FiTrendingUp } from 'react-icons/fi'
+import { FiActivity, FiCalendar, FiMessageSquare, FiTrendingUp } from 'react-icons/fi'
 import { Button, Text } from '@/components/ui'
 import { useChat } from '@/hooks/useChat'
 import { getClient } from '@/lib/supabase/client'
 
-import { PillToggle } from './_components/PillToggle'
 import { MindTab } from './_components/MindTab'
 import { BridgeTab } from './_components/BridgeTab'
+import { QuestionSessionSheet } from './_components/QuestionSessionSheet'
 import { generateSessionId, generateWeekMoodHistory, generateEmptyWeek, formatSessionTime } from './_components/types'
 import type { DashboardData, TabId } from './_components/types'
 
-interface Slot {
-  id: string
-  counselor_id: string
-  slot_start: string
-  slot_end: string
-  counselor: { name: string }
+function getInitialDashboardView(): {
+  activeTab: TabId
+  pendingCheckInOpen: boolean
+  pendingQuestionnaireOpen: boolean
+  showQuestionnaire: boolean
+} {
+  if (typeof window === 'undefined') {
+    return {
+      activeTab: 'mind' as TabId,
+      pendingCheckInOpen: false,
+      pendingQuestionnaireOpen: false,
+      showQuestionnaire: false,
+    }
+  }
+
+  const params = new URLSearchParams(window.location.search)
+  const tab = params.get('tab')
+  const open = params.get('open')
+
+  return {
+    activeTab: tab === 'bridge' ? 'bridge' : 'mind',
+    pendingCheckInOpen: open === 'check-in',
+    pendingQuestionnaireOpen: open === 'questions',
+    showQuestionnaire: open === 'questions',
+  }
 }
 
 export default function StudentDashboardPage() {
+  const initialView = getInitialDashboardView()
   const router = useRouter()
   const [data, setData] = useState<DashboardData | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [userName, setUserName] = useState('')
-  const [activeTab, setActiveTab] = useState<TabId>('mind')
-  const [pendingCheckInOpen, setPendingCheckInOpen] = useState(false)
-  
+  const [activeTab, setActiveTab] = useState<TabId>(initialView.activeTab)
+  const [pendingCheckInOpen, setPendingCheckInOpen] = useState(initialView.pendingCheckInOpen)
+  const [pendingQuestionnaireOpen, setPendingQuestionnaireOpen] = useState(initialView.pendingQuestionnaireOpen)
+  const [showQuestionnaire, setShowQuestionnaire] = useState(initialView.showQuestionnaire)
   const [sessionId, setSessionId] = useState('')
-  const [showBooking, setShowBooking] = useState(false)
-  const [showResources, setShowResources] = useState(false)
-  
-  const [nextSlot, setNextSlot] = useState<Slot | null>(null)
-  const [isBooking, setIsBooking] = useState(false)
-  const [bookingConfirmed, setBookingConfirmed] = useState(false)
-
-  const handleAction = useCallback(
-    (action: { type: string; context: string | null }) => {
-      if (action.type === 'book_counselor') setShowBooking(true)
-      else if (action.type === 'show_resources') setShowResources(true)
-    },
-    []
-  )
 
   const handleCrisis = useCallback(() => {
     console.log('Crisis detected - alert sent to counselor')
-  }, [])
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const tab = params.get('tab')
-    if (tab === 'mind' || tab === 'bridge') {
-      setActiveTab(tab)
-    }
-
-    if (params.get('open') === 'check-in') {
-      setActiveTab('mind')
-      setPendingCheckInOpen(true)
-    }
   }, [])
 
   const handleAutoOpenCheckInHandled = useCallback(() => {
@@ -71,13 +65,33 @@ export default function StudentDashboardPage() {
     router.replace(query ? `/student/dashboard?${query}` : '/student/dashboard')
   }, [router])
 
-  const refreshMoodData = useCallback(async () => {
+  const closeQuestionnaire = useCallback(() => {
+    setShowQuestionnaire(false)
+
+    if (!pendingQuestionnaireOpen) return
+
+    setPendingQuestionnaireOpen(false)
+    const params = new URLSearchParams(window.location.search)
+    params.delete('open')
+    const query = params.toString()
+    router.replace(query ? `/student/dashboard?${query}` : '/student/dashboard')
+  }, [pendingQuestionnaireOpen, router])
+
+  const refreshDashboardInsights = useCallback(async () => {
     try {
+      const supabase = getClient()
       const moodResponse = await fetch('/api/mood?days=7')
+      const assessmentResult = await supabase
+        .from('assessments')
+        .select('severity, criteria_flagged, assessed_at')
+        .order('assessed_at', { ascending: false })
+        .limit(1)
+
       if (!moodResponse.ok) return
 
       const moodData = await moodResponse.json()
       const updatedMoodHistory = generateWeekMoodHistory(moodData.moods || [])
+      const latestAssessment = assessmentResult.data?.[0]
 
       setData((prev) =>
         prev
@@ -85,6 +99,13 @@ export default function StudentDashboardPage() {
               ...prev,
               streak: moodData.streak || 0,
               moodHistory: updatedMoodHistory,
+              latestAssessment: latestAssessment
+                ? {
+                    severity: latestAssessment.severity,
+                    criteriaFlagged: latestAssessment.criteria_flagged || [],
+                    assessedAt: latestAssessment.assessed_at,
+                  }
+                : prev.latestAssessment,
             }
           : prev
       )
@@ -95,7 +116,6 @@ export default function StudentDashboardPage() {
 
   const { messages, sendMessage, isLoading, error, stopGenerating } = useChat({
     sessionId,
-    onAction: handleAction,
     onCrisis: handleCrisis,
   })
 
@@ -118,21 +138,6 @@ export default function StudentDashboardPage() {
 
       setIsAuthenticated(true)
 
-      let generatedName = profileResult.data?.name
-      if (!generatedName && user.email) {
-        const randomAdjectives = ['Calm', 'Bright', 'Gentle', 'Warm', 'Peaceful', 'Serene', 'Kind', 'Happy', 'Mellow', 'Quiet']
-        const randomNouns = ['Mind', 'Heart', 'Soul', 'Spirit', 'Wave', 'Leaf', 'Star', 'Moon', 'Cloud', 'River']
-        const adj = randomAdjectives[Math.floor(Math.random() * randomAdjectives.length)]
-        const noun = randomNouns[Math.floor(Math.random() * randomNouns.length)]
-        generatedName = `${adj}${noun}`
-        
-        await supabase.from('profiles').upsert({
-          id: user.id,
-          name: generatedName,
-          email: user.email,
-        })
-      }
-
       const stored = sessionStorage.getItem('currentChatSession')
       if (stored) {
         setSessionId(stored)
@@ -142,7 +147,7 @@ export default function StudentDashboardPage() {
         sessionStorage.setItem('currentChatSession', newId)
       }
 
-      const [moodResponse, profileResult, sessionsResult, bookingsResult] =
+      const [moodResponse, profileResult, sessionsResult, bookingsResult, assessmentResult] =
         await Promise.all([
           fetch('/api/mood?days=7'),
           supabase.from('profiles').select('name').eq('id', user.id).single(),
@@ -159,7 +164,28 @@ export default function StudentDashboardPage() {
             .gte('slot_start', new Date().toISOString())
             .order('slot_start', { ascending: true })
             .limit(1),
+          supabase
+            .from('assessments')
+            .select('severity, criteria_flagged, assessed_at')
+            .eq('user_id', user.id)
+            .order('assessed_at', { ascending: false })
+            .limit(1),
         ])
+
+      let generatedName = profileResult.data?.name
+      if (!generatedName && user.email) {
+        const randomAdjectives = ['Calm', 'Bright', 'Gentle', 'Warm', 'Peaceful', 'Serene', 'Kind', 'Happy', 'Mellow', 'Quiet']
+        const randomNouns = ['Mind', 'Heart', 'Soul', 'Spirit', 'Wave', 'Leaf', 'Star', 'Moon', 'Cloud', 'River']
+        const adj = randomAdjectives[Math.floor(Math.random() * randomAdjectives.length)]
+        const noun = randomNouns[Math.floor(Math.random() * randomNouns.length)]
+        generatedName = `${adj}${noun}`
+        
+        await supabase.from('profiles').upsert({
+          id: user.id,
+          name: generatedName,
+          role: 'student',
+        })
+      }
 
       let moodData = { moods: [], streak: 0, average: null }
       if (moodResponse.ok) moodData = await moodResponse.json()
@@ -175,30 +201,10 @@ export default function StudentDashboardPage() {
 
       setUserName(generatedName || 'there')
 
-      let nextAvailableSlot: Slot | null = null
-      try {
-        const slotsResult = await fetch('/api/bookings')
-        if (slotsResult.ok) {
-          const slotsData = await slotsResult.json()
-          if (slotsData.slots && slotsData.slots.length > 0) {
-            nextAvailableSlot = slotsData.slots[0]
-          }
-        }
-      } catch (slotError) {
-        nextAvailableSlot = {
-          id: 'demo-slot-1',
-          counselor_id: 'demo-counselor',
-          slot_start: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-          slot_end: new Date(Date.now() + 24 * 60 * 60 * 1000 + 30 * 60 * 1000).toISOString(),
-          counselor: { name: 'Dr. Priya Sharma' }
-        }
-      }
-
       const existingBooking = bookingsResult.data?.[0]
+      const latestAssessment = assessmentResult.data?.[0]
 
       const moodHistory = generateWeekMoodHistory(moodData.moods || [])
-      const scored = moodHistory.filter((m) => m.score > 0)
-      const averageMood = scored.length ? scored.reduce((a, b) => a + b.score, 0) / scored.length : 0
 
       setData({
         streak: moodData.streak || 0,
@@ -208,42 +214,18 @@ export default function StudentDashboardPage() {
         activeChats: sessionsResult.data?.length || 0,
         moodHistory,
         proactiveMessage: proactiveMsg?.content || null,
+        latestAssessment: latestAssessment
+          ? {
+              severity: latestAssessment.severity,
+              criteriaFlagged: latestAssessment.criteria_flagged || [],
+              assessedAt: latestAssessment.assessed_at,
+            }
+          : null,
       })
-      
-      setNextSlot(nextAvailableSlot)
     }
 
     init()
   }, [])
-
-  const handleOneTapBooking = async () => {
-    if (!nextSlot || isBooking) return
-    
-    setIsBooking(true)
-    
-    try {
-      const res = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          slotId: nextSlot.id,
-          counselorId: nextSlot.counselor_id,
-          type: 'anonymous',
-          slotStart: nextSlot.slot_start,
-          slotEnd: nextSlot.slot_end,
-        }),
-      })
-
-      if (res.ok) {
-        setBookingConfirmed(true)
-        setNextSlot(null)
-      }
-    } catch (error) {
-      console.error('Booking error:', error)
-    } finally {
-      setIsBooking(false)
-    }
-  }
 
   if (isAuthenticated === null) {
     return (
@@ -287,6 +269,21 @@ export default function StudentDashboardPage() {
     return 'steady'
   })()
 
+  const latestAssessmentLabel = data?.latestAssessment
+    ? data.latestAssessment.severity === 'none'
+      ? 'Stable'
+      : data.latestAssessment.severity[0].toUpperCase() + data.latestAssessment.severity.slice(1)
+    : 'Pending'
+
+  const latestAssessmentNote = data?.latestAssessment
+    ? data.latestAssessment.criteriaFlagged.length
+      ? data.latestAssessment.criteriaFlagged
+          .slice(0, 2)
+          .map((item) => item.replaceAll('_', ' '))
+          .join(' • ')
+      : 'No urgent flags'
+    : 'Run a guided check-in'
+
   const metrics = [
     {
       label: 'Check-in streak',
@@ -301,6 +298,12 @@ export default function StudentDashboardPage() {
       icon: <FiCalendar className="h-5 w-5 text-[var(--color-info)]" />,
     },
     {
+      label: 'Latest scan',
+      value: latestAssessmentLabel,
+      note: latestAssessmentNote,
+      icon: <FiActivity className="h-5 w-5 text-[var(--color-primary)]" />,
+    },
+    {
       label: 'Active chats',
       value: `${data?.activeChats || 0}`,
       note: 'This week',
@@ -309,15 +312,15 @@ export default function StudentDashboardPage() {
   ]
 
   return (
-    <div className="[--brm:0.78] h-full">
-      <AnimatePresence mode="wait">
-        {activeTab === 'mind' ? (
+    <div className="[--brm:0.78] h-full overflow-hidden">
+      <AnimatePresence mode="wait" initial={false}>
+        {activeTab === "mind" ? (
           <motion.div
             key="mind"
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, scale: 0.99, filter: "blur(4px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, scale: 1.01, filter: "blur(4px)" }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="h-full"
           >
             <MindTab
@@ -329,26 +332,22 @@ export default function StudentDashboardPage() {
               error={error}
               stopGenerating={stopGenerating}
               startNewSession={startNewSession}
-              showBooking={showBooking}
-              showResources={showResources}
-              setShowBooking={setShowBooking}
-              setShowResources={setShowResources}
               autoOpenCheckIn={pendingCheckInOpen}
               onAutoOpenCheckInHandled={handleAutoOpenCheckInHandled}
-              onMoodLogged={refreshMoodData}
-              router={router}
+              onMoodLogged={refreshDashboardInsights}
+              onOpenQuestionnaire={() => setShowQuestionnaire(true)}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
-              onSwitchToBridge={() => setActiveTab('bridge')}
+              onSwitchToBridge={() => setActiveTab("bridge")}
             />
           </motion.div>
         ) : (
           <motion.div
             key="bridge"
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 30 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, scale: 0.99, filter: "blur(4px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, scale: 1.01, filter: "blur(4px)" }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="h-full"
           >
             <BridgeTab
@@ -361,13 +360,21 @@ export default function StudentDashboardPage() {
               worstDay={worstDay}
               trendDirection={trendDirection}
               completedDays={scored.length}
-              onSwitchToMind={() => setActiveTab('mind')}
+              onOpenQuestionnaire={() => setShowQuestionnaire(true)}
+              onSwitchToMind={() => setActiveTab("mind")}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
             />
           </motion.div>
         )}
       </AnimatePresence>
+
+      <QuestionSessionSheet
+        isOpen={showQuestionnaire}
+        onClose={closeQuestionnaire}
+        onComplete={refreshDashboardInsights}
+        onChatRequested={() => setActiveTab('mind')}
+      />
     </div>
   )
 }

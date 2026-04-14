@@ -108,8 +108,8 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
         onClose();
         onComplete?.();
       }, 1500);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create booking");
     } finally {
       setSubmitting(false);
     }

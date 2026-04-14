@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
 // GET: List counselor's slots
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const supabase = await createClient()
     
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
     }
 
     // Get pending bookings
-    const { data: bookings, error: bookingsError } = await supabase
+    const { data: bookings } = await supabase
       .from('bookings')
       .select(`
         id,

@@ -5,10 +5,11 @@ import { HTMLAttributes, forwardRef } from "react";
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: "default" | "elevated" | "outline" | "subtle" | "warm";
   padding?: "none" | "sm" | "md" | "lg";
+  interactive?: boolean;
 }
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ className = "", variant = "default", padding = "md", children, ...props }, ref) => {
+  ({ className = "", variant = "default", padding = "md", interactive = false, children, ...props }, ref) => {
     const variants = {
       default: "border border-[var(--color-border)] bg-[var(--color-surface)]",
       elevated:
@@ -28,7 +29,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     return (
       <div
         ref={ref}
-        className={`rounded-[calc(var(--radius-card)*var(--brm))] squircle ${variants[variant]} ${paddings[padding]} ${className}`}
+        className={`rounded-[calc(var(--radius-card)*var(--brm))] squircle transition-[border-color,background-color,transform,box-shadow] duration-200 ease-[var(--ease-out)] ${variants[variant]} ${paddings[padding]} ${interactive ? "hover:border-[var(--color-border-strong)] hover:shadow-sm active:scale-[0.99]" : ""} ${className}`}
         {...props}
       >
         {children}
