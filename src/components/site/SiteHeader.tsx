@@ -3,18 +3,26 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Icon } from '@iconify/react';
-import { Button, Container, Text } from "@/components/ui";
+import { Container, Text } from "@/components/ui";
 import { marketingNav } from "@/content/mindbridge";
 
 export function SiteHeader() {
  const [isOpen, setIsOpen] = useState(false);
+ const desktopGhostLinkClass =
+ "inline-flex h-11 shrink-0 items-center justify-center rounded-full px-4 text-button font-bold whitespace-nowrap text-[var(--color-text-secondary)] transition-[background-color,color] duration-200 hover:bg-[var(--color-surface-strong)] hover:text-[var(--color-text-primary)]";
+ const desktopWarmLinkClass =
+ "inline-flex h-11 shrink-0 items-center justify-center rounded-full px-4 text-button font-bold whitespace-nowrap bg-[var(--color-surface-warm-hover)] text-[var(--color-text-primary)] transition-[background-color,color] duration-200 hover:bg-[var(--color-surface-warm-active)]";
+ const mobileGhostLinkClass =
+ "inline-flex h-11 w-full items-center justify-center rounded-full px-4 text-button font-bold text-[var(--color-text-secondary)] transition-[background-color,color] duration-200 hover:bg-[var(--color-surface-strong)] hover:text-[var(--color-text-primary)]";
+ const mobileWarmLinkClass =
+ "inline-flex h-11 w-full items-center justify-center rounded-full px-4 text-button font-bold bg-[var(--color-surface-warm-hover)] text-[var(--color-text-primary)] transition-[background-color,color] duration-200 hover:bg-[var(--color-surface-warm-active)]";
 
  return (
  <header className="sticky top-0 z-40 w-full pt-4 sm:pt-5">
  <Container size="md">
  <div className="surface-panel rounded-md px-4 py-3 sm:px-5">
  <div className="flex items-center justify-between gap-3">
- <Link href="/" className="group flex min-w-0 items-center gap-3">
+ <Link href="/" className="flex min-w-0 items-center gap-3">
  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-span font-bold text-[var(--color-white)]">
  MB
  </span>
@@ -41,20 +49,12 @@ export function SiteHeader() {
  </nav>
 
  <div className="hidden items-center gap-2 lg:flex">
-               <nav className="flex items-center border-r border-[var(--color-border)] pr-4 mr-2 gap-1">
-                 <Button href="/login" variant="ghost" size="sm" className="hidden xl:inline-flex">
-                   Login
-                 </Button>
-                 <Button href="/admin/login" size="sm" variant="ghost" className="hidden xl:inline-flex">
-                   Admin Gateway
-                 </Button>
-               </nav>
-               <Button href="/student/dashboard" variant="warm" size="sm" className="shrink-0 whitespace-nowrap">
-                 Dashboard
-               </Button>
-               <Button href="/student/settings" variant="ghost" size="sm" className="shrink-0 whitespace-nowrap">
-                 User Settings
-               </Button>
+ <Link href="/login" className={desktopGhostLinkClass}>
+ Login
+ </Link>
+ <Link href="/student/dashboard" className={desktopWarmLinkClass}>
+ Dashboard
+ </Link>
  </div>
 
  <button
@@ -65,7 +65,7 @@ export function SiteHeader() {
  aria-controls="marketing-menu"
  aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
  >
- {isOpen ? <Icon icon="solar:close-circle-linear" className="h-5 w-5" /> : <Icon icon="solar:hamburger-menu-linear" className="h-5 w-5" />}
+ {isOpen ? <Icon icon="tabler:x" className="h-5 w-5" /> : <Icon icon="tabler:menu-2" className="h-5 w-5" />}
  </button>
  </div>
 
@@ -80,22 +80,20 @@ export function SiteHeader() {
  className="interactive-panel flex min-h-[3rem] items-center justify-between rounded-md px-4 py-3 text-label font-medium text-[var(--color-text-primary)]"
  >
  <span>{item.label}</span>
- <Icon icon="solar:arrow-right-linear" className="h-4 w-4 text-[var(--color-black)]" />
+ <Icon icon="tabler:arrow-right" className="h-4 w-4 text-[var(--color-black)]" />
  </Link>
  ))}
  </div>
 
- <div className="mt-4 grid gap-2">
- <Button href="/admin/login" variant="ghost" className="w-full justify-between">
- Admin Gateway
- <Icon icon="solar:arrow-right-linear" className="h-4 w-4" />
- </Button>
- <Button href="/student/dashboard" variant="warm" className="w-full">
+ <div className="mt-4 border-t border-[var(--color-border)] pt-4">
+ <div className="grid grid-cols-2 gap-2">
+ <Link href="/login" className={mobileGhostLinkClass} onClick={() => setIsOpen(false)}>
+ Login
+ </Link>
+ <Link href="/student/dashboard" className={mobileWarmLinkClass} onClick={() => setIsOpen(false)}>
  Dashboard
- </Button>
- <Button href="/student/settings" className="w-full">
- User Settings
- </Button>
+ </Link>
+ </div>
  </div>
  </div>
  ) : null}
@@ -104,4 +102,3 @@ export function SiteHeader() {
  </header>
  );
 }
-

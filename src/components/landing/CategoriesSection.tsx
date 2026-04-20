@@ -130,7 +130,7 @@ export function CategoriesSection() {
  <div className="flex items-center gap-2">
  {Icon && <Icon />}
  <div className="p-2 text-[var(--color-text-secondary)] transition-colors group-hover:text-[var(--color-text-primary)]">
- <IconifyIcon icon="solar:alt-arrow-right-linear" className="h-5 w-5" />
+ <IconifyIcon icon="tabler:chevron-right" className="h-5 w-5" />
  </div>
  </div>
  </motion.button>

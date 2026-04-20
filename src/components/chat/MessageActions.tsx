@@ -17,7 +17,7 @@ export function MessageActions({
  if (!action || action === 'send_crisis_alert') return null
 
  const primaryLabel = action === 'book_counselor' ? 'Book session' : 'View resources'
- const primaryIconName = action === 'book_counselor' ? 'solar:calendar-linear' : 'solar:book-linear'
+ const primaryIconName = action === 'book_counselor' ? 'tabler:calendar' : 'tabler:book'
 
  return (
  <motion.div
@@ -45,7 +45,7 @@ export function MessageActions({
  className="inline-flex min-h-9 items-center gap-2 rounded-full bg-white/80 px-3.5 py-2 text-sm font-medium text-[var(--color-text-muted)] shadow-sm transition-all duration-150 hover:bg-white hover:text-[var(--color-text-secondary)]"
  >
  <span>Not now</span>
- <Icon icon="solar:arrow-right-linear" className="h-3.5 w-3.5" />
+ <Icon icon="tabler:arrow-right" className="h-3.5 w-3.5" />
  </motion.button>
  </motion.div>
  )

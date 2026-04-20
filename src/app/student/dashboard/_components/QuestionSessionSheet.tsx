@@ -238,7 +238,7 @@ export function QuestionSessionSheet({
  animate={{ opacity: 1, y: 0, scale: 1 }}
  exit={{ opacity: 0, y: "100%", scale: 0.98 }}
  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
- className="relative z-10 flex max-h-[92vh] w-full max-w-xl flex-col overflow-hidden rounded-t-[24px] border border-[var(--color-border)] bg-white shadow-2xl sm:max-h-[85vh] sm:rounded-[24px]"
+ className="relative z-10 flex max-h-[92vh] w-full max-w-xl flex-col overflow-hidden rounded-t-[24px] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-2xl sm:max-h-[85vh] sm:rounded-[24px]"
  >
  {/* Top Progress Bar */}
  {!summary && session && (
@@ -279,7 +279,7 @@ export function QuestionSessionSheet({
  onClick={onClose}
  className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-surface-warm)] text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-surface-strong)] hover:text-[var(--color-text-primary)]"
  >
- <Icon icon="solar:close-circle-linear" className="h-4 w-4" />
+ <Icon icon="tabler:x" className="h-4 w-4" />
  </button>
  </div>
 
@@ -289,7 +289,7 @@ export function QuestionSessionSheet({
  <div className="flex h-full min-h-[30vh] items-center justify-center">
  <div className="text-center">
  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-md bg-[var(--color-surface-warm)] text-[var(--color-primary)]">
- <Icon icon="solar:restart-circle-linear" className="h-6 w-6 animate-spin" />
+ <Icon icon="tabler:loader" className="h-6 w-6 animate-spin" />
  </div>
  <p className="mt-4 text-base font-bold text-[var(--color-text-primary)]">
  Curating your mix...
@@ -299,7 +299,7 @@ export function QuestionSessionSheet({
  ) : error && !session && !summary ? (
  <div className="mx-auto flex h-full min-h-[30vh] max-w-xs flex-col items-center justify-center text-center">
  <div className="flex h-12 w-12 items-center justify-center rounded-md bg-[var(--color-danger-soft)] text-[var(--color-danger)]">
- <Icon icon="solar:danger-triangle-linear" className="h-6 w-6" />
+ <Icon icon="tabler:alert-triangle" className="h-6 w-6" />
  </div>
  <p className="mt-4 text-lg font-bold text-[var(--color-text-primary)]">
  We hit a small bump
@@ -312,7 +312,7 @@ export function QuestionSessionSheet({
  onClick={() => void loadSession()}
  className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-full bg-black px-5 text-xs font-bold text-white transition-opacity hover:opacity-90 active:scale-95"
  >
- <Icon icon="solar:refresh-circle-linear" className="h-3.5 w-3.5" />
+ <Icon icon="tabler:refresh" className="h-3.5 w-3.5" />
  Try again
  </button>
  </div>
@@ -327,7 +327,7 @@ export function QuestionSessionSheet({
  <span className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${severityStyles[summary.severity]}`}>
  {severityTone[summary.severity]}
  </span>
- <span className="rounded-full border border-[var(--color-border)] bg-white px-2.5 py-1 text-[10px] font-bold text-[var(--color-text-secondary)]">
+ <span className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-2.5 py-1 text-[10px] font-bold text-[var(--color-text-secondary)]">
  Score {summary.derivedMoodScore}/5
  </span>
  </div>
@@ -340,7 +340,7 @@ export function QuestionSessionSheet({
  </p>
 
  <div className="mt-6 flex flex-wrap items-center gap-2">
- <div className="inline-flex h-9 items-center gap-2 rounded-full border border-[var(--color-border)] bg-white px-3.5 py-2 shadow-sm">
+ <div className="inline-flex h-9 items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3.5 py-2 shadow-sm">
  <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Balance</span>
  <span className="text-xs font-bold text-[var(--color-text-primary)]">{summary.balanceScore}%</span>
  </div>
@@ -352,15 +352,15 @@ export function QuestionSessionSheet({
  onClick={() => { onChatRequested?.(); onClose(); }}
  className="inline-flex h-9 items-center justify-center gap-2 rounded-full bg-black px-4 text-xs font-bold text-white transition-opacity hover:opacity-90 active:scale-95"
  >
- <Icon icon="solar:chat-round-linear" className="h-3.5 w-3.5" />
+ <Icon icon="tabler:message-circle" className="h-3.5 w-3.5" />
  Chat
  </button>
  <button
  type="button"
  onClick={() => router.push("/student/book")}
- className="inline-flex h-9 items-center justify-center gap-2 rounded-full bg-white px-4 text-xs font-bold text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-surface-warm)] active:scale-95"
+ className="inline-flex h-9 items-center justify-center gap-2 rounded-full bg-[var(--color-surface)] px-4 text-xs font-bold text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-surface-warm)] active:scale-95"
  >
- <Icon icon="solar:calendar-linear" className="h-3.5 w-3.5" />
+ <Icon icon="tabler:calendar" className="h-3.5 w-3.5" />
  Support
  </button>
  </div>
@@ -369,8 +369,8 @@ export function QuestionSessionSheet({
  {summary.hasSafetyConcern && (
  <div className="mt-4 rounded-md border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] p-4">
  <div className="flex items-start gap-3">
- <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white text-[var(--color-danger)]">
- <Icon icon="solar:danger-triangle-linear" className="h-4.5 w-4.5" />
+ <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[var(--color-surface)] text-[var(--color-danger)]">
+ <Icon icon="tabler:alert-triangle" className="h-4.5 w-4.5" />
  </div>
  <div>
  <p className="text-sm font-bold text-[var(--color-text-primary)]">
@@ -393,7 +393,7 @@ export function QuestionSessionSheet({
  {summary.topInsights.map((insight) => (
  <div
  key={insight.category}
- className="flex items-center justify-between rounded-md border border-[var(--color-border)] bg-white px-3 py-2 shadow-sm"
+ className="flex items-center justify-between rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 shadow-sm"
  >
  <p className="truncate text-xs font-bold text-[var(--color-text-primary)]">
  {insight.label}
@@ -412,7 +412,7 @@ export function QuestionSessionSheet({
  </p>
  <div className="mt-2.5 space-y-2">
  {summary.nextSteps.map((stepText, index) => (
- <div key={stepText} className="flex gap-2.5 rounded-md border border-[var(--color-border)] bg-white px-3.5 py-2.5 shadow-sm">
+ <div key={stepText} className="flex gap-2.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3.5 py-2.5 shadow-sm">
  <div className="mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-light)] text-[9px] font-bold text-[var(--color-primary)]">
  {index + 1}
  </div>
@@ -448,7 +448,7 @@ export function QuestionSessionSheet({
  className={`group flex items-center justify-between gap-3 rounded-[16px] border px-4 py-3.5 text-left transition-all active:scale-[0.98] ${
  selected
  ? "border-[var(--color-primary)] bg-[var(--color-primary-light)] shadow-sm"
- : "border-[var(--color-border)] bg-white hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface)]"
+ : "border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface)]"
  }`}
  >
  <span className={`text-[15px] font-semibold ${selected ? "text-[var(--color-primary)]" : "text-[var(--color-text-primary)]"}`}>
@@ -458,7 +458,7 @@ export function QuestionSessionSheet({
  "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-1.5 transition-all",
  selected ? "border-[var(--color-primary)] bg-[var(--color-primary)]" : "border-[var(--color-border)] group-hover:border-[var(--color-border-strong)]"
  )}>
- {selected && <Icon icon="solar:check-circle-linear" className="h-3 w-3 text-white stroke-[3]" />}
+ {selected && <Icon icon="tabler:circle-check" className="h-3 w-3 text-white stroke-[3]" />}
  </div>
  </motion.button>
  );
@@ -470,7 +470,7 @@ export function QuestionSessionSheet({
 
  {/* Footer */}
  {!summary && session && (
- <div className="border-t border-[var(--color-border)] bg-white px-5 py-3.5 sm:px-8">
+ <div className="border-t border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-3.5 sm:px-8">
  <div className="mx-auto flex max-w-lg flex-row-reverse items-center justify-between">
  <button
  type="button"
@@ -485,11 +485,11 @@ export function QuestionSessionSheet({
  className="inline-flex h-10 min-w-[7rem] items-center justify-center gap-2 rounded-full bg-black px-5 text-xs font-bold text-white transition-opacity hover:opacity-90 active:scale-95 disabled:pointer-events-none disabled:opacity-30"
  >
  {isSubmitting ? (
- <Icon icon="solar:restart-circle-linear" className="h-3.5 w-3.5 animate-spin" />
+ <Icon icon="tabler:loader" className="h-3.5 w-3.5 animate-spin" />
  ) : (
  <>
  {step === session.questions.length - 1 ? "Complete" : "Continue"}
- <Icon icon="solar:arrow-right-linear" className="h-3.5 w-3.5" />
+ <Icon icon="tabler:arrow-right" className="h-3.5 w-3.5" />
  </>
  )}
  </button>
@@ -500,7 +500,7 @@ export function QuestionSessionSheet({
  disabled={step === 0}
  className="inline-flex h-10 items-center justify-center gap-1.5 rounded-full px-2 text-xs font-bold text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)] disabled:invisible"
  >
- <Icon icon="solar:arrow-left-linear" className="h-3.5 w-3.5" />
+ <Icon icon="tabler:arrow-left" className="h-3.5 w-3.5" />
  Back
  </button>
  </div>
@@ -512,4 +512,3 @@ export function QuestionSessionSheet({
  </AnimatePresence>
  );
 }
-

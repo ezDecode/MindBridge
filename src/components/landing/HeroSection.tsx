@@ -32,7 +32,7 @@ export function HeroSection() {
  <ul className="mx-auto flex flex-wrap justify-center gap-x-2 sm:gap-x-4 gap-y-2 max-w-[48rem]">
  {valueProps.map((prop, i) => (
  <li key={i} className="group flex cursor-pointer items-center gap-1.5 sm:gap-2 rounded-full px-2.5 py-1.5 sm:px-3 sm:py-1.25 transition-all duration-300 hover:bg-[var(--color-primary-light)]">
- <Icon icon="solar:check-circle-linear" className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0 text-[var(--color-primary)]" aria-hidden="true" />
+ <Icon icon="tabler:circle-check" className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0 text-[var(--color-primary)]" aria-hidden="true" />
  <Text as="span" variant="small" weight="medium" className="tracking-tight text-[var(--color-text-secondary)] text-center transition-colors duration-300 group-hover:text-[var(--color-text-primary)]">{prop}</Text>
  </li>
  ))}
@@ -52,7 +52,7 @@ export function HeroSection() {
  </Text>
  <Button href="/student/dashboard" size="sm" className="w-fit">
  Start for free
- <Icon icon="solar:arrow-right-linear" className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+ <Icon icon="tabler:arrow-right" className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
  </Button>
  </div>
  <div className="mt-auto">
@@ -80,7 +80,7 @@ export function HeroSection() {
  </Text>
  <Button href="/student/chat" size="sm" className="w-fit">
  Chat now
- <Icon icon="solar:arrow-right-linear" className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+ <Icon icon="tabler:arrow-right" className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
  </Button>
  </div>
  <div className="mt-auto">

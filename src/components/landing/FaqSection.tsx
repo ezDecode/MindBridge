@@ -62,7 +62,7 @@ export function FaqSection() {
  ? "bg-[var(--color-primary-light)] text-[var(--color-primary)] rotate-180" 
  : "bg-[var(--color-surface-warm)] text-[var(--color-text-secondary)]"
  }`}>
- <Icon icon="solar:alt-arrow-down-linear" className="h-5 w-5" />
+ <Icon icon="tabler:chevron-down" className="h-5 w-5" />
  </div>
  </button>
  

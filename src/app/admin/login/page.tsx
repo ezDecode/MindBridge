@@ -20,7 +20,7 @@ export default function AdminLoginPage() {
  <Card variant="elevated" padding="lg" className="rounded-md">
  <div className="flex items-center gap-3">
  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)]">
- <Icon icon="solar:shield-keyhole-linear" className="h-5 w-5" />
+ <Icon icon="tabler:shield-lock" className="h-5 w-5" />
  </span>
  <div>
  <Text as="p" variant="h4" weight="bold" className="md:text-h3">
@@ -64,7 +64,7 @@ export default function AdminLoginPage() {
  {state.error && (
  <div className="rounded-md border border-[var(--color-danger)] bg-red-50 p-4">
  <div className="flex items-start gap-3">
- <Icon icon="solar:danger-circle-linear" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-danger)]" />
+ <Icon icon="tabler:alert-circle" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-danger)]" />
  <Text as="p" variant="small" className="text-[var(--color-danger)]">
  {state.error}
  </Text>

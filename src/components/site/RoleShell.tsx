@@ -8,15 +8,15 @@ import type { NavItem } from "@/content/mindbridge";
 import { cn } from "@/lib/utils";
 
 const iconMap = {
- grid: "solar:widget-linear",
- chat: "solar:chat-round-linear",
- heart: "solar:heart-linear",
- quiz: "solar:notes-linear",
- library: "solar:book-linear",
- calendar: "solar:calendar-linear",
- shield: "solar:shield-linear",
- chart: "solar:pie-chart-linear",
- alert: "solar:danger-circle-linear",
+ grid: "tabler:layout-grid",
+ chat: "tabler:message-circle",
+ heart: "tabler:heart",
+ quiz: "tabler:notes",
+ library: "tabler:book",
+ calendar: "tabler:calendar",
+ shield: "tabler:shield",
+ chart: "tabler:chart-pie",
+ alert: "tabler:alert-circle",
 };
 
 interface RoleShellProps {
@@ -42,13 +42,13 @@ export function RoleShell({
  href="/"
  className="inline-flex items-center gap-2 px-2 text-label font-bold text-[var(--color-text-primary)] transition-opacity duration-200 hover:opacity-80"
  >
- <Icon icon="solar:crown-star-bold" className="h-5 w-5 text-[var(--color-primary)]" />
+ <Icon icon="tabler:crown" className="h-5 w-5 text-[var(--color-primary)]" />
  <span>MindBridge</span>
  </Link>
 
  <div>
  <Button variant="ghost" className="w-full justify-start text-[var(--color-text-primary)] border border-[var(--color-border-strong)] rounded-full h-10 px-4 bg-[var(--color-surface-tinted)] hover:bg-[var(--color-surface-strong)] shadow-sm">
- <Icon icon="solar:add-circle-linear" className="mr-2 h-4 w-4" />
+ <Icon icon="tabler:plus" className="mr-2 h-4 w-4" />
  New Entry
  </Button>
  </div>
@@ -59,7 +59,7 @@ export function RoleShell({
  {roleLabel} Panel
  </Text>
  {navItems.map((item) => {
- const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "solar:widget-linear";
+ const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "tabler:layout-grid";
  const isActive = pathname === item.href;
 
  return (
@@ -83,19 +83,19 @@ export function RoleShell({
 
  <div className="p-3 border-t border-[var(--color-border)]">
  <Link href="/counselor/dashboard" className="flex items-center gap-3 rounded-md px-3 py-2 text-[13px] font-medium text-[var(--color-info)] hover:bg-[var(--color-surface-tinted)] transition-colors">
- <Icon icon="solar:shield-user-linear" className="h-[1.125rem] w-[1.125rem]" />
+ <Icon icon="tabler:user-shield" className="h-[1.125rem] w-[1.125rem]" />
  Counselor Access
  </Link>
  <Link href="/admin/dashboard" className="flex items-center gap-3 rounded-md px-3 py-2 text-[13px] font-medium text-[var(--color-danger)] hover:bg-[var(--color-surface-tinted)] transition-colors">
- <Icon icon="solar:lock-keyhole-linear" className="h-[1.125rem] w-[1.125rem]" />
+ <Icon icon="tabler:lock" className="h-[1.125rem] w-[1.125rem]" />
  Admin Panel
  </Link>
  <Link href="/student/settings" className="flex items-center gap-3 rounded-md px-3 py-2 text-label font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-tinted)] hover:text-[var(--color-text-primary)] transition-colors mt-2 border-t border-[var(--color-border)] pt-3">
- <Icon icon="solar:user-circle-linear" className="h-[1.125rem] w-[1.125rem]" />
+ <Icon icon="tabler:user-circle" className="h-[1.125rem] w-[1.125rem]" />
  User Profile
  </Link>
  <Link href="/" className="flex items-center gap-3 rounded-md px-3 py-2 text-label font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-tinted)] hover:text-[var(--color-text-primary)] transition-colors mt-1">
- <Icon icon="solar:logout-linear" className="h-[1.125rem] w-[1.125rem]" />
+ <Icon icon="tabler:logout" className="h-[1.125rem] w-[1.125rem]" />
  Leave Dashboard
  </Link>
  </div>
@@ -104,7 +104,7 @@ export function RoleShell({
  <div className="flex flex-1 flex-col min-w-0">
  <div className="lg:hidden flex items-center justify-between border-b border-[var(--color-border)] p-4 bg-[var(--color-background)]">
  <Link href="/" className="inline-flex items-center gap-2 font-bold text-[var(--color-text-primary)]">
- <Icon icon="solar:crown-star-bold" className="h-5 w-5 text-[var(--color-primary)]" />
+ <Icon icon="tabler:crown" className="h-5 w-5 text-[var(--color-primary)]" />
  <span>MindBridge</span>
  </Link>
  </div>
@@ -112,7 +112,7 @@ export function RoleShell({
  <div className="overflow-x-auto lg:hidden border-b border-[var(--color-border)]">
  <div className="flex min-w-max gap-2 p-3">
  {navItems.map((item) => {
- const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "solar:widget-linear";
+ const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "tabler:layout-grid";
  const isActive = pathname === item.href;
  return (
  <Link
@@ -141,5 +141,4 @@ export function RoleShell({
  </main>
  );
 }
-
 

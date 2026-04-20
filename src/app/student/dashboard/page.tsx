@@ -298,25 +298,25 @@ export default function StudentDashboardPage() {
  label: 'Check-in streak',
  value: `${data?.streak || 0} days`,
  note: data?.streak ? 'Keep it going! 🔥' : 'Start your streak today',
- icon: <Icon icon="solar:graph-up-linear" className="h-5 w-5 text-[var(--color-primary)]" />,
+ icon: <Icon icon="tabler:trending-up" className="h-5 w-5 text-[var(--color-primary)]" />,
  },
  {
  label: 'Next session',
  value: data?.nextSession || 'None',
  note: data?.nextSession ? 'Upcoming booking' : 'Book when ready',
- icon: <Icon icon="solar:calendar-linear" className="h-5 w-5 text-[var(--color-info)]" />,
+ icon: <Icon icon="tabler:calendar" className="h-5 w-5 text-[var(--color-info)]" />,
  },
  {
  label: 'Latest scan',
  value: latestAssessmentLabel,
  note: latestAssessmentNote,
- icon: <Icon icon="solar:pulse-linear" className="h-5 w-5 text-[var(--color-primary)]" />,
+ icon: <Icon icon="tabler:activity-heartbeat" className="h-5 w-5 text-[var(--color-primary)]" />,
  },
  {
  label: 'Active chats',
  value: `${data?.activeChats || 0}`,
  note: 'This week',
- icon: <Icon icon="solar:chat-round-linear" className="h-5 w-5 text-[var(--color-success)]" />,
+ icon: <Icon icon="tabler:message-circle" className="h-5 w-5 text-[var(--color-success)]" />,
  },
  ]
 

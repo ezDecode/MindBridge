@@ -39,7 +39,7 @@ export function SuggestionChips({
  onClick={() => onSelect(suggestion)}
  className="inline-flex min-h-9 items-center gap-2 rounded-full bg-white/80 px-3.5 py-2 text-sm font-medium text-[var(--color-text-secondary)] shadow-sm transition-all duration-150 hover:bg-white hover:text-[var(--color-text-primary)] hover:shadow-md"
  >
- <Icon icon="solar:chat-round-linear" className="h-3.5 w-3.5 text-[var(--color-primary)]" />
+ <Icon icon="tabler:message-circle" className="h-3.5 w-3.5 text-[var(--color-primary)]" />
  <span>{suggestion}</span>
  </motion.button>
  ))}

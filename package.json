@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@iconify-json/solar": "^1.2.5",
+    "@iconify-json/tabler": "^1.2.33",
     "@iconify/react": "^6.0.2",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",

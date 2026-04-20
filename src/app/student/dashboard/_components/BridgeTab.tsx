@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { Icon } from '@iconify/react';
@@ -70,6 +70,7 @@ function MoodTooltip({
  );
 }
 
+import { DashboardSidebar } from "./DashboardSidebar";
 export function BridgeTab({
  data,
  userName,
@@ -85,7 +86,8 @@ export function BridgeTab({
  activeTab,
  setActiveTab,
 }: BridgeTabProps) {
- const latestAssessment = data?.latestAssessment;
+ const [sidebarOpen, setSidebarOpen] = useState(false);
+  const latestAssessment = data?.latestAssessment;
  const assessmentLabel = latestAssessment ? assessmentTone[latestAssessment.severity] : "No guided scan yet";
  const assessmentCopy = latestAssessment?.criteriaFlagged.length
  ? latestAssessment.criteriaFlagged
@@ -95,56 +97,32 @@ export function BridgeTab({
  : "Run a question set for a richer mood read.";
 
  return (
- <div className="flex h-full min-h-0 flex-col bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-surface-warm),white_18%)_0%,var(--color-surface)_18rem)]">
- <header className="border-b border-[var(--color-border)] px-4 py-4 sm:px-6">
- <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
- <div>
- <Text as="p" variant="small" className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--color-text-muted)]">
- Dashboard
- </Text>
- <Text as="h1" variant="h5" weight="bold" className="mt-1 text-[var(--color-text-primary)]">
- Support Rhythm
- </Text>
- </div>
-
- <div className="flex flex-wrap items-center gap-3">
- <div className="flex items-center gap-1 rounded-full bg-[var(--color-surface)] p-1 shadow-sm">
- <button
- onClick={() => {
- setActiveTab("mind");
- onSwitchToMind();
- }}
- className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
- activeTab === "mind"
- ? "bg-[var(--color-text-primary)] text-white"
- : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
- }`}
- >
- Chat
- </button>
- <button
- onClick={() => setActiveTab("bridge")}
- className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
- activeTab === "bridge"
- ? "bg-[var(--color-text-primary)] text-white"
- : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
- }`}
- >
- Dashboard
- </button>
- </div>
-
- <button
- type="button"
- onClick={onOpenQuestionnaire}
- className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[var(--color-primary)] px-5 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(244,125,75,0.24)]"
- >
- <Icon icon="solar:bolt-linear" className="h-4 w-4" />
- Guided questions
- </button>
- </div>
- </div>
- </header>
+    <>
+      <div className="flex h-full min-h-0 bg-[var(--color-surface-tinted)] lg:bg-[var(--color-background)]">
+        <DashboardSidebar
+          userName={userName}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          onSwitchToBridge={() => {}}
+          onSwitchToMind={onSwitchToMind}
+          startNewSession={() => {}}
+          onOpenQuestionnaire={onOpenQuestionnaire}
+          setShowCheckIn={() => {}}
+          setShowBookingModal={() => {}}
+          setShowAnalyticsModal={() => {}}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+        />
+        <section className="relative flex min-h-0 min-w-0 flex-1 flex-col bg-[var(--color-surface)] lg:m-2 lg:rounded-[1.5rem] lg:border lg:border-[var(--color-border)] lg:shadow-sm">
+          <header className="absolute top-0 left-0 z-20 flex w-full items-center p-4 lg:hidden bg-gradient-to-b from-[var(--color-background)] to-transparent">
+             <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface)] text-[var(--color-text-secondary)] shadow-sm border border-[var(--color-border)]"
+            >
+              <Icon icon="tabler:menu-2" className="h-5 w-5" />
+            </button>
+          </header>
 
  <div className="flex-1 overflow-y-auto px-4 py-5 sm:px-6">
  <div className="mx-auto max-w-6xl">
@@ -163,11 +141,11 @@ export function BridgeTab({
 
  <div className="mt-5 flex flex-wrap gap-3">
  <Button onClick={onSwitchToMind} size="sm" className="gap-2">
- <Icon icon="solar:chat-round-linear" className="h-4 w-4" />
+ <Icon icon="tabler:message-circle" className="h-4 w-4" />
  Open chat
  </Button>
  <Button onClick={onOpenQuestionnaire} variant="warm" size="sm" className="gap-2">
- <Icon icon="solar:bolt-linear" className="h-4 w-4" />
+ <Icon icon="tabler:bolt" className="h-4 w-4" />
  Start question set
  </Button>
  </div>
@@ -176,7 +154,7 @@ export function BridgeTab({
  <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)]/85 p-5">
  <div className="flex items-start gap-3">
  <div className="flex h-11 w-11 items-center justify-center rounded-md bg-[var(--color-surface-warm)] text-[var(--color-primary)]">
- <Icon icon="solar:compass-linear" className="h-5 w-5" />
+ <Icon icon="tabler:compass" className="h-5 w-5" />
  </div>
  <div className="min-w-0">
  <Text as="p" variant="small" weight="bold" className="text-[var(--color-text-primary)]">
@@ -196,7 +174,7 @@ export function BridgeTab({
  onClick={onOpenQuestionnaire}
  className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[var(--color-surface)] px-4 text-sm font-semibold text-[var(--color-text-primary)] shadow-sm hover:bg-[var(--color-surface-warm)] transition-colors"
  >
- <Icon icon="solar:bolt-linear" className="h-4 w-4" />
+ <Icon icon="tabler:bolt" className="h-4 w-4" />
  Refresh question set
  </button>
  </div>
@@ -316,14 +294,14 @@ export function BridgeTab({
 
  <div className="mt-5 grid gap-3">
  <CompactAction
- icon={<Icon icon="solar:bolt-linear" className="h-4 w-4" />}
+ icon={<Icon icon="tabler:bolt" className="h-4 w-4" />}
  title="Guided question check-in"
  copy="Fresh mixed-category questions and a saved assessment."
  action="Start now"
  onClick={onOpenQuestionnaire}
  />
  <CompactAction
- icon={<Icon icon="solar:chat-round-linear" className="h-4 w-4" />}
+ icon={<Icon icon="tabler:message-circle" className="h-4 w-4" />}
  title="Talk in chat"
  copy="Use the companion when you want to unpack something in real time."
  action="Open chat"
@@ -335,7 +313,7 @@ export function BridgeTab({
  >
  <div className="flex items-start gap-3">
  <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--color-surface-warm)] text-[var(--color-primary)]">
- <Icon icon="solar:calendar-linear" className="h-4 w-4" />
+ <Icon icon="tabler:calendar" className="h-4 w-4" />
  </div>
  <div className="min-w-0">
  <Text as="p" variant="small" weight="bold" className="text-[var(--color-text-primary)]">
@@ -346,7 +324,7 @@ export function BridgeTab({
  </Text>
  <span className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-text-primary)]">
  Open booking
- <Icon icon="solar:arrow-right-linear" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+ <Icon icon="tabler:arrow-right" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
  </span>
  </div>
  </div>
@@ -365,7 +343,7 @@ export function BridgeTab({
  </Text>
  </div>
  <Button href="/student/resources" variant="ghost" size="sm" className="gap-1">
- View all <Icon icon="solar:arrow-right-linear" className="h-4 w-4" />
+ View all <Icon icon="tabler:arrow-right" className="h-4 w-4" />
  </Button>
  </div>
 
@@ -379,7 +357,7 @@ export function BridgeTab({
  className="group rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-warm)]"
  >
  <div className="flex items-center gap-2 text-[var(--color-text-muted)]">
- <Icon icon="solar:book-linear" className="h-4 w-4" />
+ <Icon icon="tabler:book" className="h-4 w-4" />
  <Text as="span" variant="small" className="text-[var(--color-text-secondary)]">
  {resource.type}
  </Text>
@@ -393,7 +371,7 @@ export function BridgeTab({
  </Text>
  <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--color-text-primary)]">
  Open
- <Icon icon="solar:arrow-right-linear" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+ <Icon icon="tabler:arrow-right" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
  </span>
  </div>
  </a>
@@ -403,7 +381,9 @@ export function BridgeTab({
  </div>
  </div>
  </div>
+ </section>
  </div>
+ </>
  );
 }
 
@@ -452,12 +432,16 @@ function CompactAction({
  </Text>
  <span className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[var(--color-text-primary)]">
  {action}
- <Icon icon="solar:arrow-right-linear" className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+ <Icon icon="tabler:arrow-right" className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
  </span>
  </div>
  </div>
  </button>
  );
 }
+
+
+
+
 
 

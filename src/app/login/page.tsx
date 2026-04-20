@@ -72,7 +72,7 @@ function LoginForm() {
             <Card variant="elevated" padding="lg" className="rounded-2xl">
               <div className="flex items-center gap-3">
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)]">
-                  <Icon icon="solar:lock-password-linear" className="h-5 w-5" />
+                  <Icon icon="tabler:lock-password" className="h-5 w-5" />
                 </span>
                 <div>
                   <Text as="p" variant="h4" weight="bold" className="md:text-h3">
@@ -86,7 +86,7 @@ function LoginForm() {
 
               <form action={signInWithGoogle} className="mt-6 md:mt-8">
                 <Button type="submit" variant="ghost" className="w-full border border-[var(--color-border)] bg-[var(--color-surface)]">
-                  <Icon icon="flat-color-icons:google" className="mr-2 h-5 w-5" />
+                  <Icon icon="tabler:brand-google" className="mr-2 h-5 w-5" />
                   Continue with Google
                 </Button>
               </form>
@@ -149,7 +149,7 @@ function LoginForm() {
                 {state.error && (
                   <div className="rounded-md border border-[var(--color-danger)] bg-red-50 p-4">
                     <div className="flex items-start gap-3">
-                      <Icon icon="solar:danger-circle-linear" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-danger)]" />
+                      <Icon icon="tabler:alert-circle" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-danger)]" />
                       <Text as="p" variant="small" className="text-[var(--color-danger)]">
                         {state.error}
                       </Text>
@@ -160,7 +160,7 @@ function LoginForm() {
                 {state.success && (
                   <div className="rounded-md border border-[var(--color-success)] bg-green-50 p-4">
                     <div className="flex items-start gap-3">
-                      <Icon icon="solar:check-circle-linear" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-success)]" />
+                      <Icon icon="tabler:circle-check" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-success)]" />
                       <Text as="p" variant="small" className="text-[var(--color-success)]">
                         {state.message}
                       </Text>
@@ -170,7 +170,7 @@ function LoginForm() {
 
                 <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-gray-50)] p-4">
                   <div className="flex items-start gap-3">
-                    <Icon icon="solar:shield-check-linear" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-primary)]" />
+                    <Icon icon="tabler:shield-check" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-primary)]" />
                     <Text as="p" variant="small" color="secondary">
                       {authMode === 'login' ? "Secure sign-in. Data remains private." : authMode === 'signup' ? "Creating an account gives you complete access." : "We'll send a secure login link to your email."}
                     </Text>
@@ -186,13 +186,13 @@ function LoginForm() {
                 >
                   {isPending ? (
                     <>
-                      <Icon icon="solar:restart-circle-linear" className="h-4 w-4 animate-spin" />
+                      <Icon icon="tabler:loader" className="h-4 w-4 animate-spin" />
                       {authMode === 'login' ? "Signing in..." : authMode === 'signup' ? "Creating..." : "Sending..."}
                     </>
                   ) : (
                     <>
                       {authMode === 'login' ? "Sign in" : authMode === 'signup' ? "Create Account" : "Send Magic Link"}
-                      <Icon icon="solar:arrow-right-linear" className="h-4 w-4" />
+                      <Icon icon="tabler:arrow-right" className="h-4 w-4" />
                     </>
                   )}
                 </Button>

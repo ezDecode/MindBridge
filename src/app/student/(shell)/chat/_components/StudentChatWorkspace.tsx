@@ -330,7 +330,7 @@ export function StudentChatWorkspace() {
  <div className="flex min-h-[70svh] items-center justify-center">
  <div className="w-full max-w-lg rounded-[28px] border border-black/10 bg-white p-8 text-center shadow-[0_30px_70px_rgba(15,23,42,0.08)]">
  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[20px] bg-black text-white">
- <Icon icon="solar:chat-round-linear" className="h-7 w-7" />
+ <Icon icon="tabler:message-circle" className="h-7 w-7" />
  </div>
  <Text as="h1" variant="h5" weight="bold" className="mt-6 text-black">
  Sign in to open your chat workspace
@@ -426,7 +426,7 @@ function EmptyState({
  className="flex flex-col items-center"
  >
  <div className="flex h-16 w-16 items-center justify-center rounded-[20px] border border-black/10 bg-[var(--color-surface)] shadow-[0_12px_28px_rgba(15,23,42,0.08)]">
- <Icon icon="solar:chat-round-linear" className="h-8 w-8 text-[var(--color-primary)]" />
+ <Icon icon="tabler:message-circle" className="h-8 w-8 text-[var(--color-primary)]" />
  </div>
  <div className="mt-6 flex flex-col items-center gap-2">
  <div className="flex items-center gap-2.5">
@@ -473,7 +473,7 @@ function ConversationPane({
  isUser ? "bg-black" : "bg-black"
  )}
  >
- {isUser ? <Icon icon="solar:user-linear" className="h-4 w-4" /> : <Icon icon="solar:chat-round-linear" className="h-4 w-4" />}
+ {isUser ? <Icon icon="tabler:user" className="h-4 w-4" /> : <Icon icon="tabler:message-circle" className="h-4 w-4" />}
  </div>
 
  <div
@@ -516,10 +516,10 @@ function WorkspaceComposer({
  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
  const quickActions = [
- { icon: "solar:question-circle-linear", title: "Start guided questions", prompt: "I'd like to start a guided reflection." },
- { icon: "solar:smile-circle-linear", title: "Quick mood log", prompt: "I want to log my current mood." },
- { icon: "solar:calendar-add-linear", title: "Book session", prompt: "I need to book a session with a counselor." },
- { icon: "solar:chart-square-linear", title: "View analytics", prompt: "Show my mood analytics." }
+ { icon: "tabler:question-circle", title: "Start guided questions", prompt: "I'd like to start a guided reflection." },
+ { icon: "tabler:mood-smile", title: "Quick mood log", prompt: "I want to log my current mood." },
+ { icon: "tabler:calendar-plus", title: "Book session", prompt: "I need to book a session with a counselor." },
+ { icon: "tabler:chart-bar", title: "View analytics", prompt: "Show my mood analytics." }
  ];
 
  useEffect(() => {
@@ -592,7 +592,7 @@ function WorkspaceComposer({
  className="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 disabled:bg-black/5 disabled:text-black/20 enabled:bg-black enabled:text-white enabled:hover:scale-105 enabled:active:scale-90"
  aria-label="Send message"
  >
- <Icon icon="solar:plain-linear" className="h-5 w-5" />
+ <Icon icon="tabler:send" className="h-5 w-5" />
  </button>
  )}
  </div>
@@ -636,7 +636,7 @@ function WorkspaceComposer({
  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-black/40 transition-colors hover:bg-black/5 hover:text-black/80"
  aria-label="Dismiss quick actions"
  >
- <Icon icon="solar:close-circle-linear" className="h-[1.125rem] w-[1.125rem]" />
+ <Icon icon="tabler:x" className="h-[1.125rem] w-[1.125rem]" />
  </button>
  </div>
  </div>
@@ -706,4 +706,3 @@ function TypingDots() {
 function truncateLabel(value: string) {
  return value.length > 34 ? `${value.slice(0, 33)}…` : value;
 }
-

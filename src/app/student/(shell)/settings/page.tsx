@@ -155,13 +155,13 @@ export default function UserSettingsDashboard() {
  : 'text-[var(--color-danger)]'
  }`}
  >
- <Icon icon={message.type === 'success' ? 'solar:check-circle-linear' : 'solar:danger-circle-linear'} className="h-4 w-4" />
+ <Icon icon={message.type === 'success' ? 'tabler:circle-check' : 'tabler:alert-circle'} className="h-4 w-4" />
  {message.text}
  </motion.div>
  )}
  </div>
  </AnimatePresence>
- <Button onClick={handleSave} variant="primary" size="sm" className="rounded-md h-9 px-5 bg-white text-black hover:bg-gray-100" disabled={saving}>
+ <Button onClick={handleSave} variant="primary" size="sm" className="rounded-md h-9 px-5 bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-warm)]" disabled={saving}>
  {saving ? 'Saving...' : 'Save Profile'}
  </Button>
  </div>
@@ -180,7 +180,7 @@ export default function UserSettingsDashboard() {
  End your current session safely.
  </Text>
  </div>
- <Icon icon="solar:logout-2-linear" className="h-5 w-5 text-[var(--color-danger)]" />
+ <Icon icon="tabler:logout-2" className="h-5 w-5 text-[var(--color-danger)]" />
  </div>
  </div>
  </section>

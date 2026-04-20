@@ -93,15 +93,15 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
  transition={{ duration: 2, repeat: Infinity }}
  className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--color-danger-soft)] shadow-sm"
  >
- <Icon icon="solar:heart-linear" className="h-5 w-5 text-[var(--color-danger)]" />
+ <Icon icon="tabler:heart" className="h-5 w-5 text-[var(--color-danger)]" />
  </motion.div>
  <Text as="p" variant="h6" weight="bold">How are you feeling?</Text>
  </div>
  <button
  onClick={onClose}
- className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-text-primary)]"
+ className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-surface)] text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-text-primary)]"
  >
- <Icon icon="solar:close-circle-linear" className="h-5 w-5" />
+ <Icon icon="tabler:x" className="h-5 w-5" />
  </button>
  </div>
 
@@ -162,7 +162,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
  exit={{ scale: 0, opacity: 0 }}
  className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-md"
  >
- <Icon icon="solar:check-circle-linear" className="h-3 w-3" />
+ <Icon icon="tabler:circle-check" className="h-3 w-3" />
  </motion.div>
  )}
  </AnimatePresence>
@@ -188,12 +188,12 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
  >
  {isLoading ? (
  <>
- <Icon icon="solar:restart-circle-linear" className="h-4 w-4 animate-spin" />
+ <Icon icon="tabler:loader" className="h-4 w-4 animate-spin" />
  Saving...
  </>
  ) : isSaved ? (
  <>
- <Icon icon="solar:check-circle-linear" className="h-4 w-4" />
+ <Icon icon="tabler:circle-check" className="h-4 w-4" />
  Saved!
  </>
  ) : (
@@ -214,4 +214,3 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
  </AnimatePresence>
  );
 }
-

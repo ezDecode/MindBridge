@@ -28,11 +28,11 @@ export function AnalyticsModal({ isOpen, onClose, onGoToDashboard }: AnalyticsMo
  animate={{ opacity: 1, scale: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.95, y: 10 }}
  transition={{ duration: 0.2 }}
- className="w-full max-w-sm overflow-hidden rounded-[24px] bg-white shadow-[0_30px_60px_rgba(0,0,0,0.15)]"
+ className="w-full max-w-sm overflow-hidden rounded-[24px] bg-[var(--color-surface)] shadow-[0_30px_60px_rgba(0,0,0,0.15)]"
  >
  <div className="flex flex-col items-center p-8 text-center">
  <div className="flex h-16 w-16 items-center justify-center rounded-[20px] bg-[var(--color-primary-light)] text-[var(--color-primary)]">
- <Icon icon="solar:graph-up-linear" className="h-8 w-8" />
+ <Icon icon="tabler:trending-up" className="h-8 w-8" />
  </div>
 
  <Text as="h2" variant="h6" weight="semibold" className="mt-5 text-[var(--color-text-primary)]">

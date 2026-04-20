@@ -145,7 +145,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  <motion.div
  className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--color-primary-light)]"
  >
- <Icon icon="solar:calendar-linear" className="h-4 w-4 text-[var(--color-primary)]" />
+ <Icon icon="tabler:calendar" className="h-4 w-4 text-[var(--color-primary)]" />
  </motion.div>
  <Text as="p" variant="h6" weight="bold">Book a session</Text>
  </div>
@@ -153,7 +153,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  onClick={onClose}
  className="flex h-8 w-8 items-center justify-center rounded-md text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-strong)] hover:text-[var(--color-text-primary)]"
  >
- <Icon icon="solar:close-circle-linear" className="h-4 w-4" />
+ <Icon icon="tabler:x" className="h-4 w-4" />
  </button>
  </div>
 
@@ -169,7 +169,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
  className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-success-light)] shadow-lg shadow-[var(--color-success)]/20"
  >
- <Icon icon="solar:check-circle-linear" className="h-7 w-7 text-[var(--color-success)]" />
+ <Icon icon="tabler:circle-check" className="h-7 w-7 text-[var(--color-success)]" />
  </motion.div>
  <Text as="p" variant="h6" weight="bold" className="mt-4">
  Booking confirmed! 🎉
@@ -254,7 +254,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  }`}
  >
  <div className="flex flex-col items-center gap-0.5">
- <Icon icon="solar:clock-circle-linear" className="h-3.5 w-3.5 text-[var(--color-text-muted)]" />
+ <Icon icon="tabler:clock" className="h-3.5 w-3.5 text-[var(--color-text-muted)]" />
  <span className="font-medium">{formatSlotTime(slot)}</span>
  </div>
  </motion.button>
@@ -280,7 +280,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  >
  <div className="flex items-center gap-3 rounded-md bg-gradient-to-r from-[var(--color-primary-light)]/30 to-[var(--color-primary-light)]/10 px-3 py-2.5">
  <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--color-primary-light)]">
- <Icon icon="solar:user-linear" className="h-5 w-5 text-[var(--color-primary)]" />
+ <Icon icon="tabler:user" className="h-5 w-5 text-[var(--color-primary)]" />
  </div>
  <div className="flex-1">
  <Text as="p" variant="small" color="secondary">
@@ -295,7 +295,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  animate={{ scale: 1 }}
  className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-success)]"
  >
- <Icon icon="solar:check-circle-linear" className="h-3.5 w-3.5 text-white" />
+ <Icon icon="tabler:circle-check" className="h-3.5 w-3.5 text-white" />
  </motion.div>
  </div>
  </motion.div>
@@ -311,12 +311,12 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  >
  {submitting ? (
  <>
- <Icon icon="solar:restart-circle-linear" className="h-4 w-4 animate-spin" />
+ <Icon icon="tabler:loader" className="h-4 w-4 animate-spin" />
  Booking...
  </>
  ) : (
  <>
- <Icon icon="solar:calendar-linear" className="h-4 w-4" />
+ <Icon icon="tabler:calendar" className="h-4 w-4" />
  Confirm booking
  </>
  )}
@@ -330,4 +330,3 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  </AnimatePresence>
  );
 }
-
