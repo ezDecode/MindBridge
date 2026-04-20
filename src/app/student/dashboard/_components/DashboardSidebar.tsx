@@ -68,7 +68,7 @@ export function DashboardSidebar({
             <button
               type="button"
               onClick={() => setSidebarOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--color-text-muted)] hover:bg-[var(--color-surface-warm)] lg:hidden"
+              className="flex h-8 w-8 items-center justify-center rounded-md text-[var(--color-text-muted)] hover:bg-[var(--color-surface-warm)] lg:hidden"
             >
               <Icon icon="tabler:x" className="h-5 w-5" />
             </button>
@@ -83,7 +83,7 @@ export function DashboardSidebar({
                }
                startNewSession();
             }}
-            className="group flex w-full items-center justify-between rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 text-sm font-medium text-[var(--color-text-primary)] shadow-[var(--shadow-sm)] transition-all hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-warm)] hover:shadow-[var(--shadow-md)] active:scale-[0.98]"
+            className="group flex w-full items-center justify-between rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 text-sm font-medium text-[var(--color-text-primary)] shadow-[var(--shadow-sm)] transition-all hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-warm)] hover:shadow-[var(--shadow-md)] active:scale-[0.98]"
           >
             <div className="flex items-center gap-2">
               <Icon icon="tabler:plus" className="h-5 w-5 text-[var(--color-text-muted)] group-hover:text-[var(--color-text-primary)]" />
@@ -188,7 +188,7 @@ export function DashboardSidebar({
         <div className="flex flex-col gap-1 px-4 mt-auto">
            <button className="flex w-full items-center justify-between rounded-lg px-2 py-2.5 text-sm font-medium text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-surface-warm)]">
              <div className="flex items-center gap-3">
-               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-info-soft)] text-[var(--color-info)]">
+               <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--color-info-soft)] text-[var(--color-info)]">
                  <Icon icon="tabler:stars" className="h-4 w-4" />
                </div>
                <div className="flex flex-col items-start gap-0">
@@ -202,7 +202,7 @@ export function DashboardSidebar({
 
            <a href="/student/settings" className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm font-medium text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-surface-warm)]">
              <div className="flex items-center gap-3">
-               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-primary)] text-white">
+               <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--color-primary)] text-white">
                  <span className="text-xs uppercase font-bold">{userName.charAt(0)}</span>
                </div>
                <span className="text-sm font-medium">{userName}</span>

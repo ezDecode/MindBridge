@@ -74,10 +74,10 @@ export function ChatInput({
  <motion.form
  onSubmit={handleSubmit}
  className={cn(
- "relative flex w-full flex-col overflow-hidden rounded-[22px] border transition-all duration-300 bg-[var(--color-surface)]",
+ "relative flex w-full flex-col overflow-hidden rounded-[22px] border bg-[var(--color-surface)] transition-all duration-300",
  isFocused
- ? "border-[var(--color-primary)] ring-2 ring-[var(--color-primary-light)] shadow-sm"
- : "border-[var(--color-border)] shadow-sm hover:border-[var(--color-border-strong)]"
+ ? "border-[var(--color-primary)] ring-4 ring-[var(--color-primary-light)] shadow-[0_18px_42px_rgba(244,125,75,0.14)]"
+ : "border-[var(--color-border)] shadow-[0_14px_34px_rgba(45,41,38,0.08)] hover:border-[var(--color-border-strong)]"
  )}
  >
  <div className="flex flex-row items-end px-3 pt-3 pb-2">
@@ -112,7 +112,7 @@ export function ChatInput({
  variant="warm"
  size="sm"
  onClick={onStop}
- className="h-10 w-10 rounded-full border border-[var(--color-danger)]/30 bg-[var(--color-danger-soft)] text-[var(--color-danger)] transition-colors duration-200 hover:bg-[var(--color-danger-soft)]"
+ className="h-10 w-10 rounded-md border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] text-[var(--color-danger)] transition-colors duration-200 hover:bg-[var(--color-danger-soft)]"
  aria-label="Stop generating"
  >
  <Icon icon="tabler:player-stop" className="h-4 w-4" />
@@ -131,10 +131,10 @@ export function ChatInput({
  variant="warm"
  size="sm"
  disabled={!input.trim() || disabled}
- className={`h-10 w-10 rounded-full transition-all duration-200 ease-out ${
+ className={`h-10 w-10 rounded-md border transition-all duration-200 ease-out ${
  input.trim() 
- ? 'bg-[var(--color-primary)] text-white shadow-[0_12px_22px_rgba(244,125,75,0.24)] hover:bg-[var(--color-primary-dark)]' 
- : 'bg-[var(--color-surface-strong)] text-[var(--color-text-muted)]'
+ ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-white shadow-[0_12px_22px_rgba(244,125,75,0.24)] hover:bg-[var(--color-primary-dark)] hover:border-[var(--color-primary-dark)]' 
+ : 'border-[var(--color-border)] bg-[var(--color-surface-strong)] text-[var(--color-text-muted)]'
  }`}
  aria-label="Send message"
  >
@@ -173,7 +173,7 @@ export function ChatInput({
  }
  }}
  title={action.prompt}
- className="flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-all hover:-translate-y-0.5 hover:border-[var(--color-primary)] hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-primary)] active:translate-y-0"
+ className="flex items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-all hover:-translate-y-0.5 hover:border-[var(--color-primary)] hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-primary)] active:translate-y-0"
  aria-label={action.prompt}
  >
  <Icon icon={action.icon} className="h-4 w-4" />
@@ -186,7 +186,7 @@ export function ChatInput({
  <button
  type="button"
  onClick={() => setShowTools(false)}
- className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-text-primary)]"
+ className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-text-primary)]"
  aria-label="Dismiss quick actions"
  >
  <Icon icon="tabler:x" className="h-[1.125rem] w-[1.125rem]" />
@@ -205,4 +205,3 @@ export function ChatInput({
  </div>
  )
 }
-

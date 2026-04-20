@@ -196,7 +196,7 @@ export function StudentChatWorkspace() {
 
  const urlParam = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("session") : null;
  const storedSessionId = typeof window !== "undefined" ? sessionStorage.getItem(STORAGE_KEY) : null;
- let activeSessionId = urlParam || storedSessionId || generateSessionId();
+ const activeSessionId = urlParam || storedSessionId || generateSessionId();
 
  if (typeof window !== "undefined") {
  sessionStorage.setItem(STORAGE_KEY, activeSessionId);
@@ -433,7 +433,7 @@ function EmptyState({
  <span className="text-[1.8rem] font-bold tracking-[-0.04em] text-[var(--color-text-primary)] sm:text-[2.2rem]">MindBridge</span>
  <span className="rounded-full bg-[var(--color-primary-soft)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--color-primary)]">Companion</span>
  </div>
- <p className="mt-2 text-sm text-[var(--color-text-secondary)]">I'm here to listen, support, and help you find clarity.</p>
+ <p className="mt-2 text-sm text-[var(--color-text-secondary)]">I&apos;m here to listen, support, and help you find clarity.</p>
  </div>
  </motion.div>
  </div>
@@ -555,10 +555,10 @@ function WorkspaceComposer({
  <form
  onSubmit={handleSubmit}
  className={cn(
- "flex flex-col min-h-16 rounded-[24px] border bg-white transition-all duration-300 ease-[var(--ease-out)] overflow-hidden",
- isFocused || showTools
- ? "border-black shadow-[0_20px_50px_rgba(0,0,0,0.12)]"
- : "border-black/10 shadow-[0_12px_40px_rgba(0,0,0,0.06)]"
+ "flex min-h-16 flex-col overflow-hidden rounded-[24px] border bg-[var(--color-surface)] transition-all duration-300 ease-[var(--ease-out)]",
+ isFocused
+ ? "border-[var(--color-primary)] ring-4 ring-[var(--color-primary-light)] shadow-[0_20px_44px_rgba(244,125,75,0.14)]"
+ : "border-[var(--color-border)] shadow-[0_14px_34px_rgba(45,41,38,0.08)] hover:border-[var(--color-border-strong)]"
  )}
  >
  <div className="flex items-center gap-3 px-5 pt-3.5 pb-3">
@@ -572,7 +572,7 @@ function WorkspaceComposer({
  onKeyDown={handleKeyDown}
  placeholder="Tell MindBridge what feels heavy, noisy, or hard to name..."
  disabled={disabled || isLoading}
- className="min-h-6 flex-1 resize-none bg-transparent px-2 py-1 text-[15px] leading-6 text-black placeholder:text-black/30 focus:outline-none disabled:cursor-not-allowed"
+ className="min-h-6 flex-1 resize-none bg-transparent px-2 py-1 text-[15px] leading-6 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none disabled:cursor-not-allowed"
  />
 
  <div className="mb-0.5">
@@ -580,16 +580,16 @@ function WorkspaceComposer({
  <button
  type="button"
  onClick={onStop}
- className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white transition-all duration-200 hover:scale-105 active:scale-90"
+ className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] text-[var(--color-danger)] transition-all duration-200 hover:scale-105 active:scale-90"
  aria-label="Stop generating"
  >
- <span className="h-3.5 w-3.5 rounded-[3px] bg-white" />
+ <span className="h-3.5 w-3.5 rounded-[3px] bg-current" />
  </button>
  ) : (
  <button
  type="submit"
  disabled={!value.trim() || disabled}
- className="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 disabled:bg-black/5 disabled:text-black/20 enabled:bg-black enabled:text-white enabled:hover:scale-105 enabled:active:scale-90"
+ className="flex h-10 w-10 items-center justify-center rounded-md border transition-all duration-200 disabled:border-[var(--color-border)] disabled:bg-[var(--color-surface-strong)] disabled:text-[var(--color-text-muted)] enabled:border-[var(--color-primary)] enabled:bg-[var(--color-primary)] enabled:text-white enabled:hover:scale-105 enabled:hover:bg-[var(--color-primary-dark)] enabled:hover:border-[var(--color-primary-dark)] enabled:active:scale-90"
  aria-label="Send message"
  >
  <Icon icon="tabler:send" className="h-5 w-5" />
@@ -605,9 +605,9 @@ function WorkspaceComposer({
  animate={{ height: "auto", opacity: 1 }}
  exit={{ height: 0, opacity: 0 }}
  transition={{ duration: 0.2 }}
- className="border-t border-black/5"
+ className="border-t border-[var(--color-border-light)]"
  >
- <div className="flex items-center justify-between px-4 py-3 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.01),rgba(0,0,0,0.03))]">
+ <div className="flex items-center justify-between bg-[var(--color-surface)] px-4 py-3">
  <div className="flex flex-wrap items-center gap-2">
  {quickActions.map((action, i) => (
  <button
@@ -621,7 +621,7 @@ function WorkspaceComposer({
  textareaRef.current.focus();
  }
  }}
- className="flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3 py-1.5 text-xs font-medium text-black/70 transition-all hover:-translate-y-[1px] hover:border-black/20 hover:bg-black/[0.02] hover:text-black hover:shadow-sm active:translate-y-0"
+ className="flex items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-all hover:-translate-y-[1px] hover:border-[var(--color-primary)] hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-primary)] hover:shadow-sm active:translate-y-0"
  >
  <Icon icon={action.icon} className="h-4 w-4" />
  <span>{action.title}</span>
@@ -629,11 +629,11 @@ function WorkspaceComposer({
  ))}
  </div>
  <div className="ml-4 flex shrink-0 items-center">
- <div className="mr-2 h-4 w-px bg-black/10" />
+ <div className="mr-2 h-4 w-px bg-[var(--color-border)]" />
  <button
  type="button"
  onClick={() => setShowTools(false)}
- className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-black/40 transition-colors hover:bg-black/5 hover:text-black/80"
+ className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-text-primary)]"
  aria-label="Dismiss quick actions"
  >
  <Icon icon="tabler:x" className="h-[1.125rem] w-[1.125rem]" />

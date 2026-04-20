@@ -277,7 +277,7 @@ export function QuestionSessionSheet({
  <button
  type="button"
  onClick={onClose}
- className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-surface-warm)] text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-surface-strong)] hover:text-[var(--color-text-primary)]"
+ className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-text-primary)]"
  >
  <Icon icon="tabler:x" className="h-4 w-4" />
  </button>
@@ -455,10 +455,10 @@ export function QuestionSessionSheet({
  {option.label}
  </span>
  <div className={cn(
- "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-1.5 transition-all",
+ "flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-1.5 transition-all",
  selected ? "border-[var(--color-primary)] bg-[var(--color-primary)]" : "border-[var(--color-border)] group-hover:border-[var(--color-border-strong)]"
  )}>
- {selected && <Icon icon="tabler:circle-check" className="h-3 w-3 text-white stroke-[3]" />}
+ {selected && <Icon icon="tabler:check" className="h-3 w-3 text-white stroke-[3]" />}
  </div>
  </motion.button>
  );

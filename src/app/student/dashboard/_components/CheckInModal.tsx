@@ -99,7 +99,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
  </div>
  <button
  onClick={onClose}
- className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-surface)] text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-text-primary)]"
+ className="flex h-10 w-10 items-center justify-center rounded-md text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-text-primary)]"
  >
  <Icon icon="tabler:x" className="h-5 w-5" />
  </button>
@@ -160,9 +160,9 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
  initial={{ scale: 0, opacity: 0 }}
  animate={{ scale: 1, opacity: 1 }}
  exit={{ scale: 0, opacity: 0 }}
- className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-md"
+ className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-md bg-[var(--color-primary)] text-white shadow-md"
  >
- <Icon icon="tabler:circle-check" className="h-3 w-3" />
+ <Icon icon="tabler:check" className="h-3 w-3" />
  </motion.div>
  )}
  </AnimatePresence>
@@ -193,7 +193,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
  </>
  ) : isSaved ? (
  <>
- <Icon icon="tabler:circle-check" className="h-4 w-4" />
+ <Icon icon="tabler:check" className="h-4 w-4" />
  Saved!
  </>
  ) : (

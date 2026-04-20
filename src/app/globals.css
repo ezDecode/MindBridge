@@ -65,54 +65,56 @@
   --color-text-muted-light: #8A827A;
   --color-text-inverse: #FFFFFF;
 
-  /* ── Primary (Warm Wellness Orange) ── */
-  --color-primary: #F47D4B;
-  --color-primary-light: #F9F4F2;
-  --color-primary-dark: #C4572A;
-  --color-primary-darker: #A3421D;
-  --color-link: #F47D4B;
+  /* ── Primary (Soft Terracotta) ── */
+  --color-primary: #C9744D;
+  --color-primary-soft: #F3E5DC;
+  --color-primary-light: #FBF3EE;
+  --color-primary-dark: #A85A37;
+  --color-primary-darker: #884529;
+  --color-link: #C9744D;
 
   /* ── Accent ── */
-  --color-accent: #E5B85C;
-  --color-accent-dark: #C5983C;
-  --color-accent-light: #FBF3DF;
-  --color-accent-pink: #D4899F;
+  --color-accent: #C49A63;
+  --color-accent-dark: #A77F49;
+  --color-accent-light: #F7ECDD;
+  --color-accent-pink: #C98993;
 
   /* ── Surface ── */
-  --color-surface: #FFFFFF;
-  --color-surface-warm: #F9F4F2;
-  --color-surface-warm-hover: #F3ECE8;
-  --color-surface-warm-active: #EDE4DF;
-  --color-surface-tinted: #F9F4F2;
+  --color-surface: #FFFDF9;
+  --color-surface-warm: #F7F0E9;
+  --color-surface-warm-hover: #F1E7DD;
+  --color-surface-warm-active: #E9DDD0;
+  --color-surface-tinted: #F6EFE8;
   --color-surface-dark: #2D2926;
   --color-surface-dark-alt: #3D3834;
-  --color-surface-strong: #F3ECE8;
-  --color-background: #FFFFFF;
+  --color-surface-strong: #EFE5DA;
+  --color-background: #F6F0E9;
 
   /* ── Borders ── */
-  --color-border: #D9CEBF;
-  --color-border-strong: #B5A898;
-  --color-border-light: #E8DFD4;
-  --color-border-cool: #E8DFD4;
-  --color-border-warm: #D9CEBF;
+  --color-border: #D8CBBB;
+  --color-border-strong: #BDAE9B;
+  --color-border-light: #E8DED2;
+  --color-border-cool: #E4DCD4;
+  --color-border-warm: #D8CBBB;
   --color-border-dark: #8A827A;
 
   /* ── Semantic ── */
-  --color-success: #6B9E7D;
-  --color-success-soft: #E8F2EC;
-  --color-warning: #D4899F;
-  --color-warning-soft: #F9E8ED;
-  --color-danger: #C26A6A;
-  --color-danger-soft: #FAEAEA;
-  --color-info: #5A8EC7;
-  --color-info-soft: #EBF2FB;
+  --color-success: #6E8F7C;
+  --color-success-dark: #55705F;
+  --color-success-soft: #E7EFEA;
+  --color-warning: #C88A64;
+  --color-warning-soft: #F8EBE2;
+  --color-danger: #BA6B68;
+  --color-danger-soft: #F8E9E8;
+  --color-info: #6C879B;
+  --color-info-soft: #EAF0F4;
 
   /* ── Gray scale (warm-tinted) ── */
-  --color-gray-50: #faf8f6;
-  --color-gray-100: #f3efe9;
-  --color-gray-200: #ebe5dd;
-  --color-gray-300: #ddd5cb;
-  --color-gray-400: #c6bcb0;
+  --color-gray-50: #fbf8f4;
+  --color-gray-100: #f2ece4;
+  --color-gray-200: #e7ddd2;
+  --color-gray-300: #d8cbbb;
+  --color-gray-400: #bfae9d;
 
   /* ── Easing ── */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -123,18 +125,18 @@
   --spacing-page-block: clamp(1.5rem, 4vw, 3rem);
   --spacing-section-gap: clamp(4rem, 8vw, 7rem);
   --spacing-content-max: 70vw;
-  --radius-card: 0.5rem;
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
-  --radius-2xl: 1rem;
+  --radius-card: 1.125rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
 
   /* ── Shadows ── */
-  --shadow-sm: 0 1px 3px rgba(45, 41, 38, 0.06);
-  --shadow-md: 0 4px 12px rgba(45, 41, 38, 0.10);
-  --shadow-lg: 0 8px 24px rgba(45, 41, 38, 0.14);
-  --shadow-xl: 0 12px 36px rgba(45, 41, 38, 0.18);
+  --shadow-sm: 0 6px 18px rgba(52, 43, 37, 0.05);
+  --shadow-md: 0 12px 28px rgba(52, 43, 37, 0.08);
+  --shadow-lg: 0 18px 40px rgba(52, 43, 37, 0.11);
+  --shadow-xl: 0 24px 56px rgba(52, 43, 37, 0.14);
 
   /* ── Touch Targets ── */
   --spacing-touch-min: 2.75rem;
@@ -375,44 +377,35 @@ button:disabled {
 
 
 .protected-shell {
-  --color-background: #111111;
-  --color-surface: #1e1e1e;
-  --color-surface-tinted: #262626;
-  --color-surface-strong: #333333;
-  --color-surface-warm: #1f1a18;
-  --color-surface-warm-hover: #2a2220;
-  --color-surface-warm-active: #3a2e2a;
-  --color-surface-dark: #000000;
-  --color-surface-dark-alt: #161616;
-  --color-border: #333333;
-  --color-border-strong: #444444;
-  --color-border-light: #262626;
-  --color-border-warm: #3d302a;
-  --color-border-cool: #2a333d;
-  --color-border-dark: #555555;
-  --color-text-primary: #f5f5f5;
-  --color-text-secondary: #a3a3a3;
-  --color-text-muted: #737373;
-  --color-text-inverse: #111111;
-  --color-black: #ffffff;
-  --color-white: #111111;
-  --color-primary-light: #2f1b13;
-  --color-primary-dark: #f89d76;
-  --color-success-soft: #1a2a22;
-  --color-warning-soft: #2e1a20;
-  --color-danger-soft: #2e1818;
-  --color-info-soft: #1a2333;
-  
-  --color-gray-50: #1a1a1a;
-  --color-gray-100: #262626;
-  --color-gray-200: #333333;
-  --color-gray-300: #404040;
-  --color-gray-400: #525252;
-  
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.8);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.8);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.8);
-  background-color: var(--color-background);
+  --color-background: #f5efe8;
+  --color-surface: #fffdfa;
+  --color-surface-tinted: #f6efe8;
+  --color-surface-strong: #ede4d9;
+  --color-surface-warm: #f8f1e9;
+  --color-surface-warm-hover: #f0e6db;
+  --color-surface-warm-active: #e7d9cb;
+  --color-border: #dacdbe;
+  --color-border-strong: #beaf9d;
+  --color-border-light: #e8ded1;
+  --color-border-warm: #d7c8b7;
+  --color-border-cool: #e3dbd3;
+  --color-text-primary: #342b25;
+  --color-text-secondary: #61564f;
+  --color-text-muted: #8d8378;
+  --color-text-inverse: #fffdfa;
+  --color-primary-soft: #f3e5dc;
+  --color-primary-light: #faf1eb;
+  --color-primary-dark: #aa5a37;
+  --color-success-soft: #e7efea;
+  --color-warning-soft: #f8ebe2;
+  --color-danger-soft: #f8e9e8;
+  --color-info-soft: #eaf0f4;
+  --shadow-sm: 0 6px 18px rgba(52, 43, 37, 0.05);
+  --shadow-md: 0 12px 28px rgba(52, 43, 37, 0.08);
+  --shadow-lg: 0 18px 40px rgba(52, 43, 37, 0.11);
+  background:
+    radial-gradient(circle at top left, rgba(201, 116, 77, 0.08), transparent 34%),
+    linear-gradient(180deg, #f8f3ee 0%, #f5efe8 48%, #f3ece4 100%);
   color: var(--color-text-primary);
   min-height: 100svh;
 }

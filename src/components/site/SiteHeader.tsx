@@ -36,7 +36,7 @@ export function SiteHeader() {
  </div>
  </Link>
 
- <nav className="hidden items-center gap-1 lg:gap-2 lg:flex">
+ <nav className="hidden items-center border-[var(--color-border)] pr-4 mr-2 gap-1 lg:gap-2 border-r lg:flex">
  {marketingNav.map((item) => (
  <Link
  key={item.href}

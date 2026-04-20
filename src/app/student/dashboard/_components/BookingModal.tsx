@@ -167,9 +167,9 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  initial={{ scale: 0 }}
  animate={{ scale: 1 }}
  transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
- className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-success-light)] shadow-lg shadow-[var(--color-success)]/20"
+ className="flex h-14 w-14 items-center justify-center rounded-[1.1rem] bg-[var(--color-success-light)] shadow-lg shadow-[var(--color-success)]/20"
  >
- <Icon icon="tabler:circle-check" className="h-7 w-7 text-[var(--color-success)]" />
+ <Icon icon="tabler:check" className="h-7 w-7 text-[var(--color-success)]" />
  </motion.div>
  <Text as="p" variant="h6" weight="bold" className="mt-4">
  Booking confirmed! 🎉
@@ -293,9 +293,9 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  <motion.div
  initial={{ scale: 0 }}
  animate={{ scale: 1 }}
- className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-success)]"
+ className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--color-success)]"
  >
- <Icon icon="tabler:circle-check" className="h-3.5 w-3.5 text-white" />
+ <Icon icon="tabler:check" className="h-3.5 w-3.5 text-white" />
  </motion.div>
  </div>
  </motion.div>

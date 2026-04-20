@@ -57,12 +57,12 @@ export function ToastProvider({ children }: ToastProviderProps) {
  animate={{ opacity: 1, y: 0, scale: 1 }}
  exit={{ opacity: 0, y: -10, scale: 0.95 }}
  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
- className={`mb-2 rounded-full px-5 py-3 shadow-lg ${
+ className={`mb-2 rounded-[1rem] border px-5 py-3 shadow-[var(--shadow-lg)] ${
  toast.type === 'success' 
- ? 'bg-[var(--color-success)] text-white'
+ ? 'border-[var(--color-success)]/20 bg-[var(--color-success-soft)] text-[var(--color-success-dark)]'
  : toast.type === 'error'
- ? 'bg-[var(--color-danger)] text-white'
- : 'bg-[var(--color-surface-dark)] text-white'
+ ? 'border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] text-[var(--color-danger)]'
+ : 'border-[var(--color-info)]/20 bg-[var(--color-info-soft)] text-[var(--color-info)]'
  }`}
  onClick={() => removeToast(toast.id)}
  >

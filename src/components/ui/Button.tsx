@@ -24,15 +24,15 @@ type PolymorphicComponentProp<T extends ElementType, Props = object> = {
 
 const variantStyles: Record<ButtonVariant, string> = {
  primary:
- "bg-[var(--color-text-primary)] !text-[var(--color-white)] hover:bg-[var(--color-black-dark)] hover:!text-[var(--color-white)]",
+ "border border-[var(--color-primary)] bg-[var(--color-primary)] !text-[var(--color-text-inverse)] shadow-[var(--shadow-sm)] hover:border-[var(--color-primary-dark)] hover:bg-[var(--color-primary-dark)] hover:!text-[var(--color-text-inverse)]",
  warm:
- "bg-[var(--color-surface-warm-hover)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-warm-active)] hover:text-[var(--color-text-primary)]",
+ "border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] shadow-[var(--shadow-sm)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-text-primary)]",
  ghost:
- "bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-strong)] hover:text-[var(--color-text-primary)]",
+ "border border-transparent bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-strong)] hover:text-[var(--color-text-primary)]",
  link:
  "bg-transparent text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] underline-offset-4 hover:underline p-0 h-auto",
  danger:
- "bg-red-600 text-white hover:bg-red-700",
+ "border border-[var(--color-danger)] bg-[var(--color-danger)] text-white shadow-[var(--shadow-sm)] hover:bg-[#a75b59] hover:border-[#a75b59]",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -49,7 +49,7 @@ const weightStyles: Record<ButtonWeight, string> = {
 };
 
 const baseStyles =
- "inline-flex shrink-0 items-center justify-center gap-2 rounded-full whitespace-nowrap text-button transition-[background-color,color,box-shadow,opacity,transform] duration-200 ease-[var(--ease-out)] active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 [&_svg]:shrink-0 outline-none";
+ "inline-flex shrink-0 items-center justify-center gap-2 rounded-[0.95rem] whitespace-nowrap text-button transition-[background-color,border-color,color,box-shadow,opacity,transform] duration-200 ease-[var(--ease-out)] active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 [&_svg]:shrink-0 outline-none";
 
 export function Button<T extends ElementType = "button">({
  as,
