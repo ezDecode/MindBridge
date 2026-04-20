@@ -41,11 +41,17 @@ export function SiteHeader() {
             </nav>
 
             <div className="hidden items-center gap-2 lg:flex">
-              <Button href="/login" variant="warm" size="sm">
+              <Button href="/login" variant="ghost" size="sm">
                 Login
               </Button>
-              <Button href="/student/dashboard" size="sm">
-                Explore flow
+              <Button href="/student/dashboard" variant="warm" size="sm">
+                Dashboard
+              </Button>
+              <Button href="/student/settings" size="sm">
+                User Settings
+              </Button>
+              <Button href="/admin/login" size="sm" variant="ghost">
+                Admin Gateway
               </Button>
             </div>
 
@@ -78,12 +84,15 @@ export function SiteHeader() {
               </div>
 
               <div className="mt-4 grid gap-2">
-                <Button href="/student/dashboard" className="w-full justify-between">
-                  Explore student flow
+                <Button href="/admin/login" variant="ghost" className="w-full justify-between">
+                  Admin Gateway
                   <Icon icon="solar:arrow-right-linear" className="h-4 w-4" />
                 </Button>
-                <Button href="/login" variant="warm" className="w-full">
-                  Continue with college email
+                <Button href="/student/dashboard" variant="warm" className="w-full">
+                  Dashboard
+                </Button>
+                <Button href="/student/settings" className="w-full">
+                  User Settings
                 </Button>
               </div>
             </div>

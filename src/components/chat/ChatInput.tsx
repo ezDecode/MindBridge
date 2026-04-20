@@ -19,6 +19,10 @@ interface ChatInputProps {
   onStop?: () => void
   placeholder?: string
   disabled?: boolean
+  onBookSession?: () => void
+  onViewAnalytics?: () => void
+  onQuickMoodLog?: () => void
+  onGuidedQuestions?: () => void
 }
 
 export function ChatInput({
@@ -27,6 +31,10 @@ export function ChatInput({
   onStop,
   placeholder = "Type your ideas here...",
   disabled,
+  onBookSession,
+  onViewAnalytics,
+  onQuickMoodLog,
+  onGuidedQuestions,
 }: ChatInputProps) {
   const [input, setInput] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -150,7 +158,18 @@ export function ChatInput({
                     <button
                       key={i}
                       type="button"
-                      onClick={() => onSend(action.prompt)}
+                      onClick={() => {
+                        onSend(action.prompt)
+                        if (action.title === 'Book session' && onBookSession) {
+                          onBookSession()
+                        } else if (action.title === 'View analytics' && onViewAnalytics) {
+                          onViewAnalytics()
+                        } else if (action.title === 'Quick mood log' && onQuickMoodLog) {
+                          onQuickMoodLog()
+                        } else if (action.title === 'Start guided questions' && onGuidedQuestions) {
+                          onGuidedQuestions()
+                        }
+                      }}
                       title={action.prompt}
                       className="flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-all hover:-translate-y-0.5 hover:border-[var(--color-primary)]/30 hover:bg-[var(--color-primary-soft)] hover:text-[var(--color-primary)] active:translate-y-0"
                       aria-label={action.prompt}

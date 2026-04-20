@@ -10,6 +10,7 @@ import { ChatInput, ChatWindow } from "@/components/chat";
 import type { Message } from "@/hooks/useChat";
 import { CheckInModal } from "./CheckInModal";
 import { BookingModal } from "./BookingModal";
+import { AnalyticsModal } from "./AnalyticsModal";
 import type { DashboardData, TabId } from "./types";
 
 interface MindTabProps {
@@ -50,6 +51,7 @@ export function MindTab({
   const router = useRouter();
   const [showCheckIn, setShowCheckIn] = useState(false);
   const [showBookingModal, setShowBookingModal] = useState(false);
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isCheckInOpen = showCheckIn || Boolean(autoOpenCheckIn);
 
@@ -283,13 +285,7 @@ export function MindTab({
           <div className="flex-1 overflow-y-auto px-4 pb-36 pt-4 sm:px-6">
             <div className="mx-auto max-w-3xl">
               {messages.length === 0 ? (
-                <EmptyState
-                  userName={userName}
-                  onCheckIn={() => setShowCheckIn(true)}
-                  onOpenQuestionnaire={onOpenQuestionnaire}
-                  onBookSession={() => setShowBookingModal(true)}
-                  onSwitchToBridge={onSwitchToBridge}
-                />
+                <EmptyState userName={userName} />
               ) : (
                 <ChatWindow
                   messages={messages}
@@ -331,6 +327,18 @@ export function MindTab({
                   isLoading={isLoading}
                   onStop={stopGenerating}
                   placeholder="Tell MindBridge what feels heavy, noisy, or hard to name..."
+                  onBookSession={() => {
+                    setShowBookingModal(true)
+                  }}
+                  onViewAnalytics={() => {
+                    setShowAnalyticsModal(true)
+                  }}
+                  onQuickMoodLog={() => {
+                    setShowCheckIn(true)
+                  }}
+                  onGuidedQuestions={() => {
+                    onOpenQuestionnaire()
+                  }}
                 />
               </div>
             </div>
@@ -340,6 +348,14 @@ export function MindTab({
 
       <CheckInModal isOpen={isCheckInOpen} onClose={handleCloseCheckIn} onComplete={onMoodLogged} />
       <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
+      <AnalyticsModal 
+        isOpen={showAnalyticsModal} 
+        onClose={() => setShowAnalyticsModal(false)}
+        onGoToDashboard={() => {
+          setShowAnalyticsModal(false)
+          onSwitchToBridge()
+        }}
+      />
     </>
   );
 }
@@ -377,16 +393,8 @@ function ActionButton({
 
 function EmptyState({
   userName,
-  onCheckIn,
-  onOpenQuestionnaire,
-  onBookSession,
-  onSwitchToBridge,
 }: {
   userName: string;
-  onCheckIn: () => void;
-  onOpenQuestionnaire: () => void;
-  onBookSession: () => void;
-  onSwitchToBridge: () => void;
 }) {
   return (
     <motion.div
@@ -399,30 +407,6 @@ function EmptyState({
         <Text as="h2" variant="h3" weight="bold" className="tracking-tight text-[var(--color-text-primary)]">
           Welcome back, {userName}.
         </Text>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[34rem]">
-          <ActionButton
-            icon={<Icon icon="solar:bolt-linear" className="h-4 w-4" />}
-            title="Start guided questions"
-            onClick={onOpenQuestionnaire}
-            highlighted
-          />
-          <ActionButton
-            icon={<Icon icon="solar:heart-linear" className="h-4 w-4" />}
-            title="Quick mood log"
-            onClick={onCheckIn}
-          />
-          <ActionButton
-            icon={<Icon icon="solar:calendar-linear" className="h-4 w-4" />}
-            title="Book session"
-            onClick={onBookSession}
-          />
-          <ActionButton
-            icon={<Icon icon="solar:graph-up-linear" className="h-4 w-4" />}
-            title="View analytics"
-            onClick={onSwitchToBridge}
-          />
-        </div>
       </div>
     </motion.div>
   );

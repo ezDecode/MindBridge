@@ -40,6 +40,20 @@ export async function updateSession(request: NextRequest) {
   // Protected routes
   const studentRoutes = pathname.startsWith('/student')
   const counselorRoutes = pathname.startsWith('/counselor')
+  const adminRoutes = pathname.startsWith('/admin')
+
+  // Hardcoded Admin Auth override
+  const hasAdminCookie = request.cookies.get('mindbridge_admin')?.value === 'true'
+
+  if (adminRoutes && pathname !== '/admin/login' && !hasAdminCookie) {
+    url.pathname = '/admin/login'
+    return NextResponse.redirect(url)
+  }
+
+  if (hasAdminCookie && pathname === '/admin/login') {
+    url.pathname = '/admin/dashboard'
+    return NextResponse.redirect(url)
+  }
 
   if (!user && (studentRoutes || counselorRoutes)) {
     // Redirect unauthenticated users to login

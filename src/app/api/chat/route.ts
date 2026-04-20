@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { nim, DEFAULT_CHAT_PARAMS, parseCompanionResponse } from '@/lib/nvidia-nim'
-import { buildMemoryContext, getStudentName } from '@/lib/agents/memory-agent'
+import { buildQuickContext, contextToPrompt } from '@/lib/simple-context'
 import { buildSystemPrompt } from '@/lib/agents/companion-agent'
 import { triggerCrisisAlert } from '@/lib/crisis'
 import { NextResponse } from 'next/server'
@@ -8,18 +8,93 @@ import { NextResponse } from 'next/server'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-// Demo fail-safe: warm responses if AI times out
-const DEMO_TIMEOUT_MS = 8000 // 8 seconds
-const FALLBACK_RESPONSES = [
-  "I hear you. Let's take this one step at a time. What feels most pressing right now?",
-  "That sounds really challenging. I'm here with you. Would you like to talk more about it?",
-  "Thanks for sharing that with me. How are you feeling in this moment?",
-  "I appreciate you opening up. Sometimes just naming what we're feeling helps. What comes to mind?",
-  "That makes sense. It's okay to feel that way. What would feel supportive right now?",
+// Increased timeout for better response quality
+const DEMO_TIMEOUT_MS = 12000 // 12 seconds
+
+// Contextual fallbacks based on mood
+const FALLBACK_RESPONSES_BY_MOOD: Record<string, string[]> = {
+  low: [
+    "I'm here with you. Take your time — what's on your mind?",
+    "That sounds really heavy. Want to just talk it through?",
+    "I'm listening. Whatever's going on, you've got space here.",
+  ],
+  medium: [
+    "Thanks for sharing that. How are you feeling about all this?",
+    "I hear you. What's the hardest part right now?",
+    "That makes sense. Want to unpack it a bit more?",
+  ],
+  good: [
+    "That's great to hear! What's been helping lately?",
+    "Nice! So what's been making things better?",
+    "I love that for you. What's contributing to this?",
+  ],
+  unknown: [
+    "I'm here. Take your time — what's going on?",
+    "Hey, thanks for reaching out. What's on your mind?",
+    "What's feeling most pressing right now?",
+  ],
+}
+
+// Generic fallbacks for when we don't know their mood
+const GENERIC_FALLBACKS = [
+  "I'm here with you. Take your time — what's on your mind?",
+  "That sounds really challenging. Want to talk more about it?",
+  "Thanks for sharing that. How are you feeling right now?",
+  "I appreciate you opening up. What's the heaviest part?",
 ]
 
-function getRandomFallbackResponse(): string {
-  return FALLBACK_RESPONSES[Math.floor(Math.random() * FALLBACK_RESPONSES.length)]
+interface MoodContext {
+  trend: string
+  lastScore: number | null
+}
+
+async function getMoodContext(userId: string): Promise<MoodContext> {
+  const supabase = await createClient()
+  
+  const { data } = await supabase
+    .from('mood_logs')
+    .select('score')
+    .eq('user_id', userId)
+    .order('logged_at', { ascending: false })
+    .limit(7)
+    .single()
+
+  if (!data) return { trend: 'unknown', lastScore: null }
+
+  const avgScore = data.score
+  let trend = 'unknown'
+  if (avgScore >= 4) trend = 'good'
+  else if (avgScore >= 3) trend = 'medium'
+  else trend = 'low'
+
+  return { trend, lastScore: data.score }
+}
+
+function getContextualFallback(moodContext: MoodContext, userMessage: string): string {
+  const lower = userMessage.toLowerCase()
+  
+  // Topic-specific fallbacks
+  if (/sleep|tired|exhausted|rest/.test(lower)) {
+    return moodContext.trend === 'low' 
+      ? "Sleep issues when you're already drained is the worst. Have you been able to rest at all?"
+      : "Exhaustion hits different. Want to talk about what's draining you?"
+  }
+  
+  if (/sad|heavy|down|hopeless|alone|lonely/.test(lower)) {
+    return "That sounds really lonely. I'm here — want to talk about what's making it heavy?"
+  }
+  
+  if (/anxi|panic|overwhelm|stress|nervous/.test(lower)) {
+    return "That overwhelm is real. Before everything spirals — what's the biggest thing right now?"
+  }
+  
+  if (/exam|test|assignment|college|university|placement/.test(lower)) {
+    return "Academic pressure hits hard. What's worrying you most — the marks or something else?"
+  }
+
+  // Mood-based selection
+  const moodResponses = FALLBACK_RESPONSES_BY_MOOD[moodContext.trend] || GENERIC_FALLBACKS
+  return moodResponses[Math.floor(Math.random() * moodResponses.length)]
 }
 
 function buildSuggestions({
@@ -112,11 +187,9 @@ export async function POST(request: Request) {
       )
     }
 
-    // 1. Build memory context (runs in parallel with other prep)
-    const [memoryContext, studentName, historyResult] = await Promise.all([
-      buildMemoryContext(user.id),
-      getStudentName(user.id),
-      // Get conversation history for this session
+    // 1. Build quick context (simple, no LLM call)
+    const [quickContext, historyResult] = await Promise.all([
+      buildQuickContext(user.id),
       supabase
         .from('chat_messages')
         .select('role, content')
@@ -127,9 +200,10 @@ export async function POST(request: Request) {
     ])
 
     const history = historyResult.data ?? []
+    const contextString = contextToPrompt(quickContext)
 
-    // 2. Build the system prompt with memory context
-    const systemPrompt = buildSystemPrompt(memoryContext, studentName)
+    // 2. Build system prompt with simple context
+    const systemPrompt = buildSystemPrompt(contextString)
 
     // 3. Create the streaming response from NIM with timeout protection
     let stream: AsyncIterable<unknown>
@@ -171,9 +245,10 @@ export async function POST(request: Request) {
         let fullResponse = ''
 
         try {
-          // If we're using fallback, simulate streaming
+          // If we're using fallback, simulate streaming with contextual response
           if (usesFallback) {
-            const fallbackText = getRandomFallbackResponse()
+            const moodCtx = await getMoodContext(user.id)
+            const fallbackText = getContextualFallback(moodCtx, message)
             fullResponse = fallbackText
             
             // Simulate natural typing by sending character by character
@@ -220,7 +295,8 @@ export async function POST(request: Request) {
             await updateAssessment(supabase, user.id, parsed.assessment_update)
           }
 
-          // 9. Send final metadata
+          // 9. Send final metadata with smart suggestions
+          // 9. Send final metadata with simple suggestions (no extra LLM call)
           const suggestions = parsed?.suggestions?.length
             ? parsed.suggestions.slice(0, 3)
             : buildSuggestions({

@@ -12,11 +12,12 @@ export const marketingNav = [
 ];
 
 export const studentNav: NavItem[] = [
-  { href: "/student/dashboard", label: "Dashboard", icon: "grid" },
+  { href: "/student/dashboard", label: "User Dashboard", icon: "grid" },
   { href: "/student/chat", label: "Chat", icon: "chat" },
-  { href: "/student/check-in", label: "Check-in", icon: "heart" },
+  { href: "/student/check-in", label: "My Mind", icon: "heart" },
   { href: "/student/resources", label: "Resources", icon: "library" },
   { href: "/student/book", label: "Book", icon: "calendar" },
+  { href: "/student/settings", label: "Settings", icon: "shield" },
 ];
 
 export const counselorNav: NavItem[] = [
