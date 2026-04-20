@@ -1,31 +1,33 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { Suspense, useActionState, useEffect, useState } from "react";
 import { Icon } from '@iconify/react';
 import { Button, Card, Container, Input, Text } from "@/components/ui";
 import { SiteFooter, SiteHeader } from "@/components/site";
-import { signInWithPassword, signUpWithPassword, type AuthState } from "@/lib/auth/actions";
+import { sendOtp, signInWithPassword, signUpWithPassword, signInWithGoogle, type AuthState } from "@/lib/auth/actions";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const initialState: AuthState = {};
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const defaultRole = searchParams.get('role') || 'student';
   
-  const [isLogin, setIsLogin] = useState(true);
+  const [authMode, setAuthMode] = useState<'login' | 'signup' | 'otp'>('login');
   const [role, setRole] = useState(defaultRole);
   
   const [state, formAction, isPending] = useActionState(
-    isLogin ? signInWithPassword : signUpWithPassword, 
+    authMode === 'login' ? signInWithPassword : 
+    authMode === 'signup' ? signUpWithPassword : 
+    sendOtp, 
     initialState
   );
 
   useEffect(() => {
     if (state.success && state.message?.includes('Account created')) {
       // Switch back to login view after successful signup
-      setIsLogin(true);
+      setAuthMode('login');
     }
   }, [state.success, state.message]);
 
@@ -74,16 +76,29 @@ export default function LoginPage() {
                 </span>
                 <div>
                   <Text as="p" variant="h4" weight="bold" className="md:text-h3">
-                    {isLogin ? "Sign in to MindBridge" : "Create an Account"}
+                    {authMode === 'login' ? "Sign in to MindBridge" : authMode === 'signup' ? "Create an Account" : "Sign in with Magic Link"}
                   </Text>
                   <Text as="p" variant="small" color="secondary" className="mt-1">
-                    {isLogin ? "Welcome back" : "Join your campus community securely"}
+                    {authMode === 'login' ? "Welcome back" : authMode === 'signup' ? "Join your campus community securely" : "Receive a temporary link to sign in"}
                   </Text>
                 </div>
               </div>
 
-              <form action={formAction} className="mt-6 md:mt-8 space-y-4 md:space-y-5">
-                {!isLogin && (
+              <form action={signInWithGoogle} className="mt-6 md:mt-8">
+                <Button type="submit" variant="ghost" className="w-full border border-[var(--color-border)] bg-[var(--color-surface)]">
+                  <Icon icon="flat-color-icons:google" className="mr-2 h-5 w-5" />
+                  Continue with Google
+                </Button>
+              </form>
+
+              <div className="my-6 flex items-center">
+                <div className="flex-grow border-t border-[var(--color-border)]"></div>
+                <span className="mx-4 text-[13px] font-medium text-[var(--color-text-secondary)] uppercase">OR</span>
+                <div className="flex-grow border-t border-[var(--color-border)]"></div>
+              </div>
+
+              <form action={formAction} className="space-y-4 md:space-y-5">
+                {authMode === 'signup' && (
                   <label className="block">
                     <Text as="span" variant="label" weight="medium">
                       Role
@@ -103,31 +118,33 @@ export default function LoginPage() {
 
                 <label className="block mt-4 md:mt-5">
                   <Text as="span" variant="label" weight="medium">
-                    {role === "counselor" && !isLogin ? "Staff email" : "Email"}
+                    {role === "counselor" && authMode === 'signup' ? "Staff email" : "Email"}
                   </Text>
                   <Input
                     type="email"
                     name="email"
-                    placeholder={role === "counselor" && !isLogin ? "name@uni.edu" : "you@college.edu"}
+                    placeholder={role === "counselor" && authMode === 'signup' ? "name@uni.edu" : "you@college.edu"}
                     required
                     disabled={isPending}
                     className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--color-border)] bg-[var(--color-surface)]"
                   />
                 </label>
 
-                <label className="block mt-4 md:mt-5">
-                  <Text as="span" variant="label" weight="medium">
-                    Password
-                  </Text>
-                  <Input
-                    type="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    required
-                    disabled={isPending}
-                    className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--color-border)] bg-[var(--color-surface)]"
-                  />
-                </label>
+                {authMode !== 'otp' && (
+                  <label className="block mt-4 md:mt-5">
+                    <Text as="span" variant="label" weight="medium">
+                      Password
+                    </Text>
+                    <Input
+                      type="password"
+                      name="password"
+                      placeholder="Enter your password"
+                      required
+                      disabled={isPending}
+                      className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--color-border)] bg-[var(--color-surface)]"
+                    />
+                  </label>
+                )}
 
                 {state.error && (
                   <div className="rounded-md border border-[var(--color-danger)] bg-red-50 p-4">
@@ -155,7 +172,7 @@ export default function LoginPage() {
                   <div className="flex items-start gap-3">
                     <Icon icon="solar:shield-check-linear" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-primary)]" />
                     <Text as="p" variant="small" color="secondary">
-                      {isLogin ? "Secure sign-in. Data remains private." : "Creating an account gives you complete access."}
+                      {authMode === 'login' ? "Secure sign-in. Data remains private." : authMode === 'signup' ? "Creating an account gives you complete access." : "We'll send a secure login link to your email."}
                     </Text>
                   </div>
                 </div>
@@ -170,11 +187,11 @@ export default function LoginPage() {
                   {isPending ? (
                     <>
                       <Icon icon="solar:restart-circle-linear" className="h-4 w-4 animate-spin" />
-                      {isLogin ? "Signing in..." : "Creating..."}
+                      {authMode === 'login' ? "Signing in..." : authMode === 'signup' ? "Creating..." : "Sending..."}
                     </>
                   ) : (
                     <>
-                      {isLogin ? "Sign in" : "Create Account"}
+                      {authMode === 'login' ? "Sign in" : authMode === 'signup' ? "Create Account" : "Send Magic Link"}
                       <Icon icon="solar:arrow-right-linear" className="h-4 w-4" />
                     </>
                   )}
@@ -182,17 +199,20 @@ export default function LoginPage() {
               </form>
 
               <div className="mt-6 md:mt-8 grid gap-3 sm:grid-cols-2">
-                <Button 
-                  type="button"
-                  onClick={() => setIsLogin(!isLogin)} 
-                  variant="ghost" 
-                  className="w-full"
-                >
-                  {isLogin ? "Need an account? Sign up" : "Have an account? Sign in"}
-                </Button>
-                <Button href="/student/chat" variant="warm" className="w-full">
-                  Browse chat preview
-                </Button>
+                {authMode === 'login' ? (
+                  <>
+                    <Button type="button" onClick={() => setAuthMode('signup')} variant="ghost" className="w-full">
+                      Need an account? Sign up
+                    </Button>
+                    <Button type="button" onClick={() => setAuthMode('otp')} variant="ghost" className="w-full text-[var(--color-primary)]">
+                      Lost Password? Use Magic Link
+                    </Button>
+                  </>
+                ) : (
+                  <Button type="button" onClick={() => setAuthMode('login')} variant="ghost" className="w-full sm:col-span-2">
+                    Back to Sign in
+                  </Button>
+                )}
               </div>
             </Card>
           </div>
@@ -201,5 +221,13 @@ export default function LoginPage() {
 
       <SiteFooter />
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

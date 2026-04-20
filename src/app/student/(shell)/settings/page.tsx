@@ -8,182 +8,184 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Icon } from '@iconify/react'
 
 export default function UserSettingsDashboard() {
-  const [profile, setProfile] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState<{ text: string, type: 'success' | 'error' } | null>(null)
-  
-  // Settings form states
-  const [name, setName] = useState('')
-  const [institution, setInstitution] = useState('')
+ const [profile, setProfile] = useState<any>(null)
+ const [loading, setLoading] = useState(true)
+ const [saving, setSaving] = useState(false)
+ const [message, setMessage] = useState<{ text: string, type: 'success' | 'error' } | null>(null)
+ 
+ // Settings form states
+ const [name, setName] = useState('')
+ const [institution, setInstitution] = useState('')
 
-  const supabase = useMemo(() => createClient(), [])
+ const supabase = useMemo(() => createClient(), [])
 
-  const fetchProfile = useCallback(async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      const { data } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single()
-      
-      if (data) {
-        setProfile(data)
-        setName(data.name || '')
-        setInstitution(data.institution || '')
-      }
-    }
-    setLoading(false)
-  }, [supabase])
+ const fetchProfile = useCallback(async () => {
+ const { data: { user } } = await supabase.auth.getUser()
+ if (user) {
+ const { data } = await supabase
+ .from('profiles')
+ .select('*')
+ .eq('id', user.id)
+ .single()
+ 
+ if (data) {
+ setProfile(data)
+ setName(data.name || '')
+ setInstitution(data.institution || '')
+ }
+ }
+ setLoading(false)
+ }, [supabase])
 
-  useEffect(() => {
-    fetchProfile()
-  }, [fetchProfile])
+ useEffect(() => {
+ fetchProfile()
+ }, [fetchProfile])
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSaving(true)
-    setMessage(null)
+ const handleSave = async (e: React.FormEvent) => {
+ e.preventDefault()
+ setSaving(true)
+ setMessage(null)
 
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const { error } = await supabase
-          .from('profiles')
-          .update({ name, institution })
-          .eq('id', user.id)
+ try {
+ const { data: { user } } = await supabase.auth.getUser()
+ if (user) {
+ const { error } = await supabase
+ .from('profiles')
+ .update({ name, institution })
+ .eq('id', user.id)
 
-        if (error) throw error
+ if (error) throw error
 
-        setMessage({ text: 'Settings saved successfully.', type: 'success' })
-        
-        // Clear message after 3 seconds
-        setTimeout(() => setMessage(null), 3000)
-      }
-    } catch (err: any) {
-      console.error(err)
-      setMessage({ text: err.message || 'Failed to save settings.', type: 'error' })
-    } finally {
-      setSaving(false)
-    }
-  }
+ setMessage({ text: 'Settings saved successfully.', type: 'success' })
+ 
+ // Clear message after 3 seconds
+ setTimeout(() => setMessage(null), 3000)
+ }
+ } catch (err: any) {
+ console.error(err)
+ setMessage({ text: err.message || 'Failed to save settings.', type: 'error' })
+ } finally {
+ setSaving(false)
+ }
+ }
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    window.location.href = '/login'
-  }
+ const handleSignOut = async () => {
+ await supabase.auth.signOut()
+ window.location.href = '/login'
+ }
 
-  if (loading) {
-    return (
-      <div className="w-full max-w-2xl space-y-6">
-        <Skeleton className="w-1/3 h-8 rounded-lg" />
-        <Skeleton className="w-full h-64 rounded-2xl" />
-      </div>
-    )
-  }
+ if (loading) {
+ return (
+ <div className="w-full max-w-3xl space-y-6">
+ <Skeleton className="w-1/3 h-8 rounded-md" />
+ <Skeleton className="w-full h-32 rounded-md" />
+ </div>
+ )
+ }
 
-  return (
-    <div className="w-full max-w-2xl space-y-8 pb-12">
-      <PageIntro 
-        title="Settings" 
-        description="Manage your profile, preferences, and account operations securely." 
-      />
+ return (
+ <div className="w-full max-w-3xl mx-auto space-y-12 pb-12 pt-6">
+ <div>
+ <Text as="h1" variant="h3" weight="bold" className="tracking-tight text-[var(--color-text-primary)]">Settings</Text>
+ <Text as="p" className="text-[var(--color-text-secondary)] mt-2">Manage your profile, preferences, and account securely.</Text>
+ </div>
 
-      <Card variant="elevated" padding="lg" className="rounded-2xl">
-        <div className="flex items-center gap-3 mb-6">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)]">
-            <Icon icon="solar:user-circle-linear" className="h-5 w-5" />
-          </span>
-          <div>
-            <Text as="h3" variant="h5" weight="bold">Profile Details</Text>
-            <Text as="p" variant="small" color="secondary">
-              Update how you appear in MindBridge
-            </Text>
-          </div>
-        </div>
-        
-        <form onSubmit={handleSave} className="space-y-5">
-          <div className="space-y-2">
-            <Text as="label" variant="label" weight="medium" className="block text-[var(--color-text-secondary)]">
-              Display Name
-            </Text>
-            <Input 
-              type="text" 
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="e.g. Alex"
-              disabled={saving}
-            />
-            <Text as="p" variant="small" color="muted" className="mt-1">
-              Your name helps counselors build rapport. You can change this at any time.
-            </Text>
-          </div>
+ <div className="space-y-8">
+ <section>
+ <Text as="h2" variant="label" weight="bold" className="uppercase tracking-wider text-[var(--color-text-muted)] text-[11px] mb-4">Profile Details</Text>
+ <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] divide-y divide-[var(--color-border)] overflow-hidden">
+ <div className="p-5 sm:p-6 transition-colors">
+ <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+ <div className="flex-1">
+ <Text as="label" variant="label" weight="medium" className="block text-[var(--color-text-primary)]">
+ Display Name
+ </Text>
+ <Text as="p" className="text-[13px] text-[var(--color-text-secondary)] mt-1">
+ Your name helps counselors build rapport.
+ </Text>
+ </div>
+ <div className="sm:w-64 shrink-0">
+ <Input 
+ type="text" 
+ value={name}
+ onChange={e => setName(e.target.value)}
+ placeholder="e.g. Alex"
+ disabled={saving}
+ className="h-10 text-sm rounded-md"
+ />
+ </div>
+ </div>
+ </div>
 
-          <div className="space-y-2">
-            <Text as="label" variant="label" weight="medium" className="block text-[var(--color-text-secondary)]">
-              Institution / Campus
-            </Text>
-            <Input 
-              type="text" 
-              value={institution}
-              onChange={e => setInstitution(e.target.value)}
-              placeholder="e.g. University of Technology"
-              disabled={saving}
-            />
-          </div>
+ <div className="p-5 sm:p-6 transition-colors">
+ <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+ <div className="flex-1">
+ <Text as="label" variant="label" weight="medium" className="block text-[var(--color-text-primary)]">
+ Institution / Campus
+ </Text>
+ <Text as="p" className="text-[13px] text-[var(--color-text-secondary)] mt-1">
+ For campus-specific emergency protocols.
+ </Text>
+ </div>
+ <div className="sm:w-64 shrink-0">
+ <Input 
+ type="text" 
+ value={institution}
+ onChange={e => setInstitution(e.target.value)}
+ placeholder="e.g. University of Tech"
+ disabled={saving}
+ className="h-10 text-sm rounded-md"
+ />
+ </div>
+ </div>
+ </div>
 
-          <div className="pt-4 flex items-center justify-between border-t border-[var(--color-border)] mt-6">
-            <Button type="submit" variant="warm" size="md" disabled={saving}>
-              {saving ? (
-                <>
-                  <Icon icon="solar:restart-circle-linear" className="h-4 w-4 animate-spin mr-2" />
-                  Saving...
-                </>
-              ) : 'Save Changes'}
-            </Button>
-            
-            <AnimatePresence>
-              {message && (
-                <motion.div 
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 10 }}
-                  className={`flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-full ${
-                    message.type === 'success' 
-                      ? 'bg-green-50 text-[var(--color-success)]' 
-                      : 'bg-red-50 text-[var(--color-danger)]'
-                  }`}
-                >
-                  <Icon icon={message.type === 'success' ? 'solar:check-circle-linear' : 'solar:danger-circle-linear'} className="h-4 w-4" />
-                  {message.text}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </form>
-      </Card>
+ <div className="bg-[var(--color-surface-tinted)] p-4 flex items-center justify-between">
+ <AnimatePresence mode="wait">
+ <div className="min-h-[24px]">
+ {message && (
+ <motion.div 
+ key={message.text}
+ initial={{ opacity: 0, y: 5 }}
+ animate={{ opacity: 1, y: 0 }}
+ exit={{ opacity: 0, y: -5 }}
+ className={`flex items-center gap-2 text-[13px] font-medium ${
+ message.type === 'success' 
+ ? 'text-[var(--color-success)]' 
+ : 'text-[var(--color-danger)]'
+ }`}
+ >
+ <Icon icon={message.type === 'success' ? 'solar:check-circle-linear' : 'solar:danger-circle-linear'} className="h-4 w-4" />
+ {message.text}
+ </motion.div>
+ )}
+ </div>
+ </AnimatePresence>
+ <Button onClick={handleSave} variant="primary" size="sm" className="rounded-md h-9 px-5 bg-white text-black hover:bg-gray-100" disabled={saving}>
+ {saving ? 'Saving...' : 'Save Profile'}
+ </Button>
+ </div>
+ </div>
+ </section>
 
-      <Card variant="subtle" padding="lg" className="rounded-2xl border border-[var(--color-border)]">
-        <div className="flex items-center gap-3 mb-6">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface-tinted)] text-[var(--color-text-primary)]">
-            <Icon icon="solar:shield-keyhole-linear" className="h-5 w-5" />
-          </span>
-          <div>
-            <Text as="h3" variant="h5" weight="bold">Account Operations</Text>
-            <Text as="p" variant="small" color="secondary">
-              Sign out or manage your session safely
-            </Text>
-          </div>
-        </div>
-        
-        <div className="flex flex-col sm:flex-row gap-4 pt-2">
-          <Button variant="secondary" size="md" onClick={handleSignOut} className="w-full sm:w-auto">
-            <Icon icon="solar:logout-2-linear" className="h-4 w-4 mr-2" />
-            Sign Out
-          </Button>
-        </div>
-      </Card>
-    </div>
-  )
+ <section>
+ <Text as="h2" variant="label" weight="bold" className="uppercase tracking-wider text-[var(--color-text-muted)] text-[11px] mb-4">Account</Text>
+ <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden">
+ <div className="p-5 sm:p-6 transition-colors hover:bg-[var(--color-surface-tinted)] flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer" onClick={handleSignOut}>
+ <div>
+ <Text as="p" variant="label" weight="medium" className="text-[var(--color-danger)]">
+ Log out of MindBridge
+ </Text>
+ <Text as="p" className="text-[13px] text-[var(--color-text-secondary)] mt-1">
+ End your current session safely.
+ </Text>
+ </div>
+ <Icon icon="solar:logout-2-linear" className="h-5 w-5 text-[var(--color-danger)]" />
+ </div>
+ </div>
+ </section>
+ </div>
+ </div>
+ )
 }
+

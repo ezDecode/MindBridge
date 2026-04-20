@@ -8,133 +8,138 @@ import type { NavItem } from "@/content/mindbridge";
 import { cn } from "@/lib/utils";
 
 const iconMap = {
-  grid: "solar:widget-linear",
-  chat: "solar:chat-round-linear",
-  heart: "solar:heart-linear",
-  quiz: "solar:notes-linear",
-  library: "solar:book-linear",
-  calendar: "solar:calendar-linear",
-  shield: "solar:shield-linear",
-  chart: "solar:pie-chart-linear",
-  alert: "solar:danger-circle-linear",
+ grid: "solar:widget-linear",
+ chat: "solar:chat-round-linear",
+ heart: "solar:heart-linear",
+ quiz: "solar:notes-linear",
+ library: "solar:book-linear",
+ calendar: "solar:calendar-linear",
+ shield: "solar:shield-linear",
+ chart: "solar:pie-chart-linear",
+ alert: "solar:danger-circle-linear",
 };
 
 interface RoleShellProps {
-  roleLabel: string;
-  roleDescription: string;
-  navItems: NavItem[];
-  children: React.ReactNode;
+ roleLabel: string;
+ roleDescription: string;
+ navItems: NavItem[];
+ children: React.ReactNode;
 }
 
 export function RoleShell({
-  roleLabel,
-  roleDescription,
-  navItems,
-  children,
+ roleLabel,
+ roleDescription,
+ navItems,
+ children,
 }: RoleShellProps) {
-  const pathname = usePathname();
+ const pathname = usePathname();
 
-  return (
-    <main id="main-content" className="w-full py-6 sm:py-8">
-      <Container size="md">
-        <div className="grid gap-6 lg:grid-cols-[22.5rem_minmax(0,1fr)]">
-          <aside className="surface-panel hidden self-start rounded-[calc(var(--radius-2xl)*var(--brm))] squircle p-5 lg:sticky lg:top-6 lg:block">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 text-span font-medium text-[var(--color-text-secondary)] transition-colors duration-200 hover:text-[var(--color-text-primary)]"
-            >
-              <Icon icon="solar:arrow-left-linear" className="h-4 w-4" />
-              Back to home
-            </Link>
+ return (
+ <main id="main-content" className="protected-shell w-full flex min-h-[100svh]">
+ <aside className="hidden lg:flex w-[16.5rem] flex-col border-r border-[var(--color-border)] bg-[var(--color-background)] shrink-0 h-screen sticky top-0 overflow-y-auto">
+ <div className="p-4 flex flex-col gap-6">
+ <Link
+ href="/"
+ className="inline-flex items-center gap-2 px-2 text-label font-bold text-[var(--color-text-primary)] transition-opacity duration-200 hover:opacity-80"
+ >
+ <Icon icon="solar:crown-star-bold" className="h-5 w-5 text-[var(--color-primary)]" />
+ <span>MindBridge</span>
+ </Link>
 
-            <div className="mt-6 rounded-[calc(var(--radius-xl)*var(--brm))] squircle bg-[var(--color-surface-tinted)] p-4">
-              <Text as="p" variant="label" weight="bold" color="brand">
-                {roleLabel}
-              </Text>
-              <Text as="p" variant="h4" weight="bold" className="mt-1">
-                MindBridge
-              </Text>
-            </div>
+ <div>
+ <Button variant="ghost" className="w-full justify-start text-[var(--color-text-primary)] border border-[var(--color-border-strong)] rounded-full h-10 px-4 bg-[var(--color-surface-tinted)] hover:bg-[var(--color-surface-strong)] shadow-sm">
+ <Icon icon="solar:add-circle-linear" className="mr-2 h-4 w-4" />
+ New Entry
+ </Button>
+ </div>
+ </div>
 
-            <nav className="mt-6 flex flex-col gap-2">
-              {navItems.map((item) => {
-                const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "solar:widget-linear";
-                const isActive = pathname === item.href;
+ <div className="px-3 flex-1 flex flex-col gap-1">
+ <Text as="p"  className="px-3 mb-2 font-medium text-[var(--color-text-secondary)] uppercase tracking-wider text-[10px]">
+ {roleLabel} Panel
+ </Text>
+ {navItems.map((item) => {
+ const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "solar:widget-linear";
+ const isActive = pathname === item.href;
 
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    aria-current={isActive ? "page" : undefined}
-                    className={cn(
-                      "flex items-center gap-3 rounded-[calc(var(--radius-md)*var(--brm))] squircle border px-4 py-3 text-label font-medium transition-colors duration-200 ease-[var(--ease-out)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]",
-                      isActive
-                        ? "border-[var(--color-primary)] bg-[var(--color-primary-light)] text-[var(--color-text-primary)]"
-                        : "border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border)] hover:bg-[var(--color-primary-light)] hover:text-[var(--color-text-primary)]"
-                    )}
-                  >
-                    <Icon icon={iconName} className="h-4 w-4" />
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
+ return (
+ <Link
+ key={item.href}
+ href={item.href}
+ aria-current={isActive ? "page" : undefined}
+ className={cn(
+ "flex items-center gap-3 rounded-md px-3 py-2.5 text-label font-medium transition-colors duration-200 ease-[var(--ease-out)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-text-primary)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-surface)]",
+ isActive
+ ? "bg-[var(--color-surface-strong)] text-[var(--color-text-primary)]"
+ : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-tinted)] hover:text-[var(--color-text-primary)]"
+ )}
+ >
+ <Icon icon={iconName} className="h-[1.125rem] w-[1.125rem]" />
+ {item.label}
+ </Link>
+ );
+ })}
+ </div>
 
-            <div className="mt-6 rounded-[calc(var(--radius-xl)*var(--brm))] squircle border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
-              <Text as="p" variant="h6" weight="bold" color="primary">
-                Crisis protocol
-              </Text>
-              <Text as="p" variant="small" color="secondary" className="mt-2">
-                If someone mentions self-harm or not wanting to live, surface iCall and route them toward real support immediately.
-              </Text>
-            </div>
-          </aside>
+ <div className="p-3 border-t border-[var(--color-border)]">
+ <Link href="/counselor/dashboard" className="flex items-center gap-3 rounded-md px-3 py-2 text-[13px] font-medium text-[var(--color-info)] hover:bg-[var(--color-surface-tinted)] transition-colors">
+ <Icon icon="solar:shield-user-linear" className="h-[1.125rem] w-[1.125rem]" />
+ Counselor Access
+ </Link>
+ <Link href="/admin/dashboard" className="flex items-center gap-3 rounded-md px-3 py-2 text-[13px] font-medium text-[var(--color-danger)] hover:bg-[var(--color-surface-tinted)] transition-colors">
+ <Icon icon="solar:lock-keyhole-linear" className="h-[1.125rem] w-[1.125rem]" />
+ Admin Panel
+ </Link>
+ <Link href="/student/settings" className="flex items-center gap-3 rounded-md px-3 py-2 text-label font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-tinted)] hover:text-[var(--color-text-primary)] transition-colors mt-2 border-t border-[var(--color-border)] pt-3">
+ <Icon icon="solar:user-circle-linear" className="h-[1.125rem] w-[1.125rem]" />
+ User Profile
+ </Link>
+ <Link href="/" className="flex items-center gap-3 rounded-md px-3 py-2 text-label font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-tinted)] hover:text-[var(--color-text-primary)] transition-colors mt-1">
+ <Icon icon="solar:logout-linear" className="h-[1.125rem] w-[1.125rem]" />
+ Leave Dashboard
+ </Link>
+ </div>
+ </aside>
 
-          <div className="flex min-w-0 flex-col gap-5 md:gap-6">
-            <div className="surface-panel flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 rounded-[calc(var(--radius-2xl)*var(--brm))] squircle px-4 md:px-5 py-3 md:py-4 lg:hidden">
-              <div className="min-w-0">
-                <Text as="p" variant="label" weight="bold" color="brand">
-                  {roleLabel}
-                </Text>
-                <Text as="p" variant="h6" weight="bold" className="mt-0.5 truncate max-w-[200px] sm:max-w-none">
-                  MindBridge
-                </Text>
-              </div>
-              <Button href="/" variant="warm" size="sm" className="shrink-0">
-                Home
-              </Button>
-            </div>
+ <div className="flex flex-1 flex-col min-w-0">
+ <div className="lg:hidden flex items-center justify-between border-b border-[var(--color-border)] p-4 bg-[var(--color-background)]">
+ <Link href="/" className="inline-flex items-center gap-2 font-bold text-[var(--color-text-primary)]">
+ <Icon icon="solar:crown-star-bold" className="h-5 w-5 text-[var(--color-primary)]" />
+ <span>MindBridge</span>
+ </Link>
+ </div>
 
-            <div className="overflow-x-auto lg:hidden -mx-4 px-4 md:mx-0 md:px-0">
-              <div className="flex min-w-max gap-2 md:gap-3 pb-1">
-                {navItems.map((item) => {
-                  const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "solar:widget-linear";
-                  const isActive = pathname === item.href;
+ <div className="overflow-x-auto lg:hidden border-b border-[var(--color-border)]">
+ <div className="flex min-w-max gap-2 p-3">
+ {navItems.map((item) => {
+ const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "solar:widget-linear";
+ const isActive = pathname === item.href;
+ return (
+ <Link
+ key={item.href}
+ href={item.href}
+ aria-current={isActive ? "page" : undefined}
+ className={cn(
+ "inline-flex items-center gap-2 rounded-md px-3 py-2 text-span font-medium transition-colors",
+ isActive
+ ? "bg-[var(--color-surface-strong)] text-[var(--color-text-primary)]"
+ : "bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-tinted)]"
+ )}
+ >
+ <Icon icon={iconName} className="h-4 w-4" />
+ <span>{item.label}</span>
+ </Link>
+ );
+ })}
+ </div>
+ </div>
 
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      aria-current={isActive ? "page" : undefined}
-                      className={cn(
-                        "inline-flex min-h-11 items-center gap-2 rounded-full border px-3 md:px-4 py-2.5 text-label font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
-                        isActive
-                          ? "border-[var(--color-primary)] bg-[var(--color-primary-light)] text-[var(--color-text-primary)]"
-                          : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-primary-light)]"
-                      )}
-                    >
-                      <Icon icon={iconName} className="h-4 w-4" />
-                      <span className="hidden xs:inline">{item.label}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            {children}
-          </div>
-        </div>
-      </Container>
-    </main>
-  );
+ <div className="flex-1 w-full max-w-5xl mx-auto p-4 sm:p-6 md:p-8">
+ {children}
+ </div>
+ </div>
+ </main>
+ );
 }
+
+

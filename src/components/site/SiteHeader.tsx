@@ -7,98 +7,101 @@ import { Button, Container, Text } from "@/components/ui";
 import { marketingNav } from "@/content/mindbridge";
 
 export function SiteHeader() {
-  const [isOpen, setIsOpen] = useState(false);
+ const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <header className="sticky top-0 z-40 w-full pt-4 sm:pt-5">
-      <Container size="md">
-        <div className="surface-panel rounded-[calc(var(--radius-2xl)*var(--brm))] squircle px-4 py-3 sm:px-5">
-          <div className="flex items-center justify-between gap-3">
-            <Link href="/" className="group flex min-w-0 items-center gap-3">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-span font-bold text-[var(--color-white)]">
-                MB
-              </span>
-              <div className="min-w-0">
-                <Text as="p" variant="label" weight="bold" color="muted" className="tracking-[0.12em]">
-                  MindBridge
-                </Text>
-                <Text as="p" variant="small" color="secondary" className="mt-0.5 truncate">
-                  Your guide to a calmer mind
-                </Text>
-              </div>
-            </Link>
+ return (
+ <header className="sticky top-0 z-40 w-full pt-4 sm:pt-5">
+ <Container size="md">
+ <div className="surface-panel rounded-md px-4 py-3 sm:px-5">
+ <div className="flex items-center justify-between gap-3">
+ <Link href="/" className="group flex min-w-0 items-center gap-3">
+ <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-span font-bold text-[var(--color-white)]">
+ MB
+ </span>
+ <div className="min-w-0">
+ <Text as="p" variant="label" weight="bold" color="muted" className="tracking-[0.12em]">
+ MindBridge
+ </Text>
+ <Text as="p" variant="small" color="secondary" className="mt-0.5 truncate">
+ Your guide to a calmer mind
+ </Text>
+ </div>
+ </Link>
 
-            <nav className="hidden items-center gap-1 lg:gap-2 lg:flex">
-              {marketingNav.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="rounded-full px-3 lg:px-4 py-2 text-label font-medium text-[var(--color-text-secondary)] transition-[color,background-color] duration-200 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+ <nav className="hidden items-center gap-1 lg:gap-2 lg:flex">
+ {marketingNav.map((item) => (
+ <Link
+ key={item.href}
+ href={item.href}
+ className="rounded-full px-3 lg:px-4 py-2 text-label font-medium text-[var(--color-text-secondary)] transition-[color,background-color] duration-200 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
+ >
+ {item.label}
+ </Link>
+ ))}
+ </nav>
 
-            <div className="hidden items-center gap-2 lg:flex">
-              <Button href="/login" variant="ghost" size="sm">
-                Login
-              </Button>
-              <Button href="/student/dashboard" variant="warm" size="sm">
-                Dashboard
-              </Button>
-              <Button href="/student/settings" size="sm">
-                User Settings
-              </Button>
-              <Button href="/admin/login" size="sm" variant="ghost">
-                Admin Gateway
-              </Button>
-            </div>
+ <div className="hidden items-center gap-2 lg:flex">
+               <nav className="flex items-center border-r border-[var(--color-border)] pr-4 mr-2 gap-1">
+                 <Button href="/login" variant="ghost" size="sm" className="hidden xl:inline-flex">
+                   Login
+                 </Button>
+                 <Button href="/admin/login" size="sm" variant="ghost" className="hidden xl:inline-flex">
+                   Admin Gateway
+                 </Button>
+               </nav>
+               <Button href="/student/dashboard" variant="warm" size="sm" className="shrink-0 whitespace-nowrap">
+                 Dashboard
+               </Button>
+               <Button href="/student/settings" variant="ghost" size="sm" className="shrink-0 whitespace-nowrap">
+                 User Settings
+               </Button>
+ </div>
 
-            <button
-              type="button"
-              onClick={() => setIsOpen((open) => !open)}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] transition-colors duration-200 hover:bg-[var(--color-surface-tinted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] lg:hidden"
-              aria-expanded={isOpen}
-              aria-controls="marketing-menu"
-              aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
-            >
-              {isOpen ? <Icon icon="solar:close-circle-linear" className="h-5 w-5" /> : <Icon icon="solar:hamburger-menu-linear" className="h-5 w-5" />}
-            </button>
-          </div>
+ <button
+ type="button"
+ onClick={() => setIsOpen((open) => !open)}
+ className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] transition-colors duration-200 hover:bg-[var(--color-surface-tinted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-black)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] lg:hidden"
+ aria-expanded={isOpen}
+ aria-controls="marketing-menu"
+ aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+ >
+ {isOpen ? <Icon icon="solar:close-circle-linear" className="h-5 w-5" /> : <Icon icon="solar:hamburger-menu-linear" className="h-5 w-5" />}
+ </button>
+ </div>
 
-          {isOpen ? (
-            <div id="marketing-menu" className="mt-4 border-t border-[var(--color-border)] pt-4 lg:hidden">
-              <div className="grid gap-2">
-                {marketingNav.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className="interactive-panel flex min-h-[3rem] items-center justify-between rounded-[calc(var(--radius-md)*var(--brm))] squircle px-4 py-3 text-label font-medium text-[var(--color-text-primary)]"
-                  >
-                    <span>{item.label}</span>
-                    <Icon icon="solar:arrow-right-linear" className="h-4 w-4 text-[var(--color-black)]" />
-                  </Link>
-                ))}
-              </div>
+ {isOpen ? (
+ <div id="marketing-menu" className="mt-4 border-t border-[var(--color-border)] pt-4 lg:hidden">
+ <div className="grid gap-2">
+ {marketingNav.map((item) => (
+ <Link
+ key={item.href}
+ href={item.href}
+ onClick={() => setIsOpen(false)}
+ className="interactive-panel flex min-h-[3rem] items-center justify-between rounded-md px-4 py-3 text-label font-medium text-[var(--color-text-primary)]"
+ >
+ <span>{item.label}</span>
+ <Icon icon="solar:arrow-right-linear" className="h-4 w-4 text-[var(--color-black)]" />
+ </Link>
+ ))}
+ </div>
 
-              <div className="mt-4 grid gap-2">
-                <Button href="/admin/login" variant="ghost" className="w-full justify-between">
-                  Admin Gateway
-                  <Icon icon="solar:arrow-right-linear" className="h-4 w-4" />
-                </Button>
-                <Button href="/student/dashboard" variant="warm" className="w-full">
-                  Dashboard
-                </Button>
-                <Button href="/student/settings" className="w-full">
-                  User Settings
-                </Button>
-              </div>
-            </div>
-          ) : null}
-        </div>
-      </Container>
-    </header>
-  );
+ <div className="mt-4 grid gap-2">
+ <Button href="/admin/login" variant="ghost" className="w-full justify-between">
+ Admin Gateway
+ <Icon icon="solar:arrow-right-linear" className="h-4 w-4" />
+ </Button>
+ <Button href="/student/dashboard" variant="warm" className="w-full">
+ Dashboard
+ </Button>
+ <Button href="/student/settings" className="w-full">
+ User Settings
+ </Button>
+ </div>
+ </div>
+ ) : null}
+ </div>
+ </Container>
+ </header>
+ );
 }
+

@@ -146,7 +146,7 @@ export default function AdminStudentDetailsPage() {
       <Card className="p-6 bg-[var(--color-surface-soft)]">
         <div className="flex justify-between items-center mb-4">
           <Text variant="h3">Weekly Report</Text>
-          <Button variant="secondary" onClick={handleGenerateReport} disabled={loadingReport}>
+          <Button variant="ghost" onClick={handleGenerateReport} disabled={loadingReport}>
             {loadingReport ? 'Generating...' : 'Generate Weekly Report'}
           </Button>
         </div>

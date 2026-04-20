@@ -2,33 +2,34 @@ import { ReactNode } from "react";
 import { Text } from "@/components/ui";
 
 interface PageIntroProps {
-  eyebrow?: string;
-  title: string;
-  description: string;
-  actions?: ReactNode;
-  className?: string;
+ eyebrow?: string;
+ title: string;
+ description: string;
+ actions?: ReactNode;
+ className?: string;
 }
 
 export function PageIntro({ eyebrow, title, description, actions, className }: PageIntroProps) {
-  return (
-    <div className={`section-divider flex flex-col gap-5 rounded-[calc(var(--radius-2xl)*var(--brm))] squircle border border-[var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(255,255,255,0.97))] p-6 sm:p-8 ${className || ""}`}>
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-[52rem]">
-          {eyebrow && (
-            <Text as="p" variant="label" weight="bold" color="brand" className="mb-1">
-              {eyebrow}
-            </Text>
-          )}
-          <Text as="h1" variant="h1" weight="bold" className="mt-3 max-w-[18ch] text-balance">
-            {title}
-          </Text>
-          <Text as="p" variant="body" color="secondary" className="mt-3 max-w-[62ch]">
-            {description}
-          </Text>
-        </div>
+ return (
+ <div className={`section-divider flex flex-col gap-5 rounded-md border border-[var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(255,255,255,0.97))] p-6 sm:p-8 ${className || ""}`}>
+ <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+ <div className="max-w-[52rem]">
+ {eyebrow && (
+ <Text as="p" variant="label" weight="bold" color="brand" className="mb-1">
+ {eyebrow}
+ </Text>
+ )}
+ <Text as="h1" variant="h1" weight="bold" className="mt-3 max-w-[18ch] text-balance">
+ {title}
+ </Text>
+ <Text as="p" variant="body" color="secondary" className="mt-3 max-w-[62ch]">
+ {description}
+ </Text>
+ </div>
 
-        {actions ? <div className="flex flex-wrap gap-3">{actions}</div> : null}
-      </div>
-    </div>
-  );
+ {actions ? <div className="flex flex-wrap gap-3">{actions}</div> : null}
+ </div>
+ </div>
+ );
 }
+

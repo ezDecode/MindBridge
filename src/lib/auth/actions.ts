@@ -11,6 +11,29 @@ export type AuthState = {
   message?: string
 }
 
+export async function signInWithGoogle() {
+  const supabase = await createClient()
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      },
+    },
+  })
+
+  if (data.url) {
+    redirect(data.url)
+  }
+
+  if (error) {
+    console.error('Google OAuth error:', error.message)
+    redirect('/login?error=Could not authenticate with Google')
+  }
+}
+
 export async function signInWithPassword(
   prevState: AuthState,
   formData: FormData
@@ -87,6 +110,34 @@ export async function signUpWithPassword(
   return {
     success: true,
     message: 'Account created! You can now sign in.',
+  }
+}
+
+export async function sendOtp(
+  prevState: AuthState,
+  formData: FormData
+): Promise<AuthState> {
+  const supabase = await createClient()
+  const email = formData.get('email') as string
+
+  if (!email || !email.includes('@')) {
+    return { error: 'Please enter a valid email address' }
+  }
+
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      shouldCreateUser: false,
+    },
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return {
+    success: true,
+    message: 'We sent a login code/link to your email.',
   }
 }
 

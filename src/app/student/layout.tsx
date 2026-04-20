@@ -1,5 +1,6 @@
 export default function StudentLayout({
-  children,
+ children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return <>{children}</>;
+ return <>{children}</>;
 }
+
