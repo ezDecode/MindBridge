@@ -29,9 +29,10 @@ interface BridgeTabProps {
  trendDirection: string;
  completedDays: number;
  onOpenQuestionnaire: () => void;
- onSwitchToMind: () => void;
- activeTab: TabId;
- setActiveTab: (tab: TabId) => void;
+ onOpenSidebar: () => void;
+ onOpenCheckIn: () => void;
+ onOpenBooking: () => void;
+ onOpenAnalytics: () => void;
 }
 
 const assessmentTone: Record<NonNullable<DashboardData["latestAssessment"]>["severity"], string> = {
@@ -70,7 +71,6 @@ function MoodTooltip({
  );
 }
 
-import { DashboardSidebar } from "./DashboardSidebar";
 export function BridgeTab({
  data,
  userName,
@@ -82,42 +82,28 @@ export function BridgeTab({
  trendDirection,
  completedDays,
  onOpenQuestionnaire,
- onSwitchToMind,
- activeTab,
- setActiveTab,
-}: BridgeTabProps) {
- const [sidebarOpen, setSidebarOpen] = useState(false);
-  const latestAssessment = data?.latestAssessment;
- const assessmentLabel = latestAssessment ? assessmentTone[latestAssessment.severity] : "No guided scan yet";
- const assessmentCopy = latestAssessment?.criteriaFlagged.length
- ? latestAssessment.criteriaFlagged
- .slice(0, 3)
- .map((item) => item.replaceAll("_", " "))
- .join(" • ")
- : "Run a question set for a richer mood read.";
 
- return (
+  onOpenSidebar,
+  onOpenCheckIn,
+  onOpenBooking,
+  onOpenAnalytics,
+}: BridgeTabProps) {
+  const latestAssessment = data?.latestAssessment;
+  const assessmentLabel = latestAssessment ? assessmentTone[latestAssessment.severity] : "No guided scan yet";
+  const assessmentCopy = latestAssessment?.criteriaFlagged.length
+    ? latestAssessment.criteriaFlagged
+        .slice(0, 3)
+        .map((item) => item.replaceAll("_", " "))
+        .join(" • ")
+    : "Run a question set for a richer mood read.";
+
+  return (
     <>
-      <div className="flex h-full min-h-0 bg-[var(--color-surface-tinted)] lg:bg-[var(--color-background)]">
-        <DashboardSidebar
-          userName={userName}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          onSwitchToBridge={() => {}}
-          onSwitchToMind={onSwitchToMind}
-          startNewSession={() => {}}
-          onOpenQuestionnaire={onOpenQuestionnaire}
-          setShowCheckIn={() => {}}
-          setShowBookingModal={() => {}}
-          setShowAnalyticsModal={() => {}}
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
-        <section className="relative flex min-h-0 min-w-0 flex-1 flex-col bg-[var(--color-surface)] lg:m-2 lg:rounded-[1.5rem] lg:border lg:border-[var(--color-border)] lg:shadow-sm">
+        <section className="relative flex h-full min-h-0 min-w-0 flex-1 flex-col bg-[var(--color-surface)] lg:m-2 lg:rounded-[1.5rem] lg:border lg:border-[var(--color-border)] lg:shadow-sm">
           <header className="absolute top-0 left-0 z-20 flex w-full items-center p-4 lg:hidden bg-gradient-to-b from-[var(--color-background)] to-transparent">
              <button
               type="button"
-              onClick={() => setSidebarOpen(true)}
+              onClick={onOpenSidebar}
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface)] text-[var(--color-text-secondary)] shadow-sm border border-[var(--color-border)]"
             >
               <Icon icon="tabler:menu-2" className="h-5 w-5" />
@@ -140,10 +126,6 @@ export function BridgeTab({
  </Text>
 
  <div className="mt-5 flex flex-wrap gap-3">
- <Button onClick={onSwitchToMind} size="sm" className="gap-2">
- <Icon icon="tabler:message-circle" className="h-4 w-4" />
- Open chat
- </Button>
  <Button onClick={onOpenQuestionnaire} variant="warm" size="sm" className="gap-2">
  <Icon icon="tabler:bolt" className="h-4 w-4" />
  Start question set
@@ -228,8 +210,8 @@ export function BridgeTab({
  </span>
  </div>
 
- <div className="mt-6 h-64">
- <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
+ <div className="mt-6 h-64 w-full">
+ <ResponsiveContainer width="99%" height="100%" minWidth={100} minHeight={100}>
  <BarChart data={moodHistory} barCategoryGap="24%">
  <CartesianGrid vertical={false} stroke="#e8dfd4" strokeDasharray="4 4" />
  <XAxis
@@ -301,34 +283,19 @@ export function BridgeTab({
  onClick={onOpenQuestionnaire}
  />
  <CompactAction
- icon={<Icon icon="tabler:message-circle" className="h-4 w-4" />}
- title="Talk in chat"
- copy="Use the companion when you want to unpack something in real time."
- action="Open chat"
- onClick={onSwitchToMind}
+ icon={<Icon icon="tabler:calendar-plus" className="h-4 w-4" />}
+ title="Book session"
+ copy="Reserve a support slot when you want a human conversation."
+ action="Open booking"
+ onClick={onOpenBooking}
  />
- <Link
- href="/student/book"
- className="group rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-warm)]"
- >
- <div className="flex items-start gap-3">
- <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--color-surface-warm)] text-[var(--color-primary)]">
- <Icon icon="tabler:calendar" className="h-4 w-4" />
- </div>
- <div className="min-w-0">
- <Text as="p" variant="small" weight="bold" className="text-[var(--color-text-primary)]">
- Book counselor
- </Text>
- <Text as="p" variant="small" className="mt-1 leading-6 text-[var(--color-text-secondary)]">
- Reserve a support slot when you want a human conversation.
- </Text>
- <span className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-text-primary)]">
- Open booking
- <Icon icon="tabler:arrow-right" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
- </span>
- </div>
- </div>
- </Link>
+ <CompactAction
+ icon={<Icon icon="tabler:book" className="h-4 w-4" />}
+ title="Library"
+ copy="Browse resources and readings."
+ action="View"
+ onClick={() => window.location.href = '/student/resources'}
+ />
  </div>
  </Card>
 
@@ -382,8 +349,7 @@ export function BridgeTab({
  </div>
  </div>
  </section>
- </div>
- </>
+    </>
  );
 }
 

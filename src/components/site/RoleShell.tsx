@@ -34,117 +34,113 @@ export function RoleShell({
 }: RoleShellProps) {
  const pathname = usePathname();
 
- return (
- <main id="main-content" className="protected-shell w-full flex min-h-[100svh]">
- <aside className="hidden h-screen w-[17rem] shrink-0 flex-col overflow-y-auto border-r border-[var(--color-border)]/80 bg-[color-mix(in_srgb,var(--color-surface),var(--color-surface-warm)_42%)] lg:flex">
- <div className="flex flex-col gap-6 p-4">
- <Link
- href="/"
- className="inline-flex items-center gap-2 px-2 text-label font-bold text-[var(--color-text-primary)] transition-opacity duration-200 hover:opacity-80"
- >
- <span className="flex h-10 w-10 items-center justify-center rounded-[0.95rem] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-primary)] shadow-[var(--shadow-sm)]">
- <Icon icon="tabler:crown" className="h-5 w-5" />
- </span>
- <span>MindBridge</span>
- </Link>
+  return (
+    <main id="main-content" className="protected-shell w-full flex min-h-[100svh] bg-[var(--color-base-bg)]">
+      {/* SIDEBAR */}
+      <aside className="hidden h-screen w-[200px] shrink-0 flex-col overflow-y-auto border-none bg-[var(--color-base-sidebar)] lg:flex">
+        <div className="flex flex-col gap-6 p-4">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-2 text-label font-bold text-[var(--color-text-primary)] transition-opacity duration-200 hover:opacity-80"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-[0.95rem] border-none bg-[var(--color-base-bg)] text-[var(--color-accent-electric)]">
+              <Icon icon="tabler:crown" className="h-5 w-5" />
+            </span>
+            <span>MindBridge</span>
+          </Link>
 
- <div className="rounded-[1.25rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-3 shadow-[var(--shadow-sm)]">
- <Text as="p" className="mb-3 px-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--color-text-muted)]">
- Quick start
- </Text>
- <Button variant="warm" className="h-11 w-full justify-start px-4 text-[var(--color-text-primary)]">
- <Icon icon="tabler:plus" className="mr-2 h-4 w-4" />
- New Entry
- </Button>
- </div>
- </div>
+          <button className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm text-[var(--color-text-muted)] hover:bg-[var(--color-base-hover)] hover:text-[var(--color-text-primary)] transition-colors duration-200 cursor-pointer outline-none">
+            <span className="flex items-center gap-3">
+              <Icon icon="tabler:plus" className="h-4 w-4" />
+              New Session
+            </span>
+            <span className="text-xs font-medium opacity-50">⌘K</span>
+          </button>
+        </div>
 
- <div className="flex flex-1 flex-col gap-1 px-3">
- <Text as="p"  className="mb-2 px-3 text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--color-text-muted)]">
- {roleLabel} Panel
- </Text>
- {navItems.map((item) => {
- const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "tabler:layout-grid";
- const isActive = pathname === item.href;
+        <div className="flex flex-col gap-1 px-3">
+          {navItems.map((item) => {
+            const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "tabler:layout-grid";
+            const isActive = pathname === item.href;
 
- return (
- <Link
- key={item.href}
- href={item.href}
- aria-current={isActive ? "page" : undefined}
- className={cn(
- "flex items-center gap-3 rounded-[0.95rem] px-3 py-2.5 text-label font-medium transition-[background-color,border-color,color,box-shadow] duration-200 ease-[var(--ease-out)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-primary-light)]",
- isActive
- ? "border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]"
- : "border border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)]"
- )}
- >
- <Icon icon={iconName} className="h-[1.125rem] w-[1.125rem]" />
- {item.label}
- </Link>
- );
- })}
- </div>
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={isActive ? "page" : undefined}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200 ease-in-out focus-visible:outline-none",
+                  isActive
+                    ? "bg-[#1f1f1f] text-white"
+                    : "bg-transparent text-[var(--color-text-muted)] hover:bg-[var(--color-base-hover)] hover:text-[var(--color-text-primary)]"
+                )}
+              >
+                <Icon icon={iconName} className="h-4 w-4" />
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
 
- <div className="m-3 mt-auto rounded-[1.25rem] border border-[var(--color-border)] bg-[var(--color-surface)] p-2.5 shadow-[var(--shadow-sm)]">
- <Link href="/counselor/dashboard" className="flex items-center gap-3 rounded-[0.95rem] px-3 py-2 text-[13px] font-medium text-[var(--color-info)] transition-colors hover:bg-[var(--color-surface-tinted)]">
- <Icon icon="tabler:user-shield" className="h-[1.125rem] w-[1.125rem]" />
- Counselor Access
- </Link>
- <Link href="/admin/dashboard" className="flex items-center gap-3 rounded-[0.95rem] px-3 py-2 text-[13px] font-medium text-[var(--color-danger)] transition-colors hover:bg-[var(--color-surface-tinted)]">
- <Icon icon="tabler:lock" className="h-[1.125rem] w-[1.125rem]" />
- Admin Panel
- </Link>
- <Link href="/student/settings" className="mt-2 flex items-center gap-3 rounded-[0.95rem] border-t border-[var(--color-border)] px-3 pt-3 pb-2 text-label font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-surface-tinted)] hover:text-[var(--color-text-primary)]">
- <Icon icon="tabler:user-circle" className="h-[1.125rem] w-[1.125rem]" />
- User Profile
- </Link>
- <Link href="/" className="mt-1 flex items-center gap-3 rounded-[0.95rem] px-3 py-2 text-label font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-surface-tinted)] hover:text-[var(--color-text-primary)]">
- <Icon icon="tabler:logout" className="h-[1.125rem] w-[1.125rem]" />
- Leave Dashboard
- </Link>
- </div>
- </aside>
+        {/* BOTTOM USER AVATAR AND ACTIONS */}
+        <div className="mt-auto p-3 mb-2 flex flex-col gap-1">
+          <Link href="/student/settings" className="group flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-[var(--color-text-primary)] hover:bg-[var(--color-base-hover)]">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[var(--color-accent-electric)] text-[var(--color-white)] text-xs font-bold shrink-0">
+                N
+              </div>
+              Nemo
+            </div>
+            <Icon icon="tabler:settings" className="h-4 w-4 text-[var(--color-text-muted)] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+          </Link>
+        </div>
+      </aside>
 
- <div className="flex flex-1 flex-col min-w-0">
- <div className="flex items-center justify-between border-b border-[var(--color-border)]/80 bg-[color-mix(in_srgb,var(--color-surface),var(--color-surface-warm)_38%)] p-4 lg:hidden">
- <Link href="/" className="inline-flex items-center gap-2 font-bold text-[var(--color-text-primary)]">
- <span className="flex h-10 w-10 items-center justify-center rounded-[0.95rem] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-primary)] shadow-[var(--shadow-sm)]">
- <Icon icon="tabler:crown" className="h-5 w-5" />
- </span>
- <span>MindBridge</span>
- </Link>
- </div>
+      {/* MAIN CONTENT AREA */}
+      <div className="flex flex-1 flex-col min-w-0 bg-[var(--color-base-bg)]">
+        {/* Mobile Header (Hidden on large screens) */}
+        <div className="flex items-center justify-between bg-[var(--color-base-bg)] p-4 lg:hidden">
+          <Link href="/" className="inline-flex items-center gap-2 font-bold text-[var(--color-text-primary)]">
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg border-none bg-[var(--color-base-card)] text-[var(--color-accent-electric)]">
+              <Icon icon="tabler:crown" className="h-5 w-5" />
+            </span>
+            <span>MindBridge</span>
+          </Link>
+        </div>
 
- <div className="overflow-x-auto border-b border-[var(--color-border)]/80 lg:hidden">
- <div className="flex min-w-max gap-2 p-3">
- {navItems.map((item) => {
- const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "tabler:layout-grid";
- const isActive = pathname === item.href;
- return (
- <Link
- key={item.href}
- href={item.href}
- aria-current={isActive ? "page" : undefined}
- className={cn(
- "inline-flex items-center gap-2 rounded-[0.95rem] border px-3 py-2 text-span font-medium transition-colors",
- isActive
- ? "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]"
- : "border-transparent bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:border-[var(--color-border)] hover:bg-[var(--color-surface-tinted)]"
- )}
- >
- <Icon icon={iconName} className="h-4 w-4" />
- <span>{item.label}</span>
- </Link>
- );
- })}
- </div>
- </div>
+        {/* Mobile Nav */}
+        <div className="overflow-x-auto border-none lg:hidden">
+          <div className="flex min-w-max gap-2 p-3 bg-[var(--color-base-bg)]">
+            {navItems.map((item) => {
+              const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "tabler:layout-grid";
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={cn(
+                    "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors border-none",
+                    isActive
+                      ? "bg-[var(--color-base-hover)] text-[var(--color-text-primary)]"
+                      : "bg-transparent text-[var(--color-text-muted)] hover:bg-[var(--color-base-hover)]"
+                  )}
+                >
+                  <Icon icon={iconName} className="h-4 w-4" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
 
- <div className="w-full max-w-6xl flex-1 px-4 py-4 sm:px-6 sm:py-6 md:px-8">
- {children}
- </div>
- </div>
- </main>
- );
+        {/* Dynamic Content Wrapper */}
+        <div className="w-full flex-1 flex flex-col items-center justify-center">
+          <div className="w-full max-w-6xl px-4 py-4 sm:px-6 sm:py-6 md:px-8 flex-1">
+            {children}
+          </div>
+        </div>
+      </div>
+    </main>
+  );
 }

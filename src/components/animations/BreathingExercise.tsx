@@ -123,7 +123,7 @@ export function BreathingExercise({
  className={`w-full p-4 rounded-md border-2 text-left transition-all duration-300 ${
  technique === tech
  ? "border-[var(--color-primary)] bg-[var(--color-primary-light)] shadow-md"
- : "border-[var(--color-border)] hover:border-[var(--color-border-strong)] bg-[var(--color-surface)] hover:shadow-md hover:-translate-y-0.5"
+ : "border-[var(--color-border)] hover:border-[var(--color-border-strong)] bg-[var(--color-surface)] hover:shadow-md "
  }`}
  >
  <div className="flex items-center justify-between">
@@ -198,8 +198,8 @@ export function BreathingExercise({
  >
  <div className="flex items-center justify-between w-full mb-6">
  <motion.button
- whileHover={{ scale: 1.05 }}
- whileTap={{ scale: 0.97 }}
+ 
+ 
  onClick={handleReset}
  className="p-2.5 rounded-full bg-[var(--color-surface-warm)] border border-[var(--color-border)] hover:border-[var(--color-border-strong)] transition-colors"
  style={{ WebkitTapHighlightColor: "transparent" }}
@@ -226,8 +226,8 @@ export function BreathingExercise({
  </div>
  
  <motion.button
- whileHover={{ scale: 1.05 }}
- whileTap={{ scale: 0.97 }}
+ 
+ 
  onClick={() => {
  const keys = Object.keys(TECHNIQUES) as BreathingTechnique[];
  const currentIndex = keys.indexOf(technique);

@@ -8,10 +8,6 @@ import { Text } from "@/components/ui";
 import { getAssessmentLabel } from "@/lib/question-bank";
 import { ChatInput, ChatWindow } from "@/components/chat";
 import type { Message } from "@/hooks/useChat";
-import { CheckInModal } from "./CheckInModal";
-import { BookingModal } from "./BookingModal";
-import { AnalyticsModal } from "./AnalyticsModal";
-import { DashboardSidebar } from "./DashboardSidebar";
 import type { DashboardData, TabId } from "./types";
 
 interface MindTabProps {
@@ -27,9 +23,10 @@ interface MindTabProps {
   onAutoOpenCheckInHandled?: () => void;
   onMoodLogged?: () => void;
   onOpenQuestionnaire: () => void;
-  onSwitchToBridge: () => void;
-  activeTab: TabId;
-  setActiveTab: (tab: TabId) => void;
+  onOpenSidebar: () => void;
+  onOpenCheckIn: () => void;
+  onOpenBooking: () => void;
+  onOpenAnalytics: () => void;
 }
 
 export function MindTab({
@@ -45,49 +42,24 @@ export function MindTab({
   onAutoOpenCheckInHandled,
   onMoodLogged,
   onOpenQuestionnaire,
-  onSwitchToBridge,
-  activeTab,
-  setActiveTab,
+  onOpenSidebar,
+  onOpenCheckIn,
+  onOpenBooking,
+  onOpenAnalytics,
 }: MindTabProps) {
   const router = useRouter();
-  const [showCheckIn, setShowCheckIn] = useState(false);
-  const [showBookingModal, setShowBookingModal] = useState(false);
-  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const isCheckInOpen = showCheckIn || Boolean(autoOpenCheckIn);
   const hasMessages = messages.length > 0;
-
-  const handleCloseCheckIn = () => {
-    setShowCheckIn(false);
-    onAutoOpenCheckInHandled?.();
-  };
 
   return (
     <>
-      <div className="flex h-full min-h-0 bg-[var(--color-surface-tinted)] lg:bg-[var(--color-background)]">
-        <DashboardSidebar
-          userName={userName}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          onSwitchToBridge={onSwitchToBridge}
-          onSwitchToMind={() => {}}
-          startNewSession={startNewSession}
-          onOpenQuestionnaire={onOpenQuestionnaire}
-          setShowCheckIn={setShowCheckIn}
-          setShowBookingModal={setShowBookingModal}
-          setShowAnalyticsModal={setShowAnalyticsModal}
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
-
         {/* Main Content Area */}
-        <section className="relative flex min-h-0 min-w-0 flex-1 flex-col bg-[var(--color-surface)] lg:m-2 lg:rounded-[1.5rem] lg:border lg:border-[var(--color-border)] lg:shadow-sm">
+        <section className="relative flex h-full min-h-0 min-w-0 flex-1 flex-col bg-[var(--color-surface)] lg:m-2 lg:rounded-[1.5rem] lg:border lg:border-[var(--color-border)] lg:shadow-sm">
           {/* Top Header - Mobile Only or Just the hamburger */}
           <header className="absolute top-0 left-0 z-20 flex w-full items-center p-4 lg:hidden bg-gradient-to-b from-[var(--color-background)] to-transparent">
              <button
               type="button"
-              onClick={() => setSidebarOpen(true)}
+              onClick={onOpenSidebar}
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface)] text-[var(--color-text-secondary)] shadow-sm border border-[var(--color-border)]"
             >
               <Icon icon="tabler:menu-2" className="h-5 w-5" />
@@ -113,16 +85,16 @@ export function MindTab({
                     isLoading={isLoading}
                     onStop={stopGenerating}
                     placeholder="Ask anything..."
-                    onBookSession={() => setShowBookingModal(true)}
-                    onViewAnalytics={() => setShowAnalyticsModal(true)}
-                    onQuickMoodLog={() => setShowCheckIn(true)}
+                    onBookSession={onOpenBooking}
+                    onViewAnalytics={onOpenAnalytics}
+                    onQuickMoodLog={onOpenCheckIn}
                     onGuidedQuestions={() => onOpenQuestionnaire()}
                   />
 
                   {/* Suggestion Chips Below Input */}
                   <div className="mt-12 flex flex-wrap justify-center gap-3">
                     <button 
-                      onClick={() => setShowCheckIn(true)}
+                      onClick={onOpenCheckIn}
                       className="group flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 pr-5 text-sm font-medium text-[var(--color-text-secondary)] transition-all hover:-translate-y-0.5 hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-warm)] hover:shadow-sm"
                     >
                       <Icon icon="tabler:mood-smile" className="h-[18px] w-[18px] text-[var(--color-primary)]" />
@@ -148,7 +120,7 @@ export function MindTab({
                     isLoading={isLoading}
                     onSuggestionSelect={sendMessage}
                     onActionSelect={(action) => {
-                      if (action === "book_counselor") setShowBookingModal(true);
+                      if (action === "book_counselor") onOpenBooking();
                       if (action === "show_resources") router.push("/student/resources");
                     }}
                    />
@@ -175,9 +147,9 @@ export function MindTab({
                     isLoading={isLoading}
                     onStop={stopGenerating}
                     placeholder="Ask anything..."
-                    onBookSession={() => setShowBookingModal(true)}
-                    onViewAnalytics={() => setShowAnalyticsModal(true)}
-                    onQuickMoodLog={() => setShowCheckIn(true)}
+                    onBookSession={onOpenBooking}
+                    onViewAnalytics={onOpenAnalytics}
+                    onQuickMoodLog={onOpenCheckIn}
                     onGuidedQuestions={() => onOpenQuestionnaire()}
                    />
                   </div>
@@ -186,18 +158,6 @@ export function MindTab({
             )}
           </div>
         </section>
-      </div>
-
-      <CheckInModal isOpen={isCheckInOpen} onClose={handleCloseCheckIn} onComplete={onMoodLogged} />
-      <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
-      <AnalyticsModal
-        isOpen={showAnalyticsModal}
-        onClose={() => setShowAnalyticsModal(false)}
-        onGoToDashboard={() => {
-          setShowAnalyticsModal(false);
-          onSwitchToBridge();
-        }}
-      />
     </>
   );
 }

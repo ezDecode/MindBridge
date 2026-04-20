@@ -54,67 +54,33 @@
   --font-size-span--letter-spacing: -0.011em;
 
   /* ── Neutrals ── */
-  --color-black: #000000;
-  --color-black-dark: #141313;
-    --color-white: #FFFFFF;
-
+  --color-base-bg: #0d0d0d;
+  --color-base-sidebar: #111111;
+  --color-base-hover: #1a1a1a;
+  --color-base-card: #1c1c1c;
+  --color-base-border: #2a2a2a;
+  --color-base-chip: #1e1e1e;
+  --color-base-chipBorder: #333333;
+  
   /* ── Text ── */
-  --color-text-primary: #2D2926;
-  --color-text-secondary: #5C5550;
-  --color-text-muted: #8A827A;
-  --color-text-muted-light: #8A827A;
-  --color-text-inverse: #FFFFFF;
-
-  /* ── Primary (Soft Terracotta) ── */
-  --color-primary: #C9744D;
-  --color-primary-soft: #F3E5DC;
-  --color-primary-light: #FBF3EE;
-  --color-primary-dark: #A85A37;
-  --color-primary-darker: #884529;
-  --color-link: #C9744D;
-
+  --color-text-primary: #ffffff;
+  --color-text-muted: #888888;
+  --color-text-icon: #666666;
+  
   /* ── Accent ── */
-  --color-accent: #C49A63;
-  --color-accent-dark: #A77F49;
-  --color-accent-light: #F7ECDD;
-  --color-accent-pink: #C98993;
+  --color-accent-electric: #0047FF;
+  --color-accent-electricHover: #0035CC;
+  --color-accent-electricGlow: rgba(0, 71, 255, 0.2);
+  --color-accent-electricLight: #4D85FF;
 
-  /* ── Surface ── */
-  --color-surface: #FFFDF9;
-  --color-surface-warm: #F7F0E9;
-  --color-surface-warm-hover: #F1E7DD;
-  --color-surface-warm-active: #E9DDD0;
-  --color-surface-tinted: #F6EFE8;
-  --color-surface-dark: #2D2926;
-  --color-surface-dark-alt: #3D3834;
-  --color-surface-strong: #EFE5DA;
-  --color-background: #F6F0E9;
+  --color-black: #0d0d0d;
+  --color-white: #ffffff;
 
-  /* ── Borders ── */
-  --color-border: #D8CBBB;
-  --color-border-strong: #BDAE9B;
-  --color-border-light: #E8DED2;
-  --color-border-cool: #E4DCD4;
-  --color-border-warm: #D8CBBB;
-  --color-border-dark: #8A827A;
-
-  /* ── Semantic ── */
-  --color-success: #6E8F7C;
-  --color-success-dark: #55705F;
-  --color-success-soft: #E7EFEA;
-  --color-warning: #C88A64;
-  --color-warning-soft: #F8EBE2;
-  --color-danger: #BA6B68;
-  --color-danger-soft: #F8E9E8;
-  --color-info: #6C879B;
-  --color-info-soft: #EAF0F4;
-
-  /* ── Gray scale (warm-tinted) ── */
-  --color-gray-50: #fbf8f4;
-  --color-gray-100: #f2ece4;
-  --color-gray-200: #e7ddd2;
-  --color-gray-300: #d8cbbb;
-  --color-gray-400: #bfae9d;
+  /* ── Primary Remaps ── */
+  --color-primary: var(--color-accent-electric);
+  --color-surface: var(--color-base-card);
+  --color-background: var(--color-base-bg);
+  --color-border: var(--color-base-border);
 
   /* ── Easing ── */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -132,11 +98,11 @@
   --radius-xl: 1.25rem;
   --radius-2xl: 1.5rem;
 
-  /* ── Shadows ── */
-  --shadow-sm: 0 6px 18px rgba(52, 43, 37, 0.05);
-  --shadow-md: 0 12px 28px rgba(52, 43, 37, 0.08);
-  --shadow-lg: 0 18px 40px rgba(52, 43, 37, 0.11);
-  --shadow-xl: 0 24px 56px rgba(52, 43, 37, 0.14);
+  /* ── Shadows (High-end architectural) ── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
 
   /* ── Touch Targets ── */
   --spacing-touch-min: 2.75rem;
@@ -171,9 +137,9 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--color-background);
+  background: var(--color-base-bg);
   color: var(--color-text-primary);
-  font-family: var(--font-sans);
+  font-family: 'Inter', var(--font-sans);
   font-kerning: normal;
   text-rendering: optimizeLegibility;
 }

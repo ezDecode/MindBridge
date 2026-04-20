@@ -70,18 +70,18 @@ export function ChatInput({
  }
 
  return (
- <div className="relative mx-auto w-full max-w-[52rem]">
- <motion.form
+ <div className="relative mx-auto w-full max-w-[580px]">
+ <form
  onSubmit={handleSubmit}
  className={cn(
- "relative flex w-full flex-col overflow-hidden rounded-[22px] border bg-[var(--color-surface)] transition-all duration-300",
+ "relative flex w-full flex-col overflow-hidden rounded-2xl border bg-[var(--color-base-card)] transition-all duration-200",
  isFocused
- ? "border-[var(--color-primary)] ring-4 ring-[var(--color-primary-light)] shadow-[0_18px_42px_rgba(244,125,75,0.14)]"
- : "border-[var(--color-border)] shadow-[0_14px_34px_rgba(45,41,38,0.08)] hover:border-[var(--color-border-strong)]"
+ ? "border-[var(--color-accent-electric)] ring-2 ring-[var(--color-accent-electricGlow)] shadow-none"
+ : "border-[var(--color-base-border)] shadow-none"
  )}
  >
  <div className="flex flex-row items-end px-3 pt-3 pb-2">
- <div className="relative z-10 flex flex-1 items-center px-2.5">
+ <div className="relative z-10 flex flex-1 items-center px-1">
  <textarea
  ref={textareaRef}
  value={input}
@@ -92,7 +92,7 @@ export function ChatInput({
  placeholder={placeholder}
  disabled={disabled || isLoading}
  rows={1}
- className="max-h-[150px] min-h-[44px] w-full flex-1 resize-none bg-transparent py-3 text-[0.98rem] leading-7 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none disabled:opacity-50"
+ className="max-h-[150px] min-h-[44px] w-full flex-1 resize-none bg-transparent py-3 text-sm leading-6 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none disabled:opacity-50"
  aria-label="Message input"
  />
  </div>
@@ -109,13 +109,13 @@ export function ChatInput({
  >
  <Button
  type="button"
- variant="warm"
+ variant="ghost"
  size="sm"
  onClick={onStop}
- className="h-10 w-10 rounded-md border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] text-[var(--color-danger)] transition-colors duration-200 hover:bg-[var(--color-danger-soft)]"
+ className="h-10 w-10 shrink-0 rounded-lg bg-transparent text-[var(--color-text-icon)] hover:text-[var(--color-text-primary)] transition-colors duration-200"
  aria-label="Stop generating"
  >
- <Icon icon="tabler:player-stop" className="h-4 w-4" />
+ <Icon icon="tabler:player-stop" className="h-5 w-5" />
  </Button>
  </motion.div>
  ) : (
@@ -128,17 +128,17 @@ export function ChatInput({
  >
  <Button
  type="submit"
- variant="warm"
+ variant="ghost"
  size="sm"
  disabled={!input.trim() || disabled}
- className={`h-10 w-10 rounded-md border transition-all duration-200 ease-out ${
+ className={`h-10 w-10 shrink-0 rounded-lg transition-colors duration-200 ease-out bg-transparent ${
  input.trim() 
- ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-white shadow-[0_12px_22px_rgba(244,125,75,0.24)] hover:bg-[var(--color-primary-dark)] hover:border-[var(--color-primary-dark)]' 
- : 'border-[var(--color-border)] bg-[var(--color-surface-strong)] text-[var(--color-text-muted)]'
+ ? 'text-[var(--color-accent-electric)] hover:text-[var(--color-accent-electricHover)]' 
+ : 'text-[var(--color-text-icon)]'
  }`}
  aria-label="Send message"
  >
- <Icon icon="tabler:send" className="h-4 w-4" />
+ <Icon icon="tabler:send" className="h-5 w-5" />
  </Button>
  </motion.div>
  )}
@@ -152,9 +152,9 @@ export function ChatInput({
  initial={{ height: 0, opacity: 0 }}
  animate={{ height: 'auto', opacity: 1 }}
  exit={{ height: 0, opacity: 0 }}
- className="overflow-hidden lg:hidden"
+ className="overflow-hidden"
  >
- <div className="flex items-center justify-between border-t border-[var(--color-border-light)] bg-[var(--color-surface)] px-4 py-3">
+ <div className="flex items-center justify-between border-t border-[var(--color-base-border)] bg-[var(--color-base-card)] px-4 py-3">
  <div className="flex flex-wrap items-center gap-2">
  {QUICK_ACTIONS.map((action, i) => (
  <button
@@ -173,7 +173,7 @@ export function ChatInput({
  }
  }}
  title={action.prompt}
- className="flex items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-all hover:-translate-y-0.5 hover:border-[var(--color-primary)] hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-primary)] active:translate-y-0"
+ className="flex items-center gap-1.5 rounded-full border border-[var(--color-base-chipBorder)] bg-[var(--color-base-chip)] px-3 py-1.5 text-xs text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-accent-electric)] hover:text-[var(--color-text-primary)]"
  aria-label={action.prompt}
  >
  <Icon icon={action.icon} className="h-4 w-4" />
@@ -181,27 +181,23 @@ export function ChatInput({
  </button>
  ))}
  </div>
- <div className="ml-4 flex shrink-0 items-center">
- <div className="mr-2 h-4 w-px bg-[var(--color-border)]" />
+ <div className="ml-4 flex shrink-0 items-center hidden">
+ <div className="mr-2 h-4 w-px bg-[var(--color-base-border)]" />
  <button
  type="button"
  onClick={() => setShowTools(false)}
- className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-text-primary)]"
+ className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]"
  aria-label="Dismiss quick actions"
  >
- <Icon icon="tabler:x" className="h-[1.125rem] w-[1.125rem]" />
+ <Icon icon="tabler:x" className="h-4 w-4" />
  </button>
  </div>
  </div>
  </motion.div>
  )}
  </AnimatePresence>
- </motion.form>
+ </form>
  
- <div className="pointer-events-none absolute -bottom-6 inset-x-2 hidden items-center justify-between px-2 text-[11px] font-medium tracking-[0.02em] text-[var(--color-text-muted)] sm:flex">
- <span>Press Enter to send</span>
- <span>Shift + Enter for a new line</span>
- </div>
  </div>
  )
 }

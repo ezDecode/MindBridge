@@ -469,7 +469,7 @@ function ConversationPane({
  >
  <div
  className={cn(
- "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white shadow-md transition-transform duration-200 hover:scale-110",
+ "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white shadow-md transition-transform duration-200 ",
  isUser ? "bg-black" : "bg-black"
  )}
  >
@@ -580,7 +580,7 @@ function WorkspaceComposer({
  <button
  type="button"
  onClick={onStop}
- className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] text-[var(--color-danger)] transition-all duration-200 hover:scale-105 active:scale-90"
+ className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] text-[var(--color-danger)] transition-all duration-200 "
  aria-label="Stop generating"
  >
  <span className="h-3.5 w-3.5 rounded-[3px] bg-current" />
@@ -589,7 +589,7 @@ function WorkspaceComposer({
  <button
  type="submit"
  disabled={!value.trim() || disabled}
- className="flex h-10 w-10 items-center justify-center rounded-md border transition-all duration-200 disabled:border-[var(--color-border)] disabled:bg-[var(--color-surface-strong)] disabled:text-[var(--color-text-muted)] enabled:border-[var(--color-primary)] enabled:bg-[var(--color-primary)] enabled:text-white enabled:hover:scale-105 enabled:hover:bg-[var(--color-primary-dark)] enabled:hover:border-[var(--color-primary-dark)] enabled:active:scale-90"
+ className="flex h-10 w-10 items-center justify-center rounded-md border transition-all duration-200 disabled:border-[var(--color-border)] disabled:bg-[var(--color-surface-strong)] disabled:text-[var(--color-text-muted)] enabled:border-[var(--color-primary)] enabled:bg-[var(--color-primary)] enabled:text-white enabled: enabled:hover:bg-[var(--color-primary-dark)] enabled:hover:border-[var(--color-primary-dark)] enabled:"
  aria-label="Send message"
  >
  <Icon icon="tabler:send" className="h-5 w-5" />
@@ -621,7 +621,7 @@ function WorkspaceComposer({
  textareaRef.current.focus();
  }
  }}
- className="flex items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-all hover:-translate-y-[1px] hover:border-[var(--color-primary)] hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-primary)] hover:shadow-sm active:translate-y-0"
+ className="flex items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-all hover:-translate-y-[1px] hover:border-[var(--color-primary)] hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-primary)] hover:shadow-sm "
  >
  <Icon icon={action.icon} className="h-4 w-4" />
  <span>{action.title}</span>

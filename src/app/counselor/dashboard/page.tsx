@@ -371,7 +371,7 @@ export default function CounselorDashboardPage() {
  {alert.relativeTime}
  </Text>
  </div>
- <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+ <motion.div  >
  <Button
  variant="ghost"
  onClick={() => handleAcknowledgeAlert(alert.id)}

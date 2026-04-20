@@ -157,7 +157,7 @@ export default function ResourcesPage() {
  >
  <motion.button
  whileHover={{ y: -8, transition: { duration: 0.4, ease: CUBIC_BEZIER } }}
- whileTap={{ scale: 0.98 }}
+ 
  className={`w-full p-6 rounded-md bg-gradient-to-br ${item.gradient} border border-white/60 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-shadow duration-500`}
  >
  <div className="flex flex-col items-center text-center gap-4">

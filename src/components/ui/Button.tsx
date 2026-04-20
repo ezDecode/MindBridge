@@ -24,21 +24,21 @@ type PolymorphicComponentProp<T extends ElementType, Props = object> = {
 
 const variantStyles: Record<ButtonVariant, string> = {
  primary:
- "border border-[var(--color-primary)] bg-[var(--color-primary)] !text-[var(--color-text-inverse)] shadow-[var(--shadow-sm)] hover:border-[var(--color-primary-dark)] hover:bg-[var(--color-primary-dark)] hover:!text-[var(--color-text-inverse)]",
+ "border-none bg-[var(--color-accent-electric)] text-white hover:bg-[var(--color-accent-electricHover)] shadow-none hover:shadow-none",
  warm:
- "border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] shadow-[var(--shadow-sm)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-text-primary)]",
+ "border border-[var(--color-base-border)] bg-[var(--color-base-card)] text-[var(--color-text-primary)] hover:bg-[var(--color-base-hover)] shadow-none hover:shadow-none",
  ghost:
- "border border-transparent bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-strong)] hover:text-[var(--color-text-primary)]",
+ "border-none bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-base-hover)] hover:text-[var(--color-text-primary)]",
  link:
- "bg-transparent text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] underline-offset-4 hover:underline p-0 h-auto",
+ "bg-transparent text-[var(--color-accent-electricLight)] hover:text-[var(--color-accent-electric)] underline-offset-4 hover:underline p-0 h-auto",
  danger:
- "border border-[var(--color-danger)] bg-[var(--color-danger)] text-white shadow-[var(--shadow-sm)] hover:bg-[#a75b59] hover:border-[#a75b59]",
+ "border border-red-900 bg-red-950 text-white shadow-none hover:bg-red-900",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
- sm: "h-11 px-4",
- md: "h-12 px-5",
- lg: "h-[3.25rem] px-6",
+ sm: "h-9 px-4 text-sm",
+ md: "h-11 px-5 text-sm",
+ lg: "h-12 px-6 text-sm",
 };
 
 const weightStyles: Record<ButtonWeight, string> = {
@@ -49,7 +49,7 @@ const weightStyles: Record<ButtonWeight, string> = {
 };
 
 const baseStyles =
- "inline-flex shrink-0 items-center justify-center gap-2 rounded-[0.95rem] whitespace-nowrap text-button transition-[background-color,border-color,color,box-shadow,opacity,transform] duration-200 ease-[var(--ease-out)] active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 [&_svg]:shrink-0 outline-none";
+ "inline-flex shrink-0 items-center justify-center gap-2 rounded-full whitespace-nowrap transition-colors duration-200 disabled:pointer-events-none disabled:opacity-50 outline-none";
 
 export function Button<T extends ElementType = "button">({
  as,

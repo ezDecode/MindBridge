@@ -28,8 +28,8 @@ export function MessageActions({
  >
  <motion.button
  type="button"
- whileHover={{ scale: 1.02 }}
- whileTap={{ scale: 0.98 }}
+ 
+ 
  onClick={() => onAction(action)}
  className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-[var(--color-primary-dark)] hover:shadow-md"
  >
@@ -39,8 +39,8 @@ export function MessageActions({
 
  <motion.button
  type="button"
- whileHover={{ scale: 1.02 }}
- whileTap={{ scale: 0.98 }}
+ 
+ 
  onClick={onDismiss}
  className="inline-flex min-h-9 items-center gap-2 rounded-full bg-white/80 px-3.5 py-2 text-sm font-medium text-[var(--color-text-muted)] shadow-sm transition-all duration-150 hover:bg-white hover:text-[var(--color-text-secondary)]"
  >

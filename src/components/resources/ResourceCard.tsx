@@ -51,8 +51,8 @@ export function ResourceCard({ resource, className = "", style }: ResourceCardPr
  target="_blank"
  rel="noopener noreferrer"
  style={style}
- whileHover={{ y: -4 }}
- whileTap={{ scale: 0.99 }}
+ 
+ 
  className={cn(
  "group block p-4 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)]",
  "transition-all duration-300 hover:border-[var(--color-border-strong)] hover:shadow-xl",
@@ -64,10 +64,10 @@ export function ResourceCard({ resource, className = "", style }: ResourceCardPr
  <img
  src={thumbnail}
  alt={resource.title}
- className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+ className="w-full h-full object-cover transition-transform duration-500 group-"
  />
  <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/15 transition-colors duration-300">
- <div className="w-11 h-11 rounded-full bg-white/95 flex items-center justify-center shadow-lg scale-90 group-hover:scale-100 transition-transform duration-300">
+ <div className="w-11 h-11 rounded-full bg-white/95 flex items-center justify-center shadow-lg scale-90 group- transition-transform duration-300">
  <svg className="w-5 h-5 text-[var(--color-text-primary)] ml-0.5" fill="currentColor" viewBox="0 0 24 24">
  <path d="M8 5v14l11-7z" />
  </svg>

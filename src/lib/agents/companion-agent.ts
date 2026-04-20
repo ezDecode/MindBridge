@@ -11,7 +11,7 @@ import type { ChatCompletionMessageParam } from 'openai/resources/chat/completio
  * Build system prompt - SIMPLE, natural conversation
  */
 export function buildSystemPrompt(quickContext: string): string {
-  return `You are a friend texting with someone you care about.
+ return `You are a friend texting with someone you care about.
 Keep it short. 2-3 sentences max.
 
 WHAT YOU KNOW ABOUT THEM:
@@ -36,11 +36,11 @@ respond with warmth FIRST, then include iCall: 9152987821 naturally. Set crisis:
 
 RESPONSE FORMAT (return valid JSON):
 {
-  "message": "your short response",
-  "crisis": false,
-  "assessment_update": { "criteria_flagged": [], "severity": "none" },
-  "suggested_action": null,
-  "action_context": null
+ "message": "your short response",
+ "crisis": false,
+ "assessment_update": { "criteria_flagged": [], "severity": "none" },
+ "suggested_action": null,
+ "action_context": null
 }
 
 EXAMPLES:
@@ -64,26 +64,26 @@ REMEMBER: Short. Natural. Like texting a friend at 2am.`
  * Format conversation history for the API call
  */
 export function formatConversationHistory(
-  messages: { role: 'user' | 'assistant'; content: string }[]
+ messages: { role: 'user' | 'assistant'; content: string }[]
 ): ChatCompletionMessageParam[] {
-  return messages.map(msg => ({
-    role: msg.role,
-    content: msg.content,
-  }))
+ return messages.map(msg => ({
+ role: msg.role,
+ content: msg.content,
+ }))
 }
 
 /**
  * Calculate severity based on criteria count
  */
 export function calculateSeverity(criteria: string[]): 'none' | 'mild' | 'moderate' | 'severe' {
-  if (criteria.includes('self_harm')) {
-    return 'severe'
-  }
-  
-  const count = criteria.length
-  
-  if (count === 0) return 'none'
-  if (count <= 2) return 'mild'
-  if (count <= 5) return 'moderate'
-  return 'severe'
+ if (criteria.includes('self_harm')) {
+ return 'severe'
+ }
+ 
+ const count = criteria.length
+ 
+ if (count === 0) return 'none'
+ if (count <= 2) return 'mild'
+ if (count <= 5) return 'moderate'
+ return 'severe'
 }

@@ -34,8 +34,8 @@ export function SuggestionChips({
  delay: index * 0.03,
  ease: [0.16, 1, 0.3, 1] 
  }}
- whileHover={{ scale: 1.02 }}
- whileTap={{ scale: 0.98 }}
+ 
+ 
  onClick={() => onSelect(suggestion)}
  className="inline-flex min-h-9 items-center gap-2 rounded-full bg-white/80 px-3.5 py-2 text-sm font-medium text-[var(--color-text-secondary)] shadow-sm transition-all duration-150 hover:bg-white hover:text-[var(--color-text-primary)] hover:shadow-md"
  >

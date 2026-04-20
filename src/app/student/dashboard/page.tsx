@@ -13,6 +13,10 @@ import { getAssessmentLabel } from '@/lib/question-bank'
 import { MindTab } from './_components/MindTab'
 import { BridgeTab } from './_components/BridgeTab'
 import { QuestionSessionSheet } from './_components/QuestionSessionSheet'
+import { DashboardSidebar } from './_components/DashboardSidebar'
+import { CheckInModal } from './_components/CheckInModal'
+import { BookingModal } from './_components/BookingModal'
+import { AnalyticsModal } from './_components/AnalyticsModal'
 import { generateSessionId, generateWeekMoodHistory, generateEmptyWeek, formatSessionTime } from './_components/types'
 import type { DashboardData, TabId } from './_components/types'
 
@@ -63,6 +67,10 @@ export default function StudentDashboardPage() {
  const [pendingQuestionnaireOpen, setPendingQuestionnaireOpen] = useState(initialView.pendingQuestionnaireOpen)
  const [showQuestionnaire, setShowQuestionnaire] = useState(initialView.showQuestionnaire)
  const [sessionId, setSessionId] = useState('')
+ const [showCheckIn, setShowCheckIn] = useState(false)
+ const [showBookingModal, setShowBookingModal] = useState(false)
+ const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)
+ const [sidebarOpen, setSidebarOpen] = useState(false)
 
  const handleCrisis = useCallback(() => {
  console.log('Crisis detected - alert sent to counselor')
@@ -321,17 +329,23 @@ export default function StudentDashboardPage() {
  ]
 
  return (
- <div className="[--brm:0.78] h-full overflow-hidden">
- <AnimatePresence mode="wait" initial={false}>
- {activeTab === "mind" ? (
- <motion.div
- key="mind"
- initial={{ opacity: 0, scale: 0.99, filter: "blur(4px)" }}
- animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
- exit={{ opacity: 0, scale: 1.01, filter: "blur(4px)" }}
- transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
- className="h-full"
- >
+ <div className="[--brm:0.78] flex h-full overflow-hidden bg-[var(--color-surface-tinted)] lg:bg-[var(--color-background)]">
+ <DashboardSidebar
+ userName={userName}
+ activeTab={activeTab}
+ setActiveTab={setActiveTab}
+ onSwitchToBridge={() => setActiveTab("bridge")}
+ onSwitchToMind={() => setActiveTab("mind")}
+ startNewSession={startNewSession}
+ onOpenQuestionnaire={() => setShowQuestionnaire(true)}
+ setShowCheckIn={setShowCheckIn}
+ setShowBookingModal={setShowBookingModal}
+ setShowAnalyticsModal={setShowAnalyticsModal}
+ sidebarOpen={sidebarOpen}
+ setSidebarOpen={setSidebarOpen}
+ />
+ <div className="flex flex-1 flex-col lg:flex-row overflow-hidden bg-[var(--color-surface-tinted)] lg:bg-[var(--color-background)]">
+ <div className={`h-full w-full lg:w-1/2 ${activeTab === 'mind' ? 'block' : 'hidden'} lg:block`}>
  <MindTab
  userName={userName}
  data={data}
@@ -345,20 +359,13 @@ export default function StudentDashboardPage() {
  onAutoOpenCheckInHandled={handleAutoOpenCheckInHandled}
  onMoodLogged={refreshDashboardInsights}
  onOpenQuestionnaire={() => setShowQuestionnaire(true)}
- activeTab={activeTab}
- setActiveTab={setActiveTab}
- onSwitchToBridge={() => setActiveTab("bridge")}
+ onOpenSidebar={() => setSidebarOpen(true)}
+ onOpenCheckIn={() => setShowCheckIn(true)}
+ onOpenBooking={() => setShowBookingModal(true)}
+ onOpenAnalytics={() => setShowAnalyticsModal(true)}
  />
- </motion.div>
- ) : (
- <motion.div
- key="bridge"
- initial={{ opacity: 0, scale: 0.99, filter: "blur(4px)" }}
- animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
- exit={{ opacity: 0, scale: 1.01, filter: "blur(4px)" }}
- transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
- className="h-full"
- >
+ </div>
+ <div className={`h-full w-full lg:w-1/2 ${activeTab === 'bridge' ? 'block' : 'hidden'} lg:block`}>
  <BridgeTab
  data={data}
  userName={userName}
@@ -370,13 +377,17 @@ export default function StudentDashboardPage() {
  trendDirection={trendDirection}
  completedDays={scored.length}
  onOpenQuestionnaire={() => setShowQuestionnaire(true)}
- onSwitchToMind={() => setActiveTab("mind")}
- activeTab={activeTab}
- setActiveTab={setActiveTab}
+ onOpenSidebar={() => setSidebarOpen(true)}
+ onOpenCheckIn={() => setShowCheckIn(true)}
+ onOpenBooking={() => setShowBookingModal(true)}
+ onOpenAnalytics={() => setShowAnalyticsModal(true)}
  />
- </motion.div>
- )}
- </AnimatePresence>
+ </div>
+ </div>
+
+ <CheckInModal isOpen={showCheckIn || pendingCheckInOpen} onClose={() => { setShowCheckIn(false); handleAutoOpenCheckInHandled(); }} onComplete={refreshDashboardInsights} />
+ <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
+ <AnalyticsModal isOpen={showAnalyticsModal} onClose={() => setShowAnalyticsModal(false)} onGoToDashboard={() => setActiveTab('bridge')} />
 
  <QuestionSessionSheet
  isOpen={showQuestionnaire}

@@ -11,12 +11,12 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 const Card = forwardRef<HTMLDivElement, CardProps>(
  ({ className = "", variant = "default", padding = "md", interactive = false, children, ...props }, ref) => {
  const variants = {
- default: "border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-sm)]",
+ default: "border border-[var(--color-base-border)] bg-[var(--color-base-card)] shadow-none",
  elevated:
- "border border-[var(--color-border)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-surface),var(--color-primary-light)_38%)_0%,var(--color-surface)_100%)] shadow-[var(--shadow-md)]",
- outline: "border border-[var(--color-border)] bg-transparent",
- subtle: "border border-[var(--color-border)] bg-[var(--color-surface-tinted)] shadow-[var(--shadow-sm)]",
- warm: "border border-[var(--color-border)] bg-[var(--color-surface-warm)] shadow-[var(--shadow-sm)]",
+ "border border-[var(--color-base-border)] bg-[var(--color-base-card)] shadow-none",
+ outline: "border border-[var(--color-base-border)] bg-transparent",
+ subtle: "border border-[var(--color-base-border)] bg-[var(--color-base-hover)] shadow-none",
+ warm: "border border-[var(--color-base-border)] bg-[var(--color-base-card)] shadow-none",
  };
 
  const paddings = {
@@ -29,7 +29,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
  return (
  <div
  ref={ref}
- className={`rounded-[1.25rem] transition-[border-color,background-color,transform,box-shadow] duration-200 ease-[var(--ease-out)] ${variants[variant]} ${paddings[padding]} ${interactive ? "hover:border-[var(--color-border-strong)] hover:shadow-[var(--shadow-md)] active:scale-[0.99]" : ""} ${className}`}
+ className={`rounded-xl transition-colors duration-200 ${variants[variant]} ${paddings[padding]} ${interactive ? "hover:border-[var(--color-accent-electric)] " : ""} ${className}`}
  {...props}
  >
  {children}
