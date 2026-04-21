@@ -1,19 +1,9 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import Link from "next/link";
+import { type ReactNode } from "react";
 import { motion } from "motion/react";
 import { Icon } from '@iconify/react';
-import {
- BarChart,
- Bar,
- XAxis,
- YAxis,
- CartesianGrid,
- Tooltip,
- ResponsiveContainer,
-} from "recharts";
-import { Button, Card, Text } from "@/components/ui";
+import { Button, Text } from "@/components/ui";
 import staticResources from "@/content/static-resources.json";
 import { MoodGauge } from "./MoodGauge";
 import type { DashboardData, TabId } from "./types";
@@ -42,35 +32,6 @@ const assessmentTone: Record<NonNullable<DashboardData["latestAssessment"]>["sev
  severe: "Priority support",
 };
 
-function MoodTooltip({
- active,
- payload,
- label,
-}: {
- active?: boolean;
- payload?: Array<{ value: number }>;
- label?: string;
-}) {
- if (!active || !payload?.length) return null;
-
- const score = payload[0].value;
- const labels = ["", "Very low", "Strained", "Steady", "Lighter", "Good"];
-
- return (
- <div className="rounded-md border border-[var(--border-default)] bg-[var(--surface-default)]/95 px-4 py-3 shadow-lg backdrop-blur-md">
- <Text as="p" variant="label" weight="bold" className="text-[var(--text-primary)]">
- {label}
- </Text>
- <div className="mt-1.5 flex items-center gap-2">
- <div className="h-2 w-2 rounded-full bg-[var(--action-primary)]" />
- <Text as="p" variant="small" className="text-[var(--text-secondary)]">
- {score > 0 ? `${labels[score] || score} (${score}/5)` : "No check-in"}
- </Text>
- </div>
- </div>
- );
-}
-
 export function BridgeTab({
  data,
  userName,
@@ -94,7 +55,7 @@ export function BridgeTab({
     ? latestAssessment.criteriaFlagged
         .slice(0, 3)
         .map((item) => item.replaceAll("_", " "))
-        .join(" • ")
+        .join(" · ")
     : "Run a question set for a richer mood read.";
 
   return (
@@ -111,58 +72,23 @@ export function BridgeTab({
           </header>
 
  <div className="flex-1 overflow-y-auto px-4 py-5 sm:px-6">
- <div className="mx-auto max-w-6xl">
- <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-page)] p-6 sm:p-7">
- <div className="grid gap-5 lg:grid-cols-[minmax(0,1.15fr),minmax(18rem,0.85fr)] lg:items-end">
- <div>
+ <div className="mx-auto max-w-6xl space-y-5">
+
+ {/* ── Section 1: Welcome Hero ── */}
+ <div className="rounded-2xl bg-[var(--surface-strong)] p-6 sm:p-8">
  <Text as="p" variant="small" className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
  Weekly overview
  </Text>
- <Text as="h2" variant="h4" weight="bold" className="mt-3 text-[var(--text-primary)]">
+ <Text as="h2" variant="h4" weight="bold" className="mt-2 text-[var(--text-primary)]">
  Welcome back, {userName}
  </Text>
- <Text as="p" variant="body" className="mt-3 max-w-2xl leading-7 text-[var(--text-secondary)]">
+ <Text as="p" variant="body" className="mt-2 max-w-2xl leading-7 text-[var(--text-secondary)]">
  Your streak, mood rhythm, and latest guided scan are all in one place so it is easier to notice what needs attention.
  </Text>
-
- <div className="mt-5 flex flex-wrap gap-3">
- <Button onClick={onOpenQuestionnaire} variant="warm" size="sm" className="gap-2">
- <Icon icon="tabler:bolt" className="h-4 w-4" />
- Start question set
- </Button>
- </div>
  </div>
 
- <div className="rounded-md border border-[var(--border-default)] bg-[var(--surface-default)]/85 p-5">
- <div className="flex items-start gap-3">
- <div className="flex h-11 w-11 items-center justify-center rounded-md bg-[var(--surface-warm)] text-[var(--action-primary)]">
- <Icon icon="tabler:compass" className="h-5 w-5" />
- </div>
- <div className="min-w-0">
- <Text as="p" variant="small" weight="bold" className="text-[var(--text-primary)]">
- Guided scan status
- </Text>
- <Text as="p" variant="small" className="mt-2 leading-6 text-[var(--text-secondary)]">
- {assessmentLabel}
- </Text>
- <Text as="p" variant="small" className="mt-1 leading-6 text-[var(--text-muted)]">
- {assessmentCopy}
- </Text>
- </div>
- </div>
-
- <button
- type="button"
- onClick={onOpenQuestionnaire}
- className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[var(--surface-default)] px-4 text-sm font-semibold text-[var(--text-primary)] shadow-sm hover:bg-[var(--surface-warm)] transition-colors"
- >
- <Icon icon="tabler:bolt" className="h-4 w-4" />
- Refresh question set
- </button>
- </div>
- </div>
-
- <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+ {/* ── Section 2: Quick Stats ── */}
+ <div className="grid gap-3 grid-cols-2 xl:grid-cols-4">
  {metrics.map((metric, index) => (
  <motion.div
  key={metric.label}
@@ -170,111 +96,156 @@ export function BridgeTab({
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.4, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
  >
- <Card interactive variant="default" padding="sm" className="h-full bg-[var(--surface-default)]/80">
- <div className="flex items-center justify-between gap-3">
- <Text as="p" variant="small" weight="medium" className="text-[var(--text-secondary)]">
+ <div className="group h-full rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-4 transition-all duration-200 hover:shadow-md hover:border-[var(--border-strong)]">
+ <div className="flex items-center justify-between">
+ <Text as="p" variant="small" weight="medium" className="text-[var(--text-muted)]">
  {metric.label}
  </Text>
- <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--surface-warm)] text-[var(--action-primary)] shadow-sm">
+ <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--surface-strong)] transition-colors group-hover:bg-[var(--action-primary-light)]">
  {metric.icon}
  </div>
  </div>
- <Text as="p" variant="h6" weight="bold" className="mt-4 text-[var(--text-primary)]">
+ <Text as="p" variant="h5" weight="bold" className="mt-3 text-[var(--text-primary)]">
  {metric.value}
  </Text>
- <Text as="p" variant="small" className="mt-1 leading-6 text-[var(--text-muted)]">
+ <Text as="p" variant="small" className="mt-0.5 text-[var(--text-muted)]">
  {metric.note}
  </Text>
- </Card>
+ </div>
  </motion.div>
  ))}
  </div>
+
+ {/* ── Section 3: Guided Scan Status ── */}
+ <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-5 sm:p-6">
+ <div className="flex items-start gap-4">
+ <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--action-primary-light)] text-[var(--action-primary)]">
+ <Icon icon="tabler:compass" className="h-5 w-5" />
+ </div>
+ <div className="min-w-0 flex-1">
+ <div className="flex items-center justify-between gap-3">
+ <Text as="p" variant="body" weight="bold" className="text-[var(--text-primary)]">
+ Guided scan status
+ </Text>
+ <button
+ type="button"
+ onClick={onOpenQuestionnaire}
+ className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-[var(--action-primary)] transition-colors hover:bg-[var(--action-primary-light)]"
+ >
+ <Icon icon="tabler:refresh" className="h-3.5 w-3.5" />
+ Refresh
+ </button>
+ </div>
+ <Text as="p" variant="small" className="mt-1 text-[var(--text-secondary)]">
+ {assessmentLabel}
+ </Text>
+ <Text as="p" variant="small" className="mt-0.5 text-[var(--text-muted)]">
+ {assessmentCopy}
+ </Text>
+ </div>
+ </div>
  </div>
 
- <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
- <Card variant="default" padding="lg">
+ {/* ── Section 4: Mood Chart + Snapshot ── */}
+ <div className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
+ <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-5 sm:p-6">
  <div className="flex flex-wrap items-center justify-between gap-3">
  <div>
- <Text as="p" variant="h6" weight="bold" className="text-[var(--text-primary)]">
+ <Text as="p" variant="body" weight="bold" className="text-[var(--text-primary)]">
  7-day mood rhythm
  </Text>
- <Text as="p" variant="small" className="mt-1 text-[var(--text-secondary)]">
+ <Text as="p" variant="small" className="mt-1 text-[var(--text-muted)]">
  {completedDays}/7 days logged this week
  </Text>
  </div>
 
- <span className="rounded-full border border-[var(--border-default)] bg-[var(--surface-warm)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+ <span className={`rounded-lg px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.15em] ${
+ trendDirection === "improving"
+ ? "bg-[var(--status-success-soft)] text-[var(--status-success-dark)]"
+ : trendDirection === "declining"
+ ? "bg-[var(--status-warning-soft)] text-[var(--status-warning)]"
+ : "bg-[var(--surface-strong)] text-[var(--text-secondary)]"
+ }`}>
  {trendDirection === "improving" && "Improving"}
  {trendDirection === "declining" && "Needs attention"}
  {trendDirection === "steady" && "Steady"}
  </span>
  </div>
 
- <div className="mt-6 h-64 w-full">
- <ResponsiveContainer width="99%" height="100%" minWidth={100} minHeight={100}>
- <BarChart data={moodHistory} barCategoryGap="24%">
- <CartesianGrid vertical={false} stroke="#e8dfd4" strokeDasharray="4 4" />
- <XAxis
- dataKey="day"
- tickLine={false}
- axisLine={false}
- tick={{ fill: "#8a827a", fontSize: 12, fontWeight: 600 }}
- tickMargin={8}
- />
- <YAxis
- domain={[0, 5]}
- ticks={[1, 2, 3, 4, 5]}
- tickLine={false}
- axisLine={false}
- tick={{ fill: "#8a827a", fontSize: 12 }}
- tickMargin={4}
- width={24}
- />
- <Tooltip content={<MoodTooltip />} cursor={{ fill: "#f9f4f2", radius: 10 }} />
- <Bar
- dataKey="score"
- fill="#f47d4b"
- radius={[10, 10, 0, 0]}
- maxBarSize={40}
- animationDuration={450}
- />
- </BarChart>
- </ResponsiveContainer>
- </div>
- </Card>
+ {/* Custom Bar Chart */}
+ <div className="mt-6">
+ <div className="flex items-end justify-between gap-1.5" style={{ height: 180 }}>
+ {moodHistory.map((entry) => {
+ const barHeight = entry.score > 0 ? Math.max((entry.score / 5) * 100, 8) : 0;
+ const barColor = entry.score <= 0 ? "var(--surface-strong)"
+ : entry.score <= 1.5 ? "#ef4444"
+ : entry.score <= 2.5 ? "#f59e0b"
+ : entry.score <= 3.5 ? "#B58863"
+ : "#739552";
 
- <Card variant="subtle" padding="lg">
- <Text as="p" variant="h6" weight="bold" className="text-[var(--text-primary)]">
+ return (
+ <div key={entry.day} className="group flex flex-1 flex-col items-center gap-2">
+ <div className="relative flex w-full items-end justify-center" style={{ height: 140 }}>
+ {entry.score > 0 ? (
+ <motion.div
+ initial={{ height: 0 }}
+ animate={{ height: `${barHeight}%` }}
+ transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+ className="relative w-[clamp(20px,70%,36px)] rounded-t-lg transition-all group-hover:opacity-80"
+ style={{ backgroundColor: barColor }}
+ >
+ {/* Tooltip on hover */}
+ <div className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-lg bg-[var(--text-primary)] px-2.5 py-1 text-[11px] font-bold text-[var(--text-inverse)] opacity-0 shadow-lg transition-opacity group-hover:opacity-100 whitespace-nowrap">
+ {entry.score}/5
+ </div>
+ </motion.div>
+ ) : (
+ <div className="w-[clamp(20px,70%,36px)] rounded-t-lg bg-[var(--surface-strong)]" style={{ height: '6%' }} />
+ )}
+ </div>
+ <span className="text-[11px] font-semibold text-[var(--text-muted)]">{entry.day}</span>
+ </div>
+ );
+ })}
+ </div>
+ </div>
+ </div>
+
+ <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-5 sm:p-6 flex flex-col">
+ <Text as="p" variant="body" weight="bold" className="text-[var(--text-primary)]">
  Mood snapshot
  </Text>
- <div className="mt-5 flex items-center justify-center">
- <MoodGauge value={averageMood} max={5} size={124} />
+ <div className="mt-4 flex flex-1 items-center justify-center">
+ <MoodGauge value={averageMood} max={5} size={160} />
  </div>
 
- <div className="mt-5 space-y-3">
- <SnapshotRow label="Best day" value={bestDay ? bestDay.day : "—"} />
- <SnapshotRow label="Lowest day" value={worstDay ? worstDay.day : "—"} />
- <SnapshotRow
- label="Trend"
- value={
- trendDirection === "improving"
- ? "Upward"
- : trendDirection === "declining"
- ? "Downward"
- : "Steady"
- }
- />
+ <div className="mt-4 grid grid-cols-3 gap-2">
+ <div className="flex flex-col items-center rounded-xl bg-[var(--surface-strong)]/50 px-3 py-3">
+ <span className="text-[11px] font-medium text-[var(--text-muted)]">Best</span>
+ <span className="mt-0.5 text-sm font-bold text-[var(--text-primary)]">{bestDay ? bestDay.day : "—"}</span>
  </div>
- </Card>
+ <div className="flex flex-col items-center rounded-xl bg-[var(--surface-strong)]/50 px-3 py-3">
+ <span className="text-[11px] font-medium text-[var(--text-muted)]">Lowest</span>
+ <span className="mt-0.5 text-sm font-bold text-[var(--text-primary)]">{worstDay ? worstDay.day : "—"}</span>
+ </div>
+ <div className="flex flex-col items-center rounded-xl bg-[var(--surface-strong)]/50 px-3 py-3">
+ <span className="text-[11px] font-medium text-[var(--text-muted)]">Trend</span>
+ <span className="mt-0.5 text-sm font-bold text-[var(--text-primary)]">
+ {trendDirection === "improving" ? "↑ Up" : trendDirection === "declining" ? "↓ Down" : "→ Steady"}
+ </span>
+ </div>
+ </div>
+ </div>
  </div>
 
- <div className="mt-6 grid gap-4 xl:grid-cols-[minmax(0,0.9fr),minmax(0,1.1fr)]">
- <Card variant="elevated" padding="lg">
- <Text as="p" variant="h6" weight="bold" className="text-[var(--text-primary)]">
+ {/* ── Section 5: Next Moves ── */}
+ <div className="grid gap-4 xl:grid-cols-[minmax(0,0.9fr),minmax(0,1.1fr)]">
+ <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-5 sm:p-6">
+ <Text as="p" variant="body" weight="bold" className="text-[var(--text-primary)]">
  Next moves
  </Text>
 
- <div className="mt-5 grid gap-3">
+ <div className="mt-4 grid gap-2.5">
  <CompactAction
  icon={<Icon icon="tabler:bolt" className="h-4 w-4" />}
  title="Guided question check-in"
@@ -297,15 +268,15 @@ export function BridgeTab({
  onClick={() => window.location.href = '/student/resources'}
  />
  </div>
- </Card>
+ </div>
 
- <Card variant="default" padding="lg">
+ <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-5 sm:p-6">
  <div className="flex items-center justify-between gap-3">
  <div>
- <Text as="p" variant="h6" weight="bold" className="text-[var(--text-primary)]">
+ <Text as="p" variant="body" weight="bold" className="text-[var(--text-primary)]">
  Recommended for you
  </Text>
- <Text as="p" variant="small" className="mt-1 text-[var(--text-secondary)]">
+ <Text as="p" variant="small" className="mt-1 text-[var(--text-muted)]">
  Calm, short resources to keep nearby.
  </Text>
  </div>
@@ -314,55 +285,43 @@ export function BridgeTab({
  </Button>
  </div>
 
- <div className="mt-5 grid gap-3 sm:grid-cols-2">
+ <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
  {staticResources.slice(0, 4).map((resource) => (
  <a
  key={resource.title}
  href={resource.url}
  target="_blank"
  rel="noopener noreferrer"
- className="group rounded-md border border-[var(--border-default)] bg-[var(--surface-default)] p-4 transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--surface-warm)]"
+ className="group rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-4 transition-all duration-200 hover:border-[var(--border-strong)] hover:shadow-sm"
  >
  <div className="flex items-center gap-2 text-[var(--text-muted)]">
- <Icon icon="tabler:book" className="h-4 w-4" />
- <Text as="span" variant="small" className="text-[var(--text-secondary)]">
+ <Icon icon="tabler:book" className="h-3.5 w-3.5" />
+ <Text as="span" variant="small" className="text-[var(--text-muted)]">
  {resource.type}
  </Text>
  </div>
- <Text as="p" variant="body" weight="medium" className="mt-3 line-clamp-2 text-[var(--text-primary)]">
+ <Text as="p" variant="small" weight="medium" className="mt-2 line-clamp-2 text-[var(--text-primary)] leading-snug">
  {resource.title}
  </Text>
- <div className="mt-4 flex items-center justify-between">
+ <div className="mt-3 flex items-center justify-between">
  <Text as="p" variant="small" className="text-[var(--text-muted)]">
  {resource.duration}
  </Text>
- <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--text-primary)]">
+ <span className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--action-primary)] opacity-0 transition-opacity group-hover:opacity-100">
  Open
- <Icon icon="tabler:arrow-right" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+ <Icon icon="tabler:arrow-right" className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
  </span>
  </div>
  </a>
  ))}
  </div>
- </Card>
  </div>
+ </div>
+
  </div>
  </div>
  </section>
     </>
- );
-}
-
-function SnapshotRow({ label, value }: { label: string; value: string }) {
- return (
- <div className="flex items-center justify-between rounded-md bg-[var(--surface-default)] px-4 py-3 shadow-sm transition-transform hover:scale-[1.01]">
- <Text as="p" variant="small" weight="medium" className="text-[var(--text-secondary)]">
- {label}
- </Text>
- <Text as="p" variant="small" weight="bold" className="text-[var(--text-primary)]">
- {value}
- </Text>
- </div>
  );
 }
 
@@ -383,31 +342,23 @@ function CompactAction({
  <button
  type="button"
  onClick={onClick}
- className="group rounded-md border border-[var(--border-default)] bg-[var(--surface-default)] p-4 text-left transition-all duration-200 ease-[var(--ease-out)] hover:border-[var(--border-strong)] hover:bg-[var(--surface-warm)] active:scale-[0.97]"
+ className="group flex items-start gap-3.5 rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-4 text-left transition-all duration-200 hover:border-[var(--border-strong)] hover:shadow-sm active:scale-[0.98]"
  >
- <div className="flex items-start gap-3">
- <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[var(--surface-warm)] text-[var(--action-primary)] shadow-sm transition-transform group-hover:scale-110">
+ <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--surface-strong)] text-[var(--action-primary)] transition-all group-hover:bg-[var(--action-primary-light)] group-hover:scale-105">
  {icon}
  </div>
  <div className="min-w-0">
  <Text as="p" variant="small" weight="bold" className="text-[var(--text-primary)]">
  {title}
  </Text>
- <Text as="p" variant="small" className="mt-1 leading-6 text-[var(--text-secondary)]">
+ <Text as="p" variant="small" className="mt-0.5 leading-5 text-[var(--text-muted)]">
  {copy}
  </Text>
- <span className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[var(--text-primary)]">
+ <span className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-[var(--action-primary)]">
  {action}
- <Icon icon="tabler:arrow-right" className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+ <Icon icon="tabler:arrow-right" className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
  </span>
- </div>
  </div>
  </button>
  );
 }
-
-
-
-
-
-

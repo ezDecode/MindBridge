@@ -1,9 +1,10 @@
 'use client'
 
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { Button, Text, SkeletonText } from "@/components/ui"
-import { motion } from 'framer-motion'
+import { Text, SkeletonText } from "@/components/ui"
+import { motion } from 'motion/react'
 import Link from 'next/link'
+import { Icon } from '@iconify/react'
 import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 interface Profile {
@@ -18,6 +19,7 @@ interface Profile {
 export default function AdminDashboardPage() {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const fetchData = useCallback(async () => {
     try {
@@ -54,95 +56,245 @@ export default function AdminDashboardPage() {
     []
   )
 
+  const filteredStudents = useMemo(() => {
+    if (!searchQuery.trim()) return students
+    const q = searchQuery.toLowerCase()
+    return students.filter(
+      (p) =>
+        getCardDisplayName(p).toLowerCase().includes(q) ||
+        (p.institution || '').toLowerCase().includes(q) ||
+        (p.email || '').toLowerCase().includes(q)
+    )
+  }, [students, searchQuery, getCardDisplayName])
+
+  const filteredCounselors = useMemo(() => {
+    if (!searchQuery.trim()) return counselors
+    const q = searchQuery.toLowerCase()
+    return counselors.filter(
+      (p) =>
+        getCardDisplayName(p).toLowerCase().includes(q) ||
+        (p.institution || '').toLowerCase().includes(q) ||
+        (p.email || '').toLowerCase().includes(q)
+    )
+  }, [counselors, searchQuery, getCardDisplayName])
+
   if (loading) {
     return (
-      <div className="p-8 max-w-4xl mx-auto space-y-6">
+      <div className="p-8 max-w-5xl mx-auto space-y-6">
         <SkeletonText lines={1} className="w-1/4 h-8" />
-        <SkeletonText lines={3} />
+        <div className="grid gap-4 grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-24 rounded-2xl bg-[var(--surface-strong)] animate-pulse" />
+          ))}
+        </div>
+        <SkeletonText lines={5} />
       </div>
     )
   }
 
+  const metrics = [
+    {
+      label: 'Total Users',
+      value: profiles.length,
+      icon: 'tabler:users-group',
+      color: 'var(--action-primary)',
+      bg: 'var(--action-primary-light)',
+    },
+    {
+      label: 'Students',
+      value: students.length,
+      icon: 'tabler:school',
+      color: '#B58863',
+      bg: '#B5886318',
+    },
+    {
+      label: 'Counselors',
+      value: counselors.length,
+      icon: 'tabler:stethoscope',
+      color: '#0ea5e9',
+      bg: '#0ea5e918',
+    },
+  ]
+
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-12 pb-12 pt-6">
-      <div>
-        <Text as="h1" variant="h3" weight="bold" className="tracking-tight text-[var(--text-primary)]">Admin Control Panel</Text>
-        <Text as="p" color="secondary" className="mt-2">Manage all system users, review activity logs, and monitor metrics securely.</Text>
+    <div className="w-full max-w-5xl mx-auto space-y-8 pb-12 pt-6 px-4">
+      {/* Header */}
+      <div className="rounded-2xl bg-[var(--surface-strong)] p-6 sm:p-8">
+        <div className="flex items-start justify-between">
+          <div>
+            <Text as="p" variant="small" className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
+              Administration
+            </Text>
+            <Text as="h1" variant="h3" weight="bold" className="mt-2 tracking-tight text-[var(--text-primary)]">
+              Control Panel
+            </Text>
+            <Text as="p" variant="body" className="mt-2 max-w-xl text-[var(--text-secondary)]">
+              Manage system users, review activity, and monitor platform health.
+            </Text>
+          </div>
+          <div className="hidden sm:flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--action-primary)] text-[var(--text-inverse)]">
+            <Icon icon="tabler:shield-check" className="h-6 w-6" />
+          </div>
+        </div>
       </div>
 
-      <section>
-        <div className="flex justify-between items-end mb-4">
-          <Text as="h2" variant="label" weight="bold" className="uppercase tracking-wider text-[var(--text-muted)] text-[11px]">Registered Users</Text>
-          <span className="text-[12px] font-medium text-[var(--text-muted)]">{profiles.length} total users</span>
-        </div>
-
-        <div className="grid gap-5 lg:grid-cols-2">
-          <div className="rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-3 shadow-[0_12px_30px_-26px_rgba(15,23,42,0.5)]">
-            <div className="flex items-center justify-between px-2 pb-3">
-              <Text as="h3" variant="h6" weight="bold" className="text-[var(--text-primary)]">Students</Text>
-              <span className="rounded-full bg-[var(--chip-bg)] px-2 py-0.5 text-[11px] font-semibold text-[var(--text-muted)]">{students.length}</span>
-            </div>
-            <div className="max-h-[26rem] space-y-2 overflow-y-auto pr-1">
-              {students.length === 0 ? (
-                <div className="rounded-lg bg-[var(--surface-default)] px-4 py-6 text-center">
-                  <Text className="text-[var(--text-muted)]">No student accounts found.</Text>
+      {/* Metric Cards */}
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+        {metrics.map((metric, index) => (
+          <motion.div
+            key={metric.label}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-5 transition-all duration-200 hover:shadow-md hover:border-[var(--border-strong)]">
+              <div className="flex items-center justify-between">
+                <Text as="p" variant="small" weight="medium" className="text-[var(--text-muted)]">
+                  {metric.label}
+                </Text>
+                <div
+                  className="flex h-10 w-10 items-center justify-center rounded-xl"
+                  style={{ backgroundColor: metric.bg, color: metric.color }}
+                >
+                  <Icon icon={metric.icon} className="h-5 w-5" />
                 </div>
-              ) : (
-                students.map((profile) => (
-                  <motion.div
-                    key={profile.id}
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex flex-col gap-3 rounded-lg border border-[var(--border-default)] bg-[var(--surface-default)] p-4 sm:flex-row sm:items-center sm:justify-between"
-                    role="article"
-                  >
-                    <div>
-                      <Text variant="h6" className="font-bold text-[var(--text-primary)] leading-none">{getCardDisplayName(profile)}</Text>
-                      <Text className="mt-1.5 text-[13px] text-[var(--text-muted)]">Institution: {profile.institution || 'N/A'}</Text>
-                    </div>
-                    <Link href={`/admin/student/${profile.id}`} className="shrink-0">
-                      <Button variant="ghost" size="sm" className="h-9 rounded-md bg-[var(--bg-hover)] px-4 text-[var(--text-primary)] hover:bg-[var(--surface-default)]">
-                        View Profile
-                      </Button>
-                    </Link>
-                  </motion.div>
-                ))
-              )}
+              </div>
+              <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--text-primary)]">
+                {metric.value}
+              </Text>
             </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Search */}
+      <div className="relative">
+        <Icon icon="tabler:search" className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)]" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by name, email, or institution..."
+          className="no-focus-ring w-full rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] py-3 pl-11 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] transition-colors focus:outline-none focus:border-[var(--border-strong)]"
+        />
+      </div>
+
+      {/* Users Grid */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Students Column */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ backgroundColor: '#B5886318', color: '#B58863' }}>
+                <Icon icon="tabler:school" className="h-4 w-4" />
+              </div>
+              <Text as="h2" variant="body" weight="bold" className="text-[var(--text-primary)]">
+                Students
+              </Text>
+            </div>
+            <span className="rounded-full bg-[var(--surface-strong)] px-2.5 py-1 text-[11px] font-bold text-[var(--text-muted)]">
+              {filteredStudents.length}
+            </span>
           </div>
 
-          <div className="rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-3 shadow-[0_12px_30px_-26px_rgba(15,23,42,0.5)]">
-            <div className="flex items-center justify-between px-2 pb-3">
-              <Text as="h3" variant="h6" weight="bold" className="text-[var(--text-primary)]">Counselors</Text>
-              <span className="rounded-full bg-[var(--chip-bg)] px-2 py-0.5 text-[11px] font-semibold text-[var(--text-muted)]">{counselors.length}</span>
-            </div>
-            <div className="max-h-[26rem] space-y-2 overflow-y-auto pr-1">
-              {counselors.length === 0 ? (
-                <div className="rounded-lg bg-[var(--surface-default)] px-4 py-6 text-center">
-                  <Text className="text-[var(--text-muted)]">No counselor accounts found.</Text>
-                </div>
-              ) : (
-                counselors.map((profile) => (
-                  <motion.div
-                    key={profile.id}
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="rounded-lg border border-[var(--border-default)] bg-[var(--surface-default)] p-4"
-                    role="article"
+          <div className="max-h-[32rem] space-y-2 overflow-y-auto pr-1">
+            {filteredStudents.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-[var(--border-default)] px-4 py-8 text-center">
+                <Icon icon="tabler:user-off" className="mx-auto h-8 w-8 text-[var(--text-muted)] opacity-40" />
+                <Text className="mt-2 text-[var(--text-muted)]">
+                  {searchQuery ? 'No students match your search.' : 'No student accounts found.'}
+                </Text>
+              </div>
+            ) : (
+              filteredStudents.map((profile, index) => (
+                <motion.div
+                  key={profile.id}
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.03 }}
+                >
+                  <Link
+                    href={`/admin/student/${profile.id}`}
+                    className="group flex items-center gap-3.5 rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-4 transition-all duration-200 hover:border-[var(--border-strong)] hover:shadow-sm"
                   >
-                    <div className="flex items-center gap-2">
-                      <Text variant="h6" className="font-bold text-[var(--text-primary)] leading-none">{getCardDisplayName(profile)}</Text>
-                      <span className="rounded bg-[var(--chip-bg)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)]">Counselor</span>
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-inverse)] text-sm font-bold shadow-sm">
+                      {getCardDisplayName(profile).charAt(0).toUpperCase()}
                     </div>
-                    <Text className="mt-1.5 text-[13px] text-[var(--text-muted)]">Institution: {profile.institution || 'N/A'}</Text>
-                  </motion.div>
-                ))
-              )}
-            </div>
+                    <div className="min-w-0 flex-1">
+                      <Text variant="body" weight="bold" className="text-[var(--text-primary)] truncate leading-tight">
+                        {getCardDisplayName(profile)}
+                      </Text>
+                      <Text className="mt-0.5 text-[12px] text-[var(--text-muted)] truncate">
+                        {profile.email || profile.institution || 'No details'}
+                      </Text>
+                    </div>
+                    <Icon
+                      icon="tabler:chevron-right"
+                      className="h-4 w-4 shrink-0 text-[var(--text-muted)] opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-0.5"
+                    />
+                  </Link>
+                </motion.div>
+              ))
+            )}
           </div>
         </div>
-      </section>
+
+        {/* Counselors Column */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ backgroundColor: '#0ea5e918', color: '#0ea5e9' }}>
+                <Icon icon="tabler:stethoscope" className="h-4 w-4" />
+              </div>
+              <Text as="h2" variant="body" weight="bold" className="text-[var(--text-primary)]">
+                Counselors
+              </Text>
+            </div>
+            <span className="rounded-full bg-[var(--surface-strong)] px-2.5 py-1 text-[11px] font-bold text-[var(--text-muted)]">
+              {filteredCounselors.length}
+            </span>
+          </div>
+
+          <div className="max-h-[32rem] space-y-2 overflow-y-auto pr-1">
+            {filteredCounselors.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-[var(--border-default)] px-4 py-8 text-center">
+                <Icon icon="tabler:user-off" className="mx-auto h-8 w-8 text-[var(--text-muted)] opacity-40" />
+                <Text className="mt-2 text-[var(--text-muted)]">
+                  {searchQuery ? 'No counselors match your search.' : 'No counselor accounts found.'}
+                </Text>
+              </div>
+            ) : (
+              filteredCounselors.map((profile, index) => (
+                <motion.div
+                  key={profile.id}
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.03 }}
+                >
+                  <div className="flex items-center gap-3.5 rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-4 transition-all duration-200 hover:border-[var(--border-strong)] hover:shadow-sm">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold shadow-sm" style={{ background: 'linear-gradient(135deg, #0ea5e9, #0284c7)', color: 'white' }}>
+                      {getCardDisplayName(profile).charAt(0).toUpperCase()}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <Text variant="body" weight="bold" className="text-[var(--text-primary)] truncate leading-tight">
+                          {getCardDisplayName(profile)}
+                        </Text>
+                        <span className="shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider" style={{ backgroundColor: '#0ea5e915', color: '#0ea5e9' }}>
+                          Counselor
+                        </span>
+                      </div>
+                      <Text className="mt-0.5 text-[12px] text-[var(--text-muted)] truncate">
+                        {profile.email || profile.institution || 'No details'}
+                      </Text>
+                    </div>
+                  </div>
+                </motion.div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
-

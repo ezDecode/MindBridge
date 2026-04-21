@@ -31,7 +31,7 @@ export function MessageActions({
  
  
  onClick={() => onAction(action)}
- className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[var(--action-primary)] px-4 py-2 text-sm font-semibold text-[var(--text-primary)] shadow-sm transition-all duration-150 hover:bg-[var(--action-primary-hover)] hover:shadow-md"
+ className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[var(--action-primary)] px-4 py-2 text-sm font-semibold text-[var(--text-inverse)] shadow-sm transition-all duration-150 hover:bg-[var(--action-primary-hover)] hover:shadow-md"
  >
  <Icon icon={primaryIconName} className="h-4 w-4" />
  <span>{primaryLabel}</span>

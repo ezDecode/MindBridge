@@ -24,7 +24,7 @@ type PolymorphicComponentProp<T extends ElementType, Props = object> = {
 
 const variantStyles: Record<ButtonVariant, string> = {
  primary:
- "border-none bg-[var(--action-primary)] text-[var(--text-primary)] hover:bg-[var(--action-primary-hover)] shadow-none hover:shadow-none",
+ "border-none bg-[var(--action-primary)] text-[var(--text-inverse)] hover:bg-[var(--action-primary-hover)] shadow-none hover:shadow-none",
  warm:
  "border border-[var(--border-default)] bg-[var(--surface-default)] text-[var(--text-primary)] hover:bg-[var(--bg-hover)] shadow-none hover:shadow-none",
  ghost:

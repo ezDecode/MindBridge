@@ -18,6 +18,7 @@ import { DashboardSidebar } from './_components/DashboardSidebar'
 import { CheckInModal } from './_components/CheckInModal'
 import { BookingModal } from './_components/BookingModal'
 import { AnalyticsModal } from './_components/AnalyticsModal'
+import { SettingsModal } from './_components/SettingsModal'
 import { generateSessionId, generateWeekMoodHistory, generateEmptyWeek, formatSessionTime } from './_components/types'
 import type { DashboardData, TabId } from './_components/types'
 
@@ -71,6 +72,7 @@ export default function StudentDashboardPage() {
     const [showCheckIn, setShowCheckIn] = useState(false)
     const [showBookingModal, setShowBookingModal] = useState(false)
     const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)
+    const [showSettings, setShowSettings] = useState(false)
     const [sidebarOpen, setSidebarOpen] = useState(false)
 
     const handleCrisis = useCallback(() => {
@@ -392,6 +394,7 @@ export default function StudentDashboardPage() {
             <CheckInModal isOpen={showCheckIn || pendingCheckInOpen} onClose={() => { setShowCheckIn(false); handleAutoOpenCheckInHandled(); }} onComplete={refreshDashboardInsights} />
             <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
             <AnalyticsModal isOpen={showAnalyticsModal} onClose={() => setShowAnalyticsModal(false)} onGoToDashboard={() => setActiveTab('bridge')} />
+            <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
 
             <QuestionSessionSheet
                 isOpen={showQuestionnaire}

@@ -73,7 +73,7 @@ export function ResourceCard({ resource, className = "", style }: ResourceCardPr
  </svg>
  </div>
  </div>
- <div className="absolute bottom-2.5 right-2.5 bg-[var(--action-primary)]/75 text-[var(--text-primary)] text-xs font-medium px-2 py-0.5 rounded-md backdrop-blur-sm">
+ <div className="absolute bottom-2.5 right-2.5 bg-[var(--action-primary)]/75 text-[var(--text-inverse)] text-xs font-medium px-2 py-0.5 rounded-md backdrop-blur-sm">
  {resource.duration}
  </div>
  </div>

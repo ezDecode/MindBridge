@@ -238,8 +238,8 @@ button:disabled {
 /* ── Focus-visible for accessibility ── */
 a:focus-visible,
 button:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
+input:focus-visible:not(.no-focus-ring),
+textarea:focus-visible:not(.no-focus-ring),
 select:focus-visible {
   outline: 2px solid var(--action-primary);
   outline-offset: 2px;

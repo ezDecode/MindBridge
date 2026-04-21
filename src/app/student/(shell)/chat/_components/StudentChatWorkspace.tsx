@@ -329,7 +329,7 @@ export function StudentChatWorkspace() {
  return (
  <div className="flex min-h-[70svh] items-center justify-center">
  <div className="w-full max-w-lg rounded-[28px] border border-[var(--border-default)] bg-[var(--surface-default)] p-8 text-center shadow-lg">
- <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-[var(--action-primary)] text-[var(--text-primary)]">
+ <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-[var(--action-primary)] text-[var(--text-inverse)]">
  <Icon icon="tabler:message-circle" className="h-7 w-7" />
  </div>
  <Text as="h1" variant="h5" weight="bold" className="mt-6 text-[var(--text-primary)]">
@@ -383,7 +383,7 @@ export function StudentChatWorkspace() {
  <button
  type="button"
  onClick={handleActionClick}
- className="shrink-0 rounded-[10px] bg-[var(--action-primary)] px-3 py-2 text-xs font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--action-primary)]/85"
+ className="shrink-0 rounded-[10px] bg-[var(--action-primary)] px-3 py-2 text-xs font-medium text-[var(--text-inverse)] transition-colors hover:bg-[var(--action-primary)]/85"
  >
  {actionPrompt.type === "book_counselor" ? "Book now" : "Open resources"}
  </button>
@@ -480,7 +480,7 @@ function ConversationPane({
  className={cn(
  "max-w-[min(42rem,85%)] px-5 py-4 text-[15px] leading-7 shadow-lg transition-all duration-300",
  isUser
- ? "rounded-[22px] rounded-br-[4px] bg-[var(--action-primary)] text-[var(--text-primary)]"
+ ? "rounded-[22px] rounded-br-[4px] bg-[var(--action-primary)] text-[var(--text-inverse)]"
  : "rounded-[22px] rounded-bl-[4px] border border-[var(--border-default)] bg-[var(--surface-default)] text-[var(--text-primary)]"
  )}
  >
@@ -572,7 +572,7 @@ function WorkspaceComposer({
  onKeyDown={handleKeyDown}
  placeholder="Tell MindBridge what feels heavy, noisy, or hard to name..."
  disabled={disabled || isLoading}
- className="min-h-6 flex-1 resize-none bg-transparent px-2 py-1 text-[15px] leading-6 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none disabled:cursor-not-allowed"
+ className="no-focus-ring min-h-6 flex-1 resize-none bg-transparent px-2 py-1 text-[15px] leading-6 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none disabled:cursor-not-allowed"
  />
 
  <div className="mb-0.5">
@@ -589,7 +589,7 @@ function WorkspaceComposer({
  <button
  type="submit"
  disabled={!value.trim() || disabled}
- className="flex h-10 w-10 items-center justify-center rounded-md border transition-all duration-200 disabled:border-[var(--border-default)] disabled:bg-[var(--surface-strong)] disabled:text-[var(--text-muted)] enabled:border-[var(--action-primary)] enabled:bg-[var(--action-primary)] enabled:text-[var(--text-primary)] enabled: enabled:hover:bg-[var(--action-primary-hover)] enabled:hover:border-[var(--action-primary-hover)] enabled:"
+ className="flex h-10 w-10 items-center justify-center rounded-md border transition-all duration-200 disabled:border-[var(--border-default)] disabled:bg-[var(--surface-strong)] disabled:text-[var(--text-muted)] enabled:border-[var(--action-primary)] enabled:bg-[var(--action-primary)] enabled:text-[var(--text-inverse)] enabled: enabled:hover:bg-[var(--action-primary-hover)] enabled:hover:border-[var(--action-primary-hover)] enabled:"
  aria-label="Send message"
  >
  <Icon icon="tabler:send" className="h-5 w-5" />

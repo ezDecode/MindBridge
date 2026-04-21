@@ -43,7 +43,7 @@ export function BookingSuggestion({
  type="button"
  onClick={onConfirm}
  disabled={isLoading}
- className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--action-primary)] px-4 py-2 text-xs font-bold text-[var(--text-primary)] transition-all hover:bg-[var(--action-primary-hover)] disabled:opacity-50"
+ className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--action-primary)] px-4 py-2 text-xs font-bold text-[var(--text-inverse)] transition-all hover:bg-[var(--action-primary-hover)] disabled:opacity-50"
  >
  <Icon icon="tabler:circle-check" className="h-3.5 w-3.5" />
  Confirm

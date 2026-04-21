@@ -42,7 +42,7 @@ export function RoleShell({
             href="/"
             className="inline-flex items-center gap-2.5 px-2 text-[17px] font-bold text-[var(--text-primary)] transition-opacity hover:opacity-80"
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-b from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-primary)] shadow-sm ring-1 ring-inset ring-white/10">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-b from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-inverse)] shadow-sm ring-1 ring-inset ring-white/10">
               <Icon icon="tabler:leaf" className="h-[18px] w-[18px]" strokeWidth={2.5} />
             </span>
             <span className="tracking-tight">MindBridge</span>
@@ -87,7 +87,7 @@ export function RoleShell({
         <div className="mt-auto p-3 mb-2 flex flex-col gap-1">
           <Link href="/student/settings" className="group flex items-center justify-between rounded-xl px-2 py-2 text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--surface-default)] hover:shadow-lg hover:ring-1 hover:ring-inset hover:ring-[var(--border-default)]">
             <div className="flex items-center gap-2.5">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-primary)] text-xs font-bold shrink-0 shadow-sm ring-1 ring-inset ring-white/20">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-inverse)] text-xs font-bold shrink-0 shadow-sm ring-1 ring-inset ring-white/20">
                 N
               </div>
               Nemo
@@ -102,7 +102,7 @@ export function RoleShell({
         {/* Mobile Header (Hidden on large screens) */}
         <div className="flex items-center justify-between bg-[var(--bg-page)] p-4 lg:hidden">
           <Link href="/" className="inline-flex items-center gap-2.5 font-bold text-[var(--text-primary)]">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-b from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-primary)] shadow-sm ring-1 ring-inset ring-white/10">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-b from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-inverse)] shadow-sm ring-1 ring-inset ring-white/10">
               <Icon icon="tabler:leaf" className="h-[18px] w-[18px]" strokeWidth={2.5} />
             </span>
             <span className="text-[17px] tracking-tight">MindBridge</span>

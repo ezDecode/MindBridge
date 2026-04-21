@@ -160,7 +160,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
  initial={{ scale: 0, opacity: 0 }}
  animate={{ scale: 1, opacity: 1 }}
  exit={{ scale: 0, opacity: 0 }}
- className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-md bg-[var(--action-primary)] text-[var(--text-primary)] shadow-md"
+ className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-md bg-[var(--action-primary)] text-[var(--text-inverse)] shadow-md"
  >
  <Icon icon="tabler:check" className="h-3 w-3" />
  </motion.div>

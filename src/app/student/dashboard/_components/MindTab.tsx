@@ -106,7 +106,7 @@ export function MindTab({
                       onClick={onOpenCheckIn}
                       className="group flex items-center gap-2 rounded-full border border-[var(--border-default)]/60 bg-[var(--surface-default)]/50 px-4 py-2 text-sm font-medium text-[var(--text-secondary)] shadow-sm backdrop-blur-sm transition-all hover:border-[var(--action-primary)]/40 hover:bg-[var(--surface-default)] hover:text-[var(--text-primary)] hover:shadow"
                     >
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--action-primary)]/10 text-[var(--action-primary)] transition-colors group-hover:bg-[var(--action-primary)] group-hover:text-[var(--text-primary)]">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--action-primary)]/10 text-[var(--action-primary)] transition-colors group-hover:bg-[var(--action-primary)] group-hover:text-[var(--text-inverse)]">
                         <Icon icon="tabler:mood-smile" className="h-3.5 w-3.5" />
                       </div>
                       Quick log
@@ -115,7 +115,7 @@ export function MindTab({
                       onClick={() => onOpenQuestionnaire()}
                       className="group flex items-center gap-2 rounded-full border border-[var(--border-default)]/60 bg-[var(--surface-default)]/50 px-4 py-2 text-sm font-medium text-[var(--text-secondary)] shadow-sm backdrop-blur-sm transition-all hover:border-[var(--action-primary)]/40 hover:bg-[var(--surface-default)] hover:text-[var(--text-primary)] hover:shadow"
                     >
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--action-primary)]/10 text-[var(--action-primary)] transition-colors group-hover:bg-[var(--action-primary)] group-hover:text-[var(--text-primary)]">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--action-primary)]/10 text-[var(--action-primary)] transition-colors group-hover:bg-[var(--action-primary)] group-hover:text-[var(--text-inverse)]">
                         <Icon icon="tabler:bolt" className="h-3.5 w-3.5" />
                       </div>
                       Mental health scan

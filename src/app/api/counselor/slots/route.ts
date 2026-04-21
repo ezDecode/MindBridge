@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { resolveProfileDisplayName } from '@/lib/profile-name'
 
@@ -53,20 +54,51 @@ export async function GET() {
  .gte('slot_start', new Date().toISOString())
  .order('slot_start', { ascending: true })
 
-  const normalizedBookings = (bookings || []).map((booking) => ({
-  ...booking,
-  student: booking.student
-  ? {
-  ...booking.student,
-  name: resolveProfileDisplayName({ profileName: booking.student.name }) || 'Student',
-  }
-  : booking.student,
-  }))
+ // Resolve student names using service role to access auth emails
+ let authEmailMap = new Map<string, string>()
+ const studentIds = (bookings || [])
+  .map((b) => {
+   const s = b.student as { id: string } | null
+   return s?.id
+  })
+  .filter((id): id is string => Boolean(id))
 
-  return NextResponse.json({
+ if (studentIds.length > 0) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+  if (supabaseUrl && supabaseServiceKey) {
+   try {
+    const adminClient = createSupabaseClient(supabaseUrl, supabaseServiceKey)
+    const { data: authData } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 1000 })
+    if (authData?.users) {
+     authEmailMap = new Map(authData.users.map((u) => [u.id, u.email || '']))
+    }
+   } catch {
+    // Fallback to profile name only
+   }
+  }
+ }
+
+ const normalizedBookings = (bookings || []).map((booking) => {
+  const student = booking.student as { id: string; name: string | null } | null
+  return {
+   ...booking,
+   student: student
+    ? {
+     ...student,
+     name: resolveProfileDisplayName({
+      profileName: student.name,
+      email: authEmailMap.get(student.id),
+     }) || 'Student',
+    }
+    : booking.student,
+  }
+ })
+
+ return NextResponse.json({
   slots: slots || [],
   bookings: normalizedBookings,
-  })
+ })
  } catch (error) {
  console.error('Counselor slots error:', error)
  return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

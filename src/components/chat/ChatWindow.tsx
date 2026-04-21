@@ -142,7 +142,7 @@ function MessageBubble({
  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.85rem] shadow-sm ${
  isUser
- ? 'bg-[var(--action-primary)] text-[var(--text-primary)]'
+ ? 'bg-[var(--action-primary)] text-[var(--text-inverse)]'
  : 'bg-[var(--action-primary-light)] text-[var(--action-primary)] ring-1 ring-black/5'
  }`}
  >

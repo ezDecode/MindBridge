@@ -23,7 +23,7 @@ export function SiteHeader() {
  <div className="surface-panel rounded-md px-4 py-3 sm:px-5">
  <div className="flex items-center justify-between gap-3">
  <Link href="/" className="flex min-w-0 items-center gap-3">
- <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--action-primary)] text-span font-bold text-[var(--text-primary)]">
+ <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--action-primary)] text-span font-bold text-[var(--text-inverse)]">
  MB
  </span>
  <div className="min-w-0">

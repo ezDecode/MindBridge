@@ -60,7 +60,7 @@ export function DashboardSidebar({
         <div className="flex h-full flex-col px-4 pb-4">
           <div className="flex items-center justify-between pt-6 pb-6">
             <Link href="/" className="flex items-center gap-2.5 text-[var(--text-primary)] transition-opacity hover:opacity-80 ml-1">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-b from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-primary)] shadow-sm ring-1 ring-inset ring-white/10">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-b from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-inverse)] shadow-sm ring-1 ring-inset ring-white/10">
                 <Icon icon="tabler:leaf" className="h-[18px] w-[18px]" strokeWidth={2.5} />
               </div>
               <span className="text-[17px] font-bold tracking-tight text-[var(--text-primary)]">MindBridge</span>
@@ -188,7 +188,7 @@ export function DashboardSidebar({
              <div className="rounded-xl bg-gradient-to-b from-[var(--surface-default)] to-[var(--bg-page)] p-3.5 ring-1 ring-inset ring-[var(--border-default)] shadow-sm mb-[22px]">
                <div className="flex items-center justify-between mb-1.5">
                  <div className="flex items-center gap-1.5">
-                   <div className="flex h-[18px] w-[18px] items-center justify-center rounded-md bg-[var(--action-primary)] text-[var(--text-primary)]">
+                   <div className="flex h-[18px] w-[18px] items-center justify-center rounded-md bg-[var(--action-primary)] text-[var(--text-inverse)]">
                      <Icon icon="tabler:stars" className="h-3 w-3" strokeWidth={3} />
                    </div>
                    <span className="text-[11px] font-bold uppercase tracking-wide text-[var(--action-primary)]">Pro Plan</span>
@@ -201,7 +201,7 @@ export function DashboardSidebar({
 
              <Link href="/student/settings" className="group flex w-full items-center justify-between rounded-xl px-2 py-2 transition-all hover:bg-[var(--surface-default)] hover:shadow-lg hover:ring-1 hover:ring-inset hover:ring-[var(--border-default)]">
                <div className="flex items-center gap-2.5">
-                 <div className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-gradient-to-br from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-primary)] shadow-sm ring-1 ring-inset ring-white/20 transition-transform group-hover:scale-105">
+                 <div className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-gradient-to-br from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-inverse)] shadow-sm ring-1 ring-inset ring-white/20 transition-transform group-hover:scale-105">
                    <span className="text-[14px] font-bold">{userName.charAt(0)}</span>
                  </div>
                  <div className="flex flex-col items-start justify-center">

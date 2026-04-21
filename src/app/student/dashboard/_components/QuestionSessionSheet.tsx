@@ -310,7 +310,7 @@ export function QuestionSessionSheet({
  <button
  type="button"
  onClick={() => void loadSession()}
- className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[var(--action-primary)] px-5 text-xs font-bold text-[var(--text-primary)] transition-opacity hover:opacity-90 active:scale-95"
+ className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[var(--action-primary)] px-5 text-xs font-bold text-[var(--text-inverse)] transition-opacity hover:opacity-90 active:scale-95"
  >
  <Icon icon="tabler:refresh" className="h-3.5 w-3.5" />
  Try again
@@ -350,7 +350,7 @@ export function QuestionSessionSheet({
  <button
  type="button"
  onClick={() => { onChatRequested?.(); onClose(); }}
- className="inline-flex h-9 items-center justify-center gap-2 rounded-full bg-[var(--action-primary)] px-4 text-xs font-bold text-[var(--text-primary)] transition-opacity hover:opacity-90 active:scale-95"
+ className="inline-flex h-9 items-center justify-center gap-2 rounded-full bg-[var(--action-primary)] px-4 text-xs font-bold text-[var(--text-inverse)] transition-opacity hover:opacity-90 active:scale-95"
  >
  <Icon icon="tabler:message-circle" className="h-3.5 w-3.5" />
  Chat
@@ -482,7 +482,7 @@ export function QuestionSessionSheet({
  }
  }}
  disabled={!canGoNext || isSubmitting}
- className="inline-flex h-10 min-w-[7rem] items-center justify-center gap-2 rounded-full bg-[var(--action-primary)] px-5 text-xs font-bold text-[var(--text-primary)] transition-opacity hover:opacity-90 active:scale-95 disabled:pointer-events-none disabled:opacity-30"
+ className="inline-flex h-10 min-w-[7rem] items-center justify-center gap-2 rounded-full bg-[var(--action-primary)] px-5 text-xs font-bold text-[var(--text-inverse)] transition-opacity hover:opacity-90 active:scale-95 disabled:pointer-events-none disabled:opacity-30"
  >
  {isSubmitting ? (
  <Icon icon="tabler:loader" className="h-3.5 w-3.5 animate-spin" />
