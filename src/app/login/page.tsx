@@ -16,6 +16,7 @@ function LoginForm() {
  
  const [authMode, setAuthMode] = useState<'login' | 'signup' | 'otp'>('login');
  const [role, setRole] = useState(defaultRole);
+ const [fullName, setFullName] = useState('');
  
  const [state, formAction, isPending] = useActionState(
  authMode === 'login' ? signInWithPassword : 
@@ -50,7 +51,7 @@ function LoginForm() {
  </Text>
 
  <div className="mt-6 md:mt-8 space-y-3">
- <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+ <div className="rounded-lg border border-[var(--border-default)] bg-[var(--surface-default)] p-4">
  <Text as="p" variant="h6" weight="bold">
  Secure Password Access
  </Text>
@@ -58,7 +59,7 @@ function LoginForm() {
  Quickly return to your sessions securely matching your credentials.
  </Text>
  </div>
- <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+ <div className="rounded-lg border border-[var(--border-default)] bg-[var(--surface-default)] p-4">
  <Text as="p" variant="h6" weight="bold">
  What stays private
  </Text>
@@ -71,7 +72,7 @@ function LoginForm() {
 
  <Card variant="elevated" padding="lg" className="rounded-2xl">
  <div className="flex items-center gap-3">
- <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)]">
+ <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--action-primary-light)] text-[var(--action-primary)]">
  <Icon icon="tabler:lock-password" className="h-5 w-5" />
  </span>
  <div>
@@ -85,36 +86,54 @@ function LoginForm() {
  </div>
 
  <form action={signInWithGoogle} className="mt-6 md:mt-8">
- <Button type="submit" variant="ghost" className="w-full border border-[var(--color-border)] bg-[var(--color-surface)]">
+ <Button type="submit" variant="ghost" className="w-full border border-[var(--border-default)] bg-[var(--surface-default)]">
  <Icon icon="tabler:brand-google" className="mr-2 h-5 w-5" />
  Continue with Google
  </Button>
  </form>
 
  <div className="my-6 flex items-center">
- <div className="flex-grow border-t border-[var(--color-border)]"></div>
- <span className="mx-4 text-[13px] font-medium text-[var(--color-text-secondary)] uppercase">OR</span>
- <div className="flex-grow border-t border-[var(--color-border)]"></div>
+ <div className="flex-grow border-t border-[var(--border-default)]"></div>
+ <span className="mx-4 text-[13px] font-medium text-[var(--text-secondary)] uppercase">OR</span>
+ <div className="flex-grow border-t border-[var(--border-default)]"></div>
  </div>
 
- <form action={formAction} className="space-y-4 md:space-y-5">
- {authMode === 'signup' && (
- <label className="block">
- <Text as="span" variant="label" weight="medium">
- Role
- </Text>
- <select
- name="role"
- value={role}
- onChange={(e) => setRole(e.target.value)}
- disabled={isPending}
- className="mt-2 w-full min-h-[3.25rem] rounded-sm border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
- >
- <option value="student">Student</option>
- <option value="counselor">Counselor / Admin</option>
- </select>
- </label>
- )}
+  <form action={formAction} className="space-y-4 md:space-y-5">
+  {authMode === 'signup' && (
+  <>
+  <label className="block">
+  <Text as="span" variant="label" weight="medium">
+  Full name
+  </Text>
+  <Input
+  type="text"
+  name="fullName"
+  value={fullName}
+  onChange={(e) => setFullName(e.target.value)}
+  placeholder="e.g. Aisha Khan"
+  required
+  disabled={isPending}
+  className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--border-default)] bg-[var(--surface-default)]"
+  />
+  </label>
+
+  <label className="block">
+  <Text as="span" variant="label" weight="medium">
+  Role
+  </Text>
+  <select
+  name="role"
+  value={role}
+  onChange={(e) => setRole(e.target.value)}
+  disabled={isPending}
+  className="mt-2 w-full min-h-[3.25rem] rounded-sm border-[var(--border-default)] bg-[var(--surface-default)] px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--action-primary)] transition-all"
+  >
+  <option value="student">Student</option>
+  <option value="counselor">Counselor / Admin</option>
+  </select>
+  </label>
+  </>
+  )}
 
  <label className="block mt-4 md:mt-5">
  <Text as="span" variant="label" weight="medium">
@@ -126,7 +145,7 @@ function LoginForm() {
  placeholder={role === "counselor" && authMode === 'signup' ? "name@uni.edu" : "you@college.edu"}
  required
  disabled={isPending}
- className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--color-border)] bg-[var(--color-surface)]"
+ className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--border-default)] bg-[var(--surface-default)]"
  />
  </label>
 
@@ -141,16 +160,16 @@ function LoginForm() {
  placeholder="Enter your password"
  required
  disabled={isPending}
- className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--color-border)] bg-[var(--color-surface)]"
+ className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--border-default)] bg-[var(--surface-default)]"
  />
  </label>
  )}
 
  {state.error && (
- <div className="rounded-md border border-[var(--color-danger)] bg-red-50 p-4">
+ <div className="rounded-md border border-[var(--status-error)]/30 bg-[var(--status-error-soft)] p-4">
  <div className="flex items-start gap-3">
- <Icon icon="tabler:alert-circle" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-danger)]" />
- <Text as="p" variant="small" className="text-[var(--color-danger)]">
+ <Icon icon="tabler:alert-circle" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--status-error)]" />
+ <Text as="p" variant="small" className="text-[var(--status-error)]">
  {state.error}
  </Text>
  </div>
@@ -158,19 +177,19 @@ function LoginForm() {
  )}
 
  {state.success && (
- <div className="rounded-md border border-[var(--color-success)] bg-green-50 p-4">
+ <div className="rounded-md border border-[var(--status-success)]/30 bg-[var(--status-success-soft)] p-4">
  <div className="flex items-start gap-3">
- <Icon icon="tabler:circle-check" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-success)]" />
- <Text as="p" variant="small" className="text-[var(--color-success)]">
+ <Icon icon="tabler:circle-check" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--status-success)]" />
+ <Text as="p" variant="small" className="text-[var(--status-success)]">
  {state.message}
  </Text>
  </div>
  </div>
  )}
 
- <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-gray-50)] p-4">
+ <div className="rounded-md border border-[var(--border-default)] bg-[var(--surface-soft)] p-4">
  <div className="flex items-start gap-3">
- <Icon icon="tabler:shield-check" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-primary)]" />
+ <Icon icon="tabler:shield-check" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--action-primary)]" />
  <Text as="p" variant="small" color="secondary">
  {authMode === 'login' ? "Secure sign-in. Data remains private." : authMode === 'signup' ? "Creating an account gives you complete access." : "We'll send a secure login link to your email."}
  </Text>
@@ -204,7 +223,7 @@ function LoginForm() {
  <Button type="button" onClick={() => setAuthMode('signup')} variant="ghost" className="w-full">
  Need an account? Sign up
  </Button>
- <Button type="button" onClick={() => setAuthMode('otp')} variant="ghost" className="w-full text-[var(--color-primary)]">
+ <Button type="button" onClick={() => setAuthMode('otp')} variant="ghost" className="w-full text-[var(--action-primary)]">
  Lost Password? Use Magic Link
  </Button>
  </>

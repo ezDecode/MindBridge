@@ -100,10 +100,10 @@ export function PhaseIndicator({
  if (!phase) return null;
  
  const phaseColor = phase.name.toLowerCase().includes("inhale") 
- ? "text-[var(--color-primary)]" 
+ ? "text-[var(--action-primary)]" 
  : phase.name.toLowerCase().includes("exhale")
- ? "text-[var(--color-accent)]"
- : "text-[var(--color-text-secondary)]";
+ ? "text-[var(--action-primary)]"
+ : "text-[var(--text-secondary)]";
 
  return (
  <motion.div
@@ -125,7 +125,7 @@ export function PhaseIndicator({
  initial={{ scale: 1.05, opacity: 0.6, filter: "blur(2px)" }}
  animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
  transition={{ duration: 0.3, ease: easeUI }}
- className="block text-5xl md:text-6xl font-bold mt-3 text-[var(--color-text-primary)] tabular-nums"
+ className="block text-5xl md:text-6xl font-bold mt-3 text-[var(--text-primary)] tabular-nums"
  >
  {timeLeft}
  </motion.span>

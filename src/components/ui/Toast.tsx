@@ -59,10 +59,10 @@ export function ToastProvider({ children }: ToastProviderProps) {
  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
  className={`mb-2 rounded-[1rem] border px-5 py-3 shadow-[var(--shadow-lg)] ${
  toast.type === 'success' 
- ? 'border-[var(--color-success)]/20 bg-[var(--color-success-soft)] text-[var(--color-success-dark)]'
+ ? 'border-[var(--status-success)]/20 bg-[var(--status-success-soft)] text-[var(--status-success-dark)]'
  : toast.type === 'error'
- ? 'border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] text-[var(--color-danger)]'
- : 'border-[var(--color-info)]/20 bg-[var(--color-info-soft)] text-[var(--color-info)]'
+ ? 'border-[var(--status-error)]/20 bg-[var(--status-error-soft)] text-[var(--status-error)]'
+ : 'border-[var(--status-info)]/20 bg-[var(--status-info-soft)] text-[var(--status-info)]'
  }`}
  onClick={() => removeToast(toast.id)}
  >

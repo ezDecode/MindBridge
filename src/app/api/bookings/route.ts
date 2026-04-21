@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 // GET: List available slots and counselors
 export async function GET(request: Request) {
@@ -58,11 +59,36 @@ export async function GET(request: Request) {
  .gte('slot_start', new Date().toISOString())
  .order('slot_start', { ascending: true })
 
- return NextResponse.json({
- counselors: counselors || [],
- slots: slots || [],
- existingBookings: existingBookings || [],
- })
+  const normalizedCounselors = (counselors || []).map((counselor) => ({
+  ...counselor,
+  name: resolveProfileDisplayName({ profileName: counselor.name }) || 'Counselor',
+  }))
+
+  const normalizedSlots = (slots || []).map((slot) => ({
+  ...slot,
+  counselor: slot.counselor
+  ? {
+  ...slot.counselor,
+  name: resolveProfileDisplayName({ profileName: slot.counselor.name }) || 'Counselor',
+  }
+  : slot.counselor,
+  }))
+
+  const normalizedExistingBookings = (existingBookings || []).map((booking) => ({
+  ...booking,
+  counselor: booking.counselor
+  ? {
+  ...booking.counselor,
+  name: resolveProfileDisplayName({ profileName: booking.counselor.name }) || 'Counselor',
+  }
+  : booking.counselor,
+  }))
+
+  return NextResponse.json({
+  counselors: normalizedCounselors,
+  slots: normalizedSlots,
+  existingBookings: normalizedExistingBookings,
+  })
  } catch (error) {
  console.error('Bookings API error:', error)
  return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
@@ -135,7 +161,19 @@ export async function POST(request: Request) {
  .eq('id', slotId)
  }
 
- return NextResponse.json({ success: true, booking })
+  const normalizedBooking = booking
+  ? {
+  ...booking,
+  counselor: booking.counselor
+  ? {
+  ...booking.counselor,
+  name: resolveProfileDisplayName({ profileName: booking.counselor.name }) || 'Counselor',
+  }
+  : booking.counselor,
+  }
+  : booking
+
+  return NextResponse.json({ success: true, booking: normalizedBooking })
  } catch (error) {
  console.error('Bookings API error:', error)
  return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

@@ -20,6 +20,16 @@ DECLARE
     s_karan uuid;
     s_priya uuid;
     
+    student_names text[] := ARRAY[
+        'Aarav Gupta', 'Vihaan Sharma', 'Vivaan Patel', 'Ananya Singh', 'Diya Kumar', 
+        'Aadhya Das', 'Myra Saxena', 'Rohan Desai', 'Karan Iyer', 'Priya Nair', 
+        'Amit Bose', 'Neha Reddy', 'Pooja Joshi', 'Vikram Mehra', 'Rahul Chawla', 
+        'Sanya Kapoor', 'Kriti Verma', 'Sneha Menon', 'Arjun Mistry', 'Ravi Raj', 
+        'Tara Rao', 'Nisha Pillai', 'Mohit Ahuja', 'Ishaan Bhatia', 'Aditi Jain', 
+        'Kabir Sinha', 'Dhruv Bhatt', 'Riya Pandey', 'Tanya Malhotra', 'Yash Roy', 
+        'Ojas Agarwal', 'Navya Rastogi', 'Simran Kaur', 'Aryan Tariq', 'Shruti Soni', 
+        'Meera Hegde', 'Varun Kulkarni', 'Dev Khatri', 'Nikhil Choudhury', 'Ritu Yadav'
+    ];
     i int;
 BEGIN
 
@@ -46,7 +56,7 @@ BEGIN
         -- Distribute students randomly among the 5 main counselors
         INSERT INTO auth.users (id, role, email, encrypted_password, raw_user_meta_data)
         VALUES (s_rohan, 'authenticated', 'student' || i || '@university.edu.in', 'dummy', 
-                ('{"name": "Student ' || i || '", "role": "student"}')::jsonb);
+                ('{"name": "' || student_names[i] || '", "role": "student"}')::jsonb);
         
         -- The trigger "on_auth_user_created" will create the profile. We just need to update counselor_id!
         UPDATE public.profiles 

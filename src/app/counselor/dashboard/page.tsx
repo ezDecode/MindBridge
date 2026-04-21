@@ -6,6 +6,7 @@ import { PageIntro } from "@/components/site"
 import { Button, Card, Text, SkeletonText } from "@/components/ui"
 import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'motion/react'
+import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 interface CrisisAlert {
  id: string
@@ -275,7 +276,7 @@ export default function CounselorDashboardPage() {
  <Text as="p" variant="small" color="secondary">
  Active alerts
  </Text>
- <Text as="p" variant="h3" weight="bold" className={`mt-3 ${metrics.activeAlerts > 0 ? 'text-[var(--color-danger)]' : 'text-[var(--color-primary)]'}`}>
+ <Text as="p" variant="h3" weight="bold" className={`mt-3 ${metrics.activeAlerts > 0 ? 'text-[var(--status-error)]' : 'text-[var(--action-primary)]'}`}>
  {loading ? '-' : metrics.activeAlerts}
  </Text>
  </Card>
@@ -283,7 +284,7 @@ export default function CounselorDashboardPage() {
  <Text as="p" variant="small" color="secondary">
  Pending bookings
  </Text>
- <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--color-primary)]">
+ <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--action-primary)]">
  {loading ? '-' : metrics.pendingBookings}
  </Text>
  </Card>
@@ -291,7 +292,7 @@ export default function CounselorDashboardPage() {
  <Text as="p" variant="small" color="secondary">
  Today&apos;s sessions
  </Text>
- <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--color-primary)]">
+ <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--action-primary)]">
  {loading ? '-' : metrics.todaySessions}
  </Text>
  </Card>
@@ -305,8 +306,8 @@ export default function CounselorDashboardPage() {
  </Text>
  {crisisAlerts.length > 0 && (
  <span className="flex h-2 w-2">
- <span className="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-red-400 opacity-75"></span>
- <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
+ <span className="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-[var(--status-error)]/75 opacity-75"></span>
+ <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--status-error)]"></span>
  </span>
  )}
  </div>
@@ -314,7 +315,7 @@ export default function CounselorDashboardPage() {
  {loading ? (
  <div className="space-y-3">
  {[1, 2].map(i => (
- <div key={i} className="rounded-md border border-[var(--color-border)] p-4">
+ <div key={i} className="rounded-md border border-[var(--border-default)] p-4">
  <SkeletonText lines={2} />
  </div>
  ))}
@@ -335,8 +336,8 @@ export default function CounselorDashboardPage() {
  x: 0, 
  scale: 1,
  backgroundColor: index === 0 
- ? "var(--color-danger-soft)" 
- : "var(--color-surface)"
+ ? "var(--status-error-soft)" 
+ : "var(--surface-default)"
  }}
  exit={{ opacity: 0, x: 20, scale: 0.95 }}
  transition={{
@@ -346,8 +347,8 @@ export default function CounselorDashboardPage() {
  }}
  className={`rounded-md border p-4 ${
  index === 0
- ? "border-[var(--color-danger)]/30"
- : "border-[var(--color-border)]"
+ ? "border-[var(--status-error)]/30"
+ : "border-[var(--border-default)]"
  }`}
  >
  <div className="flex items-start justify-between">
@@ -358,7 +359,7 @@ export default function CounselorDashboardPage() {
  </Text>
  {index === 0 && (
  <motion.span
- className="h-2 w-2 rounded-full bg-red-500"
+ className="h-2 w-2 rounded-full bg-[var(--status-error)]"
  animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
  transition={{ duration: 1, repeat: Infinity }}
  />
@@ -385,7 +386,7 @@ export default function CounselorDashboardPage() {
  ))}
  </AnimatePresence>
  ) : (
- <div className="rounded-md border border-dashed border-[var(--color-border)] p-6 text-center">
+ <div className="rounded-md border border-dashed border-[var(--border-default)] p-6 text-center">
  <Text as="p" color="muted">
  No active alerts. All students are safe.
  </Text>
@@ -403,7 +404,7 @@ export default function CounselorDashboardPage() {
  {loading ? (
  <div className="space-y-3">
  {[1, 2, 3].map(i => (
- <div key={i} className="rounded-md border border-[var(--color-border)] p-4">
+ <div key={i} className="rounded-md border border-[var(--border-default)] p-4">
  <SkeletonText lines={2} />
  </div>
  ))}
@@ -412,11 +413,13 @@ export default function CounselorDashboardPage() {
  bookings.map((booking) => (
  <div
  key={booking.id}
- className="grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
+ className="grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-md border border-[var(--border-default)] bg-[var(--surface-default)] px-4 py-3"
  >
  <div>
  <Text as="p" variant="small" weight="medium">
- {booking.type === 'anonymous' ? 'Anonymous Student' : booking.student?.name || 'Student'}
+  {booking.type === 'anonymous'
+  ? 'Anonymous Student'
+  : resolveProfileDisplayName({ profileName: booking.student?.name }) || 'Student'}
  </Text>
  <Text as="p" variant="small" color="secondary" className="mt-1">
  {formatTime(booking.slot_start)}
@@ -424,8 +427,8 @@ export default function CounselorDashboardPage() {
  </div>
  <span className={`rounded-full px-3 py-1.5 text-span ${
  booking.type === 'crisis'
- ? 'bg-red-100 text-red-700'
- : 'bg-[var(--color-gray-100)] text-[var(--color-text-secondary)]'
+ ? 'bg-[var(--status-error-soft)] text-[var(--status-error)]'
+ : 'bg-[var(--surface-tinted)] text-[var(--text-secondary)]'
  }`}>
  {booking.type}
  </span>
@@ -442,7 +445,7 @@ export default function CounselorDashboardPage() {
  </div>
  ))
  ) : (
- <div className="rounded-md border border-dashed border-[var(--color-border)] p-6 text-center">
+ <div className="rounded-md border border-dashed border-[var(--border-default)] p-6 text-center">
  <Text as="p" color="muted">
  No upcoming bookings.
  </Text>

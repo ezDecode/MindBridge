@@ -315,9 +315,9 @@ export function StudentChatWorkspace() {
  if (authState === "loading") {
  return (
  <div className="flex min-h-[70svh] items-center justify-center">
- <div className="flex items-center gap-3 rounded-full border border-black/10 bg-white px-5 py-3 shadow-[0_12px_28px_rgba(15,23,42,0.08)]">
- <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-black" />
- <Text as="span" variant="small" weight="medium" className="text-black">
+ <div className="flex items-center gap-3 rounded-full border border-[var(--border-default)] bg-[var(--surface-default)] px-5 py-3 shadow-lg">
+ <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[var(--action-primary)]" />
+ <Text as="span" variant="small" weight="medium" className="text-[var(--text-primary)]">
  Loading chat workspace
  </Text>
  </div>
@@ -328,11 +328,11 @@ export function StudentChatWorkspace() {
  if (authState === "guest") {
  return (
  <div className="flex min-h-[70svh] items-center justify-center">
- <div className="w-full max-w-lg rounded-[28px] border border-black/10 bg-white p-8 text-center shadow-[0_30px_70px_rgba(15,23,42,0.08)]">
- <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[20px] bg-black text-white">
+ <div className="w-full max-w-lg rounded-[28px] border border-[var(--border-default)] bg-[var(--surface-default)] p-8 text-center shadow-lg">
+ <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-[var(--action-primary)] text-[var(--text-primary)]">
  <Icon icon="tabler:message-circle" className="h-7 w-7" />
  </div>
- <Text as="h1" variant="h5" weight="bold" className="mt-6 text-black">
+ <Text as="h1" variant="h5" weight="bold" className="mt-6 text-[var(--text-primary)]">
  Sign in to open your chat workspace
  </Text>
  <Text as="p" variant="body" color="secondary" className="mt-3 text-balance">
@@ -353,8 +353,8 @@ export function StudentChatWorkspace() {
 
  return (
  <section className="w-full pt-4 sm:pt-6 px-4 sm:px-6 lg:px-8 h-[calc(100svh-4.75rem)] flex flex-col justify-end pb-0">
- <div className="mx-auto flex h-full w-full max-w-[100rem] overflow-hidden rounded-t-[28px] border border-b-0 border-black/10 bg-white shadow-[0_24px_72px_rgba(15,23,42,0.08)]">
- <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#ffffff_72%,#fafafa_100%)] h-full">
+ <div className="mx-auto flex h-full w-full max-w-[100rem] overflow-hidden rounded-t-[28px] border border-b-0 border-[var(--border-default)] bg-[var(--surface-default)] shadow-lg">
+ <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-[var(--bg-page)] h-full">
  <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-44 pt-10 sm:px-8 lg:px-12 lg:pt-16">
  {messages.length > 0 ? (
  <ConversationPane messages={messages} isLoading={isLoading} />
@@ -364,18 +364,18 @@ export function StudentChatWorkspace() {
  </div>
 
  {isLoadingHistory ? (
- <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white/55 backdrop-blur-[6px]">
- <div className="rounded-full border border-black/10 bg-white px-5 py-3 text-sm font-medium text-black shadow-[0_12px_28px_rgba(15,23,42,0.08)]">
+ <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[var(--surface-default)]/55 backdrop-blur-[6px]">
+ <div className="rounded-full border border-[var(--border-default)] bg-[var(--surface-default)] px-5 py-3 text-sm font-medium text-[var(--text-primary)] shadow-lg">
  Loading conversation
  </div>
  </div>
  ) : null}
 
- <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-white/45 px-4 pb-5 pt-4 backdrop-blur-[20px] sm:px-8 lg:px-12">
+ <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-[var(--surface-default)]/45 px-4 pb-5 pt-4 backdrop-blur-[20px] sm:px-8 lg:px-12">
  <div className="pointer-events-auto mx-auto w-full max-w-[760px]">
  {actionPrompt ? (
- <div className="mb-3 flex items-center justify-between gap-3 rounded-[16px] border border-black/10 bg-white/80 px-4 py-3 shadow-[0_10px_28px_rgba(15,23,42,0.06)]">
- <Text as="p" variant="small" className="text-black/75">
+ <div className="mb-3 flex items-center justify-between gap-3 rounded-[16px] border border-[var(--border-default)] bg-[var(--surface-default)]/80 px-4 py-3 shadow-lg">
+ <Text as="p" variant="small" className="text-[var(--text-primary)]/75">
  {actionPrompt.type === "book_counselor"
  ? "A counselor booking path is ready if you'd like to take the next step."
  : "I found a few resources that might help you right now."}
@@ -383,7 +383,7 @@ export function StudentChatWorkspace() {
  <button
  type="button"
  onClick={handleActionClick}
- className="shrink-0 rounded-[10px] bg-black px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-black/85"
+ className="shrink-0 rounded-[10px] bg-[var(--action-primary)] px-3 py-2 text-xs font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--action-primary)]/85"
  >
  {actionPrompt.type === "book_counselor" ? "Book now" : "Open resources"}
  </button>
@@ -391,7 +391,7 @@ export function StudentChatWorkspace() {
  ) : null}
 
  {workspaceError || error ? (
- <div className="mb-3 rounded-[16px] border border-[#f3c9c9] bg-[#fff4f4] px-4 py-3 text-sm text-[#9f3f3f] shadow-[0_10px_28px_rgba(15,23,42,0.04)]">
+ <div className="mb-3 rounded-[16px] border border-[var(--status-error)]/30 bg-[var(--status-error-soft)] px-4 py-3 text-sm text-[var(--status-error)] shadow-lg">
  {workspaceError || error}
  </div>
  ) : null}
@@ -425,15 +425,15 @@ function EmptyState({
  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
  className="flex flex-col items-center"
  >
- <div className="flex h-16 w-16 items-center justify-center rounded-[20px] border border-black/10 bg-[var(--color-surface)] shadow-[0_12px_28px_rgba(15,23,42,0.08)]">
- <Icon icon="tabler:message-circle" className="h-8 w-8 text-[var(--color-primary)]" />
+ <div className="flex h-14 w-14 items-center justify-center rounded-[20px] border border-[var(--border-default)] bg-[var(--surface-default)] shadow-lg">
+ <Icon icon="tabler:message-circle" className="h-8 w-8 text-[var(--action-primary)]" />
  </div>
  <div className="mt-6 flex flex-col items-center gap-2">
  <div className="flex items-center gap-2.5">
- <span className="text-[1.8rem] font-bold tracking-[-0.04em] text-[var(--color-text-primary)] sm:text-[2.2rem]">MindBridge</span>
- <span className="rounded-full bg-[var(--color-primary-soft)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--color-primary)]">Companion</span>
+ <span className="text-[1.8rem] font-bold tracking-[-0.04em] text-[var(--text-primary)] sm:text-[2.2rem]">MindBridge</span>
+ <span className="rounded-full bg-[var(--action-primary-soft)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--action-primary)]">Companion</span>
  </div>
- <p className="mt-2 text-sm text-[var(--color-text-secondary)]">I&apos;m here to listen, support, and help you find clarity.</p>
+ <p className="mt-2 text-sm text-[var(--text-secondary)]">I&apos;m here to listen, support, and help you find clarity.</p>
  </div>
  </motion.div>
  </div>
@@ -469,8 +469,8 @@ function ConversationPane({
  >
  <div
  className={cn(
- "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white shadow-md transition-transform duration-200 ",
- isUser ? "bg-black" : "bg-black"
+ "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--text-primary)] shadow-md transition-transform duration-200 ",
+ isUser ? "bg-[var(--action-primary)]" : "bg-[var(--action-primary)]"
  )}
  >
  {isUser ? <Icon icon="tabler:user" className="h-4 w-4" /> : <Icon icon="tabler:message-circle" className="h-4 w-4" />}
@@ -478,10 +478,10 @@ function ConversationPane({
 
  <div
  className={cn(
- "max-w-[min(42rem,85%)] px-5 py-4 text-[15px] leading-7 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300",
+ "max-w-[min(42rem,85%)] px-5 py-4 text-[15px] leading-7 shadow-lg transition-all duration-300",
  isUser
- ? "rounded-[22px] rounded-br-[4px] bg-black text-white"
- : "rounded-[22px] rounded-bl-[4px] border border-black/5 bg-white text-black"
+ ? "rounded-[22px] rounded-br-[4px] bg-[var(--action-primary)] text-[var(--text-primary)]"
+ : "rounded-[22px] rounded-bl-[4px] border border-[var(--border-default)] bg-[var(--surface-default)] text-[var(--text-primary)]"
  )}
  >
  {content ? (
@@ -555,10 +555,10 @@ function WorkspaceComposer({
  <form
  onSubmit={handleSubmit}
  className={cn(
- "flex min-h-16 flex-col overflow-hidden rounded-[24px] border bg-[var(--color-surface)] transition-all duration-300 ease-[var(--ease-out)]",
+ "flex min-h-16 flex-col overflow-hidden rounded-[24px] border bg-[var(--surface-default)] transition-all duration-300 ease-[var(--ease-out)]",
  isFocused
- ? "border-[var(--color-primary)] ring-4 ring-[var(--color-primary-light)] shadow-[0_20px_44px_rgba(244,125,75,0.14)]"
- : "border-[var(--color-border)] shadow-[0_14px_34px_rgba(45,41,38,0.08)] hover:border-[var(--color-border-strong)]"
+ ? "border-[var(--action-primary)] ring-4 ring-[var(--action-primary-light)] shadow-lg"
+ : "border-[var(--border-default)] shadow-lg hover:border-[var(--border-strong)]"
  )}
  >
  <div className="flex items-center gap-3 px-5 pt-3.5 pb-3">
@@ -572,7 +572,7 @@ function WorkspaceComposer({
  onKeyDown={handleKeyDown}
  placeholder="Tell MindBridge what feels heavy, noisy, or hard to name..."
  disabled={disabled || isLoading}
- className="min-h-6 flex-1 resize-none bg-transparent px-2 py-1 text-[15px] leading-6 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none disabled:cursor-not-allowed"
+ className="min-h-6 flex-1 resize-none bg-transparent px-2 py-1 text-[15px] leading-6 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none disabled:cursor-not-allowed"
  />
 
  <div className="mb-0.5">
@@ -580,7 +580,7 @@ function WorkspaceComposer({
  <button
  type="button"
  onClick={onStop}
- className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] text-[var(--color-danger)] transition-all duration-200 "
+ className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--status-error)]/20 bg-[var(--status-error-soft)] text-[var(--status-error)] transition-all duration-200 "
  aria-label="Stop generating"
  >
  <span className="h-3.5 w-3.5 rounded-[3px] bg-current" />
@@ -589,7 +589,7 @@ function WorkspaceComposer({
  <button
  type="submit"
  disabled={!value.trim() || disabled}
- className="flex h-10 w-10 items-center justify-center rounded-md border transition-all duration-200 disabled:border-[var(--color-border)] disabled:bg-[var(--color-surface-strong)] disabled:text-[var(--color-text-muted)] enabled:border-[var(--color-primary)] enabled:bg-[var(--color-primary)] enabled:text-white enabled: enabled:hover:bg-[var(--color-primary-dark)] enabled:hover:border-[var(--color-primary-dark)] enabled:"
+ className="flex h-10 w-10 items-center justify-center rounded-md border transition-all duration-200 disabled:border-[var(--border-default)] disabled:bg-[var(--surface-strong)] disabled:text-[var(--text-muted)] enabled:border-[var(--action-primary)] enabled:bg-[var(--action-primary)] enabled:text-[var(--text-primary)] enabled: enabled:hover:bg-[var(--action-primary-hover)] enabled:hover:border-[var(--action-primary-hover)] enabled:"
  aria-label="Send message"
  >
  <Icon icon="tabler:send" className="h-5 w-5" />
@@ -605,9 +605,9 @@ function WorkspaceComposer({
  animate={{ height: "auto", opacity: 1 }}
  exit={{ height: 0, opacity: 0 }}
  transition={{ duration: 0.2 }}
- className="border-t border-[var(--color-border-light)]"
+ className="border-t border-[var(--border-light)]"
  >
- <div className="flex items-center justify-between bg-[var(--color-surface)] px-4 py-3">
+ <div className="flex items-center justify-between bg-[var(--surface-default)] px-4 py-3">
  <div className="flex flex-wrap items-center gap-2">
  {quickActions.map((action, i) => (
  <button
@@ -621,7 +621,7 @@ function WorkspaceComposer({
  textareaRef.current.focus();
  }
  }}
- className="flex items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-all hover:-translate-y-[1px] hover:border-[var(--color-primary)] hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-primary)] hover:shadow-sm "
+ className="flex items-center gap-1.5 rounded-md border border-[var(--border-default)] bg-[var(--surface-default)] px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] transition-all hover:-translate-y-[1px] hover:border-[var(--action-primary)] hover:bg-[var(--surface-warm)] hover:text-[var(--action-primary)] hover:shadow-sm "
  >
  <Icon icon={action.icon} className="h-4 w-4" />
  <span>{action.title}</span>
@@ -629,11 +629,11 @@ function WorkspaceComposer({
  ))}
  </div>
  <div className="ml-4 flex shrink-0 items-center">
- <div className="mr-2 h-4 w-px bg-[var(--color-border)]" />
+ <div className="mr-2 h-4 w-px bg-[var(--border-default)]" />
  <button
  type="button"
  onClick={() => setShowTools(false)}
- className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-warm)] hover:text-[var(--color-text-primary)]"
+ className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-warm)] hover:text-[var(--text-primary)]"
  aria-label="Dismiss quick actions"
  >
  <Icon icon="tabler:x" className="h-[1.125rem] w-[1.125rem]" />
@@ -660,9 +660,9 @@ function SidebarUtilityButton({
  <button
  type="button"
  onClick={onClick}
- className="flex w-full items-center gap-2 rounded-[12px] px-3 py-3 text-left text-sm text-black transition-colors hover:bg-black/[0.03]"
+ className="flex w-full items-center gap-2 rounded-[12px] px-3 py-3 text-left text-sm text-[var(--text-primary)] transition-colors hover:bg-[var(--action-primary)]/[0.03]"
  >
- <span className="text-black/80">{icon}</span>
+ <span className="text-[var(--text-primary)]/80">{icon}</span>
  <span>{label}</span>
  </button>
  );
@@ -682,7 +682,7 @@ function IconButton({
  type="button"
  aria-label={ariaLabel}
  disabled={disabled}
- className="flex h-8 w-8 items-center justify-center rounded-full text-black/70 transition-colors hover:bg-black/[0.04] disabled:cursor-default disabled:opacity-100"
+ className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--text-primary)]/70 transition-colors hover:bg-[var(--action-primary)]/[0.04] disabled:cursor-default disabled:opacity-100"
  >
  {children}
  </button>
@@ -695,7 +695,7 @@ function TypingDots() {
  {[0, 0.15, 0.3].map((delay) => (
  <span
  key={delay}
- className="h-1.5 w-1.5 animate-pulse rounded-full bg-black/40"
+ className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--action-primary)]/40"
  style={{ animationDelay: `${delay}s` }}
  />
  ))}

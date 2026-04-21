@@ -88,7 +88,7 @@ const categoryIcons: Record<string, React.FC> = {
 export function CategoriesSection() {
  return (
  <motion.section 
- className="w-full bg-[var(--color-background)]" 
+ className="w-full bg-[var(--bg-page)]" 
  initial="hidden" 
  whileInView="visible" 
  viewport={{ once: true, margin: "-80px" }} 
@@ -99,7 +99,7 @@ export function CategoriesSection() {
  <motion.div variants={item} className="mb-8 sm:mb-12">
  <Text 
  as="h2" 
- className="text-[var(--color-text-primary)] font-bold text-center text-2xl sm:text-3xl md:text-4xl"
+ className="text-[var(--text-primary)] font-bold text-center text-2xl sm:text-3xl md:text-4xl"
  >
  What kind of mindbridge are you looking for?
  </Text>
@@ -116,20 +116,20 @@ export function CategoriesSection() {
  key={cat.id}
  type="button"
  variants={item}
- className="group flex min-h-[4rem] w-full items-center justify-between rounded-md border-[0.125rem] border-[var(--color-border)] bg-white p-3 pl-5 sm:p-2 sm:pl-6 transition-[border-color,background-color] duration-200 hover:border-[var(--color-border-strong)] focus:outline-none"
+ className="group flex min-h-[4rem] w-full items-center justify-between rounded-md border-[0.125rem] border-[var(--border-default)] bg-[var(--surface-default)] p-3 pl-5 sm:p-2 sm:pl-6 transition-[border-color,background-color] duration-200 hover:border-[var(--border-strong)] focus:outline-none"
  >
  <Text 
  as="span" 
  variant="label"
  weight="bold"
- className="text-[var(--color-text-secondary)] transition-colors group-hover:text-[var(--color-text-primary)]"
+ className="text-[var(--text-secondary)] transition-colors group-hover:text-[var(--text-primary)]"
  >
  {cat.label}
  </Text>
  
  <div className="flex items-center gap-2">
  {Icon && <Icon />}
- <div className="p-2 text-[var(--color-text-secondary)] transition-colors group-hover:text-[var(--color-text-primary)]">
+ <div className="p-2 text-[var(--text-secondary)] transition-colors group-hover:text-[var(--text-primary)]">
  <IconifyIcon icon="tabler:chevron-right" className="h-5 w-5" />
  </div>
  </div>

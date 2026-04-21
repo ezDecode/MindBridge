@@ -93,20 +93,20 @@ export function BreathingExercise({
  className="space-y-6"
  >
  <motion.div variants={fadeInUp} className="text-center space-y-3">
- <div className="w-14 h-14 mx-auto rounded-md bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-accent)] flex items-center justify-center shadow-lg">
+ <div className="w-14 h-14 mx-auto rounded-md bg-gradient-to-br from-[var(--action-primary)] to-[var(--action-primary)] flex items-center justify-center shadow-lg">
  <motion.div
  animate={{ scale: [1, 1.1, 1] }}
  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
  >
- <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+ <svg className="w-7 h-7 text-[var(--text-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
  <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
  </svg>
  </motion.div>
  </div>
- <h2 className="text-2xl font-bold text-[var(--color-text-primary)]">
+ <h2 className="text-2xl font-bold text-[var(--text-primary)]">
  Breathe & Relax
  </h2>
- <p className="text-[var(--color-text-secondary)] text-sm max-w-[260px] mx-auto">
+ <p className="text-[var(--text-secondary)] text-sm max-w-[260px] mx-auto">
  Choose a technique and follow the visual guide
  </p>
  </motion.div>
@@ -122,24 +122,24 @@ export function BreathingExercise({
  onClick={() => setTechnique(tech)}
  className={`w-full p-4 rounded-md border-2 text-left transition-all duration-300 ${
  technique === tech
- ? "border-[var(--color-primary)] bg-[var(--color-primary-light)] shadow-md"
- : "border-[var(--color-border)] hover:border-[var(--color-border-strong)] bg-[var(--color-surface)] hover:shadow-md "
+ ? "border-[var(--action-primary)] bg-[var(--action-primary-light)] shadow-md"
+ : "border-[var(--border-default)] hover:border-[var(--border-strong)] bg-[var(--surface-default)] hover:shadow-md "
  }`}
  >
  <div className="flex items-center justify-between">
  <div className="flex-1 min-w-0">
- <span className="font-semibold text-[var(--color-text-primary)] block">
+ <span className="font-semibold text-[var(--text-primary)] block">
  {TECHNIQUES[tech].name}
  </span>
- <p className="text-xs text-[var(--color-text-muted)] mt-1 truncate">
+ <p className="text-xs text-[var(--text-muted)] mt-1 truncate">
  {TECHNIQUES[tech].description}
  </p>
  </div>
  <div className="flex flex-col items-end gap-1 ml-3 shrink-0">
- <span className="text-xs font-medium text-[var(--color-text-secondary)] bg-[var(--color-gray-100)] px-2.5 py-1 rounded-full">
+ <span className="text-xs font-medium text-[var(--text-secondary)] bg-[var(--surface-tinted)] px-2.5 py-1 rounded-full">
  {TECHNIQUES[tech].cycles} cycles
  </span>
- <span className="text-xs text-[var(--color-text-muted)]">
+ <span className="text-xs text-[var(--text-muted)]">
  ~{Math.floor(TECHNIQUES[tech].totalDuration / 60)}min
  </span>
  </div>
@@ -171,16 +171,16 @@ export function BreathingExercise({
  initial={{ scale: 0.8, opacity: 0, filter: "blur(4px)" }}
  animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
  transition={{ type: "spring", duration: 0.6, bounce: 0.3 }}
- className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-[var(--color-success)] to-[var(--color-primary)] flex items-center justify-center shadow-xl mb-5"
+ className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-[var(--status-success)] to-[var(--action-primary)] flex items-center justify-center shadow-xl mb-5"
  >
- <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+ <svg className="w-10 h-10 text-[var(--text-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
  </svg>
  </motion.div>
- <h3 className="text-2xl font-bold text-[var(--color-text-primary)] mb-2">
+ <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
  Well Done
  </h3>
- <p className="text-[var(--color-text-secondary)] mb-6">
+ <p className="text-[var(--text-secondary)] mb-6">
  You completed {completedCycles} breathing cycles
  </p>
  <Button onClick={handleReset} variant="warm" size="lg">
@@ -201,26 +201,26 @@ export function BreathingExercise({
  
  
  onClick={handleReset}
- className="p-2.5 rounded-full bg-[var(--color-surface-warm)] border border-[var(--color-border)] hover:border-[var(--color-border-strong)] transition-colors"
+ className="p-2.5 rounded-full bg-[var(--surface-warm)] border border-[var(--border-default)] hover:border-[var(--border-strong)] transition-colors"
  style={{ WebkitTapHighlightColor: "transparent" }}
  >
- <svg className="w-5 h-5 text-[var(--color-text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+ <svg className="w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
  </svg>
  </motion.button>
  
- <div className="flex items-center gap-2 px-4 py-2 bg-[var(--color-surface-warm)] rounded-full border border-[var(--color-border)]">
+ <div className="flex items-center gap-2 px-4 py-2 bg-[var(--surface-warm)] rounded-full border border-[var(--border-default)]">
  <motion.span
  key={cycleCount}
  initial={{ scale: 1.05, opacity: 0.5, filter: "blur(2px)" }}
  animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
  transition={{ duration: 0.3, ease }}
- className="text-sm font-semibold text-[var(--color-text-primary)]"
+ className="text-sm font-semibold text-[var(--text-primary)]"
  >
  Cycle {cycleCount + 1}
  </motion.span>
- <span className="text-[var(--color-text-muted)]">/</span>
- <span className="text-sm text-[var(--color-text-muted)]">
+ <span className="text-[var(--text-muted)]">/</span>
+ <span className="text-sm text-[var(--text-muted)]">
  {totalCycles}
  </span>
  </div>
@@ -236,10 +236,10 @@ export function BreathingExercise({
  reset();
  setShowInstructions(true);
  }}
- className="p-2.5 rounded-full bg-[var(--color-surface-warm)] border border-[var(--color-border)] hover:border-[var(--color-border-strong)] transition-colors"
+ className="p-2.5 rounded-full bg-[var(--surface-warm)] border border-[var(--border-default)] hover:border-[var(--border-strong)] transition-colors"
  title="Change technique"
  >
- <svg className="w-5 h-5 text-[var(--color-text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+ <svg className="w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
  <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
  </svg>
  </motion.button>
@@ -285,7 +285,7 @@ export function BreathingExercise({
  </Button>
  </div>
 
- <div className="mt-6 flex items-center justify-center gap-2 text-[var(--color-text-muted)]">
+ <div className="mt-6 flex items-center justify-center gap-2 text-[var(--text-muted)]">
  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
  </svg>
@@ -293,9 +293,9 @@ export function BreathingExercise({
  <span className="text-sm">/ {formatTime(currentTechnique.totalDuration)}</span>
  </div>
 
- <div className="w-full mt-4 h-1.5 rounded-full bg-[var(--color-gray-200)] overflow-hidden">
+ <div className="w-full mt-4 h-1.5 rounded-full bg-[var(--surface-strong)] overflow-hidden">
  <motion.div
- className="h-full rounded-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-accent)] to-[var(--color-primary)]"
+ className="h-full rounded-full bg-gradient-to-r from-[var(--action-primary)] via-[var(--action-primary)] to-[var(--action-primary)]"
  animate={{ 
  width: `${((cycleCount + (currentPhase ? (1 - phaseTimeLeft / currentPhase.duration) : 0) / currentTechnique.phases.length) / totalCycles) * 100}%` 
  }}

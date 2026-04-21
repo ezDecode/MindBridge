@@ -1,13 +1,17 @@
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
+import { resolveProfileDisplayName } from '@/lib/profile-name'
 
-export async function GET(request: Request) {
+export async function GET() {
  const supabase = await createClient()
 
- // First verify user is authenticated
+ // First verify user is authenticated or admin hardcoded cookie is present
+ const cookieStore = await cookies()
+ const isAdminCookieSet = cookieStore.get('mindbridge_admin')?.value === 'true'
  const { data: { user } } = await supabase.auth.getUser()
- if (!user) {
+ if (!user && !isAdminCookieSet) {
  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
  }
 
@@ -29,5 +33,45 @@ export async function GET(request: Request) {
  return NextResponse.json({ error: error.message }, { status: 500 })
  }
 
+ const { data: authData, error: authError } = await adminClient.auth.admin.listUsers({
+ page: 1,
+ perPage: 1000,
+ })
+
+ if (authError) {
+ console.error('Failed to fetch auth users for admin list:', authError.message)
  return NextResponse.json({ profiles })
+ }
+
+ const authUserById = new Map((authData.users || []).map((authUser) => [authUser.id, authUser]))
+
+ const profileNameUpdates: Array<{ id: string; name: string }> = []
+ const enrichedProfiles = (profiles || []).map((profile) => {
+ const authUser = authUserById.get(profile.id)
+ const resolvedName = resolveProfileDisplayName({
+ profileName: profile.name,
+ email: authUser?.email,
+ metadata: (authUser?.user_metadata as Record<string, unknown> | null) ?? null,
+ })
+
+ if (resolvedName && resolvedName !== profile.name) {
+ profileNameUpdates.push({ id: profile.id, name: resolvedName })
+ }
+
+ return {
+ ...profile,
+ name: resolvedName,
+ email: authUser?.email,
+ }
+ })
+
+ if (profileNameUpdates.length > 0) {
+ await Promise.all(
+ profileNameUpdates.map(({ id, name }) =>
+ adminClient.from('profiles').update({ name }).eq('id', id)
+ )
+ )
+ }
+
+ return NextResponse.json({ profiles: enrichedProfiles })
 }

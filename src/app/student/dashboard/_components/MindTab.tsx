@@ -54,13 +54,13 @@ export function MindTab({
   return (
     <>
         {/* Main Content Area */}
-        <section className="relative flex h-full min-h-0 min-w-0 flex-1 flex-col bg-[var(--color-surface)] lg:m-2 lg:rounded-[1.5rem] lg:border lg:border-[var(--color-border)] lg:shadow-sm">
+        <section className="relative flex h-full min-h-0 min-w-0 flex-1 flex-col bg-[var(--surface-default)] lg:m-2 lg:rounded-[1.5rem] lg:border lg:border-[var(--border-default)] lg:shadow-sm">
           {/* Top Header - Mobile Only or Just the hamburger */}
-          <header className="absolute top-0 left-0 z-20 flex w-full items-center p-4 lg:hidden bg-gradient-to-b from-[var(--color-background)] to-transparent">
+          <header className="absolute top-0 left-0 z-20 flex w-full items-center p-4 lg:hidden bg-gradient-to-b from-[var(--bg-page)] to-transparent">
              <button
               type="button"
               onClick={onOpenSidebar}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface)] text-[var(--color-text-secondary)] shadow-sm border border-[var(--color-border)]"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--surface-default)] text-[var(--text-secondary)] shadow-sm border border-[var(--border-default)]"
             >
               <Icon icon="tabler:menu-2" className="h-5 w-5" />
             </button>
@@ -70,42 +70,55 @@ export function MindTab({
             {!hasMessages ? (
               // Empty State - Centered Search Layout
               <div className="flex h-full flex-col items-center justify-center p-4">
-                <div className="mb-8 flex flex-col items-center gap-4 text-center">
-                  <Text as="h1" variant="h1" weight="bold" className="text-4xl text-[var(--color-text-primary)] tracking-tight sm:text-5xl">
-                    MindBridge
+                <div className="mb-10 flex w-full max-w-2xl flex-col items-center gap-3 text-center">
+                  <div className="inline-flex items-center justify-center rounded-2xl bg-[var(--action-primary)]/10 px-3 py-1.5 mb-2">
+                    <Icon icon="tabler:sparkles" className="mr-1.5 h-4 w-4 text-[var(--action-primary)]" />
+                    <span className="text-xs font-medium text-[var(--action-primary)]">Mind Space</span>
+                  </div>
+                  <Text as="h1" variant="h1" weight="bold" className="text-4xl text-[var(--text-primary)] tracking-tight sm:text-5xl lg:text-5xl">
+                    How can I support you today?
                   </Text>
-                  <Text as="p" className="max-w-md text-base text-[var(--color-text-secondary)]">
-                    A private, steady place to reflect, check in, and ask for support. How are you feeling today?
+                  <Text as="p" className="mx-auto max-w-lg text-base text-[var(--text-secondary)]">
+                    A steady, private space to reflect, do a quick check-in, or just talk through whatever is on your mind.
                   </Text>
                 </div>
                 
-                <div className="w-full max-w-2xl px-4 lg:px-0">
-                  <ChatInput
-                    onSend={sendMessage}
-                    isLoading={isLoading}
-                    onStop={stopGenerating}
-                    placeholder="Ask anything..."
-                    onBookSession={onOpenBooking}
-                    onViewAnalytics={onOpenAnalytics}
-                    onQuickMoodLog={onOpenCheckIn}
-                    onGuidedQuestions={() => onOpenQuestionnaire()}
-                  />
+                <div className="w-full max-w-2xl px-4 lg:px-0 relative z-10">
+                  <div className="relative">
+                    {/* Optional subtle glow behind the input */}
+                    <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-[var(--action-primary)]/20 to-[var(--text-secondary)]/20 opacity-0 blur-xl transition-opacity duration-500 group-focus-within:opacity-100" />
+                    
+                    <ChatInput
+                      onSend={sendMessage}
+                      isLoading={isLoading}
+                      onStop={stopGenerating}
+                      placeholder="Ask me anything..."
+                      onBookSession={onOpenBooking}
+                      onViewAnalytics={onOpenAnalytics}
+                      onQuickMoodLog={onOpenCheckIn}
+                      onGuidedQuestions={() => onOpenQuestionnaire()}
+                    />
+                  </div>
 
                   {/* Suggestion Chips Below Input */}
-                  <div className="mt-12 flex flex-wrap justify-center gap-3">
+                  <div className="mt-6 flex flex-wrap justify-center gap-2.5">
                     <button 
                       onClick={onOpenCheckIn}
-                      className="group flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 pr-5 text-sm font-medium text-[var(--color-text-secondary)] transition-all hover:-translate-y-0.5 hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-warm)] hover:shadow-sm"
+                      className="group flex items-center gap-2 rounded-full border border-[var(--border-default)]/60 bg-[var(--surface-default)]/50 px-4 py-2 text-sm font-medium text-[var(--text-secondary)] shadow-sm backdrop-blur-sm transition-all hover:border-[var(--action-primary)]/40 hover:bg-[var(--surface-default)] hover:text-[var(--text-primary)] hover:shadow"
                     >
-                      <Icon icon="tabler:mood-smile" className="h-[18px] w-[18px] text-[var(--color-primary)]" />
-                      Do a quick check-in
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--action-primary)]/10 text-[var(--action-primary)] transition-colors group-hover:bg-[var(--action-primary)] group-hover:text-[var(--text-primary)]">
+                        <Icon icon="tabler:mood-smile" className="h-3.5 w-3.5" />
+                      </div>
+                      Quick log
                     </button>
                     <button 
                       onClick={() => onOpenQuestionnaire()}
-                      className="group flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 pr-5 text-sm font-medium text-[var(--color-text-secondary)] transition-all hover:-translate-y-0.5 hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-warm)] hover:shadow-sm"
+                      className="group flex items-center gap-2 rounded-full border border-[var(--border-default)]/60 bg-[var(--surface-default)]/50 px-4 py-2 text-sm font-medium text-[var(--text-secondary)] shadow-sm backdrop-blur-sm transition-all hover:border-[var(--action-primary)]/40 hover:bg-[var(--surface-default)] hover:text-[var(--text-primary)] hover:shadow"
                     >
-                      <Icon icon="tabler:bolt" className="h-[18px] w-[18px] text-[var(--color-primary)]" />
-                      Take the mental health scan
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--action-primary)]/10 text-[var(--action-primary)] transition-colors group-hover:bg-[var(--action-primary)] group-hover:text-[var(--text-primary)]">
+                        <Icon icon="tabler:bolt" className="h-3.5 w-3.5" />
+                      </div>
+                      Mental health scan
                     </button>
                   </div>
                 </div>
@@ -127,7 +140,7 @@ export function MindTab({
                   </div>
                </div>
                
-               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[var(--color-background)] via-[var(--color-background)] to-transparent px-4 pb-6 pt-10 sm:px-8">
+               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[var(--bg-page)] via-[var(--bg-page)] to-transparent px-4 pb-6 pt-10 sm:px-8">
                   <div className="mx-auto w-full max-w-3xl">
                    <AnimatePresence>
                     {error && (
@@ -135,7 +148,7 @@ export function MindTab({
                        initial={{ opacity: 0, y: 6 }}
                        animate={{ opacity: 1, y: 0 }}
                        exit={{ opacity: 0, y: 6 }}
-                       className="mb-3 rounded-xl border border-[var(--color-danger-soft)] bg-[var(--color-danger-soft)] px-4 py-3 text-sm text-[var(--color-danger)]"
+                       className="mb-3 rounded-xl border border-[var(--status-error-soft)] bg-[var(--status-error-soft)] px-4 py-3 text-sm text-[var(--status-error)]"
                       >
                        {error}
                       </motion.div>

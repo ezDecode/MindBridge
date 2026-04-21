@@ -17,9 +17,9 @@ export default function AdminLoginPage() {
 
  <section className="w-full py-8 sm:py-12">
  <Container size="sm" className="max-w-md">
- <Card variant="elevated" padding="lg" className="rounded-md">
+ <Card variant="elevated" padding="lg" className="rounded-md bg-[var(--surface-default)]">
  <div className="flex items-center gap-3">
- <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)]">
+ <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--bg-hover)] text-[var(--action-primary)]">
  <Icon icon="tabler:shield-lock" className="h-5 w-5" />
  </span>
  <div>
@@ -43,7 +43,7 @@ export default function AdminLoginPage() {
  placeholder="Enter ID (admin)"
  required
  disabled={isPending}
- className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--color-border)] bg-[var(--color-surface)]"
+ className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--border-default)] bg-[var(--surface-default)]"
  />
  </label>
 
@@ -57,15 +57,15 @@ export default function AdminLoginPage() {
  placeholder="Enter Password (admin123)"
  required
  disabled={isPending}
- className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--color-border)] bg-[var(--color-surface)]"
+ className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--border-default)] bg-[var(--surface-default)]"
  />
  </label>
 
  {state.error && (
- <div className="rounded-md border border-[var(--color-danger)] bg-red-50 p-4">
+ <div className="rounded-md border border-[var(--status-error)] bg-[var(--status-error)]/10 p-4">
  <div className="flex items-start gap-3">
- <Icon icon="tabler:alert-circle" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-danger)]" />
- <Text as="p" variant="small" className="text-[var(--color-danger)]">
+ <Icon icon="tabler:alert-circle" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--status-error)]" />
+ <Text as="p" variant="small" className="text-[var(--status-error)]">
  {state.error}
  </Text>
  </div>

@@ -57,13 +57,13 @@ function MoodTooltip({
  const labels = ["", "Very low", "Strained", "Steady", "Lighter", "Good"];
 
  return (
- <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)]/95 px-4 py-3 shadow-[0_20px_40px_rgba(45,41,38,0.12)] backdrop-blur-md">
- <Text as="p" variant="label" weight="bold" className="text-[var(--color-text-primary)]">
+ <div className="rounded-md border border-[var(--border-default)] bg-[var(--surface-default)]/95 px-4 py-3 shadow-lg backdrop-blur-md">
+ <Text as="p" variant="label" weight="bold" className="text-[var(--text-primary)]">
  {label}
  </Text>
  <div className="mt-1.5 flex items-center gap-2">
- <div className="h-2 w-2 rounded-full bg-[var(--color-primary)]" />
- <Text as="p" variant="small" className="text-[var(--color-text-secondary)]">
+ <div className="h-2 w-2 rounded-full bg-[var(--action-primary)]" />
+ <Text as="p" variant="small" className="text-[var(--text-secondary)]">
  {score > 0 ? `${labels[score] || score} (${score}/5)` : "No check-in"}
  </Text>
  </div>
@@ -99,12 +99,12 @@ export function BridgeTab({
 
   return (
     <>
-        <section className="relative flex h-full min-h-0 min-w-0 flex-1 flex-col bg-[var(--color-surface)] lg:m-2 lg:rounded-[1.5rem] lg:border lg:border-[var(--color-border)] lg:shadow-sm">
-          <header className="absolute top-0 left-0 z-20 flex w-full items-center p-4 lg:hidden bg-gradient-to-b from-[var(--color-background)] to-transparent">
+        <section className="relative flex h-full min-h-0 min-w-0 flex-1 flex-col bg-[var(--surface-default)] lg:m-2 lg:rounded-[1.5rem] lg:border lg:border-[var(--border-default)] lg:shadow-sm">
+          <header className="absolute top-0 left-0 z-20 flex w-full items-center p-4 lg:hidden bg-gradient-to-b from-[var(--bg-page)] to-transparent">
              <button
               type="button"
               onClick={onOpenSidebar}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface)] text-[var(--color-text-secondary)] shadow-sm border border-[var(--color-border)]"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--surface-default)] text-[var(--text-secondary)] shadow-sm border border-[var(--border-default)]"
             >
               <Icon icon="tabler:menu-2" className="h-5 w-5" />
             </button>
@@ -112,16 +112,16 @@ export function BridgeTab({
 
  <div className="flex-1 overflow-y-auto px-4 py-5 sm:px-6">
  <div className="mx-auto max-w-6xl">
- <div className="rounded-md border border-[var(--color-border)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-primary-light),white_28%)_0%,var(--color-surface)_100%)] p-6 sm:p-7">
+ <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-page)] p-6 sm:p-7">
  <div className="grid gap-5 lg:grid-cols-[minmax(0,1.15fr),minmax(18rem,0.85fr)] lg:items-end">
  <div>
- <Text as="p" variant="small" className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-text-muted)]">
+ <Text as="p" variant="small" className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
  Weekly overview
  </Text>
- <Text as="h2" variant="h4" weight="bold" className="mt-3 text-[var(--color-text-primary)]">
+ <Text as="h2" variant="h4" weight="bold" className="mt-3 text-[var(--text-primary)]">
  Welcome back, {userName}
  </Text>
- <Text as="p" variant="body" className="mt-3 max-w-2xl leading-7 text-[var(--color-text-secondary)]">
+ <Text as="p" variant="body" className="mt-3 max-w-2xl leading-7 text-[var(--text-secondary)]">
  Your streak, mood rhythm, and latest guided scan are all in one place so it is easier to notice what needs attention.
  </Text>
 
@@ -133,19 +133,19 @@ export function BridgeTab({
  </div>
  </div>
 
- <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)]/85 p-5">
+ <div className="rounded-md border border-[var(--border-default)] bg-[var(--surface-default)]/85 p-5">
  <div className="flex items-start gap-3">
- <div className="flex h-11 w-11 items-center justify-center rounded-md bg-[var(--color-surface-warm)] text-[var(--color-primary)]">
+ <div className="flex h-11 w-11 items-center justify-center rounded-md bg-[var(--surface-warm)] text-[var(--action-primary)]">
  <Icon icon="tabler:compass" className="h-5 w-5" />
  </div>
  <div className="min-w-0">
- <Text as="p" variant="small" weight="bold" className="text-[var(--color-text-primary)]">
+ <Text as="p" variant="small" weight="bold" className="text-[var(--text-primary)]">
  Guided scan status
  </Text>
- <Text as="p" variant="small" className="mt-2 leading-6 text-[var(--color-text-secondary)]">
+ <Text as="p" variant="small" className="mt-2 leading-6 text-[var(--text-secondary)]">
  {assessmentLabel}
  </Text>
- <Text as="p" variant="small" className="mt-1 leading-6 text-[var(--color-text-muted)]">
+ <Text as="p" variant="small" className="mt-1 leading-6 text-[var(--text-muted)]">
  {assessmentCopy}
  </Text>
  </div>
@@ -154,7 +154,7 @@ export function BridgeTab({
  <button
  type="button"
  onClick={onOpenQuestionnaire}
- className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[var(--color-surface)] px-4 text-sm font-semibold text-[var(--color-text-primary)] shadow-sm hover:bg-[var(--color-surface-warm)] transition-colors"
+ className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[var(--surface-default)] px-4 text-sm font-semibold text-[var(--text-primary)] shadow-sm hover:bg-[var(--surface-warm)] transition-colors"
  >
  <Icon icon="tabler:bolt" className="h-4 w-4" />
  Refresh question set
@@ -170,19 +170,19 @@ export function BridgeTab({
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.4, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
  >
- <Card interactive variant="default" padding="sm" className="h-full bg-[var(--color-surface)]/80">
+ <Card interactive variant="default" padding="sm" className="h-full bg-[var(--surface-default)]/80">
  <div className="flex items-center justify-between gap-3">
- <Text as="p" variant="small" weight="medium" className="text-[var(--color-text-secondary)]">
+ <Text as="p" variant="small" weight="medium" className="text-[var(--text-secondary)]">
  {metric.label}
  </Text>
- <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--color-surface-warm)] text-[var(--color-primary)] shadow-sm">
+ <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--surface-warm)] text-[var(--action-primary)] shadow-sm">
  {metric.icon}
  </div>
  </div>
- <Text as="p" variant="h6" weight="bold" className="mt-4 text-[var(--color-text-primary)]">
+ <Text as="p" variant="h6" weight="bold" className="mt-4 text-[var(--text-primary)]">
  {metric.value}
  </Text>
- <Text as="p" variant="small" className="mt-1 leading-6 text-[var(--color-text-muted)]">
+ <Text as="p" variant="small" className="mt-1 leading-6 text-[var(--text-muted)]">
  {metric.note}
  </Text>
  </Card>
@@ -195,15 +195,15 @@ export function BridgeTab({
  <Card variant="default" padding="lg">
  <div className="flex flex-wrap items-center justify-between gap-3">
  <div>
- <Text as="p" variant="h6" weight="bold" className="text-[var(--color-text-primary)]">
+ <Text as="p" variant="h6" weight="bold" className="text-[var(--text-primary)]">
  7-day mood rhythm
  </Text>
- <Text as="p" variant="small" className="mt-1 text-[var(--color-text-secondary)]">
+ <Text as="p" variant="small" className="mt-1 text-[var(--text-secondary)]">
  {completedDays}/7 days logged this week
  </Text>
  </div>
 
- <span className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface-warm)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-text-secondary)]">
+ <span className="rounded-full border border-[var(--border-default)] bg-[var(--surface-warm)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
  {trendDirection === "improving" && "Improving"}
  {trendDirection === "declining" && "Needs attention"}
  {trendDirection === "steady" && "Steady"}
@@ -244,7 +244,7 @@ export function BridgeTab({
  </Card>
 
  <Card variant="subtle" padding="lg">
- <Text as="p" variant="h6" weight="bold" className="text-[var(--color-text-primary)]">
+ <Text as="p" variant="h6" weight="bold" className="text-[var(--text-primary)]">
  Mood snapshot
  </Text>
  <div className="mt-5 flex items-center justify-center">
@@ -270,7 +270,7 @@ export function BridgeTab({
 
  <div className="mt-6 grid gap-4 xl:grid-cols-[minmax(0,0.9fr),minmax(0,1.1fr)]">
  <Card variant="elevated" padding="lg">
- <Text as="p" variant="h6" weight="bold" className="text-[var(--color-text-primary)]">
+ <Text as="p" variant="h6" weight="bold" className="text-[var(--text-primary)]">
  Next moves
  </Text>
 
@@ -302,10 +302,10 @@ export function BridgeTab({
  <Card variant="default" padding="lg">
  <div className="flex items-center justify-between gap-3">
  <div>
- <Text as="p" variant="h6" weight="bold" className="text-[var(--color-text-primary)]">
+ <Text as="p" variant="h6" weight="bold" className="text-[var(--text-primary)]">
  Recommended for you
  </Text>
- <Text as="p" variant="small" className="mt-1 text-[var(--color-text-secondary)]">
+ <Text as="p" variant="small" className="mt-1 text-[var(--text-secondary)]">
  Calm, short resources to keep nearby.
  </Text>
  </div>
@@ -321,22 +321,22 @@ export function BridgeTab({
  href={resource.url}
  target="_blank"
  rel="noopener noreferrer"
- className="group rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-warm)]"
+ className="group rounded-md border border-[var(--border-default)] bg-[var(--surface-default)] p-4 transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--surface-warm)]"
  >
- <div className="flex items-center gap-2 text-[var(--color-text-muted)]">
+ <div className="flex items-center gap-2 text-[var(--text-muted)]">
  <Icon icon="tabler:book" className="h-4 w-4" />
- <Text as="span" variant="small" className="text-[var(--color-text-secondary)]">
+ <Text as="span" variant="small" className="text-[var(--text-secondary)]">
  {resource.type}
  </Text>
  </div>
- <Text as="p" variant="body" weight="medium" className="mt-3 line-clamp-2 text-[var(--color-text-primary)]">
+ <Text as="p" variant="body" weight="medium" className="mt-3 line-clamp-2 text-[var(--text-primary)]">
  {resource.title}
  </Text>
  <div className="mt-4 flex items-center justify-between">
- <Text as="p" variant="small" className="text-[var(--color-text-muted)]">
+ <Text as="p" variant="small" className="text-[var(--text-muted)]">
  {resource.duration}
  </Text>
- <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--color-text-primary)]">
+ <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--text-primary)]">
  Open
  <Icon icon="tabler:arrow-right" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
  </span>
@@ -355,11 +355,11 @@ export function BridgeTab({
 
 function SnapshotRow({ label, value }: { label: string; value: string }) {
  return (
- <div className="flex items-center justify-between rounded-md bg-[var(--color-surface)] px-4 py-3 shadow-sm transition-transform hover:scale-[1.01]">
- <Text as="p" variant="small" weight="medium" className="text-[var(--color-text-secondary)]">
+ <div className="flex items-center justify-between rounded-md bg-[var(--surface-default)] px-4 py-3 shadow-sm transition-transform hover:scale-[1.01]">
+ <Text as="p" variant="small" weight="medium" className="text-[var(--text-secondary)]">
  {label}
  </Text>
- <Text as="p" variant="small" weight="bold" className="text-[var(--color-text-primary)]">
+ <Text as="p" variant="small" weight="bold" className="text-[var(--text-primary)]">
  {value}
  </Text>
  </div>
@@ -383,20 +383,20 @@ function CompactAction({
  <button
  type="button"
  onClick={onClick}
- className="group rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4 text-left transition-all duration-200 ease-[var(--ease-out)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-warm)] active:scale-[0.97]"
+ className="group rounded-md border border-[var(--border-default)] bg-[var(--surface-default)] p-4 text-left transition-all duration-200 ease-[var(--ease-out)] hover:border-[var(--border-strong)] hover:bg-[var(--surface-warm)] active:scale-[0.97]"
  >
  <div className="flex items-start gap-3">
- <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[var(--color-surface-warm)] text-[var(--color-primary)] shadow-sm transition-transform group-hover:scale-110">
+ <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[var(--surface-warm)] text-[var(--action-primary)] shadow-sm transition-transform group-hover:scale-110">
  {icon}
  </div>
  <div className="min-w-0">
- <Text as="p" variant="small" weight="bold" className="text-[var(--color-text-primary)]">
+ <Text as="p" variant="small" weight="bold" className="text-[var(--text-primary)]">
  {title}
  </Text>
- <Text as="p" variant="small" className="mt-1 leading-6 text-[var(--color-text-secondary)]">
+ <Text as="p" variant="small" className="mt-1 leading-6 text-[var(--text-secondary)]">
  {copy}
  </Text>
- <span className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[var(--color-text-primary)]">
+ <span className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[var(--text-primary)]">
  {action}
  <Icon icon="tabler:arrow-right" className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
  </span>

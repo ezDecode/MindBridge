@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 export async function GET(request: Request) {
  const { searchParams, origin } = new URL(request.url)
@@ -15,15 +16,34 @@ export async function GET(request: Request) {
  const { data: { user } } = await supabase.auth.getUser()
  
  if (user) {
- const { data: profile } = await supabase
- .from('profiles')
- .select('role')
- .eq('id', user.id)
- .single()
+  const { data: profile } = await supabase
+  .from('profiles')
+  .select('role, name')
+  .eq('id', user.id)
+  .maybeSingle()
 
- const redirectTo = profile?.role === 'counselor' 
- ? '/counselor/dashboard' 
- : '/student/dashboard'
+  const resolvedName = resolveProfileDisplayName({
+  profileName: profile?.name ?? null,
+  email: user.email,
+  metadata: (user.user_metadata as Record<string, unknown> | null) ?? null,
+  })
+  const normalizedRole =
+  profile?.role === 'counselor' ||
+  (typeof user.user_metadata?.role === 'string' && user.user_metadata.role === 'counselor')
+  ? 'counselor'
+  : 'student'
+
+  if (!profile || (resolvedName && resolvedName !== profile.name)) {
+  await supabase.from('profiles').upsert({
+  id: user.id,
+  role: normalizedRole,
+  name: resolvedName,
+  })
+  }
+
+  const redirectTo = normalizedRole === 'counselor' 
+  ? '/counselor/dashboard' 
+  : '/student/dashboard'
 
  return NextResponse.redirect(`${origin}${redirectTo}`)
  }

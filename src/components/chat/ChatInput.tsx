@@ -74,10 +74,10 @@ export function ChatInput({
  <form
  onSubmit={handleSubmit}
  className={cn(
- "relative flex w-full flex-col overflow-hidden rounded-2xl border bg-[var(--color-base-card)] transition-all duration-200",
+ "relative flex w-full flex-col overflow-hidden rounded-2xl border bg-[var(--surface-default)] transition-all duration-200",
  isFocused
- ? "border-[var(--color-accent-electric)] ring-2 ring-[var(--color-accent-electricGlow)] shadow-none"
- : "border-[var(--color-base-border)] shadow-none"
+ ? "border-[var(--action-primary)] ring-2 ring-[var(--action-primary-glow)] shadow-none"
+ : "border-[var(--border-default)] shadow-none"
  )}
  >
  <div className="flex flex-row items-end px-3 pt-3 pb-2">
@@ -92,7 +92,7 @@ export function ChatInput({
  placeholder={placeholder}
  disabled={disabled || isLoading}
  rows={1}
- className="max-h-[150px] min-h-[44px] w-full flex-1 resize-none bg-transparent py-3 text-sm leading-6 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none disabled:opacity-50"
+ className="max-h-[150px] min-h-[44px] w-full flex-1 resize-none bg-transparent py-3 text-sm leading-6 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none disabled:opacity-50"
  aria-label="Message input"
  />
  </div>
@@ -112,7 +112,7 @@ export function ChatInput({
  variant="ghost"
  size="sm"
  onClick={onStop}
- className="h-10 w-10 shrink-0 rounded-lg bg-transparent text-[var(--color-text-icon)] hover:text-[var(--color-text-primary)] transition-colors duration-200"
+ className="h-10 w-10 shrink-0 rounded-lg bg-transparent text-[var(--text-icon)] hover:text-[var(--text-primary)] transition-colors duration-200"
  aria-label="Stop generating"
  >
  <Icon icon="tabler:player-stop" className="h-5 w-5" />
@@ -133,8 +133,8 @@ export function ChatInput({
  disabled={!input.trim() || disabled}
  className={`h-10 w-10 shrink-0 rounded-lg transition-colors duration-200 ease-out bg-transparent ${
  input.trim() 
- ? 'text-[var(--color-accent-electric)] hover:text-[var(--color-accent-electricHover)]' 
- : 'text-[var(--color-text-icon)]'
+ ? 'text-[var(--action-primary)] hover:text-[var(--action-primary-hover)]' 
+ : 'text-[var(--text-icon)]'
  }`}
  aria-label="Send message"
  >
@@ -154,7 +154,7 @@ export function ChatInput({
  exit={{ height: 0, opacity: 0 }}
  className="overflow-hidden"
  >
- <div className="flex items-center justify-between border-t border-[var(--color-base-border)] bg-[var(--color-base-card)] px-4 py-3">
+ <div className="flex items-center justify-between border-t border-[var(--border-default)] bg-[var(--surface-default)] px-4 py-3">
  <div className="flex flex-wrap items-center gap-2">
  {QUICK_ACTIONS.map((action, i) => (
  <button
@@ -173,7 +173,7 @@ export function ChatInput({
  }
  }}
  title={action.prompt}
- className="flex items-center gap-1.5 rounded-full border border-[var(--color-base-chipBorder)] bg-[var(--color-base-chip)] px-3 py-1.5 text-xs text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-accent-electric)] hover:text-[var(--color-text-primary)]"
+ className="flex items-center gap-1.5 rounded-full border border-[var(--chip-border)] bg-[var(--chip-bg)] px-3 py-1.5 text-xs text-[var(--text-muted)] transition-colors hover:border-[var(--action-primary)] hover:text-[var(--text-primary)]"
  aria-label={action.prompt}
  >
  <Icon icon={action.icon} className="h-4 w-4" />
@@ -182,11 +182,11 @@ export function ChatInput({
  ))}
  </div>
  <div className="ml-4 flex shrink-0 items-center hidden">
- <div className="mr-2 h-4 w-px bg-[var(--color-base-border)]" />
+ <div className="mr-2 h-4 w-px bg-[var(--border-default)]" />
  <button
  type="button"
  onClick={() => setShowTools(false)}
- className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]"
+ className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
  aria-label="Dismiss quick actions"
  >
  <Icon icon="tabler:x" className="h-4 w-4" />

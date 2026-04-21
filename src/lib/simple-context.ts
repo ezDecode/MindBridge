@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 /**
  * Simple Context Builder
@@ -115,9 +116,10 @@ export async function buildQuickContext(userId: string): Promise<QuickContext> {
 
  const lastMood = moods[0]
  const lastAssessment = assessment
+ const displayName = resolveProfileDisplayName({ profileName: profileResult.data?.name ?? null })
 
  return {
- name: profileResult.data?.name ?? 'there',
+  name: displayName ?? 'there',
  mood: {
  score: lastMood?.score ?? 3,
  label: getScoreLabel(lastMood?.score ?? 3),

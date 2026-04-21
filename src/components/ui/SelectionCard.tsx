@@ -25,21 +25,21 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
  aria-pressed={selected}
  aria-disabled={disabled}
  className={cn(
- "interactive-panel flex min-h-14 items-center gap-4 rounded-md p-4 text-left focus-visible:outline-none border border-[var(--color-border)]",
+ "interactive-panel flex min-h-14 items-center gap-4 rounded-md p-4 text-left focus-visible:outline-none border border-[var(--border-default)]",
  selected
- ? "border-[var(--color-primary)] bg-[var(--color-primary-light)]"
- : "bg-[var(--color-surface)]",
+ ? "border-[var(--action-primary)] bg-[var(--action-primary-light)]"
+ : "bg-[var(--surface-default)]",
  disabled && "cursor-not-allowed opacity-50",
  className
  )}
  >
  {icon ? <motion.div className="shrink-0">{icon}</motion.div> : null}
  <div className="min-w-0 flex-1 text-left">
- <span className="block font-semibold text-[var(--color-text-primary)]">
+ <span className="block font-semibold text-[var(--text-primary)]">
  {label}
  </span>
  {sublabel && (
- <span className="text-span text-[var(--color-text-muted)]">
+ <span className="text-span text-[var(--text-muted)]">
  {sublabel}
  </span>
  )}
@@ -48,10 +48,10 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
  <motion.div
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
- className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)]"
+ className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--action-primary)]"
  >
  <svg
- className="h-3 w-3 text-[var(--color-white)]"
+ className="h-3 w-3 text-[var(--text-primary)]"
  fill="currentColor"
  viewBox="0 0 20 20"
  >

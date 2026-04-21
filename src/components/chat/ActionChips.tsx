@@ -30,10 +30,10 @@ export function BookingSuggestion({
  }}
  className="mt-2.5 mb-1"
  >
- <div className="flex flex-wrap items-center gap-2 rounded-md border border-[var(--color-primary)]/20 bg-[var(--color-primary)]/5 p-2 pr-3.5 shadow-sm">
- <div className="flex h-10 items-center gap-2.5 rounded-full bg-white px-3.5 py-1.5 shadow-sm">
- <Icon icon="tabler:calendar" className="h-4 w-4 text-[var(--color-primary)]" />
- <Text as="span" variant="small" weight="bold" className="whitespace-nowrap text-[var(--color-text-primary)]">
+ <div className="flex flex-wrap items-center gap-2 rounded-md border border-[var(--action-primary)]/20 bg-[var(--action-primary)]/5 p-2 pr-3.5 shadow-sm">
+ <div className="flex h-10 items-center gap-2.5 rounded-full bg-[var(--surface-default)] px-3.5 py-1.5 shadow-sm">
+ <Icon icon="tabler:calendar" className="h-4 w-4 text-[var(--action-primary)]" />
+ <Text as="span" variant="small" weight="bold" className="whitespace-nowrap text-[var(--text-primary)]">
  Slot with {counselorName} • {slotTime}
  </Text>
  </div>
@@ -43,7 +43,7 @@ export function BookingSuggestion({
  type="button"
  onClick={onConfirm}
  disabled={isLoading}
- className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--color-primary)] px-4 py-2 text-xs font-bold text-white transition-all hover:bg-[var(--color-primary-dark)] disabled:opacity-50"
+ className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--action-primary)] px-4 py-2 text-xs font-bold text-[var(--text-primary)] transition-all hover:bg-[var(--action-primary-hover)] disabled:opacity-50"
  >
  <Icon icon="tabler:circle-check" className="h-3.5 w-3.5" />
  Confirm
@@ -52,7 +52,7 @@ export function BookingSuggestion({
  type="button"
  onClick={onCancel}
  disabled={isLoading}
- className="inline-flex h-9 items-center justify-center rounded-full border border-[var(--color-border)] bg-white px-3 text-xs font-bold text-[var(--color-text-secondary)] transition-all hover:bg-[var(--color-surface-warm)] disabled:opacity-50"
+ className="inline-flex h-9 items-center justify-center rounded-full border border-[var(--border-default)] bg-[var(--surface-default)] px-3 text-xs font-bold text-[var(--text-secondary)] transition-all hover:bg-[var(--surface-warm)] disabled:opacity-50"
  >
  Not now
  </button>
@@ -84,10 +84,10 @@ export function ResourceSuggestion({
  }}
  className="mt-2.5 mb-1"
  >
- <div className="flex flex-wrap items-center gap-2 rounded-md border border-[var(--color-success)]/20 bg-[var(--color-success)]/5 p-2 pr-3.5 shadow-sm">
- <div className="flex h-10 items-center gap-2.5 rounded-full bg-white px-3.5 py-1.5 shadow-sm">
- <Icon icon="tabler:book" className="h-4 w-4 text-[var(--color-success)]" />
- <Text as="span" variant="small" weight="bold" className="whitespace-nowrap text-[var(--color-text-primary)]">
+ <div className="flex flex-wrap items-center gap-2 rounded-md border border-[var(--status-success)]/20 bg-[var(--status-success)]/5 p-2 pr-3.5 shadow-sm">
+ <div className="flex h-10 items-center gap-2.5 rounded-full bg-[var(--surface-default)] px-3.5 py-1.5 shadow-sm">
+ <Icon icon="tabler:book" className="h-4 w-4 text-[var(--status-success)]" />
+ <Text as="span" variant="small" weight="bold" className="whitespace-nowrap text-[var(--text-primary)]">
  Suggested: {resourceType}
  </Text>
  </div>
@@ -96,7 +96,7 @@ export function ResourceSuggestion({
  <button
  type="button"
  onClick={onShow}
- className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--color-success)] px-4 py-2 text-xs font-bold text-white transition-all hover:bg-[var(--color-success-dark)] "
+ className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--status-success)] px-4 py-2 text-xs font-bold text-[var(--text-primary)] transition-all hover:bg-[var(--status-success-dark)] "
  >
  <Icon icon="tabler:arrow-right" className="h-3.5 w-3.5" />
  Show me
@@ -104,7 +104,7 @@ export function ResourceSuggestion({
  <button
  type="button"
  onClick={onDismiss}
- className="inline-flex h-9 items-center justify-center rounded-full bg-white px-3 text-xs font-bold text-[var(--color-text-secondary)] transition-all hover:bg-[var(--color-surface-warm)] "
+ className="inline-flex h-9 items-center justify-center rounded-full bg-[var(--surface-default)] px-3 text-xs font-bold text-[var(--text-secondary)] transition-all hover:bg-[var(--surface-warm)] "
  >
  Maybe later
  </button>

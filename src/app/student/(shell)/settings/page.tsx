@@ -48,15 +48,26 @@ export default function UserSettingsDashboard() {
 
  try {
  const { data: { user } } = await supabase.auth.getUser()
- if (user) {
- const { error } = await supabase
- .from('profiles')
- .update({ name, institution })
- .eq('id', user.id)
+  if (user) {
+  const trimmedName = name.trim()
+  const { error } = await supabase
+  .from('profiles')
+  .update({ name: trimmedName, institution })
+  .eq('id', user.id)
 
- if (error) throw error
+  if (error) throw error
 
- setMessage({ text: 'Settings saved successfully.', type: 'success' })
+  const { error: authUpdateError } = await supabase.auth.updateUser({
+  data: {
+  name: trimmedName,
+  full_name: trimmedName,
+  display_name: trimmedName,
+  },
+  })
+
+  if (authUpdateError) throw authUpdateError
+
+  setMessage({ text: 'Settings saved successfully.', type: 'success' })
  
  // Clear message after 3 seconds
  setTimeout(() => setMessage(null), 3000)
@@ -86,21 +97,21 @@ export default function UserSettingsDashboard() {
  return (
  <div className="w-full max-w-3xl mx-auto space-y-12 pb-12 pt-6">
  <div>
- <Text as="h1" variant="h3" weight="bold" className="tracking-tight text-[var(--color-text-primary)]">Settings</Text>
- <Text as="p" className="text-[var(--color-text-secondary)] mt-2">Manage your profile, preferences, and account securely.</Text>
+ <Text as="h1" variant="h3" weight="bold" className="tracking-tight text-[var(--text-primary)]">Settings</Text>
+ <Text as="p" className="text-[var(--text-muted)] mt-2">Manage your profile, preferences, and account securely.</Text>
  </div>
 
  <div className="space-y-8">
  <section>
- <Text as="h2" variant="label" weight="bold" className="uppercase tracking-wider text-[var(--color-text-muted)] text-[11px] mb-4">Profile Details</Text>
- <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] divide-y divide-[var(--color-border)] overflow-hidden">
+ <Text as="h2" variant="label" weight="bold" className="uppercase tracking-wider text-[var(--text-muted)] text-[11px] mb-4">Profile Details</Text>
+ <div className="rounded-md border border-[var(--border-default)] bg-[var(--surface-default)] divide-y divide-[var(--border-default)] overflow-hidden">
  <div className="p-5 sm:p-6 transition-colors">
  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
  <div className="flex-1">
- <Text as="label" variant="label" weight="medium" className="block text-[var(--color-text-primary)]">
+ <Text as="label" variant="label" weight="medium" className="block text-[var(--text-primary)]">
  Display Name
  </Text>
- <Text as="p" className="text-[13px] text-[var(--color-text-secondary)] mt-1">
+ <Text as="p" className="text-[13px] text-[var(--text-muted)] mt-1">
  Your name helps counselors build rapport.
  </Text>
  </div>
@@ -120,10 +131,10 @@ export default function UserSettingsDashboard() {
  <div className="p-5 sm:p-6 transition-colors">
  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
  <div className="flex-1">
- <Text as="label" variant="label" weight="medium" className="block text-[var(--color-text-primary)]">
+ <Text as="label" variant="label" weight="medium" className="block text-[var(--text-primary)]">
  Institution / Campus
  </Text>
- <Text as="p" className="text-[13px] text-[var(--color-text-secondary)] mt-1">
+ <Text as="p" className="text-[13px] text-[var(--text-muted)] mt-1">
  For campus-specific emergency protocols.
  </Text>
  </div>
@@ -140,7 +151,7 @@ export default function UserSettingsDashboard() {
  </div>
  </div>
 
- <div className="bg-[var(--color-surface-tinted)] p-4 flex items-center justify-between">
+ <div className="bg-[var(--bg-hover)] p-4 flex items-center justify-between">
  <AnimatePresence mode="wait">
  <div className="min-h-[24px]">
  {message && (
@@ -151,8 +162,8 @@ export default function UserSettingsDashboard() {
  exit={{ opacity: 0, y: -5 }}
  className={`flex items-center gap-2 text-[13px] font-medium ${
  message.type === 'success' 
- ? 'text-[var(--color-success)]' 
- : 'text-[var(--color-danger)]'
+ ? 'text-[var(--status-success)]' 
+ : 'text-[var(--status-error)]'
  }`}
  >
  <Icon icon={message.type === 'success' ? 'tabler:circle-check' : 'tabler:alert-circle'} className="h-4 w-4" />
@@ -161,7 +172,7 @@ export default function UserSettingsDashboard() {
  )}
  </div>
  </AnimatePresence>
- <Button onClick={handleSave} variant="primary" size="sm" className="rounded-md h-9 px-5 bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-warm)]" disabled={saving}>
+ <Button onClick={handleSave} variant="primary" size="sm" className="rounded-md h-9 px-5 bg-[var(--surface-default)] text-[var(--text-primary)] hover:bg-[var(--bg-page)]" disabled={saving}>
  {saving ? 'Saving...' : 'Save Profile'}
  </Button>
  </div>
@@ -169,18 +180,18 @@ export default function UserSettingsDashboard() {
  </section>
 
  <section>
- <Text as="h2" variant="label" weight="bold" className="uppercase tracking-wider text-[var(--color-text-muted)] text-[11px] mb-4">Account</Text>
- <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden">
- <div className="p-5 sm:p-6 transition-colors hover:bg-[var(--color-surface-tinted)] flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer" onClick={handleSignOut}>
+ <Text as="h2" variant="label" weight="bold" className="uppercase tracking-wider text-[var(--text-muted)] text-[11px] mb-4">Account</Text>
+ <div className="rounded-md border border-[var(--border-default)] bg-[var(--surface-default)] overflow-hidden">
+ <div className="p-5 sm:p-6 transition-colors hover:bg-[var(--bg-hover)] flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer" onClick={handleSignOut}>
  <div>
- <Text as="p" variant="label" weight="medium" className="text-[var(--color-danger)]">
+ <Text as="p" variant="label" weight="medium" className="text-[var(--status-error)]">
  Log out of MindBridge
  </Text>
- <Text as="p" className="text-[13px] text-[var(--color-text-secondary)] mt-1">
+ <Text as="p" className="text-[13px] text-[var(--text-muted)] mt-1">
  End your current session safely.
  </Text>
  </div>
- <Icon icon="tabler:logout-2" className="h-5 w-5 text-[var(--color-danger)]" />
+ <Icon icon="tabler:logout-2" className="h-5 w-5 text-[var(--status-error)]" />
  </div>
  </div>
  </section>
@@ -188,4 +199,3 @@ export default function UserSettingsDashboard() {
  </div>
  )
 }
-

@@ -7,6 +7,7 @@ import { Icon } from '@iconify/react';
 import { Button, Text } from '@/components/ui'
 import { useChat } from '@/hooks/useChat'
 import { getClient } from '@/lib/supabase/client'
+import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 import { getAssessmentLabel } from '@/lib/question-bank'
 
@@ -21,381 +22,384 @@ import { generateSessionId, generateWeekMoodHistory, generateEmptyWeek, formatSe
 import type { DashboardData, TabId } from './_components/types'
 
 function getInitialDashboardView(): {
- activeTab: TabId
- pendingCheckInOpen: boolean
- pendingQuestionnaireOpen: boolean
- showQuestionnaire: boolean
+    activeTab: TabId
+    pendingCheckInOpen: boolean
+    pendingQuestionnaireOpen: boolean
+    showQuestionnaire: boolean
 } {
- if (typeof window === 'undefined') {
- return {
- activeTab: 'mind' as TabId,
- pendingCheckInOpen: false,
- pendingQuestionnaireOpen: false,
- showQuestionnaire: false,
- }
- }
+    if (typeof window === 'undefined') {
+        return {
+            activeTab: 'mind' as TabId,
+            pendingCheckInOpen: false,
+            pendingQuestionnaireOpen: false,
+            showQuestionnaire: false,
+        }
+    }
 
- const params = new URLSearchParams(window.location.search)
- const tab = params.get('tab')
- const open = params.get('open')
+    const params = new URLSearchParams(window.location.search)
+    const tab = params.get('tab')
+    const open = params.get('open')
 
- return {
- activeTab: tab === 'bridge' ? 'bridge' : 'mind',
- pendingCheckInOpen: open === 'check-in',
- pendingQuestionnaireOpen: open === 'questions',
- showQuestionnaire: open === 'questions',
- }
+    return {
+        activeTab: tab === 'bridge' ? 'bridge' : 'mind',
+        pendingCheckInOpen: open === 'check-in',
+        pendingQuestionnaireOpen: open === 'questions',
+        showQuestionnaire: open === 'questions',
+    }
 }
 
 export default function StudentDashboardPage() {
- const initialView = getInitialDashboardView()
- const router = useRouter()
- const [data, setData] = useState<DashboardData | null>(null)
- const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
- const [userName, setUserName] = useState('')
- const [activeTab, setActiveTabState] = useState<TabId>(initialView.activeTab)
- 
- const setActiveTab = useCallback((newTab: TabId) => {
- setActiveTabState(newTab)
- if (typeof window !== 'undefined') {
- const url = new URL(window.location.href)
- url.searchParams.set('tab', newTab)
- router.replace(url.pathname + url.search, { scroll: false })
- }
- }, [router])
- const [pendingCheckInOpen, setPendingCheckInOpen] = useState(initialView.pendingCheckInOpen)
- const [pendingQuestionnaireOpen, setPendingQuestionnaireOpen] = useState(initialView.pendingQuestionnaireOpen)
- const [showQuestionnaire, setShowQuestionnaire] = useState(initialView.showQuestionnaire)
- const [sessionId, setSessionId] = useState('')
- const [showCheckIn, setShowCheckIn] = useState(false)
- const [showBookingModal, setShowBookingModal] = useState(false)
- const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)
- const [sidebarOpen, setSidebarOpen] = useState(false)
+    const initialView = getInitialDashboardView()
+    const router = useRouter()
+    const [data, setData] = useState<DashboardData | null>(null)
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+    const [userName, setUserName] = useState('')
+    const [activeTab, setActiveTabState] = useState<TabId>(initialView.activeTab)
 
- const handleCrisis = useCallback(() => {
- console.log('Crisis detected - alert sent to counselor')
- }, [])
+    const setActiveTab = useCallback((newTab: TabId) => {
+        setActiveTabState(newTab)
+        if (typeof window !== 'undefined') {
+            const url = new URL(window.location.href)
+            url.searchParams.set('tab', newTab)
+            router.replace(url.pathname + url.search, { scroll: false })
+        }
+    }, [router])
+    const [pendingCheckInOpen, setPendingCheckInOpen] = useState(initialView.pendingCheckInOpen)
+    const [pendingQuestionnaireOpen, setPendingQuestionnaireOpen] = useState(initialView.pendingQuestionnaireOpen)
+    const [showQuestionnaire, setShowQuestionnaire] = useState(initialView.showQuestionnaire)
+    const [sessionId, setSessionId] = useState('')
+    const [showCheckIn, setShowCheckIn] = useState(false)
+    const [showBookingModal, setShowBookingModal] = useState(false)
+    const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)
+    const [sidebarOpen, setSidebarOpen] = useState(false)
 
- const handleAutoOpenCheckInHandled = useCallback(() => {
- setPendingCheckInOpen(false)
- const params = new URLSearchParams(window.location.search)
- params.delete('open')
- const query = params.toString()
- router.replace(query ? `/student/dashboard?${query}` : '/student/dashboard')
- }, [router])
+    const handleCrisis = useCallback(() => {
+        console.log('Crisis detected - alert sent to counselor')
+    }, [])
 
- const closeQuestionnaire = useCallback(() => {
- setShowQuestionnaire(false)
+    const handleAutoOpenCheckInHandled = useCallback(() => {
+        setPendingCheckInOpen(false)
+        const params = new URLSearchParams(window.location.search)
+        params.delete('open')
+        const query = params.toString()
+        router.replace(query ? `/student/dashboard?${query}` : '/student/dashboard')
+    }, [router])
 
- if (!pendingQuestionnaireOpen) return
+    const closeQuestionnaire = useCallback(() => {
+        setShowQuestionnaire(false)
 
- setPendingQuestionnaireOpen(false)
- const params = new URLSearchParams(window.location.search)
- params.delete('open')
- const query = params.toString()
- router.replace(query ? `/student/dashboard?${query}` : '/student/dashboard')
- }, [pendingQuestionnaireOpen, router])
+        if (!pendingQuestionnaireOpen) return
 
- const refreshDashboardInsights = useCallback(async () => {
- try {
- const supabase = getClient()
- const moodResponse = await fetch('/api/mood?days=7')
- const assessmentResult = await supabase
- .from('assessments')
- .select('severity, criteria_flagged, assessed_at')
- .order('assessed_at', { ascending: false })
- .limit(1)
+        setPendingQuestionnaireOpen(false)
+        const params = new URLSearchParams(window.location.search)
+        params.delete('open')
+        const query = params.toString()
+        router.replace(query ? `/student/dashboard?${query}` : '/student/dashboard')
+    }, [pendingQuestionnaireOpen, router])
 
- if (!moodResponse.ok) return
+    const refreshDashboardInsights = useCallback(async () => {
+        try {
+            const supabase = getClient()
+            const moodResponse = await fetch('/api/mood?days=7')
+            const assessmentResult = await supabase
+                .from('assessments')
+                .select('severity, criteria_flagged, assessed_at')
+                .order('assessed_at', { ascending: false })
+                .limit(1)
 
- const moodData = await moodResponse.json()
- const updatedMoodHistory = generateWeekMoodHistory(moodData.moods || [])
- const latestAssessment = assessmentResult.data?.[0]
+            if (!moodResponse.ok) return
 
- setData((prev) =>
- prev
- ? {
- ...prev,
- streak: moodData.streak || 0,
- moodHistory: updatedMoodHistory,
- latestAssessment: latestAssessment
- ? {
- severity: latestAssessment.severity,
- criteriaFlagged: latestAssessment.criteria_flagged || [],
- assessedAt: latestAssessment.assessed_at,
- }
- : prev.latestAssessment,
- }
- : prev
- )
- } catch (error) {
- console.error('Failed to refresh mood data:', error)
- }
- }, [])
+            const moodData = await moodResponse.json()
+            const updatedMoodHistory = generateWeekMoodHistory(moodData.moods || [])
+            const latestAssessment = assessmentResult.data?.[0]
 
- const { messages, sendMessage, isLoading, error, stopGenerating } = useChat({
- sessionId,
- onCrisis: handleCrisis,
- })
+            setData((prev) =>
+                prev
+                    ? {
+                        ...prev,
+                        streak: moodData.streak || 0,
+                        moodHistory: updatedMoodHistory,
+                        latestAssessment: latestAssessment
+                            ? {
+                                severity: latestAssessment.severity,
+                                criteriaFlagged: latestAssessment.criteria_flagged || [],
+                                assessedAt: latestAssessment.assessed_at,
+                            }
+                            : prev.latestAssessment,
+                    }
+                    : prev
+            )
+        } catch (error) {
+            console.error('Failed to refresh mood data:', error)
+        }
+    }, [])
 
- const startNewSession = () => {
- const newId = generateSessionId()
- setSessionId(newId)
- sessionStorage.setItem('currentChatSession', newId)
- window.location.reload()
- }
+    const { messages, sendMessage, isLoading, error, stopGenerating } = useChat({
+        sessionId,
+        onCrisis: handleCrisis,
+    })
 
- useEffect(() => {
- const init = async () => {
- const supabase = getClient()
- const { data: { user } } = await supabase.auth.getUser()
+    const startNewSession = () => {
+        const newId = generateSessionId()
+        setSessionId(newId)
+        sessionStorage.setItem('currentChatSession', newId)
+        window.location.reload()
+    }
 
- if (!user) {
- setIsAuthenticated(false)
- return
- }
+    useEffect(() => {
+        const init = async () => {
+            const supabase = getClient()
+            const { data: { user } } = await supabase.auth.getUser()
 
- setIsAuthenticated(true)
+            if (!user) {
+                setIsAuthenticated(false)
+                return
+            }
 
- const stored = sessionStorage.getItem('currentChatSession')
- if (stored) {
- setSessionId(stored)
- } else {
- const newId = generateSessionId()
- setSessionId(newId)
- sessionStorage.setItem('currentChatSession', newId)
- }
+            setIsAuthenticated(true)
 
- const [moodResponse, profileResult, sessionsResult, bookingsResult, assessmentResult] =
- await Promise.all([
- fetch('/api/mood?days=7'),
- supabase.from('profiles').select('name').eq('id', user.id).single(),
- supabase
- .from('chat_sessions')
- .select('id')
- .eq('user_id', user.id)
- .gte('last_message_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
- supabase
- .from('bookings')
- .select('slot_start, type, status, counselor:profiles!counselor_id(name)')
- .eq('student_id', user.id)
- .in('status', ['pending_confirmation', 'confirmed'])
- .gte('slot_start', new Date().toISOString())
- .order('slot_start', { ascending: true })
- .limit(1),
- supabase
- .from('assessments')
- .select('severity, criteria_flagged, assessed_at')
- .eq('user_id', user.id)
- .order('assessed_at', { ascending: false })
- .limit(1),
- ])
+            const stored = sessionStorage.getItem('currentChatSession')
+            if (stored) {
+                setSessionId(stored)
+            } else {
+                const newId = generateSessionId()
+                setSessionId(newId)
+                sessionStorage.setItem('currentChatSession', newId)
+            }
 
- let generatedName = profileResult.data?.name
- if (!generatedName && user.email) {
- const randomAdjectives = ['Calm', 'Bright', 'Gentle', 'Warm', 'Peaceful', 'Serene', 'Kind', 'Happy', 'Mellow', 'Quiet']
- const randomNouns = ['Mind', 'Heart', 'Soul', 'Spirit', 'Wave', 'Leaf', 'Star', 'Moon', 'Cloud', 'River']
- const adj = randomAdjectives[Math.floor(Math.random() * randomAdjectives.length)]
- const noun = randomNouns[Math.floor(Math.random() * randomNouns.length)]
- generatedName = `${adj}${noun}`
- 
- await supabase.from('profiles').upsert({
- id: user.id,
- name: generatedName,
- role: 'student',
- })
- }
+            const [moodResponse, profileResult, sessionsResult, bookingsResult, assessmentResult] =
+                await Promise.all([
+                    fetch('/api/mood?days=7'),
+                    supabase.from('profiles').select('name').eq('id', user.id).single(),
+                    supabase
+                        .from('chat_sessions')
+                        .select('id')
+                        .eq('user_id', user.id)
+                        .gte('last_message_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+                    supabase
+                        .from('bookings')
+                        .select('slot_start, type, status, counselor:profiles!counselor_id(name)')
+                        .eq('student_id', user.id)
+                        .in('status', ['pending_confirmation', 'confirmed'])
+                        .gte('slot_start', new Date().toISOString())
+                        .order('slot_start', { ascending: true })
+                        .limit(1),
+                    supabase
+                        .from('assessments')
+                        .select('severity, criteria_flagged, assessed_at')
+                        .eq('user_id', user.id)
+                        .order('assessed_at', { ascending: false })
+                        .limit(1),
+                ])
 
- let moodData = { moods: [], streak: 0, average: null }
- if (moodResponse.ok) moodData = await moodResponse.json()
+            const resolvedProfileName = resolveProfileDisplayName({
+                profileName: profileResult.data?.name ?? null,
+                email: user.email,
+                metadata: (user.user_metadata as Record<string, unknown> | null) ?? null,
+            })
 
- const { data: proactiveMsg } = await supabase
- .from('chat_messages')
- .select('content')
- .eq('user_id', user.id)
- .eq('proactive', true)
- .order('sent_at', { ascending: false })
- .limit(1)
- .single()
+            if (resolvedProfileName && resolvedProfileName !== profileResult.data?.name) {
+                const userRole =
+                    typeof user.user_metadata?.role === 'string' && user.user_metadata.role === 'counselor'
+                        ? 'counselor'
+                        : 'student'
+                await supabase.from('profiles').upsert({
+                    id: user.id,
+                    name: resolvedProfileName,
+                    role: userRole,
+                })
+            }
 
- setUserName(generatedName || 'there')
+            let moodData = { moods: [], streak: 0, average: null }
+            if (moodResponse.ok) moodData = await moodResponse.json()
 
- const existingBooking = bookingsResult.data?.[0]
- const latestAssessment = assessmentResult.data?.[0]
+            const { data: proactiveMsg } = await supabase
+                .from('chat_messages')
+                .select('content')
+                .eq('user_id', user.id)
+                .eq('proactive', true)
+                .order('sent_at', { ascending: false })
+                .limit(1)
+                .single()
 
- const moodHistory = generateWeekMoodHistory(moodData.moods || [])
+            setUserName(resolvedProfileName || 'there')
 
- setData({
- streak: moodData.streak || 0,
- nextSession: existingBooking
- ? formatSessionTime(new Date(existingBooking.slot_start))
- : null,
- activeChats: sessionsResult.data?.length || 0,
- moodHistory,
- proactiveMessage: proactiveMsg?.content || null,
- latestAssessment: latestAssessment
- ? {
- severity: latestAssessment.severity,
- criteriaFlagged: latestAssessment.criteria_flagged || [],
- assessedAt: latestAssessment.assessed_at,
- }
- : null,
- })
- }
+            const existingBooking = bookingsResult.data?.[0]
+            const latestAssessment = assessmentResult.data?.[0]
 
- init()
- }, [])
+            const moodHistory = generateWeekMoodHistory(moodData.moods || [])
 
- if (isAuthenticated === null) {
- return (
- <div className="flex min-h-[60vh] items-center justify-center">
- <div className="text-center">
- <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-[var(--color-primary)] border-t-transparent" />
- <Text as="p" variant="body" color="secondary" className="mt-4">Loading...</Text>
- </div>
- </div>
- )
- }
+            setData({
+                streak: moodData.streak || 0,
+                nextSession: existingBooking
+                    ? formatSessionTime(new Date(existingBooking.slot_start))
+                    : null,
+                activeChats: sessionsResult.data?.length || 0,
+                moodHistory,
+                proactiveMessage: proactiveMsg?.content || null,
+                latestAssessment: latestAssessment
+                    ? {
+                        severity: latestAssessment.severity,
+                        criteriaFlagged: latestAssessment.criteria_flagged || [],
+                        assessedAt: latestAssessment.assessed_at,
+                    }
+                    : null,
+            })
+        }
 
- if (!isAuthenticated) {
- return (
- <div className="flex min-h-[50vh] flex-col items-center justify-center text-center">
- <Text as="h1" variant="h2" weight="bold">Sign in to continue</Text>
- <Text as="p" variant="body" color="secondary" className="mt-3 max-w-md">
- Track your mood, chat with MindBridge, and book counselor sessions.
- </Text>
- <div className="mt-6 flex gap-3">
- <Button href="/login">Sign in</Button>
- <Button href="/student/resources" variant="warm">Browse resources</Button>
- </div>
- </div>
- )
- }
+        init()
+    }, [])
 
- const moodHistory = data?.moodHistory || generateEmptyWeek()
- const scored = moodHistory.filter((m) => m.score > 0)
- const averageMood = scored.length ? scored.reduce((a, b) => a + b.score, 0) / scored.length : 0
- const bestDay = scored.length ? scored.reduce((a, b) => (b.score > a.score ? b : a)) : null
- const worstDay = scored.length ? scored.reduce((a, b) => (b.score < a.score ? b : a)) : null
+    if (isAuthenticated === null) {
+        return (
+            <div className="flex min-h-[60vh] items-center justify-center">
+                <div className="text-center">
+                    <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-[var(--action-primary)] border-t-transparent" />
+                    <Text as="p" variant="body" color="secondary" className="mt-4">Loading...</Text>
+                </div>
+            </div>
+        )
+    }
 
- const trendDirection = (() => {
- if (scored.length < 2) return 'steady'
- const half = Math.ceil(scored.length / 2)
- const avgFirst = scored.slice(0, half).reduce((a, b) => a + b.score, 0) / half
- const avgSecond = scored.slice(half).reduce((a, b) => a + b.score, 0) / scored.slice(half).length
- if (avgSecond - avgFirst > 0.3) return 'improving'
- if (avgFirst - avgSecond > 0.3) return 'declining'
- return 'steady'
- })()
+    if (!isAuthenticated) {
+        return (
+            <div className="flex min-h-[50vh] flex-col items-center justify-center text-center">
+                <Text as="h1" variant="h2" weight="bold">Sign in to continue</Text>
+                <Text as="p" variant="body" color="secondary" className="mt-3 max-w-md">
+                    Track your mood, chat with MindBridge, and book counselor sessions.
+                </Text>
+                <div className="mt-6 flex gap-3">
+                    <Button href="/login">Sign in</Button>
+                    <Button href="/student/resources" variant="warm">Browse resources</Button>
+                </div>
+            </div>
+        )
+    }
 
- const latestAssessmentLabel = data?.latestAssessment
- ? getAssessmentLabel(data.latestAssessment.severity)
- : 'Pending'
+    const moodHistory = data?.moodHistory || generateEmptyWeek()
+    const scored = moodHistory.filter((m) => m.score > 0)
+    const averageMood = scored.length ? scored.reduce((a, b) => a + b.score, 0) / scored.length : 0
+    const bestDay = scored.length ? scored.reduce((a, b) => (b.score > a.score ? b : a)) : null
+    const worstDay = scored.length ? scored.reduce((a, b) => (b.score < a.score ? b : a)) : null
 
- const latestAssessmentNote = data?.latestAssessment
- ? data.latestAssessment.criteriaFlagged.length
- ? data.latestAssessment.criteriaFlagged
- .slice(0, 2)
- .map((item) => item.replaceAll('_', ' '))
- .join(' • ')
- : 'No urgent flags'
- : 'Run a guided check-in'
+    const trendDirection = (() => {
+        if (scored.length < 2) return 'steady'
+        const half = Math.ceil(scored.length / 2)
+        const avgFirst = scored.slice(0, half).reduce((a, b) => a + b.score, 0) / half
+        const avgSecond = scored.slice(half).reduce((a, b) => a + b.score, 0) / scored.slice(half).length
+        if (avgSecond - avgFirst > 0.3) return 'improving'
+        if (avgFirst - avgSecond > 0.3) return 'declining'
+        return 'steady'
+    })()
 
- const metrics = [
- {
- label: 'Check-in streak',
- value: `${data?.streak || 0} days`,
- note: data?.streak ? 'Keep it going! 🔥' : 'Start your streak today',
- icon: <Icon icon="tabler:trending-up" className="h-5 w-5 text-[var(--color-primary)]" />,
- },
- {
- label: 'Next session',
- value: data?.nextSession || 'None',
- note: data?.nextSession ? 'Upcoming booking' : 'Book when ready',
- icon: <Icon icon="tabler:calendar" className="h-5 w-5 text-[var(--color-info)]" />,
- },
- {
- label: 'Latest scan',
- value: latestAssessmentLabel,
- note: latestAssessmentNote,
- icon: <Icon icon="tabler:activity-heartbeat" className="h-5 w-5 text-[var(--color-primary)]" />,
- },
- {
- label: 'Active chats',
- value: `${data?.activeChats || 0}`,
- note: 'This week',
- icon: <Icon icon="tabler:message-circle" className="h-5 w-5 text-[var(--color-success)]" />,
- },
- ]
+    const latestAssessmentLabel = data?.latestAssessment
+        ? getAssessmentLabel(data.latestAssessment.severity)
+        : 'Pending'
 
- return (
- <div className="[--brm:0.78] flex h-full overflow-hidden bg-[var(--color-surface-tinted)] lg:bg-[var(--color-background)]">
- <DashboardSidebar
- userName={userName}
- activeTab={activeTab}
- setActiveTab={setActiveTab}
- onSwitchToBridge={() => setActiveTab("bridge")}
- onSwitchToMind={() => setActiveTab("mind")}
- startNewSession={startNewSession}
- onOpenQuestionnaire={() => setShowQuestionnaire(true)}
- setShowCheckIn={setShowCheckIn}
- setShowBookingModal={setShowBookingModal}
- setShowAnalyticsModal={setShowAnalyticsModal}
- sidebarOpen={sidebarOpen}
- setSidebarOpen={setSidebarOpen}
- />
- <div className="flex flex-1 flex-col lg:flex-row overflow-hidden bg-[var(--color-surface-tinted)] lg:bg-[var(--color-background)]">
- <div className={`h-full w-full lg:w-1/2 ${activeTab === 'mind' ? 'block' : 'hidden'} lg:block`}>
- <MindTab
- userName={userName}
- data={data}
- messages={messages}
- sendMessage={sendMessage}
- isLoading={isLoading}
- error={error}
- stopGenerating={stopGenerating}
- startNewSession={startNewSession}
- autoOpenCheckIn={pendingCheckInOpen}
- onAutoOpenCheckInHandled={handleAutoOpenCheckInHandled}
- onMoodLogged={refreshDashboardInsights}
- onOpenQuestionnaire={() => setShowQuestionnaire(true)}
- onOpenSidebar={() => setSidebarOpen(true)}
- onOpenCheckIn={() => setShowCheckIn(true)}
- onOpenBooking={() => setShowBookingModal(true)}
- onOpenAnalytics={() => setShowAnalyticsModal(true)}
- />
- </div>
- <div className={`h-full w-full lg:w-1/2 ${activeTab === 'bridge' ? 'block' : 'hidden'} lg:block`}>
- <BridgeTab
- data={data}
- userName={userName}
- metrics={metrics}
- moodHistory={moodHistory}
- averageMood={averageMood}
- bestDay={bestDay}
- worstDay={worstDay}
- trendDirection={trendDirection}
- completedDays={scored.length}
- onOpenQuestionnaire={() => setShowQuestionnaire(true)}
- onOpenSidebar={() => setSidebarOpen(true)}
- onOpenCheckIn={() => setShowCheckIn(true)}
- onOpenBooking={() => setShowBookingModal(true)}
- onOpenAnalytics={() => setShowAnalyticsModal(true)}
- />
- </div>
- </div>
+    const latestAssessmentNote = data?.latestAssessment
+        ? data.latestAssessment.criteriaFlagged.length
+            ? data.latestAssessment.criteriaFlagged
+                .slice(0, 2)
+                .map((item) => item.replaceAll('_', ' '))
+                .join(' • ')
+            : 'No urgent flags'
+        : 'Run a guided check-in'
 
- <CheckInModal isOpen={showCheckIn || pendingCheckInOpen} onClose={() => { setShowCheckIn(false); handleAutoOpenCheckInHandled(); }} onComplete={refreshDashboardInsights} />
- <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
- <AnalyticsModal isOpen={showAnalyticsModal} onClose={() => setShowAnalyticsModal(false)} onGoToDashboard={() => setActiveTab('bridge')} />
+    const metrics = [
+        {
+            label: 'Check-in streak',
+            value: `${data?.streak || 0} days`,
+            note: data?.streak ? 'Keep it going! 🔥' : 'Start your streak today',
+            icon: <Icon icon="tabler:trending-up" className="h-5 w-5 text-[var(--action-primary)]" />,
+        },
+        {
+            label: 'Next session',
+            value: data?.nextSession || 'None',
+            note: data?.nextSession ? 'Upcoming booking' : 'Book when ready',
+            icon: <Icon icon="tabler:calendar" className="h-5 w-5 text-[var(--status-info)]" />,
+        },
+        {
+            label: 'Latest scan',
+            value: latestAssessmentLabel,
+            note: latestAssessmentNote,
+            icon: <Icon icon="tabler:activity-heartbeat" className="h-5 w-5 text-[var(--action-primary)]" />,
+        },
+        {
+            label: 'Active chats',
+            value: `${data?.activeChats || 0}`,
+            note: 'This week',
+            icon: <Icon icon="tabler:message-circle" className="h-5 w-5 text-[var(--status-success)]" />,
+        },
+    ]
 
- <QuestionSessionSheet
- isOpen={showQuestionnaire}
- onClose={closeQuestionnaire}
- onComplete={refreshDashboardInsights}
- onChatRequested={() => setActiveTab('mind')}
- />
- </div>
- )
+    return (
+        <div className="[--brm:0.78] flex h-full overflow-hidden bg-[var(--surface-tinted)] lg:bg-[var(--bg-page)]">
+            <DashboardSidebar
+                userName={userName}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                onSwitchToBridge={() => setActiveTab("bridge")}
+                onSwitchToMind={() => setActiveTab("mind")}
+                startNewSession={startNewSession}
+                onOpenQuestionnaire={() => setShowQuestionnaire(true)}
+                setShowCheckIn={setShowCheckIn}
+                setShowBookingModal={setShowBookingModal}
+                setShowAnalyticsModal={setShowAnalyticsModal}
+                sidebarOpen={sidebarOpen}
+                setSidebarOpen={setSidebarOpen}
+            />
+            <div className="flex flex-1 flex-col lg:flex-row overflow-hidden bg-[var(--surface-tinted)] lg:bg-[var(--bg-page)]">
+                <div className={`h-full w-full lg:w-1/2 ${activeTab === 'mind' ? 'block' : 'hidden'} lg:block`}>
+                    <MindTab
+                        userName={userName}
+                        data={data}
+                        messages={messages}
+                        sendMessage={sendMessage}
+                        isLoading={isLoading}
+                        error={error}
+                        stopGenerating={stopGenerating}
+                        startNewSession={startNewSession}
+                        autoOpenCheckIn={pendingCheckInOpen}
+                        onAutoOpenCheckInHandled={handleAutoOpenCheckInHandled}
+                        onMoodLogged={refreshDashboardInsights}
+                        onOpenQuestionnaire={() => setShowQuestionnaire(true)}
+                        onOpenSidebar={() => setSidebarOpen(true)}
+                        onOpenCheckIn={() => setShowCheckIn(true)}
+                        onOpenBooking={() => setShowBookingModal(true)}
+                        onOpenAnalytics={() => setShowAnalyticsModal(true)}
+                    />
+                </div>
+                <div className={`h-full w-full lg:w-1/2 ${activeTab === 'bridge' ? 'block' : 'hidden'} lg:block`}>
+                    <BridgeTab
+                        data={data}
+                        userName={userName}
+                        metrics={metrics}
+                        moodHistory={moodHistory}
+                        averageMood={averageMood}
+                        bestDay={bestDay}
+                        worstDay={worstDay}
+                        trendDirection={trendDirection}
+                        completedDays={scored.length}
+                        onOpenQuestionnaire={() => setShowQuestionnaire(true)}
+                        onOpenSidebar={() => setSidebarOpen(true)}
+                        onOpenCheckIn={() => setShowCheckIn(true)}
+                        onOpenBooking={() => setShowBookingModal(true)}
+                        onOpenAnalytics={() => setShowAnalyticsModal(true)}
+                    />
+                </div>
+            </div>
+
+            <CheckInModal isOpen={showCheckIn || pendingCheckInOpen} onClose={() => { setShowCheckIn(false); handleAutoOpenCheckInHandled(); }} onComplete={refreshDashboardInsights} />
+            <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
+            <AnalyticsModal isOpen={showAnalyticsModal} onClose={() => setShowAnalyticsModal(false)} onGoToDashboard={() => setActiveTab('bridge')} />
+
+            <QuestionSessionSheet
+                isOpen={showQuestionnaire}
+                onClose={closeQuestionnaire}
+                onComplete={refreshDashboardInsights}
+                onChatRequested={() => setActiveTab('mind')}
+            />
+        </div>
+    )
 }
 

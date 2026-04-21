@@ -82,10 +82,10 @@ export function ChatWindow({
  transition={{ duration: 0.2 }}
  className="mt-6 flex items-end gap-2.5"
  >
- <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.85rem] bg-[var(--color-primary-light)] text-[var(--color-primary)] ring-1 ring-black/5">
+ <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.85rem] bg-[var(--action-primary-light)] text-[var(--action-primary)] ring-1 ring-black/5">
  <Icon icon="tabler:message-circle" className="h-3.5 w-3.5" />
  </div>
- <div className="rounded-md rounded-bl-[0.45rem] border border-[var(--color-border)] bg-[var(--color-surface-warm)] px-4 py-2.5 shadow-sm">
+ <div className="rounded-md rounded-bl-[0.45rem] border border-[var(--border-default)] bg-[var(--surface-warm)] px-4 py-2.5 shadow-sm">
  <TypingIndicator />
  </div>
  </motion.div>
@@ -142,8 +142,8 @@ function MessageBubble({
  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.85rem] shadow-sm ${
  isUser
- ? 'bg-[var(--color-primary)] text-white'
- : 'bg-[var(--color-primary-light)] text-[var(--color-primary)] ring-1 ring-black/5'
+ ? 'bg-[var(--action-primary)] text-[var(--text-primary)]'
+ : 'bg-[var(--action-primary-light)] text-[var(--action-primary)] ring-1 ring-black/5'
  }`}
  >
  {isUser ? (
@@ -159,14 +159,14 @@ function MessageBubble({
  <div
  className={`relative rounded-md px-4 py-2.5 shadow-sm transition-colors duration-200 sm:px-4.5 ${
  isUser
- ? 'rounded-br-[0.45rem] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-primary),white_6%)_0%,var(--color-primary-dark)_100%)] text-white'
- : 'rounded-bl-[0.45rem] border border-[var(--color-border)] bg-[linear-gradient(180deg,var(--color-surface)_0%,var(--color-surface-warm)_100%)] text-[var(--color-text-primary)]'
+ ? 'rounded-br-[0.45rem] bg-[var(--bg-page)] text-[var(--text-primary)]'
+ : 'rounded-bl-[0.45rem] border border-[var(--border-default)] bg-[var(--bg-page)] text-[var(--text-primary)]'
  }`}
  >
  <Text 
  as="p" 
  variant="body" 
- className={`whitespace-pre-wrap text-[0.95rem] leading-6 ${isUser ? 'text-white' : 'text-[var(--color-text-secondary)]'}`}
+ className={`whitespace-pre-wrap text-[0.95rem] leading-6 ${isUser ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}`}
  >
  {displayContent || (message.isStreaming ? <TypingIndicator /> : '')}
  {message.isStreaming && displayContent && <TypingCursor />}
@@ -202,7 +202,7 @@ function TypingCursor() {
  initial={{ opacity: 1 }}
  animate={{ opacity: [1, 0, 1] }}
  transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
- className="ml-0.5 inline-block h-4 w-0.5 align-middle rounded-sm bg-[var(--color-primary)]"
+ className="ml-0.5 inline-block h-4 w-0.5 align-middle rounded-sm bg-[var(--action-primary)]"
  aria-hidden="true"
  />
  )
@@ -223,7 +223,7 @@ function TypingIndicator() {
  delay,
  ease: "easeInOut"
  }}
- className="h-1.5 w-1.5 rounded-full bg-[var(--color-text-muted)]"
+ className="h-1.5 w-1.5 rounded-full bg-[var(--text-muted)]"
  />
  ))}
  </span>

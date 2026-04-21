@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 export async function GET(request: Request) {
  const url = new URL(request.url)
@@ -33,15 +33,28 @@ export async function GET(request: Request) {
  return NextResponse.json({ error: moodErr.message }, { status: 500 })
  }
 
- const { data: profile, error: profileErr } = await adminClient
- .from('profiles')
- .select('name')
- .eq('id', studentId)
- .single()
+  const { data: profile, error: profileErr } = await adminClient
+  .from('profiles')
+  .select('name')
+  .eq('id', studentId)
+  .single()
 
- if (profileErr) {
- return NextResponse.json({ error: profileErr.message }, { status: 500 })
- }
+  if (profileErr) {
+  return NextResponse.json({ error: profileErr.message }, { status: 500 })
+  }
+
+  const { data: authResult } = await adminClient.auth.admin.getUserById(studentId)
+  const authUser = authResult.user
+  const resolvedName = resolveProfileDisplayName({
+  profileName: profile?.name,
+  email: authUser?.email,
+  metadata: (authUser?.user_metadata as Record<string, unknown> | null) ?? null,
+  })
+  const reportName = resolvedName || 'Student'
+
+  if (resolvedName && resolvedName !== profile?.name) {
+  await adminClient.from('profiles').update({ name: resolvedName }).eq('id', studentId)
+  }
 
  // Generate a simple report
  const logsCount = moodLogs?.length || 0
@@ -49,8 +62,8 @@ export async function GET(request: Request) {
  ? (moodLogs.reduce((acc, curr) => acc + curr.score, 0) / logsCount).toFixed(1) 
  : 'N/A'
 
- const report = {
- title: `Weekly Mood Report for ${profile?.name || 'Unknown Student'}`,
+  const report = {
+  title: `Weekly Mood Report for ${reportName}`,
  dateRange: `${new Date(sevenDaysAgo).toLocaleDateString()} - ${new Date().toLocaleDateString()}`,
  logsCount,
  averageMoodScore: avgScore,

@@ -1,15 +1,15 @@
 'use client'
 
-import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { PageIntro } from "@/components/site"
 import { Button, Card, Text, SkeletonText } from "@/components/ui"
-import { createClient } from '@/lib/supabase/client'
 import { motion } from 'framer-motion'
+import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 interface Profile {
  id: string
- name: string
+ name: string | null
  role: string
  institution: string | null
 }
@@ -33,9 +33,7 @@ export default function AdminStudentDetailsPage() {
  const [report, setReport] = useState<any>(null)
  const [loadingReport, setLoadingReport] = useState(false)
 
- const supabase = useMemo(() => createClient(), [])
-
- const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async () => {
  try {
  const res = await fetch(`/api/admin/users/${studentId}`)
  if (res.ok) {
@@ -100,22 +98,24 @@ export default function AdminStudentDetailsPage() {
  )
  }
 
- if (!profile) {
+  if (!profile) {
  return (
  <div className="p-8 max-w-4xl mx-auto text-center">
  <Text>User not found.</Text>
  </div>
  )
- }
+  }
 
- return (
- <div className="p-8 max-w-4xl mx-auto space-y-8">
- <PageIntro 
- title={`User Details: ${profile.name || 'Unnamed'}`} 
- description="View user information, recent mood logs, and trigger necessary interventions." 
- />
+  const profileDisplayName = resolveProfileDisplayName({ profileName: profile.name }) || 'Student'
 
- <Card className="p-6 bg-[var(--color-surface-soft)]">
+  return (
+  <div className="p-8 max-w-4xl mx-auto space-y-8">
+  <PageIntro 
+  title={`User Details: ${profileDisplayName}`} 
+  description="View user information, recent mood logs, and trigger necessary interventions." 
+  />
+
+ <Card className="p-6 bg-[var(--surface-soft)]">
  <Text variant="h3" className="mb-4">Profile Information</Text>
  <div className="space-y-2">
  <Text><strong>ID:</strong> {profile.id}</Text>
@@ -123,9 +123,9 @@ export default function AdminStudentDetailsPage() {
  <Text><strong>Institution:</strong> {profile.institution || 'None provided'}</Text>
  </div>
 
- <div className="mt-8 pt-6 border-t border-[var(--color-border)]">
- <Text variant="h4" className="mb-2 text-[var(--color-accent)]">Emergency Action</Text>
- <Text className="text-sm text-[var(--color-text-secondary)] mb-4">
+ <div className="mt-8 pt-6 border-t border-[var(--border-default)]">
+ <Text variant="h4" className="mb-2 text-[var(--action-primary)]">Emergency Action</Text>
+ <Text className="text-sm text-[var(--text-secondary)] mb-4">
  If this user is showing severe warning signs, you can flag them for critical intervention manually.
  </Text>
  <div className="flex items-center gap-4">
@@ -137,13 +137,13 @@ export default function AdminStudentDetailsPage() {
  {triggeringHelp ? 'Triggering...' : 'Provide Critical Help'}
  </Button>
  {helpMessage && (
- <Text className="text-sm text-[var(--color-success)]">{helpMessage}</Text>
+ <Text className="text-sm text-[var(--status-success)]">{helpMessage}</Text>
  )}
  </div>
  </div>
  </Card>
 
- <Card className="p-6 bg-[var(--color-surface-soft)]">
+ <Card className="p-6 bg-[var(--surface-soft)]">
  <div className="flex justify-between items-center mb-4">
  <Text variant="h3">Weekly Report</Text>
  <Button variant="ghost" onClick={handleGenerateReport} disabled={loadingReport}>
@@ -152,9 +152,9 @@ export default function AdminStudentDetailsPage() {
  </div>
 
  {report && (
- <div className="space-y-4 p-4 border border-[var(--color-border)] rounded-xl bg-white">
+ <div className="space-y-4 p-4 border border-[var(--border-default)] rounded-xl bg-[var(--surface-default)]">
  <Text variant="h4">{report.title}</Text>
- <Text className="text-sm text-[var(--color-text-secondary)]">{report.dateRange}</Text>
+ <Text className="text-sm text-[var(--text-secondary)]">{report.dateRange}</Text>
  <div>
  <Text><strong>Logs Count:</strong> {report.logsCount}</Text>
  <Text><strong>Average Score:</strong> {report.averageMoodScore}</Text>
@@ -174,7 +174,7 @@ export default function AdminStudentDetailsPage() {
  <Card className="p-6">
  <Text variant="h3" className="mb-4">Recent Mood Logs</Text>
  {moodLogs.length === 0 ? (
- <Text className="text-[var(--color-text-muted)]">No recent mood entries found.</Text>
+ <Text className="text-[var(--text-muted)]">No recent mood entries found.</Text>
  ) : (
  <ul className="space-y-3">
  {moodLogs.map((log) => (
@@ -182,13 +182,13 @@ export default function AdminStudentDetailsPage() {
  key={log.id} 
  initial={{ opacity: 0 }} 
  animate={{ opacity: 1 }}
- className="p-4 border border-[var(--color-border)] rounded-xl flex justify-between"
+ className="p-4 border border-[var(--border-default)] rounded-xl flex justify-between"
  >
  <div>
  <Text className="font-semibold text-lg">Score: {log.score}/5</Text>
  {log.note && <Text className="text-sm italic">"{log.note}"</Text>}
  </div>
- <Text className="text-xs text-[var(--color-text-secondary)]">
+ <Text className="text-xs text-[var(--text-secondary)]">
  {new Date(log.logged_at).toLocaleString()}
  </Text>
  </motion.li>

@@ -56,7 +56,7 @@ export function MoodGauge({ value, max = 5, size = 120 }: { value: number; max?:
  cx={circleSize / 2}
  cy={circleSize / 2}
  r={radius}
- stroke="var(--color-surface-strong)"
+ stroke="var(--surface-strong)"
  strokeWidth={strokeWidth}
  strokeLinecap="round"
  />
@@ -64,22 +64,22 @@ export function MoodGauge({ value, max = 5, size = 120 }: { value: number; max?:
  cx={circleSize / 2}
  cy={circleSize / 2}
  r={radius}
- stroke="var(--color-primary)"
+ stroke="var(--action-primary)"
  strokeWidth={strokeWidth}
  strokeLinecap="round"
  strokeDasharray={dasharray}
  strokeDashoffset={0}
  style={{
- filter: "drop-shadow(0 0 4px var(--color-primary))",
+ filter: "drop-shadow(0 0 4px var(--action-primary))",
  transition: "stroke-dasharray 0.1s ease",
  }}
  />
  </svg>
  <div className="absolute flex flex-col items-center justify-center">
- <span className="text-h4 font-bold text-[var(--color-text-primary)]">
+ <span className="text-h4 font-bold text-[var(--text-primary)]">
  <AnimatedNumber value={value} decimals={1} />
  </span>
- <span className="text-span text-[var(--color-text-muted)]">/ {max}</span>
+ <span className="text-span text-[var(--text-muted)]">/ {max}</span>
  </div>
  </div>
  );

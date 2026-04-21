@@ -11,7 +11,7 @@ interface PageIntroProps {
 
 export function PageIntro({ eyebrow, title, description, actions, className }: PageIntroProps) {
  return (
- <div className={`section-divider flex flex-col gap-5 rounded-md border border-[var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(255,255,255,0.97))] p-6 sm:p-8 ${className || ""}`}>
+ <div className={`section-divider flex flex-col gap-5 rounded-md border border-[var(--border-default)] bg-[var(--bg-page)] p-6 sm:p-8 ${className || ""}`}>
  <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
  <div className="max-w-[52rem]">
  {eyebrow && (

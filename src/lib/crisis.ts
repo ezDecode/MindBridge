@@ -1,5 +1,6 @@
 import { createServiceClient } from '@/lib/supabase/server'
 import { Resend } from 'resend'
+import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 // Lazy initialization to prevent build-time errors
 let _resend: Resend | null = null
@@ -62,7 +63,18 @@ export async function triggerCrisisAlert(studentId: string) {
  }
 
  // 3. Send backup email to counselor
- await sendCrisisEmail(student.counselor_id, studentId, student.name)
+  const { data: studentAuthResult } = await supabase.auth.admin.getUserById(studentId)
+  const resolvedStudentName = resolveProfileDisplayName({
+  profileName: student.name,
+  email: studentAuthResult.user?.email,
+  metadata: (studentAuthResult.user?.user_metadata as Record<string, unknown> | null) ?? null,
+  })
+
+  if (resolvedStudentName && resolvedStudentName !== student.name) {
+  await supabase.from('profiles').update({ name: resolvedStudentName }).eq('id', studentId)
+  }
+
+  await sendCrisisEmail(student.counselor_id, studentId, resolvedStudentName)
 
  } catch (error) {
  console.error('Crisis alert failed:', error)
@@ -110,13 +122,22 @@ async function sendCrisisEmail(
  // Get counselor's email
  const { data: counselor } = await supabase
  .from('profiles')
- .select('name')
- .eq('id', counselorId)
- .single()
+  .select('name')
+  .eq('id', counselorId)
+  .single()
 
  // Get counselor's auth email
- const { data: { user } } = await supabase.auth.admin.getUserById(counselorId)
- const counselorEmail = user?.email
+ const { data: counselorAuthResult } = await supabase.auth.admin.getUserById(counselorId)
+ const counselorEmail = counselorAuthResult.user?.email
+ const counselorName = resolveProfileDisplayName({
+ profileName: counselor?.name,
+ email: counselorAuthResult.user?.email,
+ metadata: (counselorAuthResult.user?.user_metadata as Record<string, unknown> | null) ?? null,
+ })
+
+ if (counselorName && counselorName !== counselor?.name) {
+ await supabase.from('profiles').update({ name: counselorName }).eq('id', counselorId)
+ }
 
  if (!counselorEmail) {
  console.error('Could not find counselor email')
@@ -136,8 +157,8 @@ async function sendCrisisEmail(
  </div>
  <div style="background: #fff; padding: 24px; border: 1px solid #eee; border-radius: 0 0 12px 12px;">
  <p style="font-size: 16px; color: #333; margin: 0 0 16px;">
- Hi ${counselor?.name ?? 'Counselor'},
- </p>
+  Hi ${counselorName ?? 'Counselor'},
+  </p>
  <p style="font-size: 16px; color: #333; margin: 0 0 16px;">
  A student requires immediate attention. Crisis signals were detected during their MindBridge conversation.
  </p>

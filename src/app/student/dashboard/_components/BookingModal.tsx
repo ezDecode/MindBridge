@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Icon } from '@iconify/react';
 import { Button, SelectionCard, Text } from "@/components/ui";
 import { createClient } from "@/lib/supabase/client";
+import { resolveProfileDisplayName } from "@/lib/profile-name";
 
 interface Slot {
  id: string;
@@ -127,7 +128,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
  transition={{ duration: 0.2 }}
- className="fixed inset-0 z-50 bg-black/40 backdrop-blur-md"
+ className="fixed inset-0 z-50 bg-[var(--action-primary)]/40 backdrop-blur-md"
  onClick={onClose}
  />
  
@@ -137,21 +138,21 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  animate={{ opacity: 1, scale: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.95, y: 20 }}
  transition={{ type: "spring", stiffness: 300, damping: 25 }}
- className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-2xl"
+ className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-md border border-[var(--border-default)] bg-[var(--surface-default)] p-5 shadow-2xl"
  >
  {/* Header */}
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <motion.div
- className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--color-primary-light)]"
+ className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--action-primary-light)]"
  >
- <Icon icon="tabler:calendar" className="h-4 w-4 text-[var(--color-primary)]" />
+ <Icon icon="tabler:calendar" className="h-4 w-4 text-[var(--action-primary)]" />
  </motion.div>
  <Text as="p" variant="h6" weight="bold">Book a session</Text>
  </div>
  <button
  onClick={onClose}
- className="flex h-8 w-8 items-center justify-center rounded-md text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-strong)] hover:text-[var(--color-text-primary)]"
+ className="flex h-8 w-8 items-center justify-center rounded-md text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-strong)] hover:text-[var(--text-primary)]"
  >
  <Icon icon="tabler:x" className="h-4 w-4" />
  </button>
@@ -167,9 +168,9 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  initial={{ scale: 0 }}
  animate={{ scale: 1 }}
  transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
- className="flex h-14 w-14 items-center justify-center rounded-[1.1rem] bg-[var(--color-success-light)] shadow-lg shadow-[var(--color-success)]/20"
+ className="flex h-14 w-14 items-center justify-center rounded-[1.1rem] bg-[var(--status-success-light)] shadow-lg shadow-[var(--status-success)]/20"
  >
- <Icon icon="tabler:check" className="h-7 w-7 text-[var(--color-success)]" />
+ <Icon icon="tabler:check" className="h-7 w-7 text-[var(--status-success)]" />
  </motion.div>
  <Text as="p" variant="h6" weight="bold" className="mt-4">
  Booking confirmed! 🎉
@@ -187,9 +188,9 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  initial={{ opacity: 0, y: -10 }}
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0 }}
- className="mt-3 rounded-md border border-[var(--color-danger)]/20 bg-[var(--color-danger-soft)] px-3 py-2"
+ className="mt-3 rounded-md border border-[var(--status-error)]/20 bg-[var(--status-error-soft)] px-3 py-2"
  >
- <Text as="p" variant="small" className="text-[var(--color-danger)]">
+ <Text as="p" variant="small" className="text-[var(--status-error)]">
  {error}
  </Text>
  </motion.div>
@@ -230,7 +231,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  key={i}
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
- className="h-10 animate-pulse rounded-md bg-[var(--color-surface-strong)]" 
+ className="h-10 animate-pulse rounded-md bg-[var(--surface-strong)]" 
  />
  ))}
  </div>
@@ -249,12 +250,12 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  onClick={() => setSelectedSlot(slot)}
  className={`group relative rounded-md px-3 py-2.5 text-center text-sm transition-all ${
  selectedSlot?.id === slot.id
- ? "bg-[var(--color-primary-light)] shadow-md shadow-[var(--color-primary)]/15"
- : "bg-[var(--color-surface-strong)] hover:bg-[var(--color-surface-warm)] hover:shadow-sm"
+ ? "bg-[var(--action-primary-light)] shadow-md shadow-[var(--action-primary)]/15"
+ : "bg-[var(--surface-strong)] hover:bg-[var(--surface-warm)] hover:shadow-sm"
  }`}
  >
  <div className="flex flex-col items-center gap-0.5">
- <Icon icon="tabler:clock" className="h-3.5 w-3.5 text-[var(--color-text-muted)]" />
+ <Icon icon="tabler:clock" className="h-3.5 w-3.5 text-[var(--text-muted)]" />
  <span className="font-medium">{formatSlotTime(slot)}</span>
  </div>
  </motion.button>
@@ -262,7 +263,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  </AnimatePresence>
  </div>
  ) : (
- <div className="mt-2 rounded-md border border-dashed border-[var(--color-border)] p-4 text-center">
+ <div className="mt-2 rounded-md border border-dashed border-[var(--border-default)] p-4 text-center">
  <Text as="p" variant="small" color="muted">
  No slots available right now
  </Text>
@@ -278,13 +279,13 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  exit={{ opacity: 0, y: 10, height: 0 }}
  className="mt-3 overflow-hidden"
  >
- <div className="flex items-center gap-3 rounded-md bg-gradient-to-r from-[var(--color-primary-light)]/30 to-[var(--color-primary-light)]/10 px-3 py-2.5">
- <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--color-primary-light)]">
- <Icon icon="tabler:user" className="h-5 w-5 text-[var(--color-primary)]" />
+ <div className="flex items-center gap-3 rounded-md bg-gradient-to-r from-[var(--action-primary-light)]/30 to-[var(--action-primary-light)]/10 px-3 py-2.5">
+ <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--action-primary-light)]">
+ <Icon icon="tabler:user" className="h-5 w-5 text-[var(--action-primary)]" />
  </div>
  <div className="flex-1">
  <Text as="p" variant="small" color="secondary">
- {selectedSlot.counselor?.name}
+  {resolveProfileDisplayName({ profileName: selectedSlot.counselor?.name }) || "Counselor"}
  </Text>
  <Text as="p" variant="label" weight="bold">
  {formatSlotTime(selectedSlot)}
@@ -293,9 +294,9 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  <motion.div
  initial={{ scale: 0 }}
  animate={{ scale: 1 }}
- className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--color-success)]"
+ className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--status-success)]"
  >
- <Icon icon="tabler:check" className="h-3.5 w-3.5 text-white" />
+ <Icon icon="tabler:check" className="h-3.5 w-3.5 text-[var(--text-primary)]" />
  </motion.div>
  </div>
  </motion.div>

@@ -21,7 +21,7 @@ export function FaqSection() {
  >
  <Container size="md">
  <motion.div variants={item} className="text-center px-4">
- <Text as="h2" variant="h3" weight="bold" className="text-balance text-[var(--color-text-primary)] md:text-h2">
+ <Text as="h2" variant="h3" weight="bold" className="text-balance text-[var(--text-primary)] md:text-h2">
  Common questions
  </Text>
  <Text as="p" variant="body" color="secondary" className="mx-auto mt-2 max-w-[50ch] text-balance">
@@ -33,18 +33,18 @@ export function FaqSection() {
  variants={stagger} 
  className="mx-auto mt-10 md:mt-12 max-w-[54rem]"
  >
- <div className="border-t border-[var(--color-border-light)]">
+ <div className="border-t border-[var(--border-light)]">
  {faqItems.map((faq, i) => {
  const isOpen = openIndex === i;
  return (
  <motion.div 
  key={i} 
  variants={item}
- className="border-b border-[var(--color-border-light)]"
+ className="border-b border-[var(--border-light)]"
  >
  <button
  onClick={() => setOpenIndex(isOpen ? null : i)}
- className="flex w-full min-h-[4rem] items-center justify-between py-4 md:py-6 text-left transition-colors hover:text-[var(--color-primary)] focus:outline-none"
+ className="flex w-full min-h-[4rem] items-center justify-between py-4 md:py-6 text-left transition-colors hover:text-[var(--action-primary)] focus:outline-none"
  aria-expanded={isOpen}
  >
  <Text 
@@ -52,15 +52,15 @@ export function FaqSection() {
  variant="label" 
  weight="bold" 
  className={`pr-6 md:pr-8 transition-colors duration-300 ${
- isOpen ? "text-[var(--color-primary)]" : "text-[var(--color-text-primary)]"
+ isOpen ? "text-[var(--action-primary)]" : "text-[var(--text-primary)]"
  }`}
  >
  {faq.question}
  </Text>
  <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
  isOpen 
- ? "bg-[var(--color-primary-light)] text-[var(--color-primary)] rotate-180" 
- : "bg-[var(--color-surface-warm)] text-[var(--color-text-secondary)]"
+ ? "bg-[var(--action-primary-light)] text-[var(--action-primary)] rotate-180" 
+ : "bg-[var(--surface-warm)] text-[var(--text-secondary)]"
  }`}>
  <Icon icon="tabler:chevron-down" className="h-5 w-5" />
  </div>
@@ -75,7 +75,7 @@ export function FaqSection() {
  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
  >
  <div className="pb-6 md:pb-8 pr-10 md:pr-12">
- <Text as="p" variant="body" className="max-w-[65ch] text-[var(--color-text-secondary)] leading-relaxed">
+ <Text as="p" variant="body" className="max-w-[65ch] text-[var(--text-secondary)] leading-relaxed">
  {faq.answer}
  </Text>
  </div>

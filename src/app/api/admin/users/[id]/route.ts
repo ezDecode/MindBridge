@@ -1,6 +1,6 @@
-import { createClient } from '@/lib/supabase/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
  const { id } = await context.params
@@ -21,13 +21,26 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
  .eq('id', id)
  .single()
 
- if (profileErr) {
- return NextResponse.json({ error: profileErr.message }, { status: 404 })
- }
+  if (profileErr) {
+  return NextResponse.json({ error: profileErr.message }, { status: 404 })
+  }
 
- // Fetch recent mood logs
- const { data: moodLogs, error: moodErr } = await adminClient
- .from('mood_logs')
+  const { data: authResult } = await adminClient.auth.admin.getUserById(id)
+  const authUser = authResult.user
+  const resolvedName = resolveProfileDisplayName({
+  profileName: profile.name,
+  email: authUser?.email,
+  metadata: (authUser?.user_metadata as Record<string, unknown> | null) ?? null,
+  })
+
+  if (resolvedName && resolvedName !== profile.name) {
+  await adminClient.from('profiles').update({ name: resolvedName }).eq('id', id)
+  profile.name = resolvedName
+  }
+
+  // Fetch recent mood logs
+  const { data: moodLogs, error: moodErr } = await adminClient
+  .from('mood_logs')
  .select('*')
  .eq('user_id', id)
  .order('logged_at', { ascending: false })

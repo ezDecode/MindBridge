@@ -24,15 +24,15 @@ type PolymorphicComponentProp<T extends ElementType, Props = object> = {
 
 const variantStyles: Record<ButtonVariant, string> = {
  primary:
- "border-none bg-[var(--color-accent-electric)] text-white hover:bg-[var(--color-accent-electricHover)] shadow-none hover:shadow-none",
+ "border-none bg-[var(--action-primary)] text-[var(--text-primary)] hover:bg-[var(--action-primary-hover)] shadow-none hover:shadow-none",
  warm:
- "border border-[var(--color-base-border)] bg-[var(--color-base-card)] text-[var(--color-text-primary)] hover:bg-[var(--color-base-hover)] shadow-none hover:shadow-none",
+ "border border-[var(--border-default)] bg-[var(--surface-default)] text-[var(--text-primary)] hover:bg-[var(--bg-hover)] shadow-none hover:shadow-none",
  ghost:
- "border-none bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-base-hover)] hover:text-[var(--color-text-primary)]",
+ "border-none bg-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]",
  link:
- "bg-transparent text-[var(--color-accent-electricLight)] hover:text-[var(--color-accent-electric)] underline-offset-4 hover:underline p-0 h-auto",
+ "bg-transparent text-[var(--action-primary)] hover:text-[var(--action-primary)] underline-offset-4 hover:underline p-0 h-auto",
  danger:
- "border border-red-900 bg-red-950 text-white shadow-none hover:bg-red-900",
+ "border border-[var(--status-error)]/30 bg-[var(--status-error-soft)] text-[var(--text-primary)] shadow-none hover:bg-[var(--status-error)]/20",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 // GET: List counselor's slots
 export async function GET() {
@@ -52,10 +53,20 @@ export async function GET() {
  .gte('slot_start', new Date().toISOString())
  .order('slot_start', { ascending: true })
 
- return NextResponse.json({
- slots: slots || [],
- bookings: bookings || [],
- })
+  const normalizedBookings = (bookings || []).map((booking) => ({
+  ...booking,
+  student: booking.student
+  ? {
+  ...booking.student,
+  name: resolveProfileDisplayName({ profileName: booking.student.name }) || 'Student',
+  }
+  : booking.student,
+  }))
+
+  return NextResponse.json({
+  slots: slots || [],
+  bookings: normalizedBookings,
+  })
  } catch (error) {
  console.error('Counselor slots error:', error)
  return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

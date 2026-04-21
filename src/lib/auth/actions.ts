@@ -82,12 +82,16 @@ export async function signUpWithPassword(
  const supabase = await createClient()
  const email = formData.get('email') as string
  const password = formData.get('password') as string
+ const fullName = ((formData.get('fullName') as string) || '').trim()
 
  if (!email || !email.includes('@')) {
  return { error: 'Please enter a valid email address' }
  }
  if (!password || password.length < 6) {
  return { error: 'Password must be at least 6 characters' }
+ }
+ if (!fullName || fullName.length < 2) {
+ return { error: 'Please enter your full name' }
  }
 
  // Get the role from form data (defaults to student)
@@ -99,6 +103,9 @@ export async function signUpWithPassword(
  options: {
  data: {
  role,
+ name: fullName,
+ full_name: fullName,
+ display_name: fullName,
  },
  },
  })
