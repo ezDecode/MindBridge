@@ -35,18 +35,18 @@
   --color-primary-soft: color-mix(in srgb, #739552 10%, #ffffff);
 
   --color-surface: #ffffff;
-  --color-surface-tinted: #f8f9f5;
-  --color-surface-strong: #F0D9B5;
+  --color-surface-tinted: #fdfbf7;
+  --color-surface-strong: #EBECD0;
   --color-surface-warm: #ffffff;
-  --color-surface-warm-hover: #f5f5f5;
-  --color-surface-warm-active: #ebebeb;
+  --color-surface-warm-hover: #fdfbf7;
+  --color-surface-warm-active: #f5f5f5;
   --color-surface-soft: rgba(255, 255, 255, 0.5);
 
-  --color-background: #EBECD0;
-  --color-border: color-mix(in srgb, #739552 20%, transparent);
-  --color-border-strong: color-mix(in srgb, #739552 40%, transparent);
-  --color-border-light: color-mix(in srgb, #739552 10%, transparent);
-  --color-border-warm: color-mix(in srgb, #739552 20%, transparent);
+  --color-background: #F0D9B5;
+  --color-border: color-mix(in srgb, #B58863 25%, transparent);
+  --color-border-strong: color-mix(in srgb, #B58863 50%, transparent);
+  --color-border-light: color-mix(in srgb, #B58863 15%, transparent);
+  --color-border-warm: color-mix(in srgb, #B58863 25%, transparent);
 
   --color-black: #0d0d0d;
   --color-white: #ffffff;
@@ -89,23 +89,23 @@
   --chess-cream: #F0D9B5;
 
   /* ── Backgrounds ── */
-  --bg-page: var(--chess-light);
-  --bg-sidebar: var(--chess-cream);
-  --bg-hover: color-mix(in srgb, var(--chess-dark) 10%, transparent);
+  --bg-page: var(--chess-cream);
+  --bg-sidebar: #ffffff;
+  --bg-hover: var(--chess-light);
 
   /* ── Surfaces ── */
   --surface-default: #ffffff;
-  --surface-tinted: #f8f9f5;
-  --surface-strong: var(--chess-cream);
+  --surface-tinted: #fdfbf7;
+  --surface-strong: var(--chess-light);
   --surface-warm: #ffffff;
-  --surface-warm-hover: #f5f5f5;
-  --surface-warm-active: #ebebeb;
+  --surface-warm-hover: #fdfbf7;
+  --surface-warm-active: #f5f5f5;
   --surface-soft: rgba(255, 255, 255, 0.5);
 
   /* ── Borders ── */
-  --border-default: color-mix(in srgb, var(--chess-dark) 20%, transparent);
-  --border-strong: color-mix(in srgb, var(--chess-dark) 40%, transparent);
-  --border-light: color-mix(in srgb, var(--chess-dark) 10%, transparent);
+  --border-default: color-mix(in srgb, var(--chess-wood) 25%, transparent);
+  --border-strong: color-mix(in srgb, var(--chess-wood) 50%, transparent);
+  --border-light: color-mix(in srgb, var(--chess-wood) 15%, transparent);
 
   /* ── Text ── */
   --text-primary: #1c2114;
