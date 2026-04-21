@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -116,10 +116,6 @@ export function QuestionSessionSheet({
  : ((step + 1) / session.questions.length) * 100
  : 0;
 
- const usedCategories = useMemo(() => {
- if (!session) return [];
- return Array.from(new Set(session.questions.map((question) => question.category)));
- }, [session]);
 
  const loadSession = async () => {
  setIsLoading(true);
@@ -218,7 +214,6 @@ export function QuestionSessionSheet({
  };
 
  const canGoNext = currentQuestion ? typeof responses[currentQuestion.id] === "number" : false;
- const answerCount = Object.keys(responses).length;
 
  return (
  <AnimatePresence>

@@ -64,7 +64,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
  onClick={() => handleTabClick(index)}
  className={`h-11 px-6 rounded-full text-label font-bold transition-all duration-300 ${
  current === index 
- ? "bg-[var(--action-primary)] text-[var(--text-inverse)] shadow-md shadow-[var(--action-primary)]/10"
+ ? "bg-[var(--action-primary)] text-[var(--text-inverse)]"
  : "bg-[var(--surface-warm)] text-[var(--text-secondary)] hover:bg-[var(--action-primary-light)] hover:text-[var(--text-primary)]"
  }`}
  >
@@ -83,7 +83,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
  {tabs.map((tab) => (
  <Slide key={tab.id}>
  {tab.id === "aicompanion" && (
- <Card variant="elevated" padding="none" className="rounded-md border-none overflow-hidden bg-[var(--surface-warm)] h-full shadow-sm">
+ <Card variant="elevated" padding="none" className="rounded-md border-[0.125rem] border-[var(--border-default)] overflow-hidden bg-[var(--surface-default)] h-full">
  <div className={`grid lg:grid-cols-2 ${CARD_HEIGHT}`}>
  <div className="relative bg-[var(--action-primary-light)] flex items-center justify-center p-8">
  <div className="text-center">
@@ -114,7 +114,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
  )}
 
  {tab.id === "wellnesscheck" && (
- <Card variant="elevated" padding="none" className="rounded-md border-none overflow-hidden bg-[var(--surface-warm)] h-full shadow-sm">
+ <Card variant="elevated" padding="none" className="rounded-md border-[0.125rem] border-[var(--border-default)] overflow-hidden bg-[var(--surface-default)] h-full">
  <div className={`grid lg:grid-cols-2 ${CARD_HEIGHT}`}>
  <div className="relative bg-[var(--action-primary-light)] flex items-center justify-center p-8">
  <div className="text-center">
@@ -150,7 +150,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
  )}
 
  {tab.id === "expertsupport" && (
- <Card variant="elevated" padding="none" className="rounded-md border-none overflow-hidden bg-[var(--surface-warm)] h-full shadow-sm">
+ <Card variant="elevated" padding="none" className="rounded-md border-[0.125rem] border-[var(--border-default)] overflow-hidden bg-[var(--surface-default)] h-full">
  <div className={`grid lg:grid-cols-2 ${CARD_HEIGHT}`}>
  <div className="relative bg-[var(--action-primary-light)] flex items-center justify-center p-8">
  <div className="text-center">
@@ -183,7 +183,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
  )}
 
  {tab.id === "feelgood" && (
- <Card variant="elevated" padding="none" className="rounded-md border-none overflow-hidden bg-[var(--surface-warm)] h-full shadow-sm">
+ <Card variant="elevated" padding="none" className="rounded-md border-[0.125rem] border-[var(--border-default)] overflow-hidden bg-[var(--surface-default)] h-full">
  <div className={`grid lg:grid-cols-2 ${CARD_HEIGHT}`}>
  <div className="relative bg-[var(--action-primary-light)] flex flex-col items-center justify-center p-12 text-center border-r border-white/20">
  <div className="inline-flex items-center justify-center w-20 h-20 rounded-md bg-[var(--surface-default)] shadow-sm mb-6">

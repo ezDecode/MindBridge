@@ -17,3 +17,6 @@ export { Input } from "./Input";
 export type { InputProps } from "./Input";
 
 export { Skeleton, SkeletonText } from "./Skeleton";
+
+export { Modal } from "./Modal";
+export { Sheet } from "./Sheet";

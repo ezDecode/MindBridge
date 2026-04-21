@@ -84,14 +84,6 @@ export interface MemoryContext {
  communicationStyle: string
 }
 
-// Clinical words that should never appear in responses
-const CLINICAL_FORBIDDEN_WORDS = [
- 'depression', 'anxiety disorder', 'major depressive', 'gad',
- 'symptom', 'diagnosis', 'dsm', 'criteria', 'mental illness',
- 'patient', 'therapy session', 'clinical', 'psychiatric',
- 'prescribe', 'medication', 'disorder', 'pathology',
-]
-
 // Warm replacements for clinical words
 const CLINICAL_REPLACEMENTS: Record<string, string> = {
  depression: 'rough patch',

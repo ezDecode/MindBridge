@@ -203,7 +203,7 @@ export async function getProfile() {
 }
 
 export async function adminLoginHardcoded(
- prevState: any,
+ prevState: unknown,
  formData: FormData
 ): Promise<{ error?: string }> {
  const adminId = formData.get('adminId')

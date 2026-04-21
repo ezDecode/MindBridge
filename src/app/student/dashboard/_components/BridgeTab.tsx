@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react';
 import { Button, Text } from "@/components/ui";
 import staticResources from "@/content/static-resources.json";
 import { MoodGauge } from "./MoodGauge";
-import type { DashboardData, TabId } from "./types";
+import type { DashboardData } from "./types";
 
 interface BridgeTabProps {
  data: DashboardData | null;
@@ -20,9 +20,7 @@ interface BridgeTabProps {
  completedDays: number;
  onOpenQuestionnaire: () => void;
  onOpenSidebar: () => void;
- onOpenCheckIn: () => void;
  onOpenBooking: () => void;
- onOpenAnalytics: () => void;
 }
 
 const assessmentTone: Record<NonNullable<DashboardData["latestAssessment"]>["severity"], string> = {
@@ -45,9 +43,7 @@ export function BridgeTab({
  onOpenQuestionnaire,
 
   onOpenSidebar,
-  onOpenCheckIn,
   onOpenBooking,
-  onOpenAnalytics,
 }: BridgeTabProps) {
   const latestAssessment = data?.latestAssessment;
   const assessmentLabel = latestAssessment ? assessmentTone[latestAssessment.severity] : "No guided scan yet";

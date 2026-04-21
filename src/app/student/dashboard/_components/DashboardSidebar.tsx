@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { AnimatePresence, motion } from "motion/react";
 import type { TabId } from "./types";
@@ -15,7 +14,6 @@ interface DashboardSidebarProps {
   onOpenQuestionnaire: () => void;
   setShowCheckIn: (val: boolean) => void;
   setShowBookingModal: (val: boolean) => void;
-  setShowAnalyticsModal: (val: boolean) => void;
   sidebarOpen: boolean;
   setSidebarOpen: (val: boolean) => void;
 }
@@ -32,11 +30,9 @@ export function DashboardSidebar({
   onOpenQuestionnaire,
   setShowCheckIn,
   setShowBookingModal,
-  setShowAnalyticsModal,
   sidebarOpen,
   setSidebarOpen,
 }: DashboardSidebarProps) {
-  const [isMenuCollapsed, setIsMenuCollapsed] = useState(false);
 
   return (
     <>
@@ -199,7 +195,12 @@ export function DashboardSidebar({
                </p>
              </div>
 
-             <Link href="/student/settings" className="group flex w-full items-center justify-between rounded-xl px-2 py-2 transition-all hover:bg-[var(--surface-default)] hover:shadow-lg hover:ring-1 hover:ring-inset hover:ring-[var(--border-default)]">
+             <button 
+               onClick={() => {
+                 window.dispatchEvent(new CustomEvent('open-settings'));
+               }}
+               className="group flex w-full items-center justify-between rounded-xl px-2 py-2 transition-all hover:bg-[var(--surface-default)] hover:shadow-lg hover:ring-1 hover:ring-inset hover:ring-[var(--border-default)]"
+             >
                <div className="flex items-center gap-2.5">
                  <div className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-gradient-to-br from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-inverse)] shadow-sm ring-1 ring-inset ring-white/20 transition-transform group-hover:scale-105">
                    <span className="text-[14px] font-bold">{userName.charAt(0)}</span>
@@ -210,7 +211,7 @@ export function DashboardSidebar({
                  </div>
                </div>
                <Icon icon="tabler:settings" className="h-[18px] w-[18px] text-[var(--text-icon)] transition-colors group-hover:text-[var(--text-primary)]" />
-             </Link>
+             </button>
           </div>
         </div>
       </aside>

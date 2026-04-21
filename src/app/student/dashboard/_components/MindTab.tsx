@@ -1,27 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Icon } from "@iconify/react";
 import { Text } from "@/components/ui";
-import { getAssessmentLabel } from "@/lib/question-bank";
 import { ChatInput, ChatWindow } from "@/components/chat";
 import type { Message } from "@/hooks/useChat";
-import type { DashboardData, TabId } from "./types";
+import type { DashboardData } from "./types";
 
 interface MindTabProps {
-  userName: string;
-  data: DashboardData | null;
   messages: Message[];
   sendMessage: (msg: string) => void;
   isLoading: boolean;
   error: string | null;
   stopGenerating: () => void;
-  startNewSession: () => void;
-  autoOpenCheckIn?: boolean;
-  onAutoOpenCheckInHandled?: () => void;
-  onMoodLogged?: () => void;
   onOpenQuestionnaire: () => void;
   onOpenSidebar: () => void;
   onOpenCheckIn: () => void;
@@ -30,17 +22,11 @@ interface MindTabProps {
 }
 
 export function MindTab({
-  userName,
-  data,
   messages,
   sendMessage,
   isLoading,
   error,
   stopGenerating,
-  startNewSession,
-  autoOpenCheckIn,
-  onAutoOpenCheckInHandled,
-  onMoodLogged,
   onOpenQuestionnaire,
   onOpenSidebar,
   onOpenCheckIn,

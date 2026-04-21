@@ -17,7 +17,8 @@ export const studentNav: NavItem[] = [
  { href: "/student/check-in", label: "My Mind", icon: "heart" },
  { href: "/student/resources", label: "Resources", icon: "library" },
  { href: "/student/book", label: "Book", icon: "calendar" },
- { href: "/student/settings", label: "Settings", icon: "shield" },
+ { href: "#", label: "Settings", icon: "shield" },
+
 ];
 
 export const counselorNav: NavItem[] = [

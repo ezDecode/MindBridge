@@ -14,7 +14,6 @@ export interface BreathingExerciseProps {
 }
 
 const ease: Easing = [0.23, 1, 0.32, 1]; // Strong ease-out
-const springTransition = { type: "spring", stiffness: 400, damping: 30 };
 
 const fadeInUp = {
  initial: { opacity: 0, y: 16, filter: "blur(4px)" },
@@ -26,15 +25,6 @@ const fadeInUp = {
  }
 };
 
-const scaleIn = {
- initial: { opacity: 0, scale: 0.95, filter: "blur(4px)" },
- animate: { 
- opacity: 1, 
- scale: 1,
- filter: "blur(0px)",
- transition: { duration: 0.4, ease }
- }
-};
 
 export function BreathingExercise({ 
  defaultTechnique = "box", 

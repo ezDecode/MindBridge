@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'motion/react'
 import { Icon } from '@iconify/react';
 import { Button, Text } from '@/components/ui'
 import { useChat } from '@/hooks/useChat'
@@ -18,7 +17,6 @@ import { DashboardSidebar } from './_components/DashboardSidebar'
 import { CheckInModal } from './_components/CheckInModal'
 import { BookingModal } from './_components/BookingModal'
 import { AnalyticsModal } from './_components/AnalyticsModal'
-import { SettingsModal } from './_components/SettingsModal'
 import { generateSessionId, generateWeekMoodHistory, generateEmptyWeek, formatSessionTime } from './_components/types'
 import type { DashboardData, TabId } from './_components/types'
 
@@ -72,9 +70,7 @@ export default function StudentDashboardPage() {
     const [showCheckIn, setShowCheckIn] = useState(false)
     const [showBookingModal, setShowBookingModal] = useState(false)
     const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)
-    const [showSettings, setShowSettings] = useState(false)
     const [sidebarOpen, setSidebarOpen] = useState(false)
-
     const handleCrisis = useCallback(() => {
         console.log('Crisis detected - alert sent to counselor')
     }, [])
@@ -346,24 +342,17 @@ export default function StudentDashboardPage() {
                 onOpenQuestionnaire={() => setShowQuestionnaire(true)}
                 setShowCheckIn={setShowCheckIn}
                 setShowBookingModal={setShowBookingModal}
-                setShowAnalyticsModal={setShowAnalyticsModal}
                 sidebarOpen={sidebarOpen}
                 setSidebarOpen={setSidebarOpen}
             />
             <div className="flex flex-1 flex-col lg:flex-row overflow-hidden bg-[var(--surface-tinted)] lg:bg-[var(--bg-page)]">
                 <div className={`h-full w-full lg:w-1/2 ${activeTab === 'mind' ? 'block' : 'hidden'} lg:block`}>
                     <MindTab
-                        userName={userName}
-                        data={data}
                         messages={messages}
                         sendMessage={sendMessage}
                         isLoading={isLoading}
                         error={error}
                         stopGenerating={stopGenerating}
-                        startNewSession={startNewSession}
-                        autoOpenCheckIn={pendingCheckInOpen}
-                        onAutoOpenCheckInHandled={handleAutoOpenCheckInHandled}
-                        onMoodLogged={refreshDashboardInsights}
                         onOpenQuestionnaire={() => setShowQuestionnaire(true)}
                         onOpenSidebar={() => setSidebarOpen(true)}
                         onOpenCheckIn={() => setShowCheckIn(true)}
@@ -384,9 +373,7 @@ export default function StudentDashboardPage() {
                         completedDays={scored.length}
                         onOpenQuestionnaire={() => setShowQuestionnaire(true)}
                         onOpenSidebar={() => setSidebarOpen(true)}
-                        onOpenCheckIn={() => setShowCheckIn(true)}
                         onOpenBooking={() => setShowBookingModal(true)}
-                        onOpenAnalytics={() => setShowAnalyticsModal(true)}
                     />
                 </div>
             </div>
@@ -394,7 +381,6 @@ export default function StudentDashboardPage() {
             <CheckInModal isOpen={showCheckIn || pendingCheckInOpen} onClose={() => { setShowCheckIn(false); handleAutoOpenCheckInHandled(); }} onComplete={refreshDashboardInsights} />
             <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
             <AnalyticsModal isOpen={showAnalyticsModal} onClose={() => setShowAnalyticsModal(false)} onGoToDashboard={() => setActiveTab('bridge')} />
-            <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
 
             <QuestionSessionSheet
                 isOpen={showQuestionnaire}

@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react'
 import { Icon } from '@iconify/react';
-import { Button, Card, Text } from '@/components/ui'
+import { Text } from '@/components/ui'
 
 interface BookingSuggestionProps {
  counselorName?: string

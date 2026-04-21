@@ -85,8 +85,8 @@ export async function POST(req: Request) {
  user_id: student.id,
  reason: 'System check-in based on recent mood logs and activity.',
  })
- } catch (e) {
- console.log("Could not log to proactive_outreach table") 
+ } catch {
+  console.log("Could not log to proactive_outreach table") 
  }
 
  triggeredCount++
@@ -106,8 +106,9 @@ export async function POST(req: Request) {
  message: `Proactive agent ran successfully. Triggered messages for ${triggeredCount} student(s).` 
  }, { status: 200 })
 
- } catch (error: any) {
- console.error('Proactive Cron Error:', error)
- return NextResponse.json({ error: error.message }, { status: 500 })
+ } catch (err: unknown) {
+  const error = err as Error;
+  console.error('Proactive Cron Error:', error)
+  return NextResponse.json({ error: error.message }, { status: 500 })
  }
 }

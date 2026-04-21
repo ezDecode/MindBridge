@@ -43,7 +43,7 @@ export function HeroSection() {
  <Card 
  variant="elevated" 
  padding="none"
- className="flex flex-col overflow-hidden rounded-md border-none bg-[var(--action-primary-light)] h-[420px] sm:h-[476px]"
+ className="flex flex-col overflow-hidden rounded-md border-[0.125rem] border-[var(--border-default)] bg-[var(--chess-light)] h-[420px] sm:h-[476px]"
  >
  <div className="flex flex-col items-center gap-4 p-6 sm:p-8">
  <Text as="h3" weight="semibold" className="text-center text-[clamp(1.125rem,2.5vw,1.5rem)] leading-[1.2] tracking-tight text-[var(--text-primary)]">
@@ -71,7 +71,7 @@ export function HeroSection() {
  <Card 
  variant="elevated" 
  padding="none"
- className="flex flex-col overflow-hidden rounded-md border-none bg-[var(--action-primary-light)] h-[420px] sm:h-[476px]"
+ className="flex flex-col overflow-hidden rounded-md border-[0.125rem] border-[var(--border-default)] bg-[var(--chess-light)] h-[420px] sm:h-[476px]"
  >
  <div className="flex flex-col items-center gap-4 p-6 sm:p-8">
  <Text as="h3" weight="semibold" className="text-center text-[clamp(1.125rem,2.5vw,1.5rem)] leading-[1.2] tracking-tight text-[var(--text-primary)]">

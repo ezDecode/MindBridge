@@ -1,7 +1,6 @@
 'use client'
 
 import { usePathname } from "next/navigation"
-import { Container } from "@/components/ui"
 import { ToastProvider } from "@/components/ui/Toast"
 import { RoleShell } from "@/components/site"
 import { studentNav } from "@/content/mindbridge"

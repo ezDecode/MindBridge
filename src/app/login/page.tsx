@@ -10,27 +10,27 @@ import { useRouter, useSearchParams } from "next/navigation";
 const initialState: AuthState = {};
 
 function LoginForm() {
- const router = useRouter();
- const searchParams = useSearchParams();
- const defaultRole = searchParams.get('role') || 'student';
- 
- const [authMode, setAuthMode] = useState<'login' | 'signup' | 'otp'>('login');
- const [role, setRole] = useState(defaultRole);
- const [fullName, setFullName] = useState('');
- 
- const [state, formAction, isPending] = useActionState(
- authMode === 'login' ? signInWithPassword : 
- authMode === 'signup' ? signUpWithPassword : 
- sendOtp, 
- initialState
- );
+  const searchParams = useSearchParams();
+  const defaultRole = searchParams.get('role') || 'student';
+  
+  const [authMode, setAuthMode] = useState<'login' | 'signup' | 'otp'>('login');
+  const [role, setRole] = useState(defaultRole);
+  const [fullName, setFullName] = useState('');
+  
+  const [state, formAction, isPending] = useActionState(
+    authMode === 'login' ? signInWithPassword : 
+    authMode === 'signup' ? signUpWithPassword : 
+    sendOtp, 
+    initialState
+  );
 
- useEffect(() => {
- if (state.success && state.message?.includes('Account created')) {
- // Switch back to login view after successful signup
- setAuthMode('login');
- }
- }, [state.success, state.message]);
+  useEffect(() => {
+    if (state.success && state.message?.includes('Account created')) {
+      // Switch back to login view after successful signup
+      const timer = setTimeout(() => setAuthMode('login'), 0);
+      return () => clearTimeout(timer);
+    }
+  }, [state.success, state.message]);
 
  return (
  <main id="main-content" className="w-full">

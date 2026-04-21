@@ -42,13 +42,6 @@ BEGIN
         (c_arjun, 'authenticated', 'arjun.desai@mindbridge.in', 'dummy', '{"name": "Dr. Arjun Desai", "role": "counselor"}'),
         (c_pooja, 'authenticated', 'pooja.iyer@mindbridge.in', 'dummy', '{"name": "Dr. Pooja Iyer", "role": "counselor"}');
 
-    -- Insert 5 more counselors
-    FOR i IN 1..5 LOOP
-        INSERT INTO auth.users (id, role, email, encrypted_password, raw_user_meta_data)
-        VALUES (gen_random_uuid(), 'authenticated', 'counselor' || i || '@mindbridge.in', 'dummy', 
-                ('{"name": "Counselor ' || i || '", "role": "counselor"}')::jsonb);
-    END LOOP;
-
     -- 2. Create Fake Auth Users & Profiles for 40 Students
     FOR i IN 1..40 LOOP
         s_rohan := gen_random_uuid();
@@ -97,5 +90,38 @@ BEGIN
     VALUES 
         ((SELECT id FROM public.profiles WHERE role = 'student' LIMIT 1), c_radha, 'high', false, now() - interval '2 hours'),
         ((SELECT id FROM public.profiles WHERE role = 'student' OFFSET 1 LIMIT 1), c_vikram, 'severe', true, now() - interval '1 day');
+
+    -- 6. Create Slots for Counselors (Next 7 days, 3 slots per day)
+    FOR d IN 1..7 LOOP
+        -- Dr. Radha Sharma
+        INSERT INTO public.counselor_slots (counselor_id, slot_start, slot_end, available) VALUES 
+        (c_radha, date_trunc('day', now()) + (d || ' days')::interval + interval '10 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '11 hours', true),
+        (c_radha, date_trunc('day', now()) + (d || ' days')::interval + interval '14 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '15 hours', true),
+        (c_radha, date_trunc('day', now()) + (d || ' days')::interval + interval '16 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '17 hours', true);
+        
+        -- Dr. Vikram Singh
+        INSERT INTO public.counselor_slots (counselor_id, slot_start, slot_end, available) VALUES 
+        (c_vikram, date_trunc('day', now()) + (d || ' days')::interval + interval '10 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '11 hours', true),
+        (c_vikram, date_trunc('day', now()) + (d || ' days')::interval + interval '14 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '15 hours', true),
+        (c_vikram, date_trunc('day', now()) + (d || ' days')::interval + interval '16 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '17 hours', true);
+
+        -- Dr. Sneha Patel
+        INSERT INTO public.counselor_slots (counselor_id, slot_start, slot_end, available) VALUES 
+        (c_sneha, date_trunc('day', now()) + (d || ' days')::interval + interval '10 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '11 hours', true),
+        (c_sneha, date_trunc('day', now()) + (d || ' days')::interval + interval '14 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '15 hours', true),
+        (c_sneha, date_trunc('day', now()) + (d || ' days')::interval + interval '16 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '17 hours', true);
+
+        -- Dr. Arjun Desai
+        INSERT INTO public.counselor_slots (counselor_id, slot_start, slot_end, available) VALUES 
+        (c_arjun, date_trunc('day', now()) + (d || ' days')::interval + interval '10 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '11 hours', true),
+        (c_arjun, date_trunc('day', now()) + (d || ' days')::interval + interval '14 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '15 hours', true),
+        (c_arjun, date_trunc('day', now()) + (d || ' days')::interval + interval '16 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '17 hours', true);
+
+        -- Dr. Pooja Iyer
+        INSERT INTO public.counselor_slots (counselor_id, slot_start, slot_end, available) VALUES 
+        (c_pooja, date_trunc('day', now()) + (d || ' days')::interval + interval '10 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '11 hours', true),
+        (c_pooja, date_trunc('day', now()) + (d || ' days')::interval + interval '14 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '15 hours', true),
+        (c_pooja, date_trunc('day', now()) + (d || ' days')::interval + interval '16 hours', date_trunc('day', now()) + (d || ' days')::interval + interval '17 hours', true);
+    END LOOP;
 
 END $$;

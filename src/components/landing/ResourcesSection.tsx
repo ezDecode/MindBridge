@@ -15,7 +15,7 @@ export function ResourcesSection() {
  return (
  <motion.section id="resources" className="page-section w-full pb-3" initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={sectionReveal}>
  <Container size="lg">
- <div className="mx-auto w-full max-w-6xl rounded-3xl bg-[var(--surface-warm)] px-5 py-8 shadow-[0_16px_42px_-28px_rgba(2,6,23,0.45)] sm:px-8 sm:py-10 lg:px-12 lg:py-14">
+ <div className="mx-auto w-full max-w-6xl rounded-3xl bg-[var(--surface-warm)] px-5 py-8 border-[0.125rem] border-[var(--border-default)] sm:px-8 sm:py-10 lg:px-12 lg:py-14">
  <div className="mx-auto max-w-3xl text-center">
  <Text as="h2" variant="h3" weight="bold" className="mx-auto max-w-[20ch] text-[var(--text-primary)] md:text-h2">
  Resources between sessions.
@@ -26,7 +26,7 @@ export function ResourcesSection() {
  </div>
 
  <div className="mt-8 grid gap-5 lg:mt-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
- <div className="flex h-full flex-col justify-between rounded-2xl bg-[var(--action-primary-light)]/80 p-6 shadow-[0_12px_30px_-22px_rgba(13,42,99,0.6)] sm:p-8">
+ <div className="flex h-full flex-col justify-between rounded-2xl bg-[var(--action-primary-light)] p-6 border-[0.125rem] border-[var(--border-default)] sm:p-8">
  <div>
  <Text as="p" variant="h4" weight="bold" className="text-[var(--text-primary)] leading-tight md:text-h3">
  Simple wellness resources that actually help.
@@ -42,7 +42,7 @@ export function ResourcesSection() {
 
  <div className="grid gap-3 sm:grid-cols-2">
  {sampleResources.map((r) => (
- <article key={r.title} className="group flex h-full flex-col justify-between rounded-2xl bg-[var(--surface-default)]/95 p-4 shadow-[0_14px_28px_-22px_rgba(15,23,42,0.55)] transition-transform duration-200 hover:-translate-y-0.5 sm:p-5">
+ <article key={r.title} className="group flex h-full flex-col justify-between rounded-2xl bg-[var(--surface-default)] p-4 border-[0.125rem] border-[var(--border-default)] transition-colors duration-200 hover:bg-[var(--chess-light)] sm:p-5">
  <div className="flex items-center gap-2">
  <Text as="span" variant="label" weight="bold" className="text-[var(--action-primary)]">{r.type}</Text>
  <Text as="span" variant="small" color="muted">·</Text>

@@ -38,7 +38,7 @@ export function ChatInput({
  onGuidedQuestions,
 }: ChatInputProps) {
  const [input, setInput] = useState('')
- const [showTools, setShowTools] = useState(true)
+ const showTools = true;
  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
  useEffect(() => {

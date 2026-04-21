@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 import { Icon } from '@iconify/react';
-import { Button, Container, Text } from "@/components/ui";
+import { Modal } from "@/components/ui";
+import { SettingsForm } from "@/components/settings/SettingsForm";
 import type { NavItem } from "@/content/mindbridge";
 
 const iconMap = {
@@ -26,15 +28,27 @@ interface RoleShellProps {
 }
 
 export function RoleShell({
-  roleLabel,
-  roleDescription,
   navItems,
   children,
 }: RoleShellProps) {
   const pathname = usePathname();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpenSettings = () => setIsSettingsOpen(true);
+    window.addEventListener('open-settings', handleOpenSettings);
+    return () => window.removeEventListener('open-settings', handleOpenSettings);
+  }, []);
+
+  const handleNavItemClick = (item: NavItem, e: React.MouseEvent) => {
+    if (item.label.toLowerCase() === 'settings' || (item.href && item.href.includes('settings'))) {
+      e.preventDefault();
+      setIsSettingsOpen(true);
+    }
+  };
 
   return (
-    <main id="main-content" className="protected-shell w-full flex min-h-[100svh] bg-[var(--bg-page)]">
+    <main id="main-content" className="protected-shell w-full flex min-h-[100svh] bg-[var(--bg-page)] text-[var(--text-primary)]">
       {/* SIDEBAR - Student dashboard style */}
       <aside className="hidden h-screen w-[16rem] shrink-0 flex-col overflow-y-auto border-none bg-[var(--bg-sidebar)] lg:flex">
         <div className="flex flex-col gap-6 p-4">
@@ -70,6 +84,7 @@ export function RoleShell({
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={(e) => handleNavItemClick(item, e)}
                 aria-current={isActive ? "page" : undefined}
                 className={isActive 
                   ? "flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13.5px] font-medium bg-[var(--surface-default)] text-[var(--text-primary)] shadow-lg ring-1 ring-inset ring-[var(--border-default)]"
@@ -85,21 +100,24 @@ export function RoleShell({
 
         {/* BOTTOM USER AVATAR AND ACTIONS */}
         <div className="mt-auto p-3 mb-2 flex flex-col gap-1">
-          <Link href="/student/settings" className="group flex items-center justify-between rounded-xl px-2 py-2 text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--surface-default)] hover:shadow-lg hover:ring-1 hover:ring-inset hover:ring-[var(--border-default)]">
+          <button 
+            onClick={() => setIsSettingsOpen(true)}
+            className="group w-full flex items-center justify-between rounded-xl px-2 py-2 text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--surface-default)] hover:shadow-lg hover:ring-1 hover:ring-inset hover:ring-[var(--border-default)] transition-all"
+          >
             <div className="flex items-center gap-2.5">
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-inverse)] text-xs font-bold shrink-0 shadow-sm ring-1 ring-inset ring-white/20">
-                N
+                U
               </div>
-              Nemo
+              My Account
             </div>
             <Icon icon="tabler:settings" className="h-[18px] w-[18px] text-[var(--text-muted)] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-          </Link>
+          </button>
         </div>
       </aside>
 
       {/* MAIN CONTENT AREA */}
       <div className="flex flex-1 flex-col min-w-0 bg-[var(--bg-page)]">
-        {/* Mobile Header (Hidden on large screens) */}
+        {/* Mobile Header */}
         <div className="flex items-center justify-between bg-[var(--bg-page)] p-4 lg:hidden">
           <Link href="/" className="inline-flex items-center gap-2.5 font-bold text-[var(--text-primary)]">
             <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-b from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-inverse)] shadow-sm ring-1 ring-inset ring-white/10">
@@ -107,6 +125,12 @@ export function RoleShell({
             </span>
             <span className="text-[17px] tracking-tight">MindBridge</span>
           </Link>
+          <button 
+            onClick={() => setIsSettingsOpen(true)}
+            className="h-10 w-10 flex items-center justify-center rounded-xl bg-[var(--surface-default)] border border-[var(--border-default)]"
+          >
+            <Icon icon="tabler:settings" className="h-5 w-5 text-[var(--text-muted)]" />
+          </button>
         </div>
 
         {/* Mobile Nav */}
@@ -119,6 +143,7 @@ export function RoleShell({
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={(e) => handleNavItemClick(item, e)}
                   aria-current={isActive ? "page" : undefined}
                   className={isActive
                     ? "inline-flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13.5px] font-medium bg-[var(--surface-default)] text-[var(--text-primary)] shadow-lg ring-1 ring-inset ring-[var(--border-default)]"
@@ -140,6 +165,18 @@ export function RoleShell({
           </div>
         </div>
       </div>
+
+      {/* Global Settings Modal */}
+      <Modal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        title="Account Settings"
+        size="md"
+      >
+        <div className="px-8 pb-10 pt-4">
+          <SettingsForm onSuccess={() => setIsSettingsOpen(false)} />
+        </div>
+      </Modal>
     </main>
   );
 }

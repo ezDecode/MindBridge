@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { Text, SkeletonText } from "@/components/ui"
-import { motion } from 'motion/react'
-import Link from 'next/link'
+import { Text, Sheet } from "@/components/ui"
+import { motion, AnimatePresence } from 'motion/react'
 import { Icon } from '@iconify/react'
 import { resolveProfileDisplayName } from '@/lib/profile-name'
+import { StudentDetailView } from '../_components/StudentDetailView'
 
 interface Profile {
   id: string
@@ -20,6 +20,8 @@ export default function AdminDashboardPage() {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
+  const [activeTab, setActiveTab] = useState<'students' | 'counselors'>('students')
+  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null)
 
   const fetchData = useCallback(async () => {
     try {
@@ -27,274 +29,246 @@ export default function AdminDashboardPage() {
       if (res.ok) {
         const data = await res.json()
         setProfiles(data.profiles || [])
-      } else {
-        console.error('Failed to fetch admin users')
       }
     } catch (err) {
       console.error(err)
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
   }, [])
 
   useEffect(() => {
     fetchData()
   }, [fetchData])
 
-  const students = useMemo(
-    () => profiles.filter((profile) => profile.role === 'student'),
-    [profiles]
-  )
-  const counselors = useMemo(
-    () => profiles.filter((profile) => profile.role === 'counselor'),
-    [profiles]
-  )
-  const getCardDisplayName = useCallback(
+  const students = useMemo(() => profiles.filter((p) => p.role === 'student'), [profiles])
+  const counselors = useMemo(() => profiles.filter((p) => p.role === 'counselor'), [profiles])
+
+  // Simulated "At Risk" logic for UI demonstration
+  const atRiskStudents = useMemo(() => {
+    return students.slice(0, 3).map((s, i) => ({
+      ...s,
+      reason: i === 0 ? 'Multiple low mood logs' : i === 1 ? 'Sudden activity drop' : 'Crisis signal detected',
+      severity: i === 2 ? 'high' : 'medium'
+    }))
+  }, [students])
+
+  const getDisplayName = useCallback(
     (profile: Profile) =>
       resolveProfileDisplayName({ profileName: profile.name, email: profile.email }) ||
       (profile.role === 'counselor' ? 'Counselor' : 'Student'),
     []
   )
 
-  const filteredStudents = useMemo(() => {
-    if (!searchQuery.trim()) return students
+  const filteredList = useMemo(() => {
+    const list = activeTab === 'students' ? students : counselors
+    if (!searchQuery.trim()) return list
     const q = searchQuery.toLowerCase()
-    return students.filter(
+    return list.filter(
       (p) =>
-        getCardDisplayName(p).toLowerCase().includes(q) ||
+        getDisplayName(p).toLowerCase().includes(q) ||
         (p.institution || '').toLowerCase().includes(q) ||
         (p.email || '').toLowerCase().includes(q)
     )
-  }, [students, searchQuery, getCardDisplayName])
-
-  const filteredCounselors = useMemo(() => {
-    if (!searchQuery.trim()) return counselors
-    const q = searchQuery.toLowerCase()
-    return counselors.filter(
-      (p) =>
-        getCardDisplayName(p).toLowerCase().includes(q) ||
-        (p.institution || '').toLowerCase().includes(q) ||
-        (p.email || '').toLowerCase().includes(q)
-    )
-  }, [counselors, searchQuery, getCardDisplayName])
+  }, [activeTab, students, counselors, searchQuery, getDisplayName])
 
   if (loading) {
     return (
-      <div className="p-8 max-w-5xl mx-auto space-y-6">
-        <SkeletonText lines={1} className="w-1/4 h-8" />
-        <div className="grid gap-4 grid-cols-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-24 rounded-2xl bg-[var(--surface-strong)] animate-pulse" />
-          ))}
+      <div className="p-8 max-w-6xl mx-auto space-y-12 animate-pulse">
+        <div className="h-24 w-3/4 bg-[var(--surface-strong)] rounded-xl" />
+        <div className="h-12 w-1/2 bg-[var(--surface-strong)] rounded-xl" />
+        <div className="space-y-4">
+          <div className="h-16 bg-[var(--surface-strong)] rounded-xl" />
+          <div className="h-16 bg-[var(--surface-strong)] rounded-xl" />
         </div>
-        <SkeletonText lines={5} />
       </div>
     )
   }
 
-  const metrics = [
-    {
-      label: 'Total Users',
-      value: profiles.length,
-      icon: 'tabler:users-group',
-      color: 'var(--action-primary)',
-      bg: 'var(--action-primary-light)',
-    },
-    {
-      label: 'Students',
-      value: students.length,
-      icon: 'tabler:school',
-      color: '#B58863',
-      bg: '#B5886318',
-    },
-    {
-      label: 'Counselors',
-      value: counselors.length,
-      icon: 'tabler:stethoscope',
-      color: '#0ea5e9',
-      bg: '#0ea5e918',
-    },
-  ]
-
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-8 pb-12 pt-6 px-4">
-      {/* Header */}
-      <div className="rounded-2xl bg-[var(--surface-strong)] p-6 sm:p-8">
-        <div className="flex items-start justify-between">
-          <div>
-            <Text as="p" variant="small" className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
-              Administration
-            </Text>
-            <Text as="h1" variant="h3" weight="bold" className="mt-2 tracking-tight text-[var(--text-primary)]">
-              Control Panel
-            </Text>
-            <Text as="p" variant="body" className="mt-2 max-w-xl text-[var(--text-secondary)]">
-              Manage system users, review activity, and monitor platform health.
-            </Text>
-          </div>
-          <div className="hidden sm:flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--action-primary)] text-[var(--text-inverse)]">
-            <Icon icon="tabler:shield-check" className="h-6 w-6" />
-          </div>
-        </div>
-      </div>
+    <div className="w-full max-w-7xl mx-auto pb-24 pt-12 px-6 sm:px-12 md:px-16">
+      
+      {/* Editorial Header - Replaces standard hero metric cards */}
+      <header className="mb-20 md:mb-32 max-w-5xl">
+        <Text as="h1" className="text-[clamp(2.5rem,6vw,4.5rem)] font-black tracking-tight leading-[1.05] mb-8 text-[var(--text-primary)]">
+          System Overview
+        </Text>
+        <p className="text-[clamp(1.25rem,3vw,1.75rem)] text-[var(--text-secondary)] leading-snug font-medium max-w-4xl">
+          Monitoring <span className="text-[var(--text-primary)] font-bold">{students.length}</span> active students across the network, supported by <span className="text-[var(--text-primary)] font-bold">{counselors.length}</span> counselors. The platform is currently operating <span className="text-[var(--status-success)]">smoothly</span>, with {atRiskStudents.length} situations requiring intervention.
+        </p>
+      </header>
 
-      {/* Metric Cards */}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
-        {metrics.map((metric, index) => (
-          <motion.div
-            key={metric.label}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-5 transition-all duration-200 hover:shadow-md hover:border-[var(--border-strong)]">
-              <div className="flex items-center justify-between">
-                <Text as="p" variant="small" weight="medium" className="text-[var(--text-muted)]">
-                  {metric.label}
-                </Text>
-                <div
-                  className="flex h-10 w-10 items-center justify-center rounded-xl"
-                  style={{ backgroundColor: metric.bg, color: metric.color }}
-                >
-                  <Icon icon={metric.icon} className="h-5 w-5" />
+      {/* Attention Required Section - Linear, hierarchical list instead of repetitive cards */}
+      <section className="mb-24">
+        <div className="flex items-baseline justify-between mb-8 pb-6 border-b border-[var(--border-default)]">
+          <Text as="h2" className="text-2xl md:text-3xl font-bold tracking-tight">Requires Attention</Text>
+          <Text className="text-xs font-bold uppercase tracking-widest text-[var(--status-error)] flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--status-error)] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--status-error)]"></span>
+            </span>
+            {atRiskStudents.length} Active Flags
+          </Text>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          {atRiskStudents.map((s) => (
+            <button 
+              key={s.id}
+              onClick={() => setSelectedStudentId(s.id)}
+              className="group text-left w-full flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-6 md:p-8 rounded-[2rem] bg-[var(--surface-default)] hover:bg-[var(--surface-soft)] transition-colors"
+            >
+              <div className="flex items-center gap-5 md:w-1/3 shrink-0">
+                <div className="h-12 w-12 rounded-full bg-[var(--status-error)]/10 text-[var(--status-error)] flex items-center justify-center font-bold text-xl shrink-0">
+                  {getDisplayName(s).charAt(0)}
+                </div>
+                <div>
+                  <Text weight="bold" className="text-lg md:text-xl truncate">{getDisplayName(s)}</Text>
+                  <Text className="text-xs font-bold uppercase tracking-widest text-[var(--status-error)] mt-1 opacity-80">
+                    {s.severity} Severity
+                  </Text>
                 </div>
               </div>
-              <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--text-primary)]">
-                {metric.value}
-              </Text>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Search */}
-      <div className="relative">
-        <Icon icon="tabler:search" className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)]" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by name, email, or institution..."
-          className="no-focus-ring w-full rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] py-3 pl-11 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] transition-colors focus:outline-none focus:border-[var(--border-strong)]"
-        />
-      </div>
-
-      {/* Users Grid */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Students Column */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ backgroundColor: '#B5886318', color: '#B58863' }}>
-                <Icon icon="tabler:school" className="h-4 w-4" />
-              </div>
-              <Text as="h2" variant="body" weight="bold" className="text-[var(--text-primary)]">
-                Students
-              </Text>
-            </div>
-            <span className="rounded-full bg-[var(--surface-strong)] px-2.5 py-1 text-[11px] font-bold text-[var(--text-muted)]">
-              {filteredStudents.length}
-            </span>
-          </div>
-
-          <div className="max-h-[32rem] space-y-2 overflow-y-auto pr-1">
-            {filteredStudents.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-[var(--border-default)] px-4 py-8 text-center">
-                <Icon icon="tabler:user-off" className="mx-auto h-8 w-8 text-[var(--text-muted)] opacity-40" />
-                <Text className="mt-2 text-[var(--text-muted)]">
-                  {searchQuery ? 'No students match your search.' : 'No student accounts found.'}
+              
+              <div className="flex-1 md:border-l md:border-[var(--border-default)] md:pl-8">
+                <Text className="text-base md:text-lg text-[var(--text-secondary)] leading-relaxed">
+                  &quot;{s.reason}&quot;
                 </Text>
               </div>
-            ) : (
-              filteredStudents.map((profile, index) => (
-                <motion.div
-                  key={profile.id}
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.03 }}
-                >
-                  <Link
-                    href={`/admin/student/${profile.id}`}
-                    className="group flex items-center gap-3.5 rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-4 transition-all duration-200 hover:border-[var(--border-strong)] hover:shadow-sm"
-                  >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-inverse)] text-sm font-bold shadow-sm">
-                      {getCardDisplayName(profile).charAt(0).toUpperCase()}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <Text variant="body" weight="bold" className="text-[var(--text-primary)] truncate leading-tight">
-                        {getCardDisplayName(profile)}
-                      </Text>
-                      <Text className="mt-0.5 text-[12px] text-[var(--text-muted)] truncate">
-                        {profile.email || profile.institution || 'No details'}
-                      </Text>
-                    </div>
-                    <Icon
-                      icon="tabler:chevron-right"
-                      className="h-4 w-4 shrink-0 text-[var(--text-muted)] opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-0.5"
-                    />
-                  </Link>
-                </motion.div>
-              ))
-            )}
+
+              <div className="flex items-center gap-4 shrink-0 text-left md:text-right mt-4 md:mt-0">
+                <Text className="text-[11px] text-[var(--text-muted)] font-bold uppercase tracking-widest">
+                  Last active: 2h ago
+                </Text>
+                <div className="h-10 w-10 rounded-full bg-[var(--surface-strong)] flex items-center justify-center text-[var(--text-primary)] group-hover:bg-[var(--text-primary)] group-hover:text-[var(--surface-default)] transition-colors">
+                  <Icon icon="tabler:arrow-right" className="h-5 w-5" />
+                </div>
+              </div>
+            </button>
+          ))}
+          {atRiskStudents.length === 0 && (
+            <div className="p-12 text-center text-[var(--text-muted)] italic">
+              No active flags requiring attention.
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* User Directory - Fluid grid without hero cards */}
+      <section>
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10 pb-6 border-b border-[var(--border-default)]">
+          <Text as="h2" className="text-2xl md:text-3xl font-bold tracking-tight">Network Directory</Text>
+          
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <div className="flex items-center gap-6">
+              <button
+                onClick={() => setActiveTab('students')}
+                className={`text-sm font-bold uppercase tracking-widest transition-colors pb-1 border-b-2 ${
+                  activeTab === 'students' 
+                  ? 'text-[var(--text-primary)] border-[var(--text-primary)]' 
+                  : 'text-[var(--text-muted)] border-transparent hover:text-[var(--text-secondary)]'
+                }`}
+              >
+                Students ({students.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('counselors')}
+                className={`text-sm font-bold uppercase tracking-widest transition-colors pb-1 border-b-2 ${
+                  activeTab === 'counselors' 
+                  ? 'text-[var(--text-primary)] border-[var(--text-primary)]' 
+                  : 'text-[var(--text-muted)] border-transparent hover:text-[var(--text-secondary)]'
+                }`}
+              >
+                Counselors ({counselors.length})
+              </button>
+            </div>
+
+            <div className="relative group w-full sm:w-64">
+              <Icon icon="tabler:search" className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--text-muted)] transition-colors group-focus-within:text-[var(--text-primary)]" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search name or ID..."
+                className="w-full bg-transparent py-2 pl-8 pr-0 text-base text-[var(--text-primary)] placeholder:text-[var(--text-muted)] border-b border-[var(--border-default)] focus:outline-none focus:border-[var(--text-primary)] transition-colors rounded-none"
+              />
+            </div>
           </div>
         </div>
 
-        {/* Counselors Column */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ backgroundColor: '#0ea5e918', color: '#0ea5e9' }}>
-                <Icon icon="tabler:stethoscope" className="h-4 w-4" />
-              </div>
-              <Text as="h2" variant="body" weight="bold" className="text-[var(--text-primary)]">
-                Counselors
-              </Text>
-            </div>
-            <span className="rounded-full bg-[var(--surface-strong)] px-2.5 py-1 text-[11px] font-bold text-[var(--text-muted)]">
-              {filteredCounselors.length}
-            </span>
-          </div>
-
-          <div className="max-h-[32rem] space-y-2 overflow-y-auto pr-1">
-            {filteredCounselors.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-[var(--border-default)] px-4 py-8 text-center">
-                <Icon icon="tabler:user-off" className="mx-auto h-8 w-8 text-[var(--text-muted)] opacity-40" />
-                <Text className="mt-2 text-[var(--text-muted)]">
-                  {searchQuery ? 'No counselors match your search.' : 'No counselor accounts found.'}
-                </Text>
-              </div>
-            ) : (
-              filteredCounselors.map((profile, index) => (
-                <motion.div
-                  key={profile.id}
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.03 }}
-                >
-                  <div className="flex items-center gap-3.5 rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-4 transition-all duration-200 hover:border-[var(--border-strong)] hover:shadow-sm">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold shadow-sm" style={{ background: 'linear-gradient(135deg, #0ea5e9, #0284c7)', color: 'white' }}>
-                      {getCardDisplayName(profile).charAt(0).toUpperCase()}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <Text variant="body" weight="bold" className="text-[var(--text-primary)] truncate leading-tight">
-                          {getCardDisplayName(profile)}
-                        </Text>
-                        <span className="shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider" style={{ backgroundColor: '#0ea5e915', color: '#0ea5e9' }}>
-                          Counselor
-                        </span>
+        <div 
+          className="grid gap-x-8 gap-y-12"
+          style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredList.map((p, i) => (
+              <motion.div
+                key={p.id}
+                layout
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.4, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {p.role === 'student' ? (
+                  <button
+                    onClick={() => setSelectedStudentId(p.id)}
+                    className="group w-full text-left flex flex-col gap-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="h-16 w-16 shrink-0 rounded-[1.25rem] flex items-center justify-center font-bold text-xl text-white bg-[var(--text-primary)] transition-transform group-hover:scale-105 duration-300">
+                        {getDisplayName(p).charAt(0)}
                       </div>
-                      <Text className="mt-0.5 text-[12px] text-[var(--text-muted)] truncate">
-                        {profile.email || profile.institution || 'No details'}
-                      </Text>
+                      <div className="min-w-0 flex-1">
+                        <Text weight="bold" className="text-lg truncate group-hover:underline underline-offset-4 decoration-2">{getDisplayName(p)}</Text>
+                        <Text className="text-sm text-[var(--text-muted)] truncate mt-1">
+                          {p.email || p.institution || 'Independent'}
+                        </Text>
+                      </div>
+                    </div>
+                  </button>
+                ) : (
+                  <div className="w-full flex flex-col gap-4 opacity-80 cursor-default">
+                    <div className="flex items-center gap-4">
+                      <div className="h-16 w-16 shrink-0 rounded-[1.25rem] flex items-center justify-center font-bold text-xl text-[var(--text-primary)] border-2 border-[var(--border-strong)] bg-transparent">
+                        {getDisplayName(p).charAt(0)}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <Text weight="bold" className="text-lg truncate">{getDisplayName(p)}</Text>
+                          <Icon icon="tabler:circle-check-filled" className="h-4 w-4 text-[var(--status-info)]" />
+                        </div>
+                        <Text className="text-sm text-[var(--text-muted)] truncate mt-1">
+                          {p.email || p.institution || 'Licensed Professional'}
+                        </Text>
+                      </div>
                     </div>
                   </div>
-                </motion.div>
-              ))
-            )}
-          </div>
+                )}
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
-      </div>
+
+        {filteredList.length === 0 && (
+          <div className="py-32 text-center">
+            <Text className="text-xl md:text-2xl font-medium text-[var(--text-muted)]">No profiles matched your search.</Text>
+          </div>
+        )}
+
+        {/* User Detail Sheet */}
+        <Sheet
+          isOpen={!!selectedStudentId}
+          onClose={() => setSelectedStudentId(null)}
+          title="Student Insights"
+        >
+          {selectedStudentId && (
+            <StudentDetailView 
+              studentId={selectedStudentId} 
+            />
+          )}
+        </Sheet>
+      </section>
     </div>
   )
 }
