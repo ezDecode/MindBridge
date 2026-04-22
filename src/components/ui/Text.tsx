@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 
 interface TextProps extends HTMLAttributes<HTMLElement> {
  variant?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "body" | "small" | "label";
- weight?: "normal" | "medium" | "semibold" | "bold";
- color?: "primary" | "secondary" | "muted" | "brand" | "success";
+ weight?: "normal" | "medium" | "semibold" | "bold" | "black";
+ color?: "primary" | "secondary" | "muted" | "brand" | "success" | "chess";
  as?: ElementType;
  htmlFor?: string;
 }
@@ -41,6 +41,7 @@ const Text = forwardRef<HTMLElement, TextProps>(
  medium: "font-medium",
  semibold: "font-semibold",
  bold: "font-bold",
+ black: "font-black",
  };
 
  const colors = {
@@ -49,6 +50,7 @@ const Text = forwardRef<HTMLElement, TextProps>(
  muted: "text-text-muted",
  brand: "text-primary", /* maps to --color-primary (Chess Green #739552) */
  success: "text-success",
+ chess: "text-[var(--chess-wood)]",
  };
 
  return (

@@ -2,477 +2,399 @@
 
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import type { User } from '@supabase/supabase-js'
-import { PageIntro } from "@/components/site"
-import { Button, Card, Text, SkeletonText } from "@/components/ui"
+import { Button, Text } from "@/components/ui"
 import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'motion/react'
+import { Icon } from '@iconify/react'
 import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 interface CrisisAlert {
- id: string
- created_at: string
- severity: string
- student_id: string
- relativeTime: string
+  id: string
+  created_at: string
+  severity: string
+  student_id: string
+  relativeTime: string
 }
 
 interface Booking {
- id: string
- slot_start: string
- slot_end: string
- type: string
- status: string
- student: { id: string; name: string | null }
+  id: string
+  slot_start: string
+  slot_end: string
+  type: string
+  status: string
+  student: { id: string; name: string | null }
 }
 
 interface Metrics {
- activeAlerts: number
- pendingBookings: number
- todaySessions: number
+  activeAlerts: number
+  pendingBookings: number
+  todaySessions: number
 }
 
 function formatRelativeTime(date: string, referenceNow: number) {
- const diff = referenceNow - new Date(date).getTime()
- const minutes = Math.max(0, Math.floor(diff / 60000))
+  const diff = referenceNow - new Date(date).getTime()
+  const minutes = Math.max(0, Math.floor(diff / 60000))
+  if (minutes < 60) return `${minutes}m ago`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours}h ago`
+  return `${Math.floor(hours / 24)}d ago`
+}
 
- if (minutes < 60) return `${minutes}m ago`
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.04 }
+  }
+}
 
- const hours = Math.floor(minutes / 60)
- if (hours < 24) return `${hours}h ago`
-
- return `${Math.floor(hours / 24)}d ago`
+const itemVariants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
+  }
 }
 
 export default function CounselorDashboardPage() {
- const [user, setUser] = useState<User | null>(null)
- const [loading, setLoading] = useState(true)
- const [isCounselor, setIsCounselor] = useState(false)
- 
- const [crisisAlerts, setCrisisAlerts] = useState<CrisisAlert[]>([])
- const [bookings, setBookings] = useState<Booking[]>([])
- const [metrics, setMetrics] = useState<Metrics>({
- activeAlerts: 0,
- pendingBookings: 0,
- todaySessions: 0,
- })
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [isCounselor, setIsCounselor] = useState(false)
+  const [crisisAlerts, setCrisisAlerts] = useState<CrisisAlert[]>([])
+  const [bookings, setBookings] = useState<Booking[]>([])
+  const [metrics, setMetrics] = useState<Metrics>({
+    activeAlerts: 0,
+    pendingBookings: 0,
+    todaySessions: 0,
+  })
 
- const supabase = useMemo(() => createClient(), [])
+  const supabase = useMemo(() => createClient(), [])
 
- // Fetch data
- const fetchData = useCallback(async () => {
- const { data: { user } } = await supabase.auth.getUser()
- setUser(user)
- 
- if (!user) {
- setLoading(false)
- return
- }
+  const fetchData = useCallback(async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    setUser(user)
+    if (!user) {
+      setLoading(false)
+      return
+    }
 
- // Check if user is counselor
- const { data: profile } = await supabase
- .from('profiles')
- .select('role')
- .eq('id', user.id)
- .single()
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+    if (profile?.role !== 'counselor') {
+      setLoading(false)
+      return
+    }
 
- if (profile?.role !== 'counselor') {
- setLoading(false)
- return
- }
- 
- setIsCounselor(true)
- const referenceNow = Date.now()
+    setIsCounselor(true)
+    const referenceNow = Date.now()
 
- // Fetch crisis alerts (last 24h)
- const { data: alerts } = await supabase
- .from('crisis_logs')
- .select('id, triggered_at, severity, student_id')
- .gte('triggered_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
- .order('triggered_at', { ascending: false })
- .limit(10)
+    const { data: alerts } = await supabase
+      .from('crisis_logs')
+      .select('id, triggered_at, severity, student_id')
+      .gte('triggered_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+      .order('triggered_at', { ascending: false })
+      .limit(10)
 
- if (alerts) {
- setCrisisAlerts(alerts.map(a => ({
- id: a.id,
- created_at: a.triggered_at,
- severity: a.severity,
- student_id: a.student_id,
- relativeTime: formatRelativeTime(a.triggered_at, referenceNow),
- })))
- }
+    if (alerts) {
+      setCrisisAlerts(alerts.map(a => ({
+        id: a.id,
+        created_at: a.triggered_at,
+        severity: a.severity,
+        student_id: a.student_id,
+        relativeTime: formatRelativeTime(a.triggered_at, referenceNow),
+      })))
+    }
 
- // Fetch bookings from slots API
- let nextBookings: Booking[] = []
- try {
- const res = await fetch('/api/counselor/slots')
- if (res.ok) {
- const data = await res.json()
- nextBookings = data.bookings || []
- setBookings(nextBookings)
- }
- } catch (err) {
- console.error('Failed to fetch bookings:', err)
- }
+    let nextBookings: Booking[] = []
+    try {
+      const res = await fetch('/api/counselor/slots')
+      if (res.ok) {
+        const data = await res.json()
+        nextBookings = data.bookings || []
+        setBookings(nextBookings)
+      }
+    } catch (err) { console.error(err) }
 
- // Calculate metrics
- const today = new Date()
- today.setHours(0, 0, 0, 0)
- const tomorrow = new Date(today)
- tomorrow.setDate(tomorrow.getDate() + 1)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate() + 1)
 
- const { count: todayCount } = await supabase
- .from('bookings')
- .select('*', { count: 'exact', head: true })
- .eq('counselor_id', user.id)
- .eq('status', 'confirmed')
- .gte('slot_start', today.toISOString())
- .lt('slot_start', tomorrow.toISOString())
+    const { count: todayCount } = await supabase
+      .from('bookings')
+      .select('*', { count: 'exact', head: true })
+      .eq('counselor_id', user.id)
+      .eq('status', 'confirmed')
+      .gte('slot_start', today.toISOString())
+      .lt('slot_start', tomorrow.toISOString())
 
- setMetrics({
- activeAlerts: alerts?.length || 0,
- pendingBookings: nextBookings.filter(b => b.status === 'pending_confirmation').length,
- todaySessions: todayCount || 0,
- })
+    setMetrics({
+      activeAlerts: alerts?.length || 0,
+      pendingBookings: nextBookings.filter(b => b.status === 'pending_confirmation').length,
+      todaySessions: todayCount || 0,
+    })
 
- setLoading(false)
- }, [supabase])
+    setLoading(false)
+  }, [supabase])
 
- // Setup realtime subscription for crisis alerts
- useEffect(() => {
- const fetchTimer = window.setTimeout(() => {
- void fetchData()
- }, 0)
+  useEffect(() => {
+    fetchData()
+    const channel = supabase.channel('crisis-alerts').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'crisis_logs' }, (payload) => {
+      const newAlertPayload = payload.new as any
+      const newAlert: CrisisAlert = {
+        id: newAlertPayload.id,
+        created_at: newAlertPayload.triggered_at,
+        severity: newAlertPayload.severity,
+        student_id: newAlertPayload.student_id,
+        relativeTime: 'Just now',
+      }
+      setCrisisAlerts(prev => [newAlert, ...prev])
+      setMetrics(prev => ({ ...prev, activeAlerts: prev.activeAlerts + 1 }))
+    }).subscribe()
 
- // Subscribe to new crisis alerts
- const channel = supabase
- .channel('crisis-alerts')
- .on(
- 'postgres_changes',
- {
- event: 'INSERT',
- schema: 'public',
- table: 'crisis_logs',
- },
- (payload) => {
- const newAlertPayload = payload.new as {
- id: string
- triggered_at: string
- severity: string
- student_id: string
- }
- const newAlert: CrisisAlert = {
- id: newAlertPayload.id,
- created_at: newAlertPayload.triggered_at,
- severity: newAlertPayload.severity,
- student_id: newAlertPayload.student_id,
- relativeTime: 'Just now',
- }
- setCrisisAlerts(prev => [newAlert, ...prev])
- setMetrics(prev => ({ ...prev, activeAlerts: prev.activeAlerts + 1 }))
- 
- // Play notification sound (if available)
- if (typeof Audio !== 'undefined') {
- const audio = new Audio('/alert.mp3')
- audio.play().catch(() => {})
- }
- }
- )
- .subscribe()
+    return () => { supabase.removeChannel(channel) }
+  }, [fetchData, supabase])
 
- // Subscribe to new bookings
- const bookingChannel = supabase
- .channel('counselor-bookings')
- .on(
- 'postgres_changes',
- {
- event: '*',
- schema: 'public',
- table: 'bookings',
- },
- () => {
- // Refresh bookings on any change
- fetchData()
- }
- )
- .subscribe()
+  const handleConfirmBooking = async (bookingId: string) => {
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}/confirm`, { method: 'POST' })
+      if (res.ok) {
+        setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: 'confirmed' } : b))
+      }
+    } catch (err) { console.error(err) }
+  }
 
- return () => {
- window.clearTimeout(fetchTimer)
- supabase.removeChannel(channel)
- supabase.removeChannel(bookingChannel)
- }
- }, [fetchData, supabase])
+  const formatTime = (date: string) => {
+    return new Date(date).toLocaleString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    })
+  }
 
- const handleConfirmBooking = async (bookingId: string) => {
- try {
- const res = await fetch(`/api/bookings/${bookingId}/confirm`, { method: 'POST' })
- if (res.ok) {
- setBookings(prev => 
- prev.map(b => b.id === bookingId ? { ...b, status: 'confirmed' } : b)
- )
- }
- } catch (err) {
- console.error('Failed to confirm booking:', err)
- }
- }
+  if (loading) {
+    return (
+      <div className="w-full space-y-8 p-4 animate-pulse">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[1, 2, 3].map(i => <Skeleton key={i} className="h-24 bg-surface-strong/30 rounded-xl" />)}
+        </div>
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+          <Skeleton className="xl:col-span-5 h-[400px] bg-surface-strong/20 rounded-2xl" />
+          <Skeleton className="xl:col-span-7 h-[400px] bg-surface-strong/20 rounded-2xl" />
+        </div>
+      </div>
+    )
+  }
 
- const handleAcknowledgeAlert = async (alertId: string) => {
- setCrisisAlerts(prev => prev.filter(a => a.id !== alertId))
- setMetrics(prev => ({ ...prev, activeAlerts: Math.max(0, prev.activeAlerts - 1) }))
- }
+  return (
+    <motion.div initial="hidden" animate="visible" variants={containerVariants} className="space-y-10 pb-20">
+      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div>
+          <Text className="text-[10px] font-bold uppercase tracking-wider text-action-primary">Clinical Command</Text>
+          <Text className="text-2xl font-bold tracking-tight">Triage & Intake Portal</Text>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="warm" size="sm" className="rounded-lg h-9 px-4 font-bold text-[12px] active:scale-[0.96]">
+            <Icon icon="tabler:calendar-event" className="mr-2 h-4 w-4" />
+            Set Availability
+          </Button>
+        </div>
+      </header>
 
- const formatTime = (date: string) => {
- return new Date(date).toLocaleString('en-US', {
- weekday: 'short',
- month: 'short',
- day: 'numeric',
- hour: 'numeric',
- minute: '2-digit',
- })
- }
+      <motion.section variants={containerVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <MetricCard 
+          icon="tabler:alert-octagon" 
+          label="Active Crisis" 
+          value={metrics.activeAlerts.toString()} 
+          accent={metrics.activeAlerts > 0 ? "error" : "primary"}
+        />
+        <MetricCard 
+          icon="tabler:calendar-time" 
+          label="Pending Intake" 
+          value={metrics.pendingBookings.toString()} 
+          accent="info"
+        />
+        <MetricCard 
+          icon="tabler:users" 
+          label="Today's Caseload" 
+          value={metrics.todaySessions.toString()} 
+          accent="success"
+        />
+      </motion.section>
 
- if (!loading && !user) {
- return (
- <div className="flex min-h-[50vh] items-center justify-center">
- <div className="text-center">
- <Text as="h2" variant="h3" className="mb-2">Sign in required</Text>
- <Text as="p" color="secondary" className="mb-4">Please sign in to access the counselor dashboard.</Text>
- <Button href="/login">Sign in</Button>
- </div>
- </div>
- )
- }
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+        <motion.div variants={itemVariants} className="xl:col-span-5 space-y-6">
+          <div className="bg-surface-default border border-border-default rounded-2xl overflow-hidden shadow-sm flex flex-col min-h-[400px]">
+            <div className="px-5 py-4 border-b border-border-default flex items-center justify-between">
+              <div>
+                <Text className="text-[10px] font-bold uppercase tracking-wider text-text-muted">Live Escalation</Text>
+              </div>
+              <div className={`h-1.5 w-1.5 rounded-full ${metrics.activeAlerts > 0 ? 'bg-status-error animate-pulse shadow-[0_0_8px_var(--status-error)]' : 'bg-status-success'}`} />
+            </div>
 
- if (!loading && !isCounselor) {
- return (
- <div className="flex min-h-[50vh] items-center justify-center">
- <div className="text-center">
- <Text as="h2" variant="h3" className="mb-2">Access denied</Text>
- <Text as="p" color="secondary" className="mb-4">This dashboard is only accessible to counselors.</Text>
- <Button href="/student/dashboard">Go to student dashboard</Button>
- </div>
- </div>
- )
- }
+            <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-2">
+              <AnimatePresence mode="popLayout" initial={false}>
+                {crisisAlerts.map((alert, idx) => (
+                  <motion.div 
+                    key={alert.id} 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className={`p-4 rounded-xl border transition-all ${idx === 0 ? "bg-status-error/5 border-status-error/20" : "bg-surface-strong/20 border-border-default/50"}`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-3">
+                        <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 border ${alert.severity === 'critical' ? 'bg-status-error text-white border-transparent' : 'bg-status-warning text-white border-transparent'}`}>
+                          <Icon icon={alert.severity === 'critical' ? 'tabler:alert-octagon' : 'tabler:alert-triangle'} className="h-4 w-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <Text className="text-[13px] font-semibold text-text-primary truncate">Diagnostic Signal</Text>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <Text className="text-[11px] font-medium text-text-muted">Ref: {alert.student_id.split('-')[0]}</Text>
+                            <span className="h-1 w-1 rounded-full bg-border-strong opacity-30" />
+                            <Text className="text-[11px] font-bold tabular-nums text-text-muted">{alert.relativeTime}</Text>
+                          </div>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => setCrisisAlerts(p => p.filter(a => a.id !== alert.id))} 
+                        className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-white transition-colors border border-transparent hover:border-border-default text-text-muted hover:text-status-success active:scale-95"
+                      >
+                        <Icon icon="tabler:check" className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+              {!crisisAlerts.length && (
+                <div className="h-full flex flex-col items-center justify-center p-12 text-center opacity-30">
+                  <Icon icon="tabler:shield-check" className="h-8 w-8 text-status-success mb-3" />
+                  <Text className="text-[10px] font-bold uppercase tracking-widest">Triage Clear</Text>
+                </div>
+              )}
+            </div>
+          </div>
 
- return (
- <>
- <PageIntro
- eyebrow="Counselor dashboard"
- title="Triage first, context second, admin noise never."
- description="Next urgent signal, next booking, notes that need attention. Deliberately simple."
- actions={
- <>
- <Button href="/student/book">Preview student booking</Button>
- <Button href="/" variant="warm">
- Back to home
- </Button>
- </>
- }
- />
+          <div className="grid grid-cols-2 gap-3">
+            <QuickAction icon="tabler:files" label="Notes" />
+            <QuickAction icon="tabler:report-analytics" label="Reports" />
+          </div>
+        </motion.div>
 
- <div className="grid gap-4 xl:grid-cols-3">
- <Card variant={metrics.activeAlerts > 0 ? "warm" : "default"} padding="md">
- <Text as="p" variant="small" color="secondary">
- Active alerts
- </Text>
- <Text as="p" variant="h3" weight="bold" className={`mt-3 ${metrics.activeAlerts > 0 ? 'text-[var(--status-error)]' : 'text-[var(--action-primary)]'}`}>
- {loading ? '-' : metrics.activeAlerts}
- </Text>
- </Card>
- <Card variant="default" padding="md">
- <Text as="p" variant="small" color="secondary">
- Pending bookings
- </Text>
- <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--action-primary)]">
- {loading ? '-' : metrics.pendingBookings}
- </Text>
- </Card>
- <Card variant="default" padding="md">
- <Text as="p" variant="small" color="secondary">
- Today&apos;s sessions
- </Text>
- <Text as="p" variant="h3" weight="bold" className="mt-3 text-[var(--action-primary)]">
- {loading ? '-' : metrics.todaySessions}
- </Text>
- </Card>
- </div>
+        <motion.div variants={itemVariants} className="xl:col-span-7">
+          <div className="bg-surface-default border border-border-default rounded-2xl overflow-hidden shadow-sm flex flex-col min-h-[500px]">
+            <div className="px-5 py-4 border-b border-border-default flex items-center justify-between">
+              <div>
+                <Text className="text-[10px] font-bold uppercase tracking-wider text-text-muted">Upcoming Engagements</Text>
+              </div>
+              <div className="h-8 w-8 rounded-lg bg-surface-strong/50 flex items-center justify-center text-text-muted border border-border-default/50">
+                <Icon icon="tabler:calendar" className="h-4 w-4" />
+              </div>
+            </div>
 
- <div className="grid gap-4 xl:grid-cols-[0.92fr_1.08fr]">
- <Card variant="subtle" padding="lg">
- <div className="flex items-center justify-between">
- <Text as="p" variant="small" weight="medium">
- Realtime crisis alerts
- </Text>
- {crisisAlerts.length > 0 && (
- <span className="flex h-2 w-2">
- <span className="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-[var(--status-error)]/75 opacity-75"></span>
- <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--status-error)]"></span>
- </span>
- )}
- </div>
- <div className="mt-5 space-y-3">
- {loading ? (
- <div className="space-y-3">
- {[1, 2].map(i => (
- <div key={i} className="rounded-md border border-[var(--border-default)] p-4">
- <SkeletonText lines={2} />
- </div>
- ))}
- </div>
- ) : crisisAlerts.length > 0 ? (
- <AnimatePresence>
- {crisisAlerts.map((alert, index) => (
- <motion.div
- key={alert.id}
- initial={{ 
- opacity: 0, 
- x: -20, 
- scale: 1.08,
- backgroundColor: "rgba(239, 68, 68, 0.3)"
- }}
- animate={{ 
- opacity: 1, 
- x: 0, 
- scale: 1,
- backgroundColor: index === 0 
- ? "var(--status-error-soft)" 
- : "var(--surface-default)"
- }}
- exit={{ opacity: 0, x: 20, scale: 0.95 }}
- transition={{
- duration: 0.4,
- scale: { type: "spring", stiffness: 300, damping: 20 },
- backgroundColor: { duration: 0.3, delay: 0.3 }
- }}
- className={`rounded-md border p-4 ${
- index === 0
- ? "border-[var(--status-error)]/30"
- : "border-[var(--border-default)]"
- }`}
- >
- <div className="flex items-start justify-between">
- <div>
- <div className="flex items-center gap-2">
- <Text as="p" variant="small" weight="medium">
- {alert.severity === 'critical' ? '🚨 Crisis Alert' : '⚠️ Warning'}
- </Text>
- {index === 0 && (
- <motion.span
- className="h-2 w-2 rounded-full bg-[var(--status-error)]"
- animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
- transition={{ duration: 1, repeat: Infinity }}
- />
- )}
- </div>
- <Text as="p" variant="small" color="secondary" className="mt-1">
- Student requires immediate attention
- </Text>
- <Text as="p" variant="small" color="muted" className="mt-2">
- {alert.relativeTime}
- </Text>
- </div>
- <motion.div  >
- <Button
- variant="ghost"
- onClick={() => handleAcknowledgeAlert(alert.id)}
- className="shrink-0"
- >
- Acknowledge
- </Button>
- </motion.div>
- </div>
- </motion.div>
- ))}
- </AnimatePresence>
- ) : (
- <div className="rounded-md border border-dashed border-[var(--border-default)] p-6 text-center">
- <Text as="p" color="muted">
- No active alerts. All students are safe.
- </Text>
- </div>
- )}
- </div>
- </Card>
-
- <div className="grid gap-4">
- <Card variant="elevated" padding="lg">
- <Text as="p" variant="small" weight="medium">
- Upcoming bookings
- </Text>
- <div className="mt-5 space-y-3">
- {loading ? (
- <div className="space-y-3">
- {[1, 2, 3].map(i => (
- <div key={i} className="rounded-md border border-[var(--border-default)] p-4">
- <SkeletonText lines={2} />
- </div>
- ))}
- </div>
- ) : bookings.length > 0 ? (
- bookings.map((booking) => (
- <div
- key={booking.id}
- className="grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-md border border-[var(--border-default)] bg-[var(--surface-default)] px-4 py-3"
- >
- <div>
- <Text as="p" variant="small" weight="medium">
-  {booking.type === 'anonymous'
-  ? 'Anonymous Student'
-  : resolveProfileDisplayName({ profileName: booking.student?.name }) || 'Student'}
- </Text>
- <Text as="p" variant="small" color="secondary" className="mt-1">
- {formatTime(booking.slot_start)}
- </Text>
- </div>
- <span className={`rounded-full px-3 py-1.5 text-span ${
- booking.type === 'crisis'
- ? 'bg-[var(--status-error-soft)] text-[var(--status-error)]'
- : 'bg-[var(--surface-tinted)] text-[var(--text-secondary)]'
- }`}>
- {booking.type}
- </span>
- {booking.status === 'pending_confirmation' ? (
- <Button
- variant="warm"
- onClick={() => handleConfirmBooking(booking.id)}
- >
- Confirm
- </Button>
- ) : (
- <span className="status-pill">{booking.status}</span>
- )}
- </div>
- ))
- ) : (
- <div className="rounded-md border border-dashed border-[var(--border-default)] p-6 text-center">
- <Text as="p" color="muted">
- No upcoming bookings.
- </Text>
- </div>
- )}
- </div>
- </Card>
-
- <Card variant="default" padding="lg">
- <Text as="p" variant="small" weight="medium">
- Notes and slots
- </Text>
- <Text as="p" variant="body" color="secondary" className="mt-3">
- Session notes stay private. Availability managed through a simple weekly slot form.
- </Text>
- <div className="mt-4 flex gap-2">
- <Button variant="ghost" className="flex-1">
- Manage slots
- </Button>
- <Button variant="ghost" className="flex-1">
- View notes
- </Button>
- </div>
- </Card>
- </div>
- </div>
- </>
- )
+            <div className="divide-y divide-border-default/30">
+              <AnimatePresence mode="popLayout" initial={false}>
+                {bookings.map((booking) => (
+                  <motion.div 
+                    key={booking.id} 
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 hover:bg-surface-strong/20 transition-colors group"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="relative">
+                        <div className="h-10 w-10 rounded-full bg-surface-strong border border-border-default text-text-primary flex items-center justify-center font-bold text-sm transition-colors group-hover:bg-action-primary group-hover:text-text-inverse group-hover:border-transparent">
+                          {booking.student?.name?.charAt(0) || 'S'}
+                        </div>
+                        {booking.type === 'crisis' && (
+                          <div className="absolute -top-1 -right-1 h-3.5 w-3.5 bg-status-error text-white rounded-full flex items-center justify-center shadow-sm">
+                            <Icon icon="tabler:alert-small" className="h-3 w-3" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <Text className="text-[14px] font-semibold text-text-primary tracking-tight">
+                            {resolveProfileDisplayName({ profileName: booking.student?.name }) || 'Student Record'}
+                          </Text>
+                          <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase border ${
+                            booking.type === 'crisis' ? 'bg-status-error/5 border-status-error/20 text-status-error' : 'bg-surface-strong/50 border-border-default text-text-muted'
+                          }`}>
+                            {booking.type}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-3 text-[11px] font-medium text-text-muted tabular-nums">
+                          <span className="flex items-center gap-1">
+                            <Icon icon="tabler:clock" className="h-3.5 w-3.5 text-action-primary/60" />
+                            {formatTime(booking.slot_start)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 self-end sm:self-center">
+                      {booking.status === 'pending_confirmation' ? (
+                        <Button variant="primary" size="sm" onClick={() => handleConfirmBooking(booking.id)} className="h-8 px-4 rounded-lg font-bold text-[11px] active:scale-95 shadow-sm">
+                          Authorize
+                        </Button>
+                      ) : (
+                        <div className="h-8 px-3 rounded-lg bg-status-success/5 border border-status-success/20 flex items-center gap-1.5 text-[10px] font-bold text-status-success">
+                          <Icon icon="tabler:shield-check" className="h-3.5 w-3.5" />
+                          Confirmed
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+              {!bookings.length && (
+                <div className="flex flex-col items-center justify-center p-20 text-center opacity-30">
+                  <Icon icon="tabler:calendar-off" className="h-8 w-8 mb-3" />
+                  <Text className="text-[10px] font-bold uppercase tracking-widest">No sessions</Text>
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </motion.div>
+  )
 }
 
+function MetricCard({ icon, label, value, accent }: { icon: string, label: string, value: string, accent: 'primary' | 'error' | 'success' | 'info' }) {
+  const accentColors = {
+    primary: 'text-action-primary border-action-primary/20 bg-action-primary/5',
+    error: 'text-status-error border-status-error/20 bg-status-error/5',
+    success: 'text-status-success border-status-success/20 bg-status-success/5',
+    info: 'text-status-info border-status-info/20 bg-status-info/5',
+  }
+
+  return (
+    <motion.div 
+      variants={itemVariants} 
+      className="bg-surface-default border border-border-default p-5 rounded-2xl flex flex-col gap-4 shadow-sm hover:shadow-md transition-all duration-300 group"
+    >
+      <div className="flex items-center justify-between relative z-10">
+        <div className={`h-8 w-8 rounded-lg flex items-center justify-center border ${accentColors[accent]} transition-transform duration-500 group-hover:scale-110`}>
+          <Icon icon={icon} className="h-4.5 w-4.5" />
+        </div>
+      </div>
+      <div className="relative z-10">
+        <Text className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1 opacity-70">{label}</Text>
+        <Text className="text-3xl font-bold text-text-primary tracking-tight tabular-nums leading-none" style={{ fontFamily: 'var(--font-mindbridge)' }}>{value}</Text>
+      </div>
+    </motion.div>
+  )
+}
+
+function QuickAction({ icon, label }: { icon: string, label: string }) {
+  return (
+    <button className="flex flex-col items-center justify-center gap-2 p-5 rounded-xl bg-surface-strong/10 border border-border-default/50 hover:bg-surface-strong/20 hover:border-action-primary/30 transition-all active:scale-[0.96] group">
+      <Icon icon={icon} className="h-5 w-5 text-text-muted group-hover:text-action-primary transition-colors" />
+      <Text className="text-[10px] font-bold uppercase tracking-widest text-text-muted/60 group-hover:text-text-primary transition-colors">{label}</Text>
+    </button>
+  )
+}

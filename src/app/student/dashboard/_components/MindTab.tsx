@@ -55,11 +55,28 @@ export function MindTab({
           <div className="relative flex flex-1 flex-col overflow-hidden">
             {!hasMessages ? (
               // Empty State - Centered Search Layout
-              <div className="flex h-full flex-col items-center justify-center p-4">
-                <div className="mb-10 flex w-full max-w-2xl flex-col items-center gap-3 text-center">
-                  <div className="inline-flex items-center justify-center rounded-2xl bg-[var(--action-primary)]/10 px-3 py-1.5 mb-2">
-                    <Icon icon="tabler:sparkles" className="mr-1.5 h-4 w-4 text-[var(--action-primary)]" />
-                    <span className="text-xs font-medium text-[var(--action-primary)]">Mind Space</span>
+              <motion.div 
+                initial="initial"
+                animate="animate"
+                variants={{
+                  animate: {
+                    transition: {
+                      staggerChildren: 0.1,
+                      delayChildren: 0.1
+                    }
+                  }
+                }}
+                className="flex h-full flex-col items-center justify-center p-4"
+              >
+                <motion.div 
+                  variants={{
+                    initial: { opacity: 0, y: 12 },
+                    animate: { opacity: 1, y: 0 }
+                  }}
+                  className="mb-10 flex w-full max-w-2xl flex-col items-center gap-3 text-center"
+                >
+                  <div className="inline-flex items-center justify-center rounded-full bg-[var(--action-primary-light)] px-4 py-1.5 mb-2">
+                    <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--action-primary)]">Mind Space</span>
                   </div>
                   <Text as="h1" variant="h1" weight="bold" className="text-4xl text-[var(--text-primary)] tracking-tight sm:text-5xl lg:text-5xl">
                     How can I support you today?
@@ -67,9 +84,15 @@ export function MindTab({
                   <Text as="p" className="mx-auto max-w-lg text-base text-[var(--text-secondary)]">
                     A steady, private space to reflect, do a quick check-in, or just talk through whatever is on your mind.
                   </Text>
-                </div>
+                </motion.div>
                 
-                <div className="w-full max-w-2xl px-4 lg:px-0 relative z-10">
+                <motion.div 
+                  variants={{
+                    initial: { opacity: 0, y: 12 },
+                    animate: { opacity: 1, y: 0 }
+                  }}
+                  className="w-full max-w-2xl px-4 lg:px-0 relative z-10"
+                >
                   <div className="relative">
                     {/* Optional subtle glow behind the input */}
                     <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-[var(--action-primary)]/20 to-[var(--text-secondary)]/20 opacity-0 blur-xl transition-opacity duration-500 group-focus-within:opacity-100" />
@@ -90,7 +113,7 @@ export function MindTab({
                   <div className="mt-6 flex flex-wrap justify-center gap-2.5">
                     <button 
                       onClick={onOpenCheckIn}
-                      className="group flex items-center gap-2 rounded-full border border-[var(--border-default)]/60 bg-[var(--surface-default)]/50 px-4 py-2 text-sm font-medium text-[var(--text-secondary)] shadow-sm backdrop-blur-sm transition-all hover:border-[var(--action-primary)]/40 hover:bg-[var(--surface-default)] hover:text-[var(--text-primary)] hover:shadow"
+                      className="group flex items-center gap-2 rounded-full border border-[var(--border-default)]/60 bg-[var(--surface-default)]/50 px-4 py-2 text-sm font-medium text-[var(--text-secondary)] shadow-sm backdrop-blur-sm transition-all hover:border-[var(--action-primary)]/40 hover:bg-[var(--surface-default)] hover:text-[var(--text-primary)] hover:shadow active:scale-[0.96]"
                     >
                       <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--action-primary)]/10 text-[var(--action-primary)] transition-colors group-hover:bg-[var(--action-primary)] group-hover:text-[var(--text-inverse)]">
                         <Icon icon="tabler:mood-smile" className="h-3.5 w-3.5" />
@@ -99,7 +122,7 @@ export function MindTab({
                     </button>
                     <button 
                       onClick={() => onOpenQuestionnaire()}
-                      className="group flex items-center gap-2 rounded-full border border-[var(--border-default)]/60 bg-[var(--surface-default)]/50 px-4 py-2 text-sm font-medium text-[var(--text-secondary)] shadow-sm backdrop-blur-sm transition-all hover:border-[var(--action-primary)]/40 hover:bg-[var(--surface-default)] hover:text-[var(--text-primary)] hover:shadow"
+                      className="group flex items-center gap-2 rounded-full border border-[var(--border-default)]/60 bg-[var(--surface-default)]/50 px-4 py-2 text-sm font-medium text-[var(--text-secondary)] shadow-sm backdrop-blur-sm transition-all hover:border-[var(--action-primary)]/40 hover:bg-[var(--surface-default)] hover:text-[var(--text-primary)] hover:shadow active:scale-[0.96]"
                     >
                       <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--action-primary)]/10 text-[var(--action-primary)] transition-colors group-hover:bg-[var(--action-primary)] group-hover:text-[var(--text-inverse)]">
                         <Icon icon="tabler:bolt" className="h-3.5 w-3.5" />
@@ -107,8 +130,8 @@ export function MindTab({
                       Mental health scan
                     </button>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             ) : (
              // Active Chat State 
              <>

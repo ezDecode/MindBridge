@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 export type ButtonVariant = "primary" | "warm" | "ghost" | "link" | "danger";
 type ButtonSize = "sm" | "md" | "lg";
-type ButtonWeight = "normal" | "medium" | "semibold" | "bold";
+type ButtonWeight = "normal" | "medium" | "semibold" | "bold" | "black";
 
 interface ButtonProps<T extends ElementType = "button"> {
  as?: T;
@@ -46,10 +46,11 @@ const weightStyles: Record<ButtonWeight, string> = {
  medium: "font-medium",
  semibold: "font-semibold",
  bold: "font-bold",
+ black: "font-black",
 };
 
 const baseStyles =
- "inline-flex shrink-0 items-center justify-center gap-2 rounded-full whitespace-nowrap transition-colors duration-200 disabled:pointer-events-none disabled:opacity-50 outline-none";
+ "inline-flex shrink-0 items-center justify-center gap-2 rounded-full whitespace-nowrap transition-all duration-200 ease-[var(--ease-out)] disabled:pointer-events-none disabled:opacity-50 outline-none active:scale-[0.96] active:opacity-90 cursor-pointer min-h-[2.5rem] min-w-[2.5rem]";
 
 export function Button<T extends ElementType = "button">({
  as,
@@ -68,6 +69,7 @@ export function Button<T extends ElementType = "button">({
  variantStyles[variant],
  variant !== "link" && sizeStyles[size],
  weightStyles[weight],
+ variant === "link" && "active:scale-100 active:opacity-100",
  className
  );
 

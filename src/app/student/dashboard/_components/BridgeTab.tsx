@@ -68,10 +68,28 @@ export function BridgeTab({
           </header>
 
  <div className="flex-1 overflow-y-auto px-4 py-5 sm:px-6">
- <div className="mx-auto max-w-6xl space-y-5">
+ <motion.div 
+   initial="initial"
+   animate="animate"
+   variants={{
+     animate: {
+       transition: {
+         staggerChildren: 0.08,
+         delayChildren: 0.1
+       }
+     }
+   }}
+   className="mx-auto max-w-6xl space-y-5"
+ >
 
  {/* ── Section 1: Welcome Hero ── */}
- <div className="rounded-2xl bg-[var(--surface-strong)] p-6 sm:p-8">
+ <motion.div 
+   variants={{
+     initial: { opacity: 0, y: 12 },
+     animate: { opacity: 1, y: 0 }
+   }}
+   className="rounded-2xl bg-[var(--surface-strong)] p-6 sm:p-8"
+ >
  <Text as="p" variant="small" className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
  Weekly overview
  </Text>
@@ -81,23 +99,26 @@ export function BridgeTab({
  <Text as="p" variant="body" className="mt-2 max-w-2xl leading-7 text-[var(--text-secondary)]">
  Your streak, mood rhythm, and latest guided scan are all in one place so it is easier to notice what needs attention.
  </Text>
- </div>
+ </motion.div>
 
  {/* ── Section 2: Quick Stats ── */}
- <div className="grid gap-3 grid-cols-2 xl:grid-cols-4">
- {metrics.map((metric, index) => (
- <motion.div
- key={metric.label}
- initial={{ opacity: 0, y: 12 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.4, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+ <motion.div 
+   variants={{
+     initial: { opacity: 0, y: 12 },
+     animate: { opacity: 1, y: 0 }
+   }}
+   className="grid gap-3 grid-cols-2 xl:grid-cols-4"
  >
- <div className="group h-full rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-4 transition-all duration-200 hover:shadow-md hover:border-[var(--border-strong)]">
+ {metrics.map((metric, index) => (
+ <div
+ key={metric.label}
+ >
+ <div className="group h-full rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-4 transition-all duration-200 hover:shadow-md hover:border-[var(--border-strong)] active:scale-[0.98] cursor-pointer">
  <div className="flex items-center justify-between">
  <Text as="p" variant="small" weight="medium" className="text-[var(--text-muted)]">
  {metric.label}
  </Text>
- <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--surface-strong)] transition-colors group-hover:bg-[var(--action-primary-light)]">
+ <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--surface-strong)] transition-all group-hover:bg-[var(--action-primary-light)] group-hover:scale-105">
  {metric.icon}
  </div>
  </div>
@@ -108,12 +129,18 @@ export function BridgeTab({
  {metric.note}
  </Text>
  </div>
- </motion.div>
- ))}
  </div>
+ ))}
+ </motion.div>
 
  {/* ── Section 3: Guided Scan Status ── */}
- <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-5 sm:p-6">
+ <motion.div 
+   variants={{
+     initial: { opacity: 0, y: 12 },
+     animate: { opacity: 1, y: 0 }
+   }}
+   className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-5 sm:p-6"
+ >
  <div className="flex items-start gap-4">
  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--action-primary-light)] text-[var(--action-primary)]">
  <Icon icon="tabler:compass" className="h-5 w-5" />
@@ -126,7 +153,7 @@ export function BridgeTab({
  <button
  type="button"
  onClick={onOpenQuestionnaire}
- className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-[var(--action-primary)] transition-colors hover:bg-[var(--action-primary-light)]"
+ className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-[var(--action-primary)] transition-all hover:bg-[var(--action-primary-light)] active:scale-95"
  >
  <Icon icon="tabler:refresh" className="h-3.5 w-3.5" />
  Refresh
@@ -140,10 +167,16 @@ export function BridgeTab({
  </Text>
  </div>
  </div>
- </div>
+ </motion.div>
 
  {/* ── Section 4: Mood Chart + Snapshot ── */}
- <div className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
+ <motion.div 
+   variants={{
+     initial: { opacity: 0, y: 12 },
+     animate: { opacity: 1, y: 0 }
+   }}
+   className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr]"
+ >
  <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-5 sm:p-6">
  <div className="flex flex-wrap items-center justify-between gap-3">
  <div>
@@ -232,10 +265,16 @@ export function BridgeTab({
  </div>
  </div>
  </div>
- </div>
+ </motion.div>
 
  {/* ── Section 5: Next Moves ── */}
- <div className="grid gap-4 xl:grid-cols-[minmax(0,0.9fr),minmax(0,1.1fr)]">
+ <motion.div 
+   variants={{
+     initial: { opacity: 0, y: 12 },
+     animate: { opacity: 1, y: 0 }
+   }}
+   className="grid gap-4 xl:grid-cols-[minmax(0,0.9fr),minmax(0,1.1fr)]"
+ >
  <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] p-5 sm:p-6">
  <Text as="p" variant="body" weight="bold" className="text-[var(--text-primary)]">
  Next moves
@@ -288,7 +327,7 @@ export function BridgeTab({
  href={resource.url}
  target="_blank"
  rel="noopener noreferrer"
- className="group rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-4 transition-all duration-200 hover:border-[var(--border-strong)] hover:shadow-sm"
+ className="group rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-4 transition-all duration-200 hover:border-[var(--border-strong)] hover:shadow-sm active:scale-[0.98]"
  >
  <div className="flex items-center gap-2 text-[var(--text-muted)]">
  <Icon icon="tabler:book" className="h-3.5 w-3.5" />
@@ -312,9 +351,9 @@ export function BridgeTab({
  ))}
  </div>
  </div>
- </div>
+ </motion.div>
 
- </div>
+ </motion.div>
  </div>
  </section>
     </>

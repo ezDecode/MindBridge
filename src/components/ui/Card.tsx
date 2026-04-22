@@ -29,7 +29,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
  return (
  <div
  ref={ref}
- className={`rounded-xl transition-colors duration-200 ${variants[variant]} ${paddings[padding]} ${interactive ? "hover:border-[var(--action-primary)] " : ""} ${className}`}
+ className={`rounded-2xl transition-[border-color,background-color,transform] duration-200 ease-[var(--ease-out)] ${variants[variant]} ${paddings[padding]} ${interactive ? "hover:border-[var(--action-primary)] active:scale-[0.98] cursor-pointer" : ""} ${className}`}
  {...props}
  >
  {children}

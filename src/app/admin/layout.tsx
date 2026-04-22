@@ -1,9 +1,5 @@
 import { RoleShell } from "@/components/site";
-import { type NavItem } from "@/content/mindbridge";
-
-const adminNav: NavItem[] = [
- { label: "Dashboard", href: "/admin/dashboard", icon: "shield" },
-];
+import { adminNav } from "@/content/mindbridge";
 
 export default function AdminLayout({
  children,

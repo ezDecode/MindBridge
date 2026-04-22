@@ -3,10 +3,11 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Icon } from '@iconify/react';
-import { Button, Text } from '@/components/ui'
+import { Button, Text, Modal } from '@/components/ui'
 import { useChat } from '@/hooks/useChat'
 import { getClient } from '@/lib/supabase/client'
 import { resolveProfileDisplayName } from '@/lib/profile-name'
+import { SettingsForm } from '@/components/settings/SettingsForm'
 
 import { getAssessmentLabel } from '@/lib/question-bank'
 
@@ -54,6 +55,7 @@ export default function StudentDashboardPage() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
     const [userName, setUserName] = useState('')
     const [activeTab, setActiveTabState] = useState<TabId>(initialView.activeTab)
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
     const setActiveTab = useCallback((newTab: TabId) => {
         setActiveTabState(newTab)
@@ -143,6 +145,12 @@ export default function StudentDashboardPage() {
         sessionStorage.setItem('currentChatSession', newId)
         window.location.reload()
     }
+
+    useEffect(() => {
+        const handleOpenSettings = () => setIsSettingsOpen(true);
+        window.addEventListener('open-settings', handleOpenSettings);
+        return () => window.removeEventListener('open-settings', handleOpenSettings);
+    }, []);
 
     useEffect(() => {
         const init = async () => {
@@ -345,8 +353,32 @@ export default function StudentDashboardPage() {
                 sidebarOpen={sidebarOpen}
                 setSidebarOpen={setSidebarOpen}
             />
-            <div className="flex flex-1 flex-col lg:flex-row overflow-hidden bg-[var(--surface-tinted)] lg:bg-[var(--bg-page)]">
-                <div className={`h-full w-full lg:w-1/2 ${activeTab === 'mind' ? 'block' : 'hidden'} lg:block`}>
+            <div className="relative flex flex-1 flex-col overflow-hidden bg-[var(--surface-tinted)] lg:bg-[var(--bg-page)]">
+                {/* Global View Switcher Pill */}
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[30] flex items-center p-1 rounded-full bg-[var(--surface-strong)] backdrop-blur-md shadow-md">
+                    <button
+                        onClick={() => setActiveTab('mind')}
+                        className={`relative flex items-center justify-center rounded-full px-5 py-2 text-[14px] font-bold transition-[background-color,color,transform] duration-200 active:scale-[0.96] border-none outline-none ${
+                            activeTab === 'mind'
+                                ? 'bg-[var(--surface-default)] text-[var(--action-primary)] shadow-sm'
+                                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                        }`}
+                    >
+                        Mind Space
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('bridge')}
+                        className={`relative flex items-center justify-center rounded-full px-5 py-2 text-[14px] font-bold transition-[background-color,color,transform] duration-200 active:scale-[0.96] border-none outline-none ${
+                            activeTab === 'bridge'
+                                ? 'bg-[var(--surface-default)] text-[var(--action-primary)] shadow-sm'
+                                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                        }`}
+                    >
+                        Dashboard
+                    </button>
+                </div>
+
+                <div className={`h-full w-full ${activeTab === 'mind' ? 'block' : 'hidden'}`}>
                     <MindTab
                         messages={messages}
                         sendMessage={sendMessage}
@@ -360,7 +392,7 @@ export default function StudentDashboardPage() {
                         onOpenAnalytics={() => setShowAnalyticsModal(true)}
                     />
                 </div>
-                <div className={`h-full w-full lg:w-1/2 ${activeTab === 'bridge' ? 'block' : 'hidden'} lg:block`}>
+                <div className={`h-full w-full ${activeTab === 'bridge' ? 'block' : 'hidden'}`}>
                     <BridgeTab
                         data={data}
                         userName={userName}
@@ -388,7 +420,17 @@ export default function StudentDashboardPage() {
                 onComplete={refreshDashboardInsights}
                 onChatRequested={() => setActiveTab('mind')}
             />
+
+            <Modal
+                isOpen={isSettingsOpen}
+                onClose={() => setIsSettingsOpen(false)}
+                title="Account Settings"
+                size="md"
+            >
+                <div className="px-8 pb-10 pt-4">
+                    <SettingsForm onSuccess={() => setIsSettingsOpen(false)} />
+                </div>
+            </Modal>
         </div>
     )
 }
-

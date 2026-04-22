@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { Button, Card, Text } from "@/components/ui"
-import { motion, AnimatePresence } from 'framer-motion'
+import { Button, Text, Skeleton } from "@/components/ui"
+import { motion, AnimatePresence } from 'motion/react'
 import { Icon } from '@iconify/react'
 import { resolveProfileDisplayName } from '@/lib/profile-name'
 
@@ -31,6 +31,23 @@ interface WeeklyReport {
 
 interface StudentDetailViewProps {
   studentId: string
+}
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05 }
+  }
+}
+
+const slideIn = {
+  hidden: { opacity: 0, y: 8 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
+  }
 }
 
 export function StudentDetailView({ studentId }: StudentDetailViewProps) {
@@ -75,13 +92,10 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
       })
 
       if (res.ok) {
-        setHelpMessage('Critical help provided: Alert logged and counselor notified.')
-      } else {
-        setHelpMessage('Failed to trigger critical help.')
+        setHelpMessage('Clinical intervention requested.')
       }
     } catch (err) {
       console.error(err)
-      setHelpMessage('A network error occurred.')
     }
     setTriggeringHelp(false)
   }
@@ -106,196 +120,187 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
   }, [moodLogs])
 
   const status = useMemo(() => {
-    if (avgMood < 2 && moodLogs.length > 0) return { label: 'At Risk', color: 'var(--status-error)', icon: 'tabler:alert-triangle' }
-    if (avgMood < 3.5 && moodLogs.length > 0) return { label: 'Needs Support', color: '#f59e0b', icon: 'tabler:alert-circle' }
-    return { label: 'Stable', color: 'var(--status-success)', icon: 'tabler:circle-check' }
+    if (avgMood < 2 && moodLogs.length > 0) return { label: 'Priority Escalation', color: 'text-status-error', bg: 'bg-status-error/5', border: 'border-status-error/20' }
+    if (avgMood < 3.5 && moodLogs.length > 0) return { label: 'Active Monitoring', color: 'text-status-warning', bg: 'bg-status-warning/5', border: 'border-status-warning/20' }
+    return { label: 'Stable Index', color: 'text-action-primary', bg: 'bg-action-primary/5', border: 'border-action-primary/20' }
   }, [avgMood, moodLogs])
 
   if (loading) {
     return (
-      <div className="space-y-8">
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-2xl bg-[var(--surface-strong)] animate-pulse" />
-          <div className="space-y-2">
-            <div className="h-6 w-48 rounded-lg bg-[var(--surface-strong)] animate-pulse" />
-            <div className="h-4 w-32 rounded-lg bg-[var(--surface-strong)] animate-pulse" />
-          </div>
-        </div>
-        <div className="space-y-6">
-          <div className="h-64 rounded-3xl bg-[var(--surface-strong)] animate-pulse" />
-          <div className="h-96 rounded-3xl bg-[var(--surface-strong)] animate-pulse" />
+      <div className="space-y-8 animate-pulse">
+        <Skeleton className="h-24 bg-surface-strong/30 rounded-xl" />
+        <Skeleton className="h-48 bg-surface-strong/20 rounded-xl" />
+        <div className="space-y-3">
+          {[1, 2, 3].map(i => <Skeleton key={i} className="h-16 bg-surface-strong/10 rounded-lg" />)}
         </div>
       </div>
     )
   }
 
   if (!profile) return (
-    <div className="py-20 text-center">
-      <Text variant="h3">User not found</Text>
+    <div className="py-20 text-center opacity-30">
+      <Icon icon="tabler:lock-access" className="h-10 w-10 mx-auto mb-4" />
+      <Text className="text-[10px] font-bold uppercase tracking-widest">Restricted Record</Text>
     </div>
   )
 
-  const profileDisplayName = resolveProfileDisplayName({ profileName: profile.name }) || 'Student'
+  const profileDisplayName = resolveProfileDisplayName({ profileName: profile.name }) || 'User'
 
   return (
-    <div className="space-y-8">
-      {/* Header Info */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-3">
-            <Text as="h1" variant="h3" weight="bold">{profileDisplayName}</Text>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--surface-strong)] border border-[var(--border-default)]">
-              <Icon icon={status.icon} className="h-3.5 w-3.5" style={{ color: status.color }} />
-              <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: status.color }}>{status.label}</span>
+    <motion.div 
+      initial="hidden"
+      animate="visible"
+      variants={staggerContainer}
+      className="space-y-10"
+    >
+      
+      {/* ── Diagnostic Header ── */}
+      <motion.div variants={slideIn} className="flex items-center justify-between">
+        <div className="flex items-center gap-5">
+          <div className="h-14 w-14 rounded-full bg-surface-strong text-text-primary flex items-center justify-center font-bold text-xl border border-border-default shadow-sm">
+            {profileDisplayName.charAt(0)}
+          </div>
+          <div>
+            <Text className="text-xl font-bold tracking-tight">{profileDisplayName}</Text>
+            <div className="flex items-center gap-3 mt-1.5">
+              <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider border ${status.bg} ${status.border} ${status.color}`}>
+                {status.label}
+              </span>
+              <Text className="text-[10px] text-text-muted font-medium tabular-nums opacity-60">REF: {profile.id.split('-')[0]}</Text>
             </div>
           </div>
-          <Text className="text-sm text-[var(--text-muted)] mt-1">ID: {profile.id}</Text>
         </div>
-        <div className="flex items-center gap-3">
-          <Button 
-            variant="warm" 
-            size="sm"
-            onClick={handleCriticalHelp} 
-            disabled={triggeringHelp}
-            className="rounded-xl shadow-lg shadow-orange-500/10"
-          >
-            <Icon icon="tabler:alert-octagon" className="mr-2 h-4 w-4" />
-            {triggeringHelp ? 'Triggering...' : 'Flag Critical'}
-          </Button>
-          <Button 
-            variant="warm" 
-            size="sm"
-            onClick={handleGenerateReport}
-            disabled={loadingReport}
-            className="rounded-xl"
-          >
-            <Icon icon="tabler:file-analytics" className="mr-2 h-4 w-4" />
-            {loadingReport ? 'Analyzing...' : 'Generate Report'}
-          </Button>
-        </div>
-      </div>
+        <Button 
+          variant="danger" 
+          size="sm"
+          onClick={handleCriticalHelp} 
+          disabled={triggeringHelp}
+          className="rounded-lg h-9 px-4 active:scale-[0.96] transition-transform"
+        >
+          <Icon icon="tabler:alert-octagon" className="mr-2 h-4 w-4" />
+          <span className="text-[11px] font-bold uppercase tracking-wider">Escalate</span>
+        </Button>
+      </motion.div>
 
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {helpMessage && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="p-4 rounded-2xl bg-[var(--status-success-light)] border border-[var(--status-success)] flex items-center gap-3"
+            exit={{ opacity: 0, y: -8 }}
+            className="p-3 rounded-lg bg-status-success/5 border border-status-success/20 flex items-center gap-3 text-status-success font-bold text-[13px]"
           >
-            <Icon icon="tabler:circle-check" className="h-5 w-5 text-[var(--status-success)]" />
-            <Text weight="medium" className="text-[var(--status-success)]">{helpMessage}</Text>
-            <button onClick={() => setHelpMessage('')} className="ml-auto text-[var(--status-success)] opacity-60 hover:opacity-100">
-              <Icon icon="tabler:x" className="h-5 w-5" />
-            </button>
+            <Icon icon="tabler:check" className="h-4 w-4" />
+            {helpMessage}
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="grid gap-8">
-        {/* Mood Trend Visualization */}
-        <Card className="p-6 sm:p-8 rounded-[2rem] border-none bg-gradient-to-br from-[var(--surface-strong)] to-[var(--surface-soft)]">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <Text variant="h4" weight="bold">Mood Resilience Trend</Text>
-              <Text className="text-sm text-[var(--text-muted)] mt-1">Visualizing the last {moodLogs.length} logs</Text>
+      {/* ── Resilience Analysis ── */}
+      <motion.div variants={slideIn} className="bg-surface-default border border-border-default rounded-xl p-6 shadow-sm relative overflow-hidden">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <Text className="text-[10px] font-bold uppercase tracking-wider text-text-muted opacity-60">Resilience Analysis</Text>
+          </div>
+          <div className="text-right">
+            <div className="flex items-baseline justify-end gap-1">
+              <Text className="text-3xl font-bold text-text-primary tracking-tight tabular-nums">{avgMood.toFixed(1)}</Text>
+              <Text className="text-sm font-medium text-text-muted/40">/ 5.0</Text>
             </div>
-            <div className="text-right">
-              <Text className="text-3xl font-black text-[var(--action-primary)]">{avgMood.toFixed(1)}</Text>
-              <Text className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Avg Score</Text>
-            </div>
           </div>
-          
-          <div className="flex items-end gap-2 h-32 px-2">
-            {moodLogs.length === 0 ? (
-              <div className="w-full h-full flex items-center justify-center border-2 border-dashed border-[var(--border-default)] rounded-2xl">
-                <Text className="text-[var(--text-muted)] italic">No data points yet</Text>
-              </div>
-            ) : (
-              [...moodLogs].reverse().map((log, i) => (
-                <motion.div 
-                  key={log.id}
-                  initial={{ height: 0 }}
-                  animate={{ height: `${(log.score / 5) * 100}%` }}
-                  transition={{ delay: i * 0.05, type: 'spring', damping: 15 }}
-                  className="flex-1 group relative"
-                >
-                  <div 
-                    className="w-full h-full rounded-t-lg transition-all group-hover:brightness-110"
-                    style={{ 
-                      backgroundColor: log.score >= 4 ? 'var(--status-success)' : log.score >= 2 ? '#f59e0b' : 'var(--status-error)',
-                      opacity: 0.6 + (log.score / 5) * 0.4
-                    }}
-                  />
-                </motion.div>
-              ))
-            )}
-          </div>
-        </Card>
-
-        {/* AI Insights */}
-        <AnimatePresence>
-          {report && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-[2rem] border border-[var(--action-primary-light)] bg-[var(--action-primary-light)]/10 p-6 space-y-4"
-            >
-              <div className="flex items-center gap-2">
-                <Icon icon="tabler:brain" className="h-5 w-5 text-[var(--action-primary)]" />
-                <Text variant="h4" weight="bold" className="text-[var(--action-primary)]">AI Insights</Text>
-              </div>
-              <ul className="space-y-2">
-                {report.insights.map((insight: string, idx: number) => (
-                  <li key={idx} className="flex gap-2 text-sm text-[var(--text-secondary)]">
-                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[var(--action-primary)]" />
-                    <Text>{insight}</Text>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Activity Feed */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 px-2">
-            <Icon icon="tabler:list-details" className="h-5 w-5 text-[var(--text-muted)]" />
-            <Text variant="body" weight="bold">Recent Logs</Text>
-          </div>
+        </div>
+        
+        <div className="flex items-end gap-1.5 h-24 px-1">
           {moodLogs.length === 0 ? (
-            <div className="p-12 text-center rounded-3xl border border-dashed border-[var(--border-default)]">
-              <Text className="text-[var(--text-muted)]">No mood logs recorded yet.</Text>
+            <div className="w-full h-full flex items-center justify-center border border-dashed border-border-default rounded-lg opacity-20">
+              <Text className="text-[10px] font-bold uppercase tracking-widest">Baseline Pending</Text>
             </div>
           ) : (
-            <div className="space-y-4">
-              {moodLogs.map((log, i) => (
+            [...moodLogs].reverse().slice(-20).map((log, i) => (
+              <div key={log.id} className="flex-1 group relative h-full flex items-end">
                 <motion.div 
-                  key={log.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="group relative flex gap-4 p-5 rounded-3xl border border-[var(--border-default)] bg-[var(--surface-default)] hover:border-[var(--border-strong)] transition-all"
-                >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl font-bold text-xl text-white shadow-md"
-                    style={{ backgroundColor: log.score >= 4 ? 'var(--status-success)' : log.score >= 2 ? '#f59e0b' : 'var(--status-error)' }}>
+                  initial={{ height: 0 }}
+                  animate={{ height: `${(log.score / 5) * 100}%` }}
+                  transition={{ delay: i * 0.02, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  className="w-full rounded-t-[2px] transition-colors cursor-help origin-bottom"
+                  style={{ 
+                    backgroundColor: log.score >= 4 ? 'var(--status-success)' : log.score >= 2 ? 'var(--status-warning)' : 'var(--status-error)',
+                    opacity: 0.5 + (log.score / 5) * 0.5
+                  }}
+                />
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
+                  <div className="bg-text-primary text-text-inverse text-[9px] font-bold px-1.5 py-0.5 rounded shadow-xl tabular-nums">
                     {log.score}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <Text weight="bold" className="text-[15px]">Score: {log.score}/5</Text>
-                      <Text className="text-[11px] text-[var(--text-muted)] uppercase font-medium">
-                        {new Date(log.logged_at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
-                      </Text>
-                    </div>
-                    {log.note && <Text className="text-sm text-[var(--text-secondary)] leading-relaxed italic">&quot;{log.note}&quot;</Text>}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                </div>
+              </div>
+            ))
           )}
         </div>
+      </motion.div>
+
+      {/* ── Intelligence Feed ── */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between border-b border-border-default/50 pb-3">
+          <Text className="text-[10px] font-bold uppercase tracking-wider text-text-muted opacity-60">Diagnostic Narrative</Text>
+          <button 
+            onClick={handleGenerateReport}
+            disabled={loadingReport}
+            className="text-[10px] font-bold uppercase tracking-wider text-action-primary hover:opacity-70 disabled:opacity-30 transition-all flex items-center gap-2 active:scale-95"
+          >
+            {loadingReport && <Icon icon="tabler:loader-2" className="h-3 w-3 animate-spin" />}
+            {loadingReport ? 'Analyzing...' : 'Refresh AI Analysis'}
+          </button>
+        </div>
+
+        {report && (
+          <motion.div 
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-5 rounded-xl bg-action-primary/5 border border-action-primary/10 space-y-4"
+          >
+            <div className="flex items-center gap-2 opacity-60">
+              <Icon icon="tabler:sparkles" className="h-3.5 w-3.5 text-action-primary" />
+              <Text className="text-[10px] font-bold uppercase tracking-wider text-action-primary">AI Clinical Insights</Text>
+            </div>
+            <div className="space-y-3">
+              {report.insights.map((insight: string, idx: number) => (
+                <div key={idx} className="flex gap-3 group">
+                  <div className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-action-primary/40" />
+                  <Text className="text-[13.5px] text-text-secondary leading-relaxed font-medium tracking-tight group-hover:text-text-primary transition-colors">{insight}</Text>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        <div className="space-y-3">
+          {moodLogs.slice(0, 10).map((log) => (
+            <motion.div 
+              key={log.id} 
+              variants={slideIn}
+              className="flex gap-4 p-4 rounded-xl bg-surface-default border border-border-default/50 hover:border-action-primary/20 transition-colors group"
+            >
+              <div 
+                className="h-10 w-10 shrink-0 rounded-lg flex items-center justify-center font-bold text-sm text-text-inverse tabular-nums shadow-sm"
+                style={{ backgroundColor: log.score >= 4 ? 'var(--status-success)' : log.score >= 2 ? 'var(--status-warning)' : 'var(--status-error)', opacity: 0.8 }}
+              >
+                {log.score}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex justify-between items-center mb-1">
+                  <Text className="text-[10px] font-bold uppercase tracking-wider text-text-muted/60">
+                    {new Date(log.logged_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} at {new Date(log.logged_at).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
+                  </Text>
+                </div>
+                <Text className="text-[13px] text-text-secondary leading-relaxed italic font-medium tracking-tight">
+                  {log.note || 'No narrative provided.'}
+                </Text>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
-    </div>
+    </motion.div>
   )
 }

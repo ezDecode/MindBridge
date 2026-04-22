@@ -64,7 +64,7 @@ export function DashboardSidebar({
             <button
               type="button"
               onClick={() => setSidebarOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--text-icon)] hover:bg-[var(--bg-hover)] lg:hidden transition-colors"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-[var(--text-icon)] hover:bg-[var(--bg-hover)] lg:hidden transition-all active:scale-95"
             >
               <Icon icon="tabler:x" className="h-5 w-5" />
             </button>
@@ -80,7 +80,7 @@ export function DashboardSidebar({
                 }
                 startNewSession();
               }}
-              className="group flex w-full items-center gap-2.5 rounded-xl bg-[var(--surface-default)] px-3 py-2.5 text-[14px] font-semibold text-[var(--text-primary)] shadow-sm ring-1 ring-inset ring-[var(--border-default)] transition-all hover:bg-[var(--bg-hover)] hover:shadow-lg hover:ring-[var(--border-default)] active:scale-[0.98]"
+              className="group flex w-full items-center gap-2.5 rounded-xl bg-[var(--surface-default)] px-3 py-2.5 text-[14px] font-semibold text-[var(--text-primary)] shadow-sm ring-1 ring-inset ring-[var(--border-default)] transition-all hover:bg-[var(--bg-hover)] hover:shadow-lg active:scale-[0.98] active:opacity-90"
             >
               <div className="flex h-[26px] w-[26px] items-center justify-center rounded-[8px] bg-[var(--chip-bg)] text-[var(--text-icon)] group-hover:text-[var(--action-primary)] group-hover:bg-[var(--action-primary-glow)] transition-colors ring-1 ring-inset ring-[var(--border-default)] group-hover:ring-[var(--action-primary)]/20">
                 <Icon icon="tabler:plus" className="h-4 w-4" strokeWidth={2.5} />
@@ -94,39 +94,6 @@ export function DashboardSidebar({
 
           <div className="flex-1 overflow-y-auto no-scrollbar -mx-2 px-2">
             
-            <div className="mb-6 lg:hidden">
-              <h3 className="mb-2.5 px-2 text-[10.5px] font-bold uppercase tracking-wider text-[var(--text-icon)]">
-                Views
-              </h3>
-              <nav className="flex flex-col gap-0.5">
-                <button
-                  onClick={() => {
-                     setActiveTab("mind");
-                     onSwitchToMind();
-                  }}
-                  className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-[13.5px] font-medium transition-all ${
-                    activeTab === "mind" ? "bg-[var(--surface-default)] text-[var(--text-primary)] shadow-lg ring-1 ring-inset ring-[var(--border-default)]" : "text-[var(--text-muted)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-                  }`}
-                >
-                  <Icon icon="tabler:message-circle" className="h-[18px] w-[18px]" strokeWidth={2} />
-                  <span>Mind Space</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    setActiveTab("bridge");
-                    onSwitchToBridge();
-                  }}
-                  className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-[13.5px] font-medium transition-all ${
-                    activeTab === "bridge" ? "bg-[var(--surface-default)] text-[var(--text-primary)] shadow-lg ring-1 ring-inset ring-[var(--border-default)]" : "text-[var(--text-muted)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-                  }`}
-                >
-                  <Icon icon="tabler:layout-grid" className="h-[18px] w-[18px]" strokeWidth={2} />
-                  <span>Dashboard</span>
-                </button>
-              </nav>
-            </div>
-
             <div className="mb-6">
               <h3 className="mb-2.5 px-2 text-[10.5px] font-bold uppercase tracking-wider text-[var(--text-icon)]">
                 Analyze
@@ -134,7 +101,7 @@ export function DashboardSidebar({
               <nav className="flex flex-col gap-0.5">
                 <button
                   onClick={() => setShowCheckIn(true)}
-                  className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13.5px] font-medium text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                  className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13.5px] font-medium text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] active:scale-[0.96]"
                 >
                   <div className="flex h-5 w-5 items-center justify-center text-[var(--text-icon)] group-hover:text-[var(--text-primary)]">
                     <Icon icon="tabler:mood-smile" className="h-[18px] w-[18px]" strokeWidth={2} />
@@ -181,25 +148,11 @@ export function DashboardSidebar({
           </div>
 
           <div className="mt-auto flex flex-col pt-6">
-             <div className="rounded-xl bg-gradient-to-b from-[var(--surface-default)] to-[var(--bg-page)] p-3.5 ring-1 ring-inset ring-[var(--border-default)] shadow-sm mb-[22px]">
-               <div className="flex items-center justify-between mb-1.5">
-                 <div className="flex items-center gap-1.5">
-                   <div className="flex h-[18px] w-[18px] items-center justify-center rounded-md bg-[var(--action-primary)] text-[var(--text-inverse)]">
-                     <Icon icon="tabler:stars" className="h-3 w-3" strokeWidth={3} />
-                   </div>
-                   <span className="text-[11px] font-bold uppercase tracking-wide text-[var(--action-primary)]">Pro Plan</span>
-                 </div>
-               </div>
-               <p className="text-[12.5px] font-medium text-[var(--text-muted)] leading-snug">
-                 Unlimited counselor access & advanced analytics.
-               </p>
-             </div>
-
              <button 
                onClick={() => {
                  window.dispatchEvent(new CustomEvent('open-settings'));
                }}
-               className="group flex w-full items-center justify-between rounded-xl px-2 py-2 transition-all hover:bg-[var(--surface-default)] hover:shadow-lg hover:ring-1 hover:ring-inset hover:ring-[var(--border-default)]"
+               className="group flex w-full items-center justify-between rounded-xl px-2 py-2 transition-all hover:bg-[var(--surface-default)] hover:shadow-lg hover:ring-1 hover:ring-inset hover:ring-[var(--border-default)] active:scale-[0.98]"
              >
                <div className="flex items-center gap-2.5">
                  <div className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-gradient-to-br from-[var(--action-primary)] to-[var(--action-primary-hover)] text-[var(--text-inverse)] shadow-sm ring-1 ring-inset ring-white/20 transition-transform group-hover:scale-105">

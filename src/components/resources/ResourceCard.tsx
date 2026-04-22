@@ -53,55 +53,55 @@ export function ResourceCard({ resource, className = "", style }: ResourceCardPr
  style={style}
  
  
- className={cn(
- "group block p-4 rounded-md border border-[var(--border-default)] bg-[var(--surface-default)]",
- "transition-all duration-300 hover:border-[var(--border-strong)] hover:shadow-xl",
- className
- )}
- >
- {thumbnail && (
- <div className="relative aspect-video rounded-md overflow-hidden mb-4 bg-[var(--surface-tinted)] shadow-inner">
- <img
- src={thumbnail}
- alt={resource.title}
- className="w-full h-full object-cover transition-transform duration-500 group-"
- />
- <div className="absolute inset-0 flex items-center justify-center bg-[var(--action-primary)]/0 group-hover:bg-[var(--action-primary)]/15 transition-colors duration-300">
- <div className="w-11 h-11 rounded-full bg-[var(--surface-default)]/95 flex items-center justify-center shadow-lg scale-90 group- transition-transform duration-300">
- <svg className="w-5 h-5 text-[var(--text-primary)] ml-0.5" fill="currentColor" viewBox="0 0 24 24">
- <path d="M8 5v14l11-7z" />
- </svg>
- </div>
- </div>
- <div className="absolute bottom-2.5 right-2.5 bg-[var(--action-primary)]/75 text-[var(--text-inverse)] text-xs font-medium px-2 py-0.5 rounded-md backdrop-blur-sm">
- {resource.duration}
- </div>
- </div>
- )}
+  className={cn(
+    "group block p-4 rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)]",
+    "transition-all duration-300 hover:border-[var(--border-strong)] hover:shadow-lg active:scale-[0.96] transition-transform",
+    className
+  )}
+>
+  {thumbnail && (
+    <div className="relative aspect-video rounded-md overflow-hidden mb-4 bg-[var(--surface-tinted)] ring-1 ring-black/5">
+      <img
+        src={thumbnail}
+        alt={resource.title}
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 flex items-center justify-center bg-[var(--action-primary)]/0 group-hover:bg-[var(--action-primary)]/10 transition-colors duration-300">
+        <div className="w-11 h-11 rounded-full bg-[var(--surface-default)]/95 flex items-center justify-center shadow-md scale-90 group-hover:scale-100 transition-transform duration-300">
+          <svg className="w-5 h-5 text-[var(--text-primary)] ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </div>
+      </div>
+      <div className="absolute bottom-2.5 right-2.5 bg-black/60 text-white text-[10px] tabular-nums font-semibold px-2 py-0.5 rounded-sm backdrop-blur-md tracking-wider">
+        {resource.duration}
+      </div>
+    </div>
+  )}
 
- <div className="flex items-center gap-2.5 mb-2.5">
- <span className={cn(
- "text-xs font-semibold px-2.5 py-0.5 rounded-full tracking-wide",
- isYouTube 
- ? "bg-[var(--status-error-soft)] text-[var(--status-error)]" 
- : "bg-[var(--action-primary)] text-[var(--action-primary)]"
- )}>
- {resource.type}
- </span>
- {!isYouTube && (
- <span className="text-xs text-[var(--text-muted)]">
- {resource.duration}
- </span>
- )}
- </div>
+  <div className="flex items-center gap-2.5 mb-2.5">
+    <span className={cn(
+      "text-[10px] uppercase font-bold px-2 py-0.5 rounded-full tracking-widest",
+      isYouTube 
+        ? "bg-[var(--status-error-soft)] text-[var(--status-error)]" 
+        : "bg-[var(--action-primary-soft)] text-[var(--action-primary)]"
+    )}>
+      {resource.type}
+    </span>
+    {!isYouTube && (
+      <span className="text-xs text-[var(--text-muted)] tabular-nums">
+        {resource.duration}
+      </span>
+    )}
+  </div>
 
- <Text as="h3" variant="h6" weight="semibold" className="text-[var(--text-primary)] group-hover:text-[var(--action-primary)] transition-colors duration-200 line-clamp-2 leading-snug">
- {resource.title}
- </Text>
- 
- <Text as="p" variant="small" color="muted" className="mt-1.5 line-clamp-2 leading-relaxed">
- {resource.description}
- </Text>
+  <Text as="h3" variant="h6" weight="semibold" className="text-[var(--text-primary)] group-hover:text-[var(--action-primary)] transition-colors duration-200 line-clamp-2 leading-snug text-balance">
+    {resource.title}
+  </Text>
+  
+  <Text as="p" variant="small" color="muted" className="mt-1.5 line-clamp-2 leading-relaxed text-pretty">
+    {resource.description}
+  </Text>
  </motion.a>
  );
 }

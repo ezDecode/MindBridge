@@ -22,7 +22,17 @@ export const studentNav: NavItem[] = [
 ];
 
 export const counselorNav: NavItem[] = [
- { href: "/counselor/dashboard", label: "Dashboard", icon: "shield" },
+  { href: "/counselor/dashboard", label: "Dashboard", icon: "grid" },
+  { href: "/counselor/dashboard?tab=triage", label: "Triage Queue", icon: "alert" },
+  { href: "/counselor/dashboard?tab=caseload", label: "Caseload", icon: "heart" },
+  { href: "/counselor/dashboard?tab=analytics", label: "Insights", icon: "chart" },
+];
+
+export const adminNav: NavItem[] = [
+  { href: "/admin/dashboard", label: "Overview", icon: "grid" },
+  { href: "/admin/dashboard?tab=directory", label: "User Directory", icon: "library" },
+  { href: "/admin/dashboard?tab=health", label: "System Health", icon: "chart" },
+  { href: "/admin/dashboard?tab=settings", label: "Settings", icon: "shield" },
 ];
 
 export const dashboardMetrics = [

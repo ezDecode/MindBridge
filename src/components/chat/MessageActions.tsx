@@ -31,7 +31,7 @@ export function MessageActions({
  
  
  onClick={() => onAction(action)}
- className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[var(--action-primary)] px-4 py-2 text-sm font-semibold text-[var(--text-inverse)] shadow-sm transition-all duration-150 hover:bg-[var(--action-primary-hover)] hover:shadow-md"
+ className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[var(--action-primary)] px-4 py-2 text-sm font-semibold text-[var(--text-inverse)] shadow-sm transition-all duration-150 hover:bg-[var(--action-primary-hover)] hover:shadow-md active:scale-[0.96]"
  >
  <Icon icon={primaryIconName} className="h-4 w-4" />
  <span>{primaryLabel}</span>
@@ -42,7 +42,7 @@ export function MessageActions({
  
  
  onClick={onDismiss}
- className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[var(--surface-default)]/80 px-3.5 py-2 text-sm font-medium text-[var(--text-muted)] shadow-sm transition-all duration-150 hover:bg-[var(--surface-default)] hover:text-[var(--text-secondary)]"
+ className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[var(--surface-default)]/80 px-3.5 py-2 text-sm font-medium text-[var(--text-muted)] shadow-sm transition-all duration-150 hover:bg-[var(--surface-default)] hover:text-[var(--text-secondary)] active:scale-[0.96]"
  >
  <span>Not now</span>
  <Icon icon="tabler:arrow-right" className="h-3.5 w-3.5" />

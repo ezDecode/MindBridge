@@ -47,22 +47,22 @@ export function Modal({ isOpen, onClose, title, children, className, size = 'md'
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, scale: 0.98, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ type: 'spring', duration: 0.5, bounce: 0.3 }}
+            exit={{ opacity: 0, scale: 0.98, y: 8 }}
+            transition={{ type: 'spring', duration: 0.4, bounce: 0 }}
             className={cn(
-              "relative z-10 w-full overflow-hidden rounded-[2.5rem] bg-[var(--surface-default)] shadow-2xl border border-[var(--border-default)]",
+              "relative z-10 w-full overflow-hidden rounded-[2rem] bg-[var(--surface-default)] shadow-xl border border-[var(--border-default)]",
               sizes[size],
               className
             )}
           >
             {title && (
-              <div className="flex items-center justify-between border-b border-[var(--border-default)] px-8 py-6">
-                <h2 className="text-xl font-bold text-[var(--text-primary)]">{title}</h2>
+              <div className="flex items-center justify-between border-b border-[var(--border-default)] px-8 py-5">
+                <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">{title}</h2>
                 <button
                   onClick={onClose}
-                  className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--surface-soft)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all active:scale-[0.92] hover:bg-[var(--surface-strong)]"
                 >
                   <Icon icon="tabler:x" className="h-5 w-5" />
                 </button>

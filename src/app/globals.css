@@ -16,25 +16,19 @@
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 96rem;
 
-  /* ── Chess Palette (Tailwind-accessible) ── */
+  /* ── Chess Palette ── */
   --color-chess-light: #EBECD0;
   --color-chess-dark: #739552;
   --color-chess-wood: #B58863;
   --color-chess-cream: #F0D9B5;
 
-  /* ── Tailwind Semantic Colors (for text-*, bg-*, border-* utilities) ── */
-  --color-text-primary: #1c2114;
-  --color-text-secondary: #4a5c3a;
-  --color-text-muted: #718063;
-  --color-text-icon: #5a7a3f;
-  --color-text-inverse: #ffffff;
+  /* ── Semantic Backgrounds ── */
+  --color-bg-page: #F0D9B5;
+  --color-bg-sidebar: #ffffff;
+  --color-bg-hover: #EBECD0;
 
-  --color-primary: #739552;
-  --color-primary-light: color-mix(in srgb, #739552 15%, #ffffff);
-  --color-primary-dark: #5a7a3f;
-  --color-primary-soft: color-mix(in srgb, #739552 10%, #ffffff);
-
-  --color-surface: #ffffff;
+  /* ── Semantic Surfaces ── */
+  --color-surface-default: #ffffff;
   --color-surface-tinted: #fdfbf7;
   --color-surface-strong: #EBECD0;
   --color-surface-warm: #ffffff;
@@ -42,31 +36,36 @@
   --color-surface-warm-active: #f5f5f5;
   --color-surface-soft: rgba(255, 255, 255, 0.5);
 
-  --color-background: #F0D9B5;
-  --color-border: color-mix(in srgb, #B58863 25%, transparent);
+  /* ── Semantic Borders ── */
+  --color-border-default: color-mix(in srgb, #B58863 25%, transparent);
   --color-border-strong: color-mix(in srgb, #B58863 50%, transparent);
   --color-border-light: color-mix(in srgb, #B58863 15%, transparent);
-  --color-border-warm: color-mix(in srgb, #B58863 25%, transparent);
 
-  --color-black: #0d0d0d;
-  --color-white: #ffffff;
+  /* ── Semantic Text ── */
+  --color-text-primary: #1c2114;
+  --color-text-secondary: #4a5c3a;
+  --color-text-muted: #718063;
+  --color-text-icon: #5a7a3f;
+  --color-text-inverse: #ffffff;
 
-  --color-success: #22c55e;
-  --color-success-soft: color-mix(in srgb, #22c55e 15%, #ffffff);
-  --color-success-dark: #16a34a;
-  --color-success-light: color-mix(in srgb, #22c55e 10%, #ffffff);
-  --color-warning: #f59e0b;
-  --color-warning-soft: color-mix(in srgb, #f59e0b 15%, #ffffff);
-  --color-info: #0ea5e9;
-  --color-info-soft: color-mix(in srgb, #0ea5e9 15%, #ffffff);
-  --color-danger: #ef4444;
-  --color-danger-soft: color-mix(in srgb, #ef4444 15%, #ffffff);
+  /* ── Semantic Actions ── */
+  --color-action-primary: #739552;
+  --color-action-primary-hover: #5a7a3f;
+  --color-action-primary-light: color-mix(in srgb, #739552 15%, #ffffff);
+  --color-action-primary-soft: color-mix(in srgb, #739552 10%, #ffffff);
+  --color-action-primary-glow: rgba(115, 149, 82, 0.2);
 
-  --color-secondary: #4a5c3a;
-  --color-accent: #739552;
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
+  /* ── Semantic Status ── */
+  --color-status-success: #22c55e;
+  --color-status-success-soft: color-mix(in srgb, #22c55e 15%, #ffffff);
+  --color-status-success-dark: #16a34a;
+  --color-status-success-light: color-mix(in srgb, #22c55e 10%, #ffffff);
+  --color-status-warning: #f59e0b;
+  --color-status-warning-soft: color-mix(in srgb, #f59e0b 15%, #ffffff);
+  --color-status-error: #ef4444;
+  --color-status-error-soft: color-mix(in srgb, #ef4444 15%, #ffffff);
+  --color-status-info: #0ea5e9;
+  --color-status-info-soft: color-mix(in srgb, #0ea5e9 15%, #ffffff);
 
   /* ── Easing ── */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -212,6 +211,17 @@ body {
   font-family: 'Inter', var(--font-sans);
   font-kerning: normal;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-variant-numeric: tabular-nums;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 a,
