@@ -69,7 +69,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
         const data = await res.json();
         
         setCounselors(data.counselors || []);
-        if (data.counselors && data.counselors.length> 0) {
+        if (data.counselors && data.counselors.length > 0) {
           // Default to Dr. Radha Sharma if she's in the list, otherwise first counselor
           const radha = data.counselors.find((c: Counselor) => c.name === 'Dr. Radha Sharma' || c.id === '87a24859-7892-49f8-b26d-c2878fe09f43');
           setSelectedCounselorId(radha ? radha.id : data.counselors[0].id);
@@ -106,7 +106,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  }, [slots, selectedCounselorId]);
 
  useEffect(() => {
-  if (availableDates.length> 0 && (!selectedDate || !availableDates.includes(selectedDate))) {
+  if (availableDates.length > 0 && (!selectedDate || !availableDates.includes(selectedDate))) {
     setSelectedDate(availableDates[0]);
   } else if (availableDates.length === 0) {
     setSelectedDate(null);
@@ -181,75 +181,81 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  const canSubmit = selectedSlot && !submitting;
 
  return (
-  
-    {isOpen && (
+<>
+{isOpen && (
       <>
         {/* Backdrop */}
-        <
-          }
-          }
-          }
+        <div
+          
+          
+          
           
           className="fixed inset-0 z-50 bg-[var(--action-primary)]/40 backdrop-blur-md"
           onClick={onClose}
         />
         
         {/* Modal */}
-        <
-          }
-          }
-          }
+        <div
           
-          className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-md border border-[var(--border-default)] bg-[var(--surface-default)] p-5 shadow-2xl">
+          
+          
+          
+          className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-md border border-[var(--border-default)] bg-[var(--surface-default)] p-5 shadow-2xl"
+        >
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <
-                className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--action-primary-light)]">
+              <div
+                className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--action-primary-light)]"
+              >
                 <Icon icon="tabler:calendar" className="h-4 w-4 text-[var(--action-primary)]" />
-              </>
+              </div>
               <Text as="p" variant="h6" weight="bold">Book a session</Text>
             </div>
             <button
               onClick={onClose}
-              className="flex h-8 w-8 items-center justify-center rounded-md text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-strong)] hover:text-[var(--text-primary)]">
+              className="flex h-8 w-8 items-center justify-center rounded-md text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-strong)] hover:text-[var(--text-primary)]"
+            >
               <Icon icon="tabler:x" className="h-4 w-4" />
             </button>
           </div>
 
           {success ? (
-            <
-              }
-              }
-              className="flex flex-col items-center py-8 text-center">
-              <
-                }
-                }
+            <div
+              
+              
+              className="flex flex-col items-center py-8 text-center"
+            >
+              <div
                 
-                className="flex h-14 w-14 items-center justify-center rounded-[1.1rem] bg-[var(--status-success-light)] shadow-lg shadow-[var(--status-success)]/20">
+                
+                
+                className="flex h-14 w-14 items-center justify-center rounded-[1.1rem] bg-[var(--status-success-light)] shadow-lg shadow-[var(--status-success)]/20"
+              >
                 <Icon icon="tabler:check" className="h-7 w-7 text-[var(--status-success)]" />
-              </>
+              </div>
               <Text as="p" variant="h6" weight="bold" className="mt-4">
                 Booking confirmed! 🎉
               </Text>
               <Text as="p" variant="small" color="secondary" className="mt-1">
                 Redirecting...
               </Text>
-            </>
+            </div>
           ) : (
             <>
               {/* Error */}
               
                 {error && (
-                  <
-                    }
-                    }
-                    }
-                    className="mt-3 rounded-md border border-[var(--status-error)]/20 bg-[var(--status-error-soft)] px-3 py-2">
+                  <div
+                    
+                    
+                    
+                    className="mt-3 rounded-md border border-[var(--status-error)]/20 bg-[var(--status-error-soft)] px-3 py-2"
+                  >
                     <Text as="p" variant="small" className="text-[var(--status-error)]">
                       {error}
                     </Text>
-                  </>
+                  </div>
                 )}
               
 
@@ -258,12 +264,13 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                 {bookingTypes.map((type, index) => {
                   const typeKey = type.label.toLowerCase().split(" ")[0] as BookingType;
                   return (
-                    <
+                    <div
                       key={typeKey}
-                      }
-                      }
                       
-                      className="h-full">
+                      
+                      
+                      className="h-full"
+                    >
                       <SelectionCard
                         selected={bookingType === typeKey}
                         label={type.label}
@@ -271,7 +278,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                         onClick={() => setBookingType(typeKey)}
                         className="h-full flex-col items-start justify-center gap-1.5 p-3 text-sm"
                       />
-                    </>
+                    </div>
                   );
                 })}
               </div>
@@ -299,7 +306,8 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                         selectedCounselorId === counselor.id
                           ? "bg-[var(--action-primary)] text-white border-[var(--action-primary)] shadow-md"
                           : "bg-[var(--surface-default)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--action-primary)]/50 hover:bg-[var(--surface-strong)]"
-                      }`}>
+                      }`}
+                    >
                       {counselor.name}
                     </button>
                   ))}
@@ -307,7 +315,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
               )}
 
               {/* Day selector */}
-              {availableDates.length> 0 && (
+              {availableDates.length > 0 && (
                 <>
                   <Text as="p" variant="label" weight="medium" className="mt-4 mb-2">
                     Select a day
@@ -324,7 +332,8 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                           selectedDate === dateString
                             ? "bg-[var(--surface-strong)] text-[var(--text-primary)] border-[var(--border-strong)] shadow-sm"
                             : "bg-[var(--surface-default)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--border-strong)]/50 hover:bg-[var(--surface-warm)]"
-                        }`}>
+                        }`}
+                      >
                         {formatDateLabel(dateString)}
                       </button>
                     ))}
@@ -340,10 +349,10 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
               {loading ? (
                 <div className="mt-2 grid grid-cols-3 gap-2">
                   {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <
+                    <div
                       key={i}
-                      }
-                      }
+                      
+                      
                       className="h-10 animate-pulse rounded-md bg-[var(--surface-strong)]" 
                     />
                   ))}
@@ -354,7 +363,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                   const m = String(date.getMonth() + 1).padStart(2, '0');
                   const d = String(date.getDate()).padStart(2, '0');
                   return s.counselor_id === selectedCounselorId && `${y}-${m}-${d}` === selectedDate;
-                }).length> 0 ? (
+                }).length > 0 ? (
                 <div className="mt-2 grid grid-cols-3 gap-2">
                   
                     {slots.filter(s => {
@@ -364,19 +373,20 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                       const d = String(date.getDate()).padStart(2, '0');
                       return s.counselor_id === selectedCounselorId && `${y}-${m}-${d}` === selectedDate;
                     }).map((slot, index) => (
-                      <
+                      <button
                         key={slot.id}
-                        }
-                        }
-                        }
                         
-                        }
+                        
+                        
+                        
+                        
                         onClick={() => setSelectedSlot(slot)}
                         className={`group relative rounded-md px-3 py-2 text-center transition-all ${
                           selectedSlot?.id === slot.id
                             ? "bg-[var(--action-primary-light)] shadow-md shadow-[var(--action-primary)]/15 border border-[var(--action-primary)]/30"
                             : "bg-[var(--surface-strong)] hover:bg-[var(--surface-warm)] hover:shadow-sm border border-transparent"
-                        }`}>
+                        }`}
+                      >
                         <div className="flex flex-col items-center justify-center gap-1">
                           <span className="text-[11px] font-semibold text-[var(--text-secondary)] truncate w-full px-1">
                             {resolveProfileDisplayName({ profileName: slot.counselor?.name }) || "Counselor"}
@@ -386,7 +396,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                             <span className="text-xs font-bold text-[var(--text-primary)]">{formatSlotTime(slot)}</span>
                           </div>
                         </div>
-                      </>
+                      </button>
                     ))}
                   
                 </div>
@@ -401,11 +411,12 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
               {/* Selected slot preview */}
               
                 {selectedSlot && (
-                  <
-                    }
-                    }
-                    }
-                    className="mt-3 overflow-hidden">
+                  <div
+                    
+                    
+                    
+                    className="mt-3 overflow-hidden"
+                  >
                     <div className="flex items-center gap-3 rounded-md bg-gradient-to-r from-[var(--action-primary-light)]/30 to-[var(--action-primary-light)]/10 px-3 py-2.5">
                       <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--action-primary-light)]">
                         <Icon icon="tabler:user" className="h-5 w-5 text-[var(--action-primary)]" />
@@ -418,14 +429,15 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                           {formatPreviewTime(selectedSlot)}
                         </Text>
                       </div>
-                      <
-                        }
-                        }
-                        className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--status-success)]">
+                      <div
+                        
+                        
+                        className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--status-success)]"
+                      >
                         <Icon icon="tabler:check" className="h-3.5 w-3.5 text-[var(--text-primary)]" />
-                      </>
+                      </div>
                     </div>
-                  </>
+                  </div>
                 )}
               
 
@@ -434,7 +446,8 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                 <Button 
                   onClick={handleSubmit} 
                   disabled={!canSubmit} 
-                  className="flex-1 gap-2 rounded-md">
+                  className="flex-1 gap-2 rounded-md"
+                >
                   {submitting ? (
                     <>
                       <Icon icon="tabler:loader" className="h-4 w-4 animate-spin" />
@@ -450,9 +463,11 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
               </div>
             </>
           )}
-        </>
+        </div>
       </>
     )}
   
- );
+ 
+</>
+);
 }

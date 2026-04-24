@@ -111,8 +111,8 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
   }, [moodLogs])
 
   const status = useMemo(() => {
-    if (avgMood < 2 && moodLogs.length> 0) return { label: 'Priority Escalation', color: 'text-danger', bg: 'bg-danger/10', border: 'border-danger/20' }
-    if (avgMood < 3.5 && moodLogs.length> 0) return { label: 'Active Monitoring', color: 'text-warning', bg: 'bg-warning/10', border: 'border-warning/20' }
+    if (avgMood < 2 && moodLogs.length > 0) return { label: 'Priority Escalation', color: 'text-danger', bg: 'bg-danger/10', border: 'border-danger/20' }
+    if (avgMood < 3.5 && moodLogs.length > 0) return { label: 'Active Monitoring', color: 'text-warning', bg: 'bg-warning/10', border: 'border-warning/20' }
     return { label: 'Stable Index', color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20' }
   }, [avgMood, moodLogs])
 
@@ -138,14 +138,15 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
   const profileDisplayName = resolveProfileDisplayName({ profileName: profile.name }) || 'User'
 
   return (
-    < 
+    <div 
       
       
       
-      className="space-y-12">
+      className="space-y-12"
+    >
       
       {/* ── Diagnostic Header ── */}
-      <  className="flex items-center justify-between">
+      <div  className="flex items-center justify-between">
         <div className="flex items-center gap-5">
           <div className="h-12 w-12 rounded bg-surface-raised text-white flex items-center justify-center font-bold text-xl border border-border shadow-sm uppercase">
             {profileDisplayName.charAt(0)}
@@ -165,27 +166,29 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
           size="sm"
           onClick={handleCriticalHelp} 
           disabled={triggeringHelp}
-          className="uppercase tracking-widest text-[10px] font-bold h-8 px-4">
+          className="uppercase tracking-widest text-[10px] font-bold h-8 px-4"
+        >
           <Icon icon="tabler:alert-octagon" className="mr-2 h-3.5 w-3.5" />
           Escalate
         </Button>
-      </>
+      </div>
 
       
         {helpMessage && (
-          <
-            }
-            }
-            }
-            className="p-3 rounded-md bg-success/10 border border-success/20 flex items-center gap-3 text-success font-bold text-[11px] uppercase tracking-widest">
+          <div
+            
+            
+            
+            className="p-3 rounded-md bg-success/10 border border-success/20 flex items-center gap-3 text-success font-bold text-[11px] uppercase tracking-widest"
+          >
             <Icon icon="tabler:check" className="h-4 w-4" />
             {helpMessage}
-          </>
+          </div>
         )}
       
 
       {/* ── Resilience Analysis ── */}
-      <  className="card p-8 bg-surface-raised">
+      <div  className="card p-8 bg-surface-raised">
         <div className="flex items-center justify-between mb-10 px-1">
           <Text variant="small" weight="bold" className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-dim">Resilience Analysis</Text>
           <div className="text-right">
@@ -204,13 +207,13 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
           ) : (
             [...moodLogs].reverse().slice(-20).map((log, i) => (
               <div key={log.id} className="flex-1 group relative h-full flex items-end">
-                < 
-                  }
-                  %` }}
+                <div 
+                  
+                  
                   
                   className={cn(
                     "w-full rounded-t-sm transition-all cursor-help origin-bottom",
-                    log.score>= 4 ? "bg-success" : log.score>= 2 ? "bg-warning" : "bg-danger"
+                    log.score >= 4 ? "bg-success" : log.score >= 2 ? "bg-warning" : "bg-danger"
                   )}
                   style={{ opacity: 0.3 + (log.score / 5) * 0.5 }}
                 />
@@ -223,7 +226,7 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
             ))
           )}
         </div>
-      </>
+      </div>
 
       {/* ── Intelligence Feed ── */}
       <div className="space-y-6">
@@ -232,17 +235,19 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
           <button 
             onClick={handleGenerateReport}
             disabled={loadingReport}
-            className="text-[9px] font-bold uppercase tracking-widest text-primary hover:text-primary-hover disabled:opacity-30 transition-all flex items-center gap-2 active:scale-95">
+            className="text-[9px] font-bold uppercase tracking-widest text-primary hover:text-primary-hover disabled:opacity-30 transition-all flex items-center gap-2 active:scale-95"
+          >
             {loadingReport && <Icon icon="tabler:loader-2" className="h-3 w-3 animate-spin" />}
             {loadingReport ? 'Analyzing...' : 'Refresh AI Analysis'}
           </button>
         </div>
 
         {report && (
-          < 
-            }
-            }
-            className="p-6 rounded-lg bg-primary/5 border border-primary/20 space-y-6">
+          <div 
+            
+            
+            className="p-6 rounded-lg bg-primary/5 border border-primary/20 space-y-6"
+          >
             <div className="flex items-center gap-2">
               <Icon icon="tabler:sparkles" className="h-4 w-4 text-primary" />
               <Text variant="small" weight="bold" className="text-[10px] font-bold uppercase tracking-widest text-primary">AI Clinical Insights</Text>
@@ -255,20 +260,22 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
                 </div>
               ))}
             </div>
-          </>
+          </div>
         )}
 
         <div className="space-y-3">
           {moodLogs.slice(0, 10).map((log) => (
-            < 
+            <div 
               key={log.id} 
               
-              className="flex gap-5 p-4 rounded-md bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors group">
+              className="flex gap-5 p-4 rounded-md bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors group"
+            >
               <div 
                 className={cn(
                   "h-10 w-10 shrink-0 rounded flex items-center justify-center font-bold text-xs text-black tabular-nums transition-all opacity-80",
-                  log.score>= 4 ? "bg-success" : log.score>= 2 ? "bg-warning" : "bg-danger"
-                )}>
+                  log.score >= 4 ? "bg-success" : log.score >= 2 ? "bg-warning" : "bg-danger"
+                )}
+              >
                 {log.score}
               </div>
               <div className="min-w-0 flex-1">
@@ -281,10 +288,10 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
                   &ldquo;{log.note || 'No narrative provided.'}&rdquo;
                 </Text>
               </div>
-            </>
+            </div>
           ))}
         </div>
       </div>
-    </>
+    </div>
   )
 }

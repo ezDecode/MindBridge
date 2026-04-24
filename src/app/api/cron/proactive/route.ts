@@ -4,8 +4,8 @@ import { firstNameOrFallback, resolveProfileDisplayName } from '@/lib/profile-na
 import { DEMO_USERS } from '@/lib/auth/demo-users'
 
 // We run this as a system process, so we use the Service Role Key to bypass Row Level Security
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-key'
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 

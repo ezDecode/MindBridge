@@ -64,40 +64,43 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
  const selectedMoodData = moodOptions.find(m => m.score === selectedMood);
 
  return (
- 
- {isOpen && (
+<>
+{isOpen && (
  <>
  {/* Backdrop */}
- <
- }
- }
- }
+ <div
+ 
+ 
+ 
  
  className="fixed inset-0 z-50 bg-[var(--action-primary)]/40 backdrop-blur-md"
  onClick={onClose}
  />
  
          {/* Modal */}
-         <
-           }
-           }
-           }
+         <div
            
-           className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-[2rem] border border-[var(--border-default)] bg-[var(--surface-default)] p-6 shadow-2xl">
+           
+           
+           
+           className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-[2rem] border border-[var(--border-default)] bg-[var(--surface-default)] p-6 shadow-2xl"
+         >
            {/* Header */}
            <div className="flex items-center justify-between">
              <div className="flex items-center gap-2.5">
-               <
-                 }
+               <div
                  
-                 className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--status-error-soft)] shadow-sm ring-1 ring-[var(--status-error)]/10">
+                 
+                 className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--status-error-soft)] shadow-sm ring-1 ring-[var(--status-error)]/10"
+               >
                  <Icon icon="tabler:heart" className="h-5 w-5 text-[var(--status-error)]" />
-               </>
+               </div>
                <Text as="p" variant="h6" weight="bold" className="text-wrap-balance">How are you feeling?</Text>
              </div>
              <button
                onClick={onClose}
-               className="flex h-10 w-10 items-center justify-center rounded-xl text-[var(--text-muted)] transition-all hover:bg-[var(--surface-warm)] hover:text-[var(--text-primary)] active:scale-[0.92]">
+               className="flex h-10 w-10 items-center justify-center rounded-xl text-[var(--text-muted)] transition-all hover:bg-[var(--surface-warm)] hover:text-[var(--text-primary)] active:scale-[0.92]"
+             >
                <Icon icon="tabler:x" className="h-5 w-5" />
              </button>
            </div>
@@ -105,17 +108,19 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
            {/* Selected mood preview */}
            
              {selectedMoodData && (
-               <
+               <div
                  key={selectedMood}
-                 }
-                 }
-                 }
                  
-                 className="overflow-hidden">
-                 < 
-                   }
-                   }
-                   className="flex items-center gap-3 rounded-xl bg-[var(--bg-page)] border border-[var(--action-primary)]/10 px-4 py-3 shadow-sm">
+                 
+                 
+                 
+                 className="overflow-hidden"
+               >
+                 <div 
+                   
+                   
+                   className="flex items-center gap-3 rounded-xl bg-[var(--bg-page)] border border-[var(--action-primary)]/10 px-4 py-3 shadow-sm"
+                 >
                    <span className="text-2xl">{selectedMoodData.emoji}</span>
                    <div>
                      <Text as="span" variant="label" weight="bold" color="brand">
@@ -125,40 +130,42 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
                        {selectedMoodData.note}
                      </Text>
                    </div>
-                 </>
-               </>
+                 </div>
+               </div>
              )}
            
 
            {/* Mood emoji selector */}
            <div className="mt-6 grid grid-cols-5 gap-3">
              {moodOptions.map((option, index) => (
-               <
+               <button
                  key={option.score}
-                 }
-                 }
+                 
+                 
                  
                  onClick={() => setSelectedMood(option.score)}
                  className={`group relative flex flex-col items-center gap-1 rounded-xl p-3 transition-all duration-200 active:scale-[0.92] ${
                    selectedMood === option.score
                      ? "bg-[var(--action-primary-light)] shadow-md ring-1 ring-[var(--action-primary)]/20"
                      : "bg-[var(--surface-warm)] hover:bg-[var(--surface-warm-hover)]"
-                 }`}>
+                 }`}
+               >
                  <span className={`text-2xl transition-transform duration-300 ${selectedMood === option.score ? 'scale-110' : ''}`}>
                    {option.emoji}
                  </span>
                  
                    {selectedMood === option.score && (
-                     <
-                       }
-                       }
-                       }
-                       className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-lg bg-[var(--action-primary)] text-[var(--text-inverse)] shadow-md">
+                     <div
+                       
+                       
+                       
+                       className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-lg bg-[var(--action-primary)] text-[var(--text-inverse)] shadow-md"
+                     >
                        <Icon icon="tabler:check" className="h-3 w-3" />
-                     </>
+                     </div>
                    )}
                  
-               </>
+               </button>
              ))}
            </div>
 
@@ -176,7 +183,8 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
              <Button 
                onClick={handleSave} 
                disabled={!selectedMood || isLoading} 
-               className="flex-1 gap-2 rounded-full h-11 active:scale-[0.96] transition-transform">
+               className="flex-1 gap-2 rounded-full h-11 active:scale-[0.96] transition-transform"
+             >
                {isLoading ? (
                  <>
                    <Icon icon="tabler:loader" className="h-4 w-4 animate-spin" />
@@ -194,13 +202,16 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
              <Button 
                onClick={onClose} 
                variant="ghost"
-               className="rounded-full h-11 text-[var(--text-secondary)] px-6 active:scale-[0.96] transition-transform">
+               className="rounded-full h-11 text-[var(--text-secondary)] px-6 active:scale-[0.96] transition-transform"
+             >
                Skip
              </Button>
            </div>
-         </>
+         </div>
  </>
  )}
  
- );
+ 
+</>
+);
 }

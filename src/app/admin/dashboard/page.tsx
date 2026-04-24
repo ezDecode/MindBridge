@@ -42,8 +42,8 @@ export default function AdminDashboardPage() {
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-      < 
-        }
+      <div 
+        
         
         className="size-12 rounded-full border-4 border-primary/20 border-t-primary"
       />
@@ -53,14 +53,15 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="w-full pb-20">
-      < 
+      <div 
         
         
         
-        className="mx-auto max-w-7xl space-y-12">
+        className="mx-auto max-w-7xl space-y-12"
+      >
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
-          <>
+          <div >
             <Text as="h2" variant="h1" weight="semibold" className="mb-4 text-balance">
               Campus <span className="text-primary">Intelligence</span>
             </Text>
@@ -74,9 +75,9 @@ export default function AdminDashboardPage() {
                 <Text as="span" variant="small" weight="medium" color="secondary">Anonymized Data</Text>
               </div>
             </div>
-          </>
+          </div>
           
-          <  className="flex items-center gap-3">
+          <div  className="flex items-center gap-3">
             <div className="relative">
               <select className="appearance-none bg-surface border border-border px-4 py-2 rounded-md text-xs font-semibold text-text-muted hover:border-white/20 transition-all outline-none pr-10 cursor-pointer">
                 <option>Spring 2025</option>
@@ -88,7 +89,7 @@ export default function AdminDashboardPage() {
               <Icon icon="tabler:download" className="text-lg" />
               <span className="hidden sm:inline">Export intelligence</span>
             </Button>
-          </>
+          </div>
         </div>
 
         {/* Main Stats Bento */}
@@ -99,10 +100,11 @@ export default function AdminDashboardPage() {
             { label: 'MindBot Sessions', value: '1,240', sub: '↑ +18% this month', icon: 'tabler:robot', color: 'text-warning' },
             { label: 'Crisis Alerts', value: '12', sub: 'All resolved', icon: 'tabler:alert-circle', color: 'text-danger', isCritical: true }
           ].map((stat, i) => (
-            < 
+            <div 
               key={i}
               
-              className="card-raised p-6 group hover:border-white/20 transition-colors">
+              className="card-raised p-6 group hover:border-white/20 transition-colors"
+            >
               <div className="flex h-8 w-8 items-center justify-center rounded bg-white/5 mb-6">
                 <Icon icon={stat.icon} className={cn("text-xl transition-transform", stat.color)} />
               </div>
@@ -112,7 +114,7 @@ export default function AdminDashboardPage() {
                 {stat.sub}
                 {stat.isCritical && <Icon icon="tabler:check" className="text-success h-3 w-3" />}
               </div>
-            </>
+            </div>
           ))}
         </div>
 
@@ -120,7 +122,7 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
           
           {/* Mood Trend Chart */}
-          <  className="card lg:col-span-8 p-8 group">
+          <div  className="card lg:col-span-8 p-8 group">
             <div className="flex items-center justify-between mb-10">
               <div>
                 <Text as="h3" weight="semibold">Campus Sentiment</Text>
@@ -139,13 +141,13 @@ export default function AdminDashboardPage() {
                 const h = 40 + ((i * 13) % 50);
                 return (
                   <div key={i} className="flex-1 flex flex-col items-center gap-2 group/bar">
-                    < 
-                      }
-                      %` }}
+                    <div 
+                      
+                      
                       
                       className={cn(
                         "w-full rounded-sm transition-all duration-300",
-                        h> 70 ? "bg-primary" : h> 50 ? "bg-primary/60" : "bg-primary/30"
+                        h > 70 ? "bg-primary" : h > 50 ? "bg-primary/60" : "bg-primary/30"
                       )}
                     />
                   </div>
@@ -158,10 +160,10 @@ export default function AdminDashboardPage() {
               <span>Week 3</span>
               <span>Week 4</span>
             </div>
-          </>
+          </div>
 
           {/* Department Moods */}
-          <  className="card lg:col-span-4 p-8">
+          <div  className="card lg:col-span-4 p-8">
             <Text as="h3" weight="semibold" className="mb-10">Departmental Wellness</Text>
             <div className="space-y-6">
               {[
@@ -177,9 +179,9 @@ export default function AdminDashboardPage() {
                     <span className="text-xs font-bold tabular-nums text-white">{dept.score}</span>
                   </div>
                   <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                    < 
-                      }
-                      }
+                    <div 
+                      
+                      
                       
                       className={cn("h-full rounded-full transition-all duration-500", dept.color)} 
                     />
@@ -187,20 +189,20 @@ export default function AdminDashboardPage() {
                 </div>
               ))}
             </div>
-          </>
+          </div>
 
           {/* PHQ-9 Donut (Simulated with SVG) */}
-          <  className="card lg:col-span-4 p-8 flex flex-col items-center justify-center text-center">
+          <div  className="card lg:col-span-4 p-8 flex flex-col items-center justify-center text-center">
             <Text as="h3" weight="semibold" className="mb-10 self-start">Severity Scan</Text>
             <div className="relative size-40 mb-10">
               <svg className="size-full rotate-[-90deg]" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="40" fill="transparent" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
-                < 
+                <circle 
                   cx="50" cy="50" r="40" fill="transparent" 
                   stroke="var(--primary)" strokeWidth="8" 
                   strokeDasharray="251.2" 
-                  }
-                  }
+                  
+                  
                   
                   strokeLinecap="round"
                 />
@@ -224,16 +226,17 @@ export default function AdminDashboardPage() {
                 <div className="size-1.5 rounded-full bg-danger" /> 12% Severe
               </div>
             </div>
-          </>
+          </div>
 
           {/* Staff Overview */}
-          <  className="card lg:col-span-4 p-8">
+          <div  className="card lg:col-span-4 p-8">
             <Text as="h3" weight="semibold" className="mb-8">Staff on Duty</Text>
             <div className="space-y-3">
               {counselors.map((c) => (
-                < 
+                <div 
                   key={c.id} 
-                  className="flex items-center justify-between p-3 rounded-md bg-white/[0.02] border border-white/5 group hover:border-white/10 transition-all">
+                  className="flex items-center justify-between p-3 rounded-md bg-white/[0.02] border border-white/5 group hover:border-white/10 transition-all"
+                >
                   <div className="flex items-center gap-3">
                     <div className="size-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
                       {c.name?.[0] || 'S'}
@@ -244,7 +247,7 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
                   <div className="size-1.5 rounded-full bg-success shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
-                </>
+                </div>
               ))}
               {counselors.length === 0 && (
                 <div className="p-8 text-center text-text-dim border border-dashed border-white/5 rounded-md">
@@ -253,10 +256,10 @@ export default function AdminDashboardPage() {
                 </div>
               )}
             </div>
-          </>
+          </div>
 
           {/* Top Resources */}
-          <  className="card lg:col-span-4 p-8">
+          <div  className="card lg:col-span-4 p-8">
             <Text as="h3" weight="semibold" className="mb-8">Content Engagement</Text>
             <div className="space-y-5">
               {[
@@ -281,11 +284,11 @@ export default function AdminDashboardPage() {
             <button className="btn btn-secondary w-full mt-10 text-[10px] uppercase tracking-widest font-bold">
               Analytics Report
             </button>
-          </>
+          </div>
         </div>
 
         {/* Heatmap Elevation */}
-        <  className="card p-10">
+        <div  className="card p-10">
           <div className="flex items-center justify-between mb-12">
             <div>
               <Text as="h3" variant="h3" weight="semibold">Campus Stress Pulse</Text>
@@ -298,10 +301,10 @@ export default function AdminDashboardPage() {
             {Array.from({ length: 120 }).map((_, i) => {
                const lvl = [0, 1, 2, 3, 4][(i * 7 + 3) % 5];
                return (
-                 < 
+                 <div 
                     key={i} 
-                    }
-                    }
+                    
+                    
                     
                     className={cn(
                       "aspect-square rounded-[1px] transition-all hover:ring-1 hover:ring-white/40 cursor-help",
@@ -339,8 +342,8 @@ export default function AdminDashboardPage() {
               </div>
             </div>
           </div>
-        </>
-      </>
+        </div>
+      </div>
     </div>
   )
 }

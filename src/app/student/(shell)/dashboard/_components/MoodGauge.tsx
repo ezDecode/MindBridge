@@ -75,7 +75,8 @@ export function MoodGauge({ value, max = 5, size = 140 }: { value: number; max?:
  width={size}
  height={size * 0.65}
  viewBox={`0 0 ${circleSize} ${circleSize * 0.65}`}
- fill="none">
+ fill="none"
+ >
  <defs>
  <linearGradient id={`mood-grad-${gradientId}`} x1="0%" y1="0%" x2="100%" y2="0%">
  <stop offset="0%" stopColor="#f59e0b" />
@@ -119,7 +120,8 @@ export function MoodGauge({ value, max = 5, size = 140 }: { value: number; max?:
  style={{
  color: moodColor,
  backgroundColor: `${moodColor}15`,
- }}>
+ }}
+ >
  {moodLabel}
  </span>
  </div>

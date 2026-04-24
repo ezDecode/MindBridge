@@ -35,10 +35,10 @@ export function DashboardSidebar({
     <>
       
         {sidebarOpen && (
-          <
-            }
-            }
-            }
+          <div
+            
+            
+            
             onClick={() => setSidebarOpen(false)}
             className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
           />
@@ -48,7 +48,8 @@ export function DashboardSidebar({
       <aside
         className={`fixed inset-y-0 left-0 z-50 flex w-[min(18rem,85vw)] flex-col border-r border-border bg-surface transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] lg:static lg:block lg:w-[16rem] lg:shrink-0 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0 shadow-lg" : "-translate-x-full lg:translate-x-0 lg:shadow-none"
-        }`}>
+        }`}
+      >
         <div className="flex h-full flex-col px-4 pb-4">
           <div className="flex items-center justify-between pt-6 pb-8">
             <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80 ml-1 group">
@@ -60,7 +61,8 @@ export function DashboardSidebar({
             <button
               type="button"
               onClick={() => setSidebarOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-md text-text-dim hover:text-white hover:bg-white/5 lg:hidden transition-all">
+              className="flex h-8 w-8 items-center justify-center rounded-md text-text-dim hover:text-white hover:bg-white/5 lg:hidden transition-all"
+            >
               <Icon icon="tabler:x" className="h-5 w-5" />
             </button>
           </div>
@@ -75,7 +77,8 @@ export function DashboardSidebar({
                 }
                 startNewSession();
               }}
-              className="group flex w-full items-center gap-2.5 rounded-md bg-white px-3 py-2 text-[13px] font-semibold text-black transition-all hover:bg-white/90 active:scale-[0.98]">
+              className="group flex w-full items-center gap-2.5 rounded-md bg-white px-3 py-2 text-[13px] font-semibold text-black transition-all hover:bg-white/90 active:scale-[0.98]"
+            >
               <Icon icon="tabler:plus" className="h-4 w-4" strokeWidth={2.5} />
               New Session
               <div className="ml-auto flex items-center gap-0.5 rounded border border-black/10 px-1 py-0.5 text-[9px] font-bold opacity-60">
@@ -116,7 +119,8 @@ export function DashboardSidebar({
                 />
                 <Link
                   href="/student/resources"
-                  className="flex w-full items-center gap-3 rounded-md px-3 py-1.5 text-[13px] font-medium text-text-muted transition-colors hover:bg-white/5 hover:text-white group">
+                  className="flex w-full items-center gap-3 rounded-md px-3 py-1.5 text-[13px] font-medium text-text-muted transition-colors hover:bg-white/5 hover:text-white group"
+                >
                   <Icon icon="tabler:books" className="h-4 w-4 text-text-dim group-hover:text-white" />
                   <span>Library</span>
                 </Link>
@@ -129,7 +133,8 @@ export function DashboardSidebar({
                onClick={() => {
                  window.dispatchEvent(new CustomEvent('open-settings'));
                }}
-               className="group flex w-full items-center justify-between rounded-md px-2 py-2 transition-all hover:bg-white/5 active:scale-[0.98]">
+               className="group flex w-full items-center justify-between rounded-md px-2 py-2 transition-all hover:bg-white/5 active:scale-[0.98]"
+             >
                <div className="flex items-center gap-3">
                  <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10 text-primary font-bold text-xs">
                    {userName.charAt(0)}
@@ -152,7 +157,8 @@ function SidebarLink({ onClick, icon, label }: { onClick: () => void, icon: stri
   return (
     <button
       onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-md px-3 py-1.5 text-[13px] font-medium text-text-muted transition-colors hover:bg-white/5 hover:text-white group">
+      className="flex w-full items-center gap-3 rounded-md px-3 py-1.5 text-[13px] font-medium text-text-muted transition-colors hover:bg-white/5 hover:text-white group"
+    >
       <Icon icon={icon} className="h-4 w-4 text-text-dim group-hover:text-white" />
       <span>{label}</span>
     </button>
