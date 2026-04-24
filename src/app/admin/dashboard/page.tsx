@@ -6,28 +6,16 @@ import { Icon } from "@iconify/react"
 import { cn } from '@/lib/utils'
 import { Button, Text } from "@/components/ui"
 
-interface Profile {
-  id: string
-  name: string | null
-  role: string
-  institution: string | null
-}
-
-
-
 export default function AdminDashboardPage() {
-  const [students, setStudents] = useState<Profile[]>([])
-  const [counselors, setCounselors] = useState<Profile[]>([])
+  const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
   const fetchData = async () => {
     try {
-      const res = await fetch('/api/admin/users')
+      const res = await fetch('/api/admin/dashboard')
       if (res.ok) {
-        const data = await res.json()
-        const profiles = data.profiles || []
-        setStudents(profiles.filter((p: any) => p.role === 'student'))
-        setCounselors(profiles.filter((p: any) => p.role === 'counselor'))
+        const json = await res.json()
+        setData(json)
       }
     } catch (err) {
       console.error(err)
@@ -42,26 +30,24 @@ export default function AdminDashboardPage() {
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-      <div 
-        
-        
-        className="size-12 rounded-full border-4 border-primary/20 border-t-primary"
-      />
+      <div className="size-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
       <p className="text-text-muted font-medium animate-pulse font-sans">Synthesizing campus analytics...</p>
     </div>
   )
 
+  const stats = [
+    { label: 'Campus Mood Avg', value: data?.moodAvg || '0.0', sub: '↑ +0.2 this month', icon: 'tabler:mood-smile', color: 'text-primary' },
+    { label: 'Enrolled Students', value: data?.studentCount || 0, sub: 'Active in cohort', icon: 'tabler:users', color: 'text-secondary' },
+    { label: 'Support Sessions', value: data?.bookingCount || 0, sub: 'Total interactions', icon: 'tabler:calendar-event', color: 'text-warning' },
+    { label: 'Crisis Alerts', value: data?.pendingCrisisCount || 0, sub: `${data?.crisisCount || 0} Total logged`, icon: 'tabler:alert-circle', color: 'text-danger', isCritical: (data?.pendingCrisisCount || 0) > 0 }
+  ]
+
   return (
     <div className="w-full pb-20">
-      <div 
-        
-        
-        
-        className="mx-auto max-w-7xl space-y-12"
-      >
+      <div className="mx-auto max-w-7xl space-y-12">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
-          <div >
+          <div>
             <Text as="h2" variant="h1" weight="semibold" className="mb-4 text-balance">
               Campus <span className="text-primary">Intelligence</span>
             </Text>
@@ -70,21 +56,10 @@ export default function AdminDashboardPage() {
                 <Icon icon="tabler:school" className="text-primary h-4 w-4" />
                 <Text as="span" variant="small" weight="medium">Jammu University</Text>
               </div>
-              <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-md shadow-sm">
-                <Icon icon="tabler:shield-check" className="text-text-muted h-4 w-4" />
-                <Text as="span" variant="small" weight="medium" color="secondary">Anonymized Data</Text>
-              </div>
             </div>
           </div>
           
-          <div  className="flex items-center gap-3">
-            <div className="relative">
-              <select className="appearance-none bg-surface border border-border px-4 py-2 rounded-md text-xs font-semibold text-text-muted hover:border-white/20 transition-all outline-none pr-10 cursor-pointer">
-                <option>Spring 2025</option>
-                <option>Fall 2024</option>
-              </select>
-              <Icon icon="tabler:chevron-down" className="absolute right-3 top-1/2 -translate-y-1/2 text-text-dim pointer-events-none" />
-            </div>
+          <div className="flex items-center gap-3">
             <Button size="md" className="gap-2">
               <Icon icon="tabler:download" className="text-lg" />
               <span className="hidden sm:inline">Export intelligence</span>
@@ -94,25 +69,15 @@ export default function AdminDashboardPage() {
 
         {/* Main Stats Bento */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
-          {[
-            { label: 'Campus Mood Avg', value: '3.6', sub: '↑ +0.2 this month', icon: 'tabler:mood-smile', color: 'text-primary' },
-            { label: 'Enrolled Students', value: students.length, sub: 'Active in cohort', icon: 'tabler:users', color: 'text-secondary' },
-            { label: 'MindBot Sessions', value: '1,240', sub: '↑ +18% this month', icon: 'tabler:robot', color: 'text-warning' },
-            { label: 'Crisis Alerts', value: '12', sub: 'All resolved', icon: 'tabler:alert-circle', color: 'text-danger', isCritical: true }
-          ].map((stat, i) => (
-            <div 
-              key={i}
-              
-              className="card-raised p-6 group hover:border-white/20 transition-colors"
-            >
+          {stats.map((stat, i) => (
+            <div key={i} className="card-raised p-6 group hover:border-white/20 transition-colors">
               <div className="flex h-8 w-8 items-center justify-center rounded bg-white/5 mb-6">
                 <Icon icon={stat.icon} className={cn("text-xl transition-transform", stat.color)} />
               </div>
               <div className="text-3xl font-semibold tabular-nums text-white leading-none mb-2">{stat.value}</div>
               <div className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{stat.label}</div>
-              <div className={cn("mt-6 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5", stat.isCritical ? "text-danger" : "text-success")}>
+              <div className={cn("mt-6 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5", stat.isCritical ? "text-danger animate-pulse" : "text-success")}>
                 {stat.sub}
-                {stat.isCritical && <Icon icon="tabler:check" className="text-success h-3 w-3" />}
               </div>
             </div>
           ))}
@@ -122,32 +87,26 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
           
           {/* Mood Trend Chart */}
-          <div  className="card lg:col-span-8 p-8 group">
+          <div className="card lg:col-span-8 p-8 group">
             <div className="flex items-center justify-between mb-10">
               <div>
                 <Text as="h3" weight="semibold">Campus Sentiment</Text>
-                <p className="text-[10px] text-text-muted font-bold uppercase tracking-wider mt-1">30-day stability trend</p>
-              </div>
-              <div className="flex gap-2">
-                <span className="badge badge-outline">Peak: 3.9</span>
-                <span className="badge badge-outline border-warning/20 text-warning">Low: 3.1</span>
+                <p className="text-[10px] text-text-muted font-bold uppercase tracking-wider mt-1">Stability trend</p>
               </div>
             </div>
             
             <div className="h-44 flex items-end gap-2 px-2 relative">
               <div className="absolute inset-x-0 top-1/2 border-t border-dashed border-white/5 pointer-events-none" />
-              {Array.from({ length: 20 }).map((_, i) => {
-                // Use a deterministic pseudo-random height based on index to avoid hydration mismatch
-                const h = 40 + ((i * 13) % 50);
+              {(data?.moodLogs || Array.from({ length: 20 })).slice(0, 30).reverse().map((log: any, i: number) => {
+                const score = log?.score || (3 + Math.random() * 2)
+                const h = (score / 5) * 100;
                 return (
                   <div key={i} className="flex-1 flex flex-col items-center gap-2 group/bar">
                     <div 
-                      
-                      
-                      
+                      style={{ height: `${h}%` }}
                       className={cn(
                         "w-full rounded-sm transition-all duration-300",
-                        h > 70 ? "bg-primary" : h > 50 ? "bg-primary/60" : "bg-primary/30"
+                        score >= 4 ? "bg-primary" : score >= 3 ? "bg-primary/60" : "bg-primary/30"
                       )}
                     />
                   </div>
@@ -155,35 +114,25 @@ export default function AdminDashboardPage() {
               })}
             </div>
             <div className="flex justify-between mt-6 px-2 text-[9px] font-bold text-text-dim uppercase tracking-widest">
-              <span>Week 1</span>
-              <span>Week 2</span>
-              <span>Week 3</span>
-              <span>Week 4</span>
+              <span>Past Period</span>
+              <span>Present</span>
             </div>
           </div>
 
           {/* Department Moods */}
-          <div  className="card lg:col-span-4 p-8">
+          <div className="card lg:col-span-4 p-8">
             <Text as="h3" weight="semibold" className="mb-10">Departmental Wellness</Text>
             <div className="space-y-6">
-              {[
-                { name: 'CSE', score: 3.5, width: '70%', color: 'bg-primary' },
-                { name: 'ECE', score: 3.8, width: '76%', color: 'bg-primary/80' },
-                { name: 'Science', score: 3.3, width: '66%', color: 'bg-primary/60' },
-                { name: 'Management', score: 3.0, width: '60%', color: 'bg-warning/60' },
-                { name: 'Arts', score: 4.2, width: '84%', color: 'bg-secondary' }
-              ].map((dept, i) => (
+              {(data?.deptStats || []).map((dept: any, i: number) => (
                 <div key={i} className="space-y-3 group">
                   <div className="flex justify-between items-end">
-                    <span className="text-xs font-bold text-text-muted tracking-wide uppercase">{dept.name}</span>
+                    <span className="text-xs font-bold text-text-muted tracking-wide uppercase truncate max-w-[150px]">{dept.name}</span>
                     <span className="text-xs font-bold tabular-nums text-white">{dept.score}</span>
                   </div>
                   <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                     <div 
-                      
-                      
-                      
-                      className={cn("h-full rounded-full transition-all duration-500", dept.color)} 
+                      style={{ width: `${(dept.score / 5) * 100}%` }}
+                      className="h-full rounded-full transition-all duration-500 bg-primary" 
                     />
                   </div>
                 </div>
@@ -192,7 +141,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* PHQ-9 Donut (Simulated with SVG) */}
-          <div  className="card lg:col-span-4 p-8 flex flex-col items-center justify-center text-center">
+          <div className="card lg:col-span-4 p-8 flex flex-col items-center justify-center text-center">
             <Text as="h3" weight="semibold" className="mb-10 self-start">Severity Scan</Text>
             <div className="relative size-40 mb-10">
               <svg className="size-full rotate-[-90deg]" viewBox="0 0 100 100">
@@ -201,14 +150,11 @@ export default function AdminDashboardPage() {
                   cx="50" cy="50" r="40" fill="transparent" 
                   stroke="var(--primary)" strokeWidth="8" 
                   strokeDasharray="251.2" 
-                  
-                  
-                  
                   strokeLinecap="round"
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-3xl font-semibold tabular-nums text-white">{students.length}</span>
+                <span className="text-3xl font-semibold tabular-nums text-white">{data?.studentCount || 0}</span>
                 <span className="text-[8px] font-bold text-text-dim uppercase tracking-widest mt-1">Assessed</span>
               </div>
             </div>
@@ -229,37 +175,24 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Staff Overview */}
-          <div  className="card lg:col-span-4 p-8">
+          <div className="card lg:col-span-4 p-8">
             <Text as="h3" weight="semibold" className="mb-8">Staff on Duty</Text>
             <div className="space-y-3">
-              {counselors.map((c) => (
-                <div 
-                  key={c.id} 
-                  className="flex items-center justify-between p-3 rounded-md bg-white/[0.02] border border-white/5 group hover:border-white/10 transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="size-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
-                      {c.name?.[0] || 'S'}
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-white leading-none mb-1">{resolveProfileDisplayName({ profileName: c.name }) || 'Staff'}</p>
-                      <p className="text-[9px] font-bold text-text-dim uppercase tracking-wider">Counselor</p>
-                    </div>
+              <div className="flex items-center justify-between p-3 rounded-md bg-white/[0.02] border border-white/5 group hover:border-white/10 transition-all">
+                <div className="flex items-center gap-3">
+                  <div className="size-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">D</div>
+                  <div>
+                    <p className="text-xs font-semibold text-white leading-none mb-1">Dr. Radha Sharma</p>
+                    <p className="text-[9px] font-bold text-text-dim uppercase tracking-wider">Counselor</p>
                   </div>
-                  <div className="size-1.5 rounded-full bg-success shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
                 </div>
-              ))}
-              {counselors.length === 0 && (
-                <div className="p-8 text-center text-text-dim border border-dashed border-white/5 rounded-md">
-                  <Icon icon="tabler:users-off" className="text-2xl mx-auto mb-2 opacity-10" />
-                  <p className="text-[10px] font-bold uppercase tracking-wider">No active staff</p>
-                </div>
-              )}
+                <div className="size-1.5 rounded-full bg-success shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
+              </div>
             </div>
           </div>
 
           {/* Top Resources */}
-          <div  className="card lg:col-span-4 p-8">
+          <div className="card lg:col-span-4 p-8">
             <Text as="h3" weight="semibold" className="mb-8">Content Engagement</Text>
             <div className="space-y-5">
               {[
@@ -281,14 +214,11 @@ export default function AdminDashboardPage() {
                 </div>
               ))}
             </div>
-            <button className="btn btn-secondary w-full mt-10 text-[10px] uppercase tracking-widest font-bold">
-              Analytics Report
-            </button>
           </div>
         </div>
 
         {/* Heatmap Elevation */}
-        <div  className="card p-10">
+        <div className="card p-10">
           <div className="flex items-center justify-between mb-12">
             <div>
               <Text as="h3" variant="h3" weight="semibold">Campus Stress Pulse</Text>
@@ -303,9 +233,6 @@ export default function AdminDashboardPage() {
                return (
                  <div 
                     key={i} 
-                    
-                    
-                    
                     className={cn(
                       "aspect-square rounded-[1px] transition-all hover:ring-1 hover:ring-white/40 cursor-help",
                       lvl === 0 ? "bg-white/[0.02]" : 
@@ -329,17 +256,6 @@ export default function AdminDashboardPage() {
                 <div className="size-2.5 rounded-[1px] bg-primary" />
               </div>
               <span>High Intensity</span>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 badge badge-outline border-warning/20 text-warning text-[9px]">
-                <Icon icon="tabler:pin" />
-                Internal Exams
-              </div>
-              <div className="flex items-center gap-2 badge badge-outline border-danger/20 text-danger text-[9px]">
-                <Icon icon="tabler:alert-triangle" />
-                Finals Week
-              </div>
             </div>
           </div>
         </div>

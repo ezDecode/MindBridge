@@ -109,7 +109,57 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
           })}
         </nav>
 
-        <div className="p-4">
+        <div className="p-4 space-y-2">
+          {/* Notifications in Sidebar */}
+          <div className="relative">
+            <button
+              onClick={() => setIsNotifOpen(!isNotifOpen)}
+              className={cn(
+                "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all border border-transparent",
+                isNotifOpen ? "bg-white/[0.08] text-white" : "text-text-muted hover:bg-white/[0.04] hover:text-white"
+              )}
+            >
+              <div className="relative">
+                <Icon icon="tabler:bell" className="h-4.5 w-4.5" />
+                <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-primary" />
+              </div>
+              Notifications
+            </button>
+
+            <AnimatePresence>
+              {isNotifOpen && (
+                <motion.div
+                  initial={{ opacity: 0, x: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: 10, scale: 0.95 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute bottom-full left-0 z-50 mb-2 w-72 overflow-hidden rounded-xl border border-white/[0.08] bg-[#0c0f14] shadow-2xl"
+                >
+                  <div className="flex items-center justify-between border-b border-white/[0.06] p-4">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-white">Alerts</span>
+                    <button className="text-[9px] font-bold uppercase tracking-widest text-primary hover:text-primary-hover">
+                      Clear
+                    </button>
+                  </div>
+                  <div className="max-h-64 overflow-y-auto custom-scrollbar">
+                    <NotificationItem
+                      title="Appointment Reminder"
+                      desc="Dr. Radha session tomorrow"
+                      time="2h ago"
+                      unread
+                    />
+                    <NotificationItem
+                      title="Mood Check-in"
+                      desc="How are you feeling?"
+                      time="5h ago"
+                      unread
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <button
             onClick={() => setIsSettingsOpen(true)}
             className="group flex w-full items-center gap-3 rounded-xl border border-white/[0.04] bg-white/[0.02] p-2.5 transition-colors hover:border-white/[0.08] hover:bg-white/[0.04]"
@@ -142,63 +192,6 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
               <Text as="h1" variant="h6" weight="semibold" className="tracking-tight">
                 {currentTitle}
               </Text>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <button
-                  onClick={() => setIsNotifOpen(!isNotifOpen)}
-                  className="flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] text-text-muted transition-all hover:bg-white/[0.04] hover:text-white"
-                >
-                  <Icon icon="tabler:bell" className="h-4.5 w-4.5" />
-                  <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full border-2 border-[#090d12] bg-primary" />
-                </button>
-
-                <AnimatePresence>
-                  {isNotifOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute right-0 z-50 mt-2 w-80 overflow-hidden rounded-xl border border-white/[0.08] bg-surface shadow-2xl"
-                    >
-                      <div className="flex items-center justify-between border-b border-white/[0.06] p-4">
-                        <span className="text-xs font-bold uppercase tracking-widest text-white">Notifications</span>
-                        <button className="text-[10px] font-bold uppercase tracking-widest text-primary transition-colors hover:text-primary-hover">
-                          Mark all read
-                        </button>
-                      </div>
-                      <div className="max-h-96 overflow-y-auto">
-                        <NotificationItem
-                          title="Appointment Reminder"
-                          desc="Dr. Priya session tomorrow at 3 PM"
-                          time="2 hours ago"
-                          unread
-                        />
-                        <NotificationItem
-                          title="Mood Check-in"
-                          desc="How are you feeling today? Log your mood"
-                          time="5 hours ago"
-                          unread
-                        />
-                      </div>
-                      <div className="border-t border-white/[0.06] p-3 text-center">
-                        <button className="text-[10px] font-bold uppercase tracking-widest text-text-muted transition-colors hover:text-white">
-                          See all
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              <button
-                onClick={handleLogout}
-                className="group flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] text-text-muted transition-all hover:bg-danger/5 hover:text-danger"
-              >
-                <Icon icon="tabler:logout" className="h-4.5 w-4.5 transition-transform group-hover:-translate-x-0.5" />
-              </button>
             </div>
           </header>
 
