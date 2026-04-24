@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'motion/react'
 import { Icon } from '@iconify/react'
 import { cn } from "@/lib/utils"
+import { getCurrentDemoUser, clearDemoSession } from '@/lib/auth/demo-session'
 
 export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
   const [loading, setLoading] = useState(true)
@@ -18,7 +19,7 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
   const supabase = useMemo(() => createClient(), [])
 
   const fetchProfile = useCallback(async () => {
-    const { data: { user } } = await supabase.auth.getUser()
+    const user = getCurrentDemoUser()
     if (user) {
       const { data } = await supabase
         .from('profiles')
@@ -44,7 +45,7 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
     setMessage(null)
 
     try {
-      const { data: { user } } = await supabase.auth.getUser()
+      const user = getCurrentDemoUser()
       if (user) {
         const trimmedName = name.trim()
         const { error } = await supabase
@@ -54,14 +55,8 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
 
         if (error) throw error
 
-        await supabase.auth.updateUser({
-          data: {
-            name: trimmedName,
-            full_name: trimmedName,
-            display_name: trimmedName,
-          },
-        })
-
+        // No-op for auth.updateUser as we are using demo system
+        
         setMessage({ text: 'Settings saved successfully.', type: 'success' })
         if (onSuccess) setTimeout(onSuccess, 1500)
       }
@@ -75,7 +70,7 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
   }
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
+    clearDemoSession()
     window.location.href = '/login'
   }
 

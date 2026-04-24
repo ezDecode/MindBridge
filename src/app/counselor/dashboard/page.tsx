@@ -7,6 +7,7 @@ import { motion } from 'motion/react'
 import { Icon } from "@iconify/react"
 import { cn } from '@/lib/utils'
 import { Text } from "@/components/ui"
+import { getCurrentDemoUser } from '@/lib/auth/demo-session'
 
 interface CrisisAlert {
   id: string
@@ -59,18 +60,8 @@ export default function CounselorDashboardPage() {
   const supabase = useMemo(() => createClient(), [])
 
   const fetchData = useCallback(async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      setLoading(false)
-      return
-    }
-
-    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-    if (profile?.role !== 'counselor') {
-      setLoading(false)
-      return
-    }
-
+    const user = getCurrentDemoUser()
+    
     const { data: alerts } = await supabase
       .from('crisis_logs')
       .select('id, triggered_at, severity, student_id')

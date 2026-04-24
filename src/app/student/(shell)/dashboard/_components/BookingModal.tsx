@@ -49,7 +49,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  const [error, setError] = useState<string | null>(null);
  const [success, setSuccess] = useState(false);
 
- useEffect(() => {
+  useEffect(() => {
   if (!isOpen) {
     setSelectedSlot(null);
     setSelectedCounselorId(null);
@@ -61,12 +61,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
   }
 
   const fetchData = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      setLoading(false);
-      return;
-    }
-
+    // In demo system, user is always present
     try {
       const res = await fetch(`/api/bookings?_t=${Date.now()}`, {
         cache: 'no-store'
@@ -76,7 +71,9 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
         
         setCounselors(data.counselors || []);
         if (data.counselors && data.counselors.length > 0) {
-          setSelectedCounselorId(data.counselors[0].id);
+          // Default to Dr. Radha Sharma if she's in the list, otherwise first counselor
+          const radha = data.counselors.find((c: Counselor) => c.name === 'Dr. Radha Sharma' || c.id === '87a24859-7892-49f8-b26d-c2878fe09f43');
+          setSelectedCounselorId(radha ? radha.id : data.counselors[0].id);
         }
 
         setSlots(data.slots || []);

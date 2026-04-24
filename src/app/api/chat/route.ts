@@ -1,9 +1,11 @@
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { nim, DEFAULT_CHAT_PARAMS, parseCompanionResponse } from '@/lib/nvidia-nim'
 import { buildQuickContext, contextToPrompt } from '@/lib/simple-context'
 import { buildSystemPrompt } from '@/lib/agents/companion-agent'
 import { triggerCrisisAlert } from '@/lib/crisis'
 import { NextResponse } from 'next/server'
+import { cookies } from "next/headers"
+import { DEMO_USERS, type DemoRole } from "@/lib/auth/demo-users"
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -49,7 +51,7 @@ interface MoodContext {
 }
 
 async function getMoodContext(userId: string): Promise<MoodContext> {
- const supabase = await createClient()
+ const supabase = await createServiceClient()
  
  const { data } = await supabase
  .from('mood_logs')
@@ -166,12 +168,14 @@ interface ChatRequest {
 
 export async function POST(request: Request) {
  try {
- const supabase = await createClient()
+ const supabase = await createServiceClient()
  
- // Get authenticated user
- const { data: { user }, error: authError } = await supabase.auth.getUser()
+ // Get demo user from cookie
+ const cookieStore = await cookies()
+ const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "student"
+ const user = DEMO_USERS[role]
  
- if (authError || !user) {
+ if (!user) {
  return NextResponse.json(
  { error: 'Unauthorized' },
  { status: 401 }
@@ -346,7 +350,7 @@ export async function POST(request: Request) {
 }
 
 async function saveMessages(
- supabase: Awaited<ReturnType<typeof createClient>>,
+ supabase: Awaited<ReturnType<typeof createServiceClient>>,
  userId: string,
  sessionId: string,
  userMessage: string,
@@ -384,7 +388,7 @@ async function saveMessages(
 }
 
 async function updateAssessment(
- supabase: Awaited<ReturnType<typeof createClient>>,
+ supabase: Awaited<ReturnType<typeof createServiceClient>>,
  userId: string,
  update: { criteria_flagged: string[]; severity: string }
 ) {

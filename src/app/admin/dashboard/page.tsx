@@ -39,8 +39,9 @@ export default function AdminDashboardPage() {
       const res = await fetch('/api/admin/users')
       if (res.ok) {
         const data = await res.json()
-        setStudents(data.students || [])
-        setCounselors(data.counselors || [])
+        const profiles = data.profiles || []
+        setStudents(profiles.filter((p: any) => p.role === 'student'))
+        setCounselors(profiles.filter((p: any) => p.role === 'counselor'))
       }
     } catch (err) {
       console.error(err)
@@ -311,7 +312,7 @@ export default function AdminDashboardPage() {
 
           <div className="grid grid-cols-10 sm:grid-cols-20 md:grid-cols-30 lg:grid-cols-40 gap-1">
             {Array.from({ length: 120 }).map((_, i) => {
-               const lvl = [0, 1, 2, 3, 4][Math.floor(Math.random() * 5)];
+               const lvl = [0, 1, 2, 3, 4][(i * 7 + 3) % 5];
                return (
                  <motion.div 
                     key={i} 

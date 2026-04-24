@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { firstNameOrFallback, resolveProfileDisplayName } from '@/lib/profile-name'
+import { DEMO_USERS } from '@/lib/auth/demo-users'
 
 // We run this as a system process, so we use the Service Role Key to bypass Row Level Security
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -24,14 +25,8 @@ export async function POST(req: Request) {
 
     if (studentsError) throw studentsError
 
-    const { data: authData, error: authUsersError } = await supabase.auth.admin.listUsers({
-      page: 1,
-      perPage: 1000,
-    })
-
-    if (authUsersError) throw authUsersError
-
-    const authUserById = new Map((authData.users || []).map((authUser) => [authUser.id, authUser]))
+    const demoUsers = Object.values(DEMO_USERS)
+    const demoUserById = new Map(demoUsers.map((u) => [u.id, u]))
 
     let triggeredCount = 0
     const profileNameUpdates: Array<{ id: string; name: string }> = []
@@ -63,11 +58,10 @@ export async function POST(req: Request) {
       }
 
       if (triggerProactiveMessage) {
-        const authUser = authUserById.get(student.id)
+        const demoUser = demoUserById.get(student.id)
         const resolvedName = resolveProfileDisplayName({
           profileName: student.name,
-          email: authUser?.email,
-          metadata: (authUser?.user_metadata as Record<string, unknown> | null) ?? null,
+          email: demoUser?.email,
         })
         
         if (resolvedName && resolvedName !== student.name) {

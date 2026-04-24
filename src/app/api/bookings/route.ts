@@ -1,24 +1,27 @@
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { cookies } from "next/headers"
+import { DEMO_USERS, type DemoRole } from "@/lib/auth/demo-users"
 import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 // GET: List available slots and counselors
 export async function GET(request: Request) {
   try {
-    const supabase = await createClient()
+    const supabase = await createServiceClient()
     
     // Create a pure admin client that DOES NOT read cookies.
-    // If we use SSR cookies with the service role key, the user's JWT overrides the service role bypass.
     const adminSupabase = createSupabaseClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
     
-    // Get authenticated user
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    // Get demo user from cookie
+    const cookieStore = await cookies()
+    const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "student"
+    const user = DEMO_USERS[role]
     
-    if (authError || !user) {
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -30,8 +33,6 @@ export async function GET(request: Request) {
       .from('profiles')
       .select('id, name, institution')
       .eq('role', 'counselor')
-
-    console.log("Counselors fetched:", counselors, "Error:", counselorErr)
 
     // Get available slots - Use admin client to bypass RLS
     let slotsQuery = adminSupabase
@@ -47,7 +48,7 @@ export async function GET(request: Request) {
       .eq('available', true)
       .gte('slot_start', new Date().toISOString())
       .order('slot_start', { ascending: true })
-      .limit(100) // Increased limit to show more slots
+      .limit(100)
 
     if (counselorId) {
       slotsQuery = slotsQuery.eq('counselor_id', counselorId)
@@ -75,7 +76,6 @@ export async function GET(request: Request) {
     }))
 
     const normalizedSlots = (slots || []).map((slot) => {
-      // Handle case where counselor join might return an array or object
       const counselorData = Array.isArray(slot.counselor) ? slot.counselor[0] : slot.counselor;
       
       return {
@@ -109,7 +109,7 @@ export async function GET(request: Request) {
       existingBookings: normalizedExistingBookings,
     })
   } catch (error) {
-    console.error('Bookings API CRITICAL error:', error)
+    console.error('Bookings API error:', error)
     return NextResponse.json({ error: 'Internal server error', details: String(error) }, { status: 500 })
   }
 }
@@ -117,12 +117,14 @@ export async function GET(request: Request) {
 // POST: Create a new booking
 export async function POST(request: Request) {
  try {
- const supabase = await createClient()
+ const supabase = await createServiceClient()
  
- // Get authenticated user
- const { data: { user }, error: authError } = await supabase.auth.getUser()
+ // Get demo user from cookie
+ const cookieStore = await cookies()
+ const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "student"
+ const user = DEMO_USERS[role]
  
- if (authError || !user) {
+ if (!user) {
  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
  }
 

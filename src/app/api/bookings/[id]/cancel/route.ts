@@ -1,5 +1,7 @@
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { cookies } from "next/headers"
+import { DEMO_USERS, type DemoRole } from "@/lib/auth/demo-users"
 
 // POST: Cancel a booking (student or counselor)
 export async function POST(
@@ -7,13 +9,15 @@ export async function POST(
  { params }: { params: Promise<{ id: string }> }
 ) {
  try {
- const supabase = await createClient()
+ const supabase = await createServiceClient()
  const { id } = await params
  
- // Get authenticated user
- const { data: { user }, error: authError } = await supabase.auth.getUser()
+ // Get demo user from cookie
+ const cookieStore = await cookies()
+ const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "student"
+ const user = DEMO_USERS[role]
  
- if (authError || !user) {
+ if (!user) {
  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
  }
 

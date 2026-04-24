@@ -14,6 +14,8 @@ import { useToast } from '@/components/ui/Toast'
 import { cn } from '@/lib/utils'
 import { Button, Text } from "@/components/ui"
 
+import { getCurrentDemoUser } from '@/lib/auth/demo-session'
+
 const container = {
   hidden: { opacity: 0 },
   show: {
@@ -31,88 +33,108 @@ const item = {
 }
 
 export default function StudentDashboardPage() {
+    return <StudentDashboardPageContent />
+}
+
+function StudentDashboardPageContent() {
     const { showToast } = useToast()
     const router = useRouter()
+    const [initError, setInitError] = useState<string | null>(null)
     const [data, setData] = useState<DashboardData | null>(null)
     const [userName, setUserName] = useState('')
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
     const [selectedMood, setSelectedMood] = useState<number>(0)
     const [isLogging, setIsLogging] = useState(false)
 
     useEffect(() => {
         const init = async () => {
             const supabase = getClient()
-            const { data: { user } } = await supabase.auth.getUser()
+            const user = getCurrentDemoUser()
 
-            if (!user) {
-                setIsAuthenticated(false)
-                return
-            }
+            setUserName(user?.name?.split(' ')[0] || 'there')
 
-            setIsAuthenticated(true)
+            let moodHistory: { day: string; score: number }[] = generateWeekMoodHistory([])
+            let streak = 0
+            let nextSession: string | null = null
+            let activeChats = 0
+            let latestAssessment: DashboardData['latestAssessment'] = null
 
+            // Fetch mood data
             try {
-                const [moodResponse, profileResult, sessionsResult, bookingsResult, assessmentResult] =
-                    await Promise.all([
-                        fetch('/api/mood?days=7'),
-                        supabase.from('profiles').select('name').eq('id', user.id).single(),
-                        supabase
-                            .from('chat_sessions')
-                            .select('id')
-                            .eq('user_id', user.id)
-                            .gte('last_message_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
-                        supabase
-                            .from('bookings')
-                            .select('slot_start, type, status, counselor:profiles!counselor_id(name)')
-                            .eq('student_id', user.id)
-                            .in('status', ['pending_confirmation', 'confirmed'])
-                            .gte('slot_start', new Date().toISOString())
-                            .order('slot_start', { ascending: true })
-                            .limit(1),
-                        supabase
-                            .from('assessments')
-                            .select('severity, criteria_flagged, assessed_at')
-                            .eq('user_id', user.id)
-                            .order('assessed_at', { ascending: false })
-                            .limit(1),
-                    ])
-
-                const resolvedProfileName = resolveProfileDisplayName({
-                    profileName: profileResult.data?.name ?? null,
-                    email: user.email,
-                    metadata: (user.user_metadata as Record<string, unknown> | null) ?? null,
-                })
-
-                setUserName(resolvedProfileName?.split(' ')[0] || 'there')
-
-                let moodData = { moods: [], streak: 0, average: null }
-                if (moodResponse.ok) moodData = await moodResponse.json()
-
-                const existingBooking = bookingsResult.data?.[0]
-                const latestAssessment = assessmentResult.data?.[0]
-
-                setData({
-                    streak: moodData.streak || 0,
-                    nextSession: existingBooking
-                        ? formatSessionTime(new Date(existingBooking.slot_start))
-                        : null,
-                    activeChats: sessionsResult.data?.length || 0,
-                    moodHistory: generateWeekMoodHistory(moodData.moods || []),
-                    proactiveMessage: null,
-                    latestAssessment: latestAssessment
-                        ? {
-                            severity: latestAssessment.severity,
-                            criteriaFlagged: latestAssessment.criteria_flagged || [],
-                            assessedAt: latestAssessment.assessed_at,
-                        }
-                        : null,
-                })
-            } catch (error) {
-                console.error("Dashboard initialization error:", error)
+                const moodResponse = await fetch('/api/mood?days=7')
+                if (moodResponse.ok) {
+                    const moodData = await moodResponse.json()
+                    streak = moodData.streak || 0
+                    moodHistory = generateWeekMoodHistory(moodData.moods || [])
+                }
+            } catch (e) {
+                console.error('Mood fetch failed:', e)
             }
+
+            // Fetch chat sessions
+            try {
+                const { data: sessions } = await supabase
+                    .from('chat_sessions')
+                    .select('id')
+                    .eq('user_id', user.id)
+                    .gte('last_message_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+                activeChats = sessions?.length || 0
+            } catch (e) {
+                console.error('Sessions fetch failed:', e)
+            }
+
+            // Fetch bookings
+            try {
+                const { data: bookings } = await supabase
+                    .from('bookings')
+                    .select('slot_start, type, status, counselor:profiles!counselor_id(name)')
+                    .eq('student_id', user.id)
+                    .in('status', ['pending_confirmation', 'confirmed'])
+                    .gte('slot_start', new Date().toISOString())
+                    .order('slot_start', { ascending: true })
+                    .limit(1)
+                const existingBooking = bookings?.[0]
+                if (existingBooking) {
+                    nextSession = formatSessionTime(new Date(existingBooking.slot_start))
+                }
+            } catch (e) {
+                console.error('Bookings fetch failed:', e)
+            }
+
+            // Fetch assessments
+            try {
+                const { data: assessments } = await supabase
+                    .from('assessments')
+                    .select('severity, criteria_flagged, assessed_at')
+                    .eq('user_id', user.id)
+                    .order('assessed_at', { ascending: false })
+                    .limit(1)
+                const latest = assessments?.[0]
+                if (latest) {
+                    latestAssessment = {
+                        severity: latest.severity,
+                        criteriaFlagged: latest.criteria_flagged || [],
+                        assessedAt: latest.assessed_at,
+                    }
+                }
+            } catch (e) {
+                console.error('Assessment fetch failed:', e)
+            }
+
+            // Always set data — never leave the page stuck on loading
+            setData({
+                streak,
+                nextSession,
+                activeChats,
+                moodHistory,
+                proactiveMessage: null,
+                latestAssessment,
+            })
         }
 
-        init()
+        init().catch((e) => {
+            console.error('Dashboard init fatal error:', e)
+            setInitError(String(e))
+        })
     }, [])
 
     const logMood = async () => {
@@ -140,14 +162,21 @@ export default function StudentDashboardPage() {
     }
 
     useEffect(() => {
-        if (isAuthenticated === false) {
-            router.push('/login')
+        if (selectedMood > 0) {
+            // Optional: auto-trigger or just wait for button
         }
-    }, [isAuthenticated, router])
+    }, [selectedMood])
 
-    if (isAuthenticated === null || isAuthenticated === false) {
-        return null
-    }
+    if (initError) return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+            <div className="p-8 border border-red-500 bg-red-500/10 text-red-500 rounded-lg max-w-lg w-full text-center">
+                <Icon icon="tabler:alert-triangle" className="text-4xl mx-auto mb-4" />
+                <h3 className="font-bold text-lg mb-2">Failed to load dashboard</h3>
+                <p className="text-sm font-mono break-all">{initError}</p>
+                <button onClick={() => window.location.reload()} className="mt-6 px-4 py-2 bg-red-500 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-red-600 transition-colors">Reload Page</button>
+            </div>
+        </div>
+    )
 
     if (!data) return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
@@ -172,13 +201,16 @@ export default function StudentDashboardPage() {
                 className="mx-auto max-w-7xl space-y-12"
             >
                 {/* Hero Header */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                <motion.div 
+                    variants={container}
+                    className="flex flex-col md:flex-row md:items-end justify-between gap-8"
+                >
                     <motion.div variants={item}>
                         <Text as="h2" variant="h1" weight="semibold" className="mb-4">
                             Good morning, <span className="text-primary">{userName}</span>
                         </Text>
                         <div className="flex items-center gap-4">
-                            <p className="text-text-muted text-sm font-medium flex items-center gap-2">
+                            <p className="text-text-muted text-sm font-medium flex items-center gap-2" suppressHydrationWarning>
                                 <Icon icon="tabler:calendar-heart" className="text-primary" />
                                 {new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                             </p>
@@ -192,13 +224,16 @@ export default function StudentDashboardPage() {
                         <Icon icon="tabler:flame" className="text-xl text-primary animate-pulse" />
                         <Text as="span" variant="small" weight="semibold">{data.streak} day streak</Text>
                     </motion.div>
-                </div>
+                </motion.div>
 
                 {/* Main Dashboard Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <motion.div 
+                    variants={container}
+                    className="grid grid-cols-1 lg:grid-cols-12 gap-8"
+                >
                     
                     {/* Left Column: Mood & Stats */}
-                    <div className="lg:col-span-8 space-y-8">
+                    <motion.div variants={container} className="lg:col-span-8 space-y-8">
                         {/* Mood Logger */}
                         <motion.div variants={item} className="card relative overflow-hidden group p-8 bg-surface-raised">
                             <div className="relative z-10 h-full flex flex-col">
@@ -214,7 +249,10 @@ export default function StudentDashboardPage() {
                                 </div>
                                 <Text color="secondary" className="mb-10 text-sm">Checking in daily helps track your progress and reveals patterns in your wellbeing.</Text>
                                 
-                                <div className="flex justify-between items-center gap-3 mb-10 overflow-x-auto no-scrollbar pb-2">
+                                <motion.div 
+                                    variants={container}
+                                    className="flex justify-between items-center gap-3 mb-10 overflow-x-auto no-scrollbar pb-2"
+                                >
                                     {[
                                         { val: 1, label: 'Low', icon: 'tabler:mood-sad', color: 'text-rose-500' },
                                         { val: 2, label: 'Down', icon: 'tabler:mood-neutral', color: 'text-orange-400' },
@@ -224,6 +262,7 @@ export default function StudentDashboardPage() {
                                     ].map((mood) => (
                                         <motion.button 
                                             key={mood.val}
+                                            variants={item}
                                             whileTap={{ scale: 0.98 }}
                                             onClick={() => setSelectedMood(mood.val)}
                                             className={cn(
@@ -237,7 +276,7 @@ export default function StudentDashboardPage() {
                                             <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">{mood.label}</span>
                                         </motion.button>
                                     ))}
-                                </div>
+                                </motion.div>
 
                                 <div className="mt-auto">
                                     <Button 
@@ -291,12 +330,12 @@ export default function StudentDashboardPage() {
                                 ))}
                             </div>
                         </motion.div>
-                    </div>
+                    </motion.div>
 
                     {/* Right Column: Stats & Actions */}
-                    <div className="lg:col-span-4 space-y-8">
+                    <motion.div variants={container} className="lg:col-span-4 space-y-8">
                         {/* Quick Stats Grid */}
-                        <div className="grid grid-cols-2 gap-4">
+                        <motion.div variants={container} className="grid grid-cols-2 gap-4">
                             {[
                                 { label: 'Weekly Avg', value: averageMood.toFixed(1), icon: 'tabler:chart-line', color: 'text-primary', sub: 'Improved 12%' },
                                 { label: 'Wellness XP', value: '240', icon: 'tabler:bolt', color: 'text-warning', sub: 'Level 4' },
@@ -311,7 +350,7 @@ export default function StudentDashboardPage() {
                                     <div className="text-[9px] font-bold text-text-dim uppercase tracking-widest mt-1">{stat.label}</div>
                                 </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
 
                         {/* Upcoming Support */}
                         <motion.div variants={item} className="card p-8 bg-surface">
@@ -321,13 +360,13 @@ export default function StudentDashboardPage() {
                                 <div className="rounded-lg p-5 bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all mb-6 cursor-pointer group">
                                     <div className="flex items-center gap-4">
                                         <div className="flex flex-col items-center justify-center size-14 rounded bg-surface-raised border border-border shadow-sm group-hover:bg-surface-hover transition-colors shrink-0">
-                                            <span className="text-[9px] font-bold uppercase text-text-dim">{data.nextSession.split(' ')[0]}</span>
-                                            <span className="text-xl font-bold text-white leading-tight tabular-nums">{data.nextSession.split(' ')[1]}</span>
+                                            <span className="text-[9px] font-bold uppercase text-text-dim">{data.nextSession.replace(',', '').split(' ')[0]}</span>
+                                            <span className="text-xl font-bold text-white leading-tight tabular-nums">{data.nextSession.replace(',', '').split(' ')[1]}</span>
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <h4 className="font-semibold text-sm mb-1 text-white truncate">Campus Counselor</h4>
                                             <div className="flex flex-col gap-1 text-[10px] font-bold text-text-dim uppercase tracking-widest">
-                                                <span className="flex items-center gap-1.5"><Icon icon="tabler:clock" className="text-primary" /> {data.nextSession.split('·')[1]}</span>
+                                                <span className="flex items-center gap-1.5"><Icon icon="tabler:clock" className="text-primary" /> {data.nextSession.replace(',', '').split(' ').slice(1).join(' ')}</span>
                                                 <span className="flex items-center gap-1.5"><Icon icon="tabler:video" className="text-secondary" /> Video Call</span>
                                             </div>
                                         </div>
@@ -355,12 +394,12 @@ export default function StudentDashboardPage() {
                                 </Link>
                             </div>
                         </motion.div>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
 
                 {/* Bottom Section: Resources */}
-                <motion.div variants={item} className="pt-8 border-t border-white/5 pb-20">
-                    <div className="flex items-end justify-between mb-10 px-1">
+                <motion.div variants={container} className="pt-8 border-t border-white/5 pb-20">
+                    <motion.div variants={item} className="flex items-end justify-between mb-10 px-1">
                         <div>
                             <Text as="h3" variant="h3" weight="semibold">Curated for You</Text>
                             <p className="text-text-dim text-[10px] font-bold uppercase tracking-widest mt-1">Personalized wellness recommendations</p>
@@ -368,9 +407,12 @@ export default function StudentDashboardPage() {
                         <Link href="/student/resources" className="text-[10px] font-bold text-text-dim hover:text-white transition-colors flex items-center gap-2 group uppercase tracking-widest">
                             Explore All <Icon icon="tabler:arrow-up-right" />
                         </Link>
-                    </div>
+                    </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <motion.div 
+                        variants={container}
+                        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+                    >
                         {[
                             { 
                                 title: '5-Minute Stress Relief', 
@@ -396,6 +438,7 @@ export default function StudentDashboardPage() {
                         ].map((res, i) => (
                             <motion.div 
                                 key={i}
+                                variants={item}
                                 className="group bg-surface border border-border rounded-lg overflow-hidden hover:border-white/20 transition-all duration-150 flex flex-col"
                             >
                                 <div className="h-40 bg-white/[0.02] border-b border-white/5 flex items-center justify-center relative overflow-hidden shrink-0">
@@ -415,7 +458,7 @@ export default function StudentDashboardPage() {
                                 </div>
                             </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
                 </motion.div>
             </motion.div>
         </div>

@@ -1,17 +1,16 @@
-import { createClient } from '@/lib/supabase/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import { DEMO_USERS, type DemoRole } from "@/lib/auth/demo-users"
 import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 export async function GET() {
- const supabase = await createClient()
-
- // First verify user is authenticated or admin hardcoded cookie is present
+ // Get demo user from cookie
  const cookieStore = await cookies()
- const isAdminCookieSet = cookieStore.get('mindbridge_admin')?.value === 'true'
- const { data: { user } } = await supabase.auth.getUser()
- if (!user && !isAdminCookieSet) {
+ const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "student"
+ const user = DEMO_USERS[role]
+ 
+ if (!user) {
  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
  }
 

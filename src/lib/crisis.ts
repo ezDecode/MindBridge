@@ -1,6 +1,7 @@
 import { createServiceClient } from '@/lib/supabase/server'
 import { Resend } from 'resend'
 import { resolveProfileDisplayName } from '@/lib/profile-name'
+import { DEMO_USERS } from '@/lib/auth/demo-users'
 
 // Lazy initialization to prevent build-time errors
 let _resend: Resend | null = null
@@ -63,11 +64,10 @@ export async function triggerCrisisAlert(studentId: string) {
  }
 
  // 3. Send backup email to counselor
-  const { data: studentAuthResult } = await supabase.auth.admin.getUserById(studentId)
+  const demoStudent = Object.values(DEMO_USERS).find(u => u.id === studentId)
   const resolvedStudentName = resolveProfileDisplayName({
   profileName: student.name,
-  email: studentAuthResult.user?.email,
-  metadata: (studentAuthResult.user?.user_metadata as Record<string, unknown> | null) ?? null,
+  email: demoStudent?.email,
   })
 
   if (resolvedStudentName && resolvedStudentName !== student.name) {
@@ -127,12 +127,11 @@ async function sendCrisisEmail(
   .single()
 
  // Get counselor's auth email
- const { data: counselorAuthResult } = await supabase.auth.admin.getUserById(counselorId)
- const counselorEmail = counselorAuthResult.user?.email
+ const demoCounselor = Object.values(DEMO_USERS).find(u => u.id === counselorId)
+ const counselorEmail = demoCounselor?.email
  const counselorName = resolveProfileDisplayName({
  profileName: counselor?.name,
- email: counselorAuthResult.user?.email,
- metadata: (counselorAuthResult.user?.user_metadata as Record<string, unknown> | null) ?? null,
+ email: demoCounselor?.email,
  })
 
  if (counselorName && counselorName !== counselor?.name) {

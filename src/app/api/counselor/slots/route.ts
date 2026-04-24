@@ -1,29 +1,22 @@
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { cookies } from "next/headers"
+import { DEMO_USERS, type DemoRole } from "@/lib/auth/demo-users"
 import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 // GET: List counselor's slots
 export async function GET() {
  try {
- const supabase = await createClient()
+ const supabase = await createServiceClient()
  
- // Get authenticated user
- const { data: { user }, error: authError } = await supabase.auth.getUser()
+ // Get demo user from cookie
+ const cookieStore = await cookies()
+ const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "student"
+ const user = DEMO_USERS[role]
  
- if (authError || !user) {
+ if (!user) {
  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
- }
-
- // Verify user is a counselor
- const { data: profile } = await supabase
- .from('profiles')
- .select('role')
- .eq('id', user.id)
- .single()
-
- if (profile?.role !== 'counselor') {
- return NextResponse.json({ error: 'Access denied' }, { status: 403 })
  }
 
  // Get counselor's slots
@@ -54,7 +47,8 @@ export async function GET() {
  .gte('slot_start', new Date().toISOString())
  .order('slot_start', { ascending: true })
 
- // Resolve student names using service role to access auth emails
+ // Resolve student names
+ // In demo system, we can still use authEmailMap if we want, but let's keep it simple for now
  let authEmailMap = new Map<string, string>()
  const studentIds = (bookings || [])
   .map((b) => {
@@ -108,24 +102,15 @@ export async function GET() {
 // POST: Create new slots (bulk)
 export async function POST(request: Request) {
  try {
- const supabase = await createClient()
+ const supabase = await createServiceClient()
  
- // Get authenticated user
- const { data: { user }, error: authError } = await supabase.auth.getUser()
+ // Get demo user from cookie
+ const cookieStore = await cookies()
+ const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "student"
+ const user = DEMO_USERS[role]
  
- if (authError || !user) {
+ if (!user) {
  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
- }
-
- // Verify user is a counselor
- const { data: profile } = await supabase
- .from('profiles')
- .select('role')
- .eq('id', user.id)
- .single()
-
- if (profile?.role !== 'counselor') {
- return NextResponse.json({ error: 'Access denied' }, { status: 403 })
  }
 
  const { slots } = await request.json()

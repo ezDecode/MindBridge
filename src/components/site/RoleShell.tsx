@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { signOut } from "@/lib/auth/actions";
 import { AnimatePresence, motion } from "motion/react";
 import { PanicModal } from "./PanicModal";
+import { getCurrentDemoUser } from "@/lib/auth/demo-session";
 
 interface RoleShellProps {
   children: React.ReactNode;
@@ -17,11 +18,14 @@ interface RoleShellProps {
   fullHeight?: boolean;
 }
 
+import { DEMO_USERS } from "@/lib/auth/demo-users";
+
 export function RoleShell({ children, navItems, fullHeight = false }: RoleShellProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleOpenSettings = () => setIsSettingsOpen(true);
@@ -29,11 +33,22 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
     return () => window.removeEventListener("open-settings", handleOpenSettings);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  const [demoUser, setDemoUser] = useState(DEMO_USERS["student"]);
+
+  useEffect(() => {
+    setDemoUser(getCurrentDemoUser());
+  }, []);
+
   const user = {
-    name: "Aisha Khan",
-    initials: "AK",
-    role: "Student",
-    dept: "Computer Science",
+    name: demoUser.name,
+    initials: demoUser.name.split(' ').map(n => n[0]).join('').slice(0, 2),
+    role: demoUser.role.charAt(0).toUpperCase() + demoUser.role.slice(1),
+    dept: demoUser.institution,
   };
 
   const isAdmin = pathname.startsWith("/admin");
@@ -117,9 +132,17 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
         <div className="flex h-full w-full flex-col overflow-hidden rounded-[1.5rem] border border-white/[0.08] bg-[#080a0d] shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-white/5 relative z-20">
           
           <header className="z-30 flex h-16 shrink-0 items-center justify-between border-b border-white/[0.04] bg-white/[0.01] px-5 sm:px-8">
-            <Text as="h1" variant="h6" weight="semibold" className="tracking-tight">
-              {currentTitle}
-            </Text>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] text-text-muted transition-all hover:bg-white/[0.04] hover:text-white lg:hidden"
+              >
+                <Icon icon="tabler:menu-2" className="h-5 w-5" />
+              </button>
+              <Text as="h1" variant="h6" weight="semibold" className="tracking-tight">
+                {currentTitle}
+              </Text>
+            </div>
 
             <div className="flex items-center gap-4">
               <div className="relative">
@@ -204,6 +227,87 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
       )}
 
       <PanicModal />
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm lg:hidden"
+            />
+            <motion.aside
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed inset-y-0 left-0 z-[70] flex w-72 flex-col bg-[#030406] p-6 lg:hidden"
+            >
+              <div className="mb-10 flex items-center justify-between">
+                <Link href="/" className="flex items-center gap-3">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-md bg-white text-[10px] font-bold text-black">
+                    MB
+                  </div>
+                  <Text variant="small" weight="bold" className="uppercase tracking-widest text-white">
+                    MindBridge
+                  </Text>
+                </Link>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex h-8 w-8 items-center justify-center rounded-md border border-white/[0.08] text-text-muted"
+                >
+                  <Icon icon="tabler:x" className="h-4 w-4" />
+                </button>
+              </div>
+
+              <nav className="flex-1 space-y-1">
+                {navItems.map((item) => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all",
+                        isActive
+                          ? "bg-white/[0.08] text-white"
+                          : "text-text-muted hover:bg-white/[0.04] hover:text-white",
+                      )}
+                    >
+                      <Icon icon={item.icon} className={cn("h-5 w-5", isActive ? "text-primary" : "text-text-dim")} />
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              <div className="mt-auto pt-6 border-t border-white/[0.04]">
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsSettingsOpen(true);
+                  }}
+                  className="flex w-full items-center gap-3 rounded-xl border border-white/[0.04] bg-white/[0.02] p-2.5"
+                >
+                  <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10 text-xs font-bold text-primary">
+                    {user.initials}
+                  </div>
+                  <div className="min-w-0 flex-1 text-left">
+                    <div className="truncate text-xs font-semibold text-white">{user.name}</div>
+                    <div className="truncate text-[10px] uppercase tracking-wider text-text-dim">
+                      {user.role}
+                    </div>
+                  </div>
+                  <Icon icon="tabler:settings" className="h-4 w-4 text-text-dim" />
+                </button>
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
 
       {isSettingsOpen && (
         <Modal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} title="Account Settings" size="md">

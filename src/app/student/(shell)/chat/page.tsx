@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useEffect, useRef, useState, useCallback } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import { useChat, cleanMessageContent } from "@/hooks/useChat";
 import { getClient } from "@/lib/supabase/client";
 import { generateSessionId } from "@/app/student/(shell)/dashboard/_components/types";
@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Icon } from "@iconify/react";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components/ui";
+import { getCurrentDemoUser } from "@/lib/auth/demo-session";
 
 const STORAGE_KEY = "currentChatSession";
 
@@ -33,12 +34,11 @@ const chipVariants = {
 
 export default function StudentChatPage() {
   const [supabase] = useState(() => (typeof window === "undefined" ? null : getClient()));
-  const [authState, setAuthState] = useState<"loading" | "authenticated" | "guest">("loading");
   const [sessionId, setSessionId] = useState("");
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { messages, sendMessage, isLoading, setMessages } = useChat({
+  const { messages, sendMessage, isLoading } = useChat({
     sessionId,
     initialMessages: [],
   });
@@ -52,11 +52,7 @@ export default function StudentChatPage() {
   }, [messages, isLoading]);
 
   useEffect(() => {
-    const initAuth = async () => {
-      if (!supabase) return;
-      const { data: { user } } = await supabase.auth.getUser();
-      setAuthState(user ? "authenticated" : "guest");
-      
+    const initSession = async () => {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         setSessionId(stored);
@@ -66,7 +62,7 @@ export default function StudentChatPage() {
         localStorage.setItem(STORAGE_KEY, newId);
       }
     };
-    initAuth();
+    initSession();
   }, [supabase]);
 
   const handleSend = async (e?: FormEvent) => {
