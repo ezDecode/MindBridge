@@ -15,8 +15,8 @@ interface Profile {
 }
 
 const container = {
-  hidden: { opacity: 0 },
-  show: {
+  initial: { opacity: 0 },
+  animate: {
     opacity: 1,
     transition: {
       staggerChildren: 0.05
@@ -25,8 +25,8 @@ const container = {
 }
 
 const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: 'spring' as const, duration: 0.6, bounce: 0 } }
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { type: 'spring' as const, duration: 0.6, bounce: 0 } }
 }
 
 export default function AdminDashboardPage() {
@@ -69,8 +69,8 @@ export default function AdminDashboardPage() {
     <div className="w-full pb-20">
       <motion.div 
         variants={container}
-        initial="hidden"
-        animate="show"
+        initial="initial"
+        animate="animate"
         className="mx-auto max-w-7xl space-y-12"
       >
         {/* Header Section */}
@@ -151,7 +151,8 @@ export default function AdminDashboardPage() {
             <div className="h-44 flex items-end gap-2 px-2 relative">
               <div className="absolute inset-x-0 top-1/2 border-t border-dashed border-white/5 pointer-events-none" />
               {Array.from({ length: 20 }).map((_, i) => {
-                const h = 40 + Math.random() * 50;
+                // Use a deterministic pseudo-random height based on index to avoid hydration mismatch
+                const h = 40 + ((i * 13) % 50);
                 return (
                   <div key={i} className="flex-1 flex flex-col items-center gap-2 group/bar">
                     <motion.div 
@@ -310,7 +311,7 @@ export default function AdminDashboardPage() {
             <span className="badge badge-outline px-4 py-1.5">Academic Year 2024-25</span>
           </div>
 
-          <div className="grid grid-cols-10 sm:grid-cols-20 md:grid-cols-30 lg:grid-cols-40 gap-1">
+          <div className="grid grid-cols-[repeat(10,minmax(0,1fr))] sm:grid-cols-[repeat(20,minmax(0,1fr))] md:grid-cols-[repeat(30,minmax(0,1fr))] lg:grid-cols-[repeat(40,minmax(0,1fr))] gap-1">
             {Array.from({ length: 120 }).map((_, i) => {
                const lvl = [0, 1, 2, 3, 4][(i * 7 + 3) % 5];
                return (

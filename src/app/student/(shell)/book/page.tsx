@@ -149,7 +149,8 @@ export default function BookCounselorPage() {
                 <div className="flex gap-0.5 text-warning">
                   {[1, 2, 3, 4, 5].map(i => <Icon key={i} icon="tabler:star-filled" className="text-xs" />)}
                 </div>
-                <Text variant="small" className="text-text-dim text-[10px] font-bold tabular-nums">4.9 · {Math.floor(Math.random() * 100) + 50} sessions</Text>
+                {/* Use a deterministic value based on id length to avoid hydration mismatch */}
+                <Text variant="small" className="text-text-dim text-[10px] font-bold tabular-nums">4.9 · {50 + (counselor.id.length * 3) % 100} sessions</Text>
               </div>
 
               <div className="w-full pt-6 border-t border-white/5">

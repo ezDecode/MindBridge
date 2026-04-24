@@ -58,7 +58,7 @@ export async function GET(request: Request) {
 
     if (slotsError) {
       console.error('Failed to fetch slots:', slotsError)
-      return NextResponse.json({ error: 'Failed to fetch slots' }, { status: 500 })
+      return NextResponse.json({ counselors: [], slots: [], existingBookings: [], error: 'Failed to fetch slots' }, { status: 200 })
     }
 
     // Get user's existing bookings
@@ -110,7 +110,7 @@ export async function GET(request: Request) {
     })
   } catch (error) {
     console.error('Bookings API error:', error)
-    return NextResponse.json({ error: 'Internal server error', details: String(error) }, { status: 500 })
+    return NextResponse.json({ counselors: [], slots: [], existingBookings: [], error: 'Internal server error', details: String(error) }, { status: 200 })
   }
 }
 

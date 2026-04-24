@@ -33,8 +33,8 @@ interface Metrics {
 }
 
 const container = {
-  hidden: { opacity: 0 },
-  show: {
+  initial: { opacity: 0 },
+  animate: {
     opacity: 1,
     transition: {
       staggerChildren: 0.05
@@ -43,12 +43,13 @@ const container = {
 }
 
 const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: 'spring' as const, duration: 0.6, bounce: 0 } }
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { type: 'spring' as const, duration: 0.6, bounce: 0 } }
 }
 
 export default function CounselorDashboardPage() {
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [crisisAlerts, setCrisisAlerts] = useState<CrisisAlert[]>([])
   const [bookings, setBookings] = useState<Booking[]>([])
   const [metrics, setMetrics] = useState<Metrics>({
@@ -60,55 +61,61 @@ export default function CounselorDashboardPage() {
   const supabase = useMemo(() => createClient(), [])
 
   const fetchData = useCallback(async () => {
-    const user = getCurrentDemoUser()
-    
-    const { data: alerts } = await supabase
-      .from('crisis_logs')
-      .select('id, triggered_at, severity, student_id')
-      .gte('triggered_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
-      .order('triggered_at', { ascending: false })
-
-    if (alerts) {
-      setCrisisAlerts(alerts.map(a => ({
-        id: a.id,
-        created_at: a.triggered_at,
-        severity: a.severity,
-        student_id: a.student_id,
-        relativeTime: "Active",
-      })))
-    }
-
-    let nextBookings: Booking[] = []
     try {
-      const res = await fetch('/api/counselor/slots')
-      if (res.ok) {
-        const data = await res.json()
-        nextBookings = data.bookings || []
-        setBookings(nextBookings)
+      setLoading(true)
+      setError(null)
+      const user = getCurrentDemoUser()
+      
+      if (!user || !user.id) {
+          throw new Error("User not available")
       }
-    } catch (err) { console.error(err) }
 
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    const tomorrow = new Date(today)
-    tomorrow.setDate(tomorrow.getDate() + 1)
+      let fetchedAlerts: CrisisAlert[] = []
+      let fetchedTodayCount = 0
 
-    const { count: todayCount } = await supabase
-      .from('bookings')
-      .select('*', { count: 'exact', head: true })
-      .eq('counselor_id', user.id)
-      .eq('status', 'confirmed')
-      .gte('slot_start', today.toISOString())
-      .lt('slot_start', tomorrow.toISOString())
+      try {
+        const dashRes = await fetch(`/api/counselor/dashboard?_t=${Date.now()}`, { cache: 'no-store' })
+        if (dashRes.ok) {
+          const dashData = await dashRes.json()
+          fetchedTodayCount = dashData.todayCount || 0
+          
+          if (Array.isArray(dashData.alerts)) {
+            fetchedAlerts = dashData.alerts.map((a: any) => ({
+              id: a.id,
+              created_at: a.triggered_at,
+              severity: a.severity,
+              student_id: a.student_id,
+              relativeTime: "Active",
+            }))
+            setCrisisAlerts(fetchedAlerts)
+          }
+        }
+      } catch (err) {
+        console.error("Dashboard core fetch error:", err)
+      }
 
-    setMetrics({
-      activeAlerts: alerts?.length || 0,
-      pendingBookings: nextBookings.filter(b => b.status === 'pending_confirmation').length,
-      todaySessions: todayCount || 0,
-    })
+      let nextBookings: Booking[] = []
+      try {
+        const res = await fetch('/api/counselor/slots')
+        if (res.ok) {
+          const data = await res.json()
+          nextBookings = Array.isArray(data.bookings) ? data.bookings : []
+          setBookings(nextBookings)
+        }
+      } catch (err) { console.error("Fetch slots error:", err) }
 
-    setLoading(false)
-  }, [supabase])
+      setMetrics({
+        activeAlerts: fetchedAlerts.length,
+        pendingBookings: Array.isArray(nextBookings) ? nextBookings.filter(b => b.status === 'pending_confirmation').length : 0,
+        todaySessions: fetchedTodayCount || 0,
+      })
+    } catch (err: any) {
+      console.error("Dashboard error:", err)
+      setError(err.message || 'Failed to load dashboard data')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
     const init = async () => {
@@ -145,6 +152,20 @@ export default function CounselorDashboardPage() {
     </div>
   )
 
+  if (error) return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center">
+      <Icon icon="tabler:alert-triangle" className="text-4xl text-danger mb-2" />
+      <Text as="h3" variant="h4" weight="semibold">Unable to Load Dashboard</Text>
+      <p className="text-text-muted font-medium max-w-md mb-4">{error}</p>
+      <button 
+        onClick={() => fetchData()}
+        className="px-4 py-2 bg-primary text-white rounded-md text-sm font-bold hover:bg-primary-hover transition-colors"
+      >
+        Retry Connection
+      </button>
+    </div>
+  )
+
   const confirmedSessions = bookings.filter(b => b.status === 'confirmed')
   const pendingSessions = bookings.filter(b => b.status === 'pending_confirmation')
 
@@ -152,8 +173,8 @@ export default function CounselorDashboardPage() {
     <div className="w-full pb-20">
       <motion.div 
         variants={container}
-        initial="hidden"
-        animate="show"
+        initial="initial"
+        animate="animate"
         className="mx-auto max-w-7xl space-y-12"
       >
         {/* Header Section */}

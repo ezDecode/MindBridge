@@ -37,7 +37,7 @@ export default function MoodTrackerPage() {
       const res = await fetch('/api/mood?days=30');
       if (res.ok) {
         const data = await res.json();
-        setMoodHistory(data.moods || []);
+        setMoodHistory(Array.isArray(data.moods) ? data.moods : []);
         setStreak(data.streak || 0);
       }
     } catch (err) {

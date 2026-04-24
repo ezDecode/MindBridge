@@ -9,7 +9,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
  
  if (!supabaseUrl || !supabaseServiceKey) {
- return NextResponse.json({ error: 'Service role config missing' }, { status: 500 })
+ return NextResponse.json({ profile: null, moodLogs: [], error: 'Service role config missing' }, { status: 200 })
  }
 
  const adminClient = createSupabaseClient(supabaseUrl, supabaseServiceKey)
@@ -22,7 +22,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
  .single()
 
   if (profileErr) {
-  return NextResponse.json({ error: profileErr.message }, { status: 404 })
+  return NextResponse.json({ profile: null, moodLogs: [], error: profileErr.message }, { status: 200 })
   }
 
   const { data: authResult } = await adminClient.auth.admin.getUserById(id)

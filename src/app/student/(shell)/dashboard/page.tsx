@@ -17,8 +17,8 @@ import { Button, Text } from "@/components/ui"
 import { getCurrentDemoUser } from '@/lib/auth/demo-session'
 
 const container = {
-  hidden: { opacity: 0 },
-  show: {
+  initial: { opacity: 0 },
+  animate: {
     opacity: 1,
     transition: {
       staggerChildren: 0.1,
@@ -28,8 +28,8 @@ const container = {
 }
 
 const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: 'spring' as const, duration: 0.6, bounce: 0 } }
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { type: 'spring' as const, duration: 0.6, bounce: 0 } }
 }
 
 export default function StudentDashboardPage() {
@@ -47,94 +47,81 @@ function StudentDashboardPageContent() {
 
     useEffect(() => {
         const init = async () => {
-            const supabase = getClient()
-            const user = getCurrentDemoUser()
-
-            setUserName(user?.name?.split(' ')[0] || 'there')
-
-            let moodHistory: { day: string; score: number }[] = generateWeekMoodHistory([])
-            let streak = 0
-            let nextSession: string | null = null
-            let activeChats = 0
-            let latestAssessment: DashboardData['latestAssessment'] = null
-
-            // Fetch mood data
             try {
-                const moodResponse = await fetch('/api/mood?days=7')
-                if (moodResponse.ok) {
-                    const moodData = await moodResponse.json()
-                    streak = moodData.streak || 0
-                    moodHistory = generateWeekMoodHistory(moodData.moods || [])
+                const user = getCurrentDemoUser()
+                
+                if (!user || !user.id) {
+                    throw new Error("User not available")
                 }
-            } catch (e) {
-                console.error('Mood fetch failed:', e)
-            }
 
-            // Fetch chat sessions
-            try {
-                const { data: sessions } = await supabase
-                    .from('chat_sessions')
-                    .select('id')
-                    .eq('user_id', user.id)
-                    .gte('last_message_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
-                activeChats = sessions?.length || 0
-            } catch (e) {
-                console.error('Sessions fetch failed:', e)
-            }
+                setUserName(user.name?.split(' ')[0] || 'there')
 
-            // Fetch bookings
-            try {
-                const { data: bookings } = await supabase
-                    .from('bookings')
-                    .select('slot_start, type, status, counselor:profiles!counselor_id(name)')
-                    .eq('student_id', user.id)
-                    .in('status', ['pending_confirmation', 'confirmed'])
-                    .gte('slot_start', new Date().toISOString())
-                    .order('slot_start', { ascending: true })
-                    .limit(1)
-                const existingBooking = bookings?.[0]
-                if (existingBooking) {
-                    nextSession = formatSessionTime(new Date(existingBooking.slot_start))
-                }
-            } catch (e) {
-                console.error('Bookings fetch failed:', e)
-            }
+                let moodHistory: { day: string; score: number }[] = generateWeekMoodHistory([])
+                let streak = 0
+                let nextSession: string | null = null
+                let activeChats = 0
+                let latestAssessment: DashboardData['latestAssessment'] = null
 
-            // Fetch assessments
-            try {
-                const { data: assessments } = await supabase
-                    .from('assessments')
-                    .select('severity, criteria_flagged, assessed_at')
-                    .eq('user_id', user.id)
-                    .order('assessed_at', { ascending: false })
-                    .limit(1)
-                const latest = assessments?.[0]
-                if (latest) {
-                    latestAssessment = {
-                        severity: latest.severity,
-                        criteriaFlagged: latest.criteria_flagged || [],
-                        assessedAt: latest.assessed_at,
+                // Fetch mood data
+                try {
+                    const moodResponse = await fetch('/api/mood?days=7')
+                    if (moodResponse.ok) {
+                        const moodData = await moodResponse.json()
+                        streak = moodData.streak || 0
+                        moodHistory = Array.isArray(moodData.moods) ? generateWeekMoodHistory(moodData.moods) : generateWeekMoodHistory([])
                     }
+                } catch (e) {
+                    console.error('Mood fetch failed:', e)
                 }
-            } catch (e) {
-                console.error('Assessment fetch failed:', e)
-            }
 
-            // Always set data — never leave the page stuck on loading
-            setData({
-                streak,
-                nextSession,
-                activeChats,
-                moodHistory,
-                proactiveMessage: null,
-                latestAssessment,
-            })
+                // Fetch dashboard core data via secure API (bypasses RLS issues for demo)
+                try {
+                    const dashRes = await fetch(`/api/student/dashboard?_t=${Date.now()}`, { cache: 'no-store' })
+                    if (dashRes.ok) {
+                        const dashData = await dashRes.json()
+                        
+                        if (Array.isArray(dashData.sessions)) {
+                            activeChats = dashData.sessions.length
+                        }
+                        
+                        if (Array.isArray(dashData.bookings) && dashData.bookings.length > 0) {
+                            const existingBooking = dashData.bookings[0]
+                            if (existingBooking && existingBooking.slot_start) {
+                                nextSession = formatSessionTime(new Date(existingBooking.slot_start))
+                            }
+                        }
+                        
+                        if (Array.isArray(dashData.assessments) && dashData.assessments.length > 0) {
+                            const latest = dashData.assessments[0]
+                            if (latest) {
+                                latestAssessment = {
+                                    severity: latest.severity,
+                                    criteriaFlagged: Array.isArray(latest.criteria_flagged) ? latest.criteria_flagged : [],
+                                    assessedAt: latest.assessed_at,
+                                }
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.error('Dashboard core fetch failed:', e)
+                }
+
+                // Always set data — never leave the page stuck on loading
+                setData({
+                    streak,
+                    nextSession,
+                    activeChats,
+                    moodHistory,
+                    proactiveMessage: null,
+                    latestAssessment,
+                })
+            } catch (err) {
+                console.error("Dashboard error:", err)
+                setInitError("Failed to load data")
+            }
         }
 
-        init().catch((e) => {
-            console.error('Dashboard init fatal error:', e)
-            setInitError(String(e))
-        })
+        init()
     }, [])
 
     const logMood = async () => {
@@ -160,12 +147,6 @@ function StudentDashboardPageContent() {
             setIsLogging(false)
         }
     }
-
-    useEffect(() => {
-        if (selectedMood > 0) {
-            // Optional: auto-trigger or just wait for button
-        }
-    }, [selectedMood])
 
     if (initError) return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
@@ -196,8 +177,8 @@ function StudentDashboardPageContent() {
         <div className="w-full pb-20">
             <motion.div 
                 variants={container}
-                initial="hidden"
-                animate="show"
+                initial="initial"
+                animate="animate"
                 className="mx-auto max-w-7xl space-y-12"
             >
                 {/* Hero Header */}

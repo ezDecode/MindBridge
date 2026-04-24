@@ -19,20 +19,30 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
   const supabase = useMemo(() => createClient(), [])
 
   const fetchProfile = useCallback(async () => {
-    const user = getCurrentDemoUser()
-    if (user) {
-      const { data } = await supabase
+    try {
+      setLoading(true)
+      const user = getCurrentDemoUser()
+      if (!user || !user.id) {
+        throw new Error("User not available")
+      }
+      
+      const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single()
       
-      if (data) {
+      if (error) {
+        console.error("Supabase error:", error)
+      } else if (data) {
         setName(data.name || '')
         setInstitution(data.institution || '')
       }
+    } catch (err) {
+      console.error("Dashboard error:", err)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }, [supabase])
 
   useEffect(() => {

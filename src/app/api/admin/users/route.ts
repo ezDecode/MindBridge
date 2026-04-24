@@ -5,72 +5,83 @@ import { DEMO_USERS, type DemoRole } from "@/lib/auth/demo-users"
 import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 export async function GET() {
- // Get demo user from cookie
- const cookieStore = await cookies()
- const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "student"
- const user = DEMO_USERS[role]
- 
- if (!user) {
- return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
- }
+  try {
+    // Get demo user from cookie
+    const cookieStore = await cookies()
+    const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "student"
+    const user = DEMO_USERS[role]
+    
+    if (!user || role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
- // Use the service role to bypass RLS in an admin context
- const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
- const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
- 
- if (!supabaseUrl || !supabaseServiceKey) {
- return NextResponse.json({ error: 'Service role configuration missing' }, { status: 500 })
- }
+    // Use the service role to bypass RLS in an admin context
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.warn('Supabase service role configuration missing');
+      return NextResponse.json({ profiles: [], error: 'Service role configuration missing' }, { status: 200 })
+    }
 
- const adminClient = createSupabaseClient(supabaseUrl, supabaseServiceKey)
- const { data: profiles, error } = await adminClient
- .from('profiles')
- .select('*')
- .order('created_at', { ascending: false })
+    const adminClient = createSupabaseClient(supabaseUrl, supabaseServiceKey)
+    const { data: profiles, error } = await adminClient
+      .from('profiles')
+      .select('*')
+      .order('created_at', { ascending: false })
 
- if (error) {
- return NextResponse.json({ error: error.message }, { status: 500 })
- }
+    if (error) {
+      console.error('Failed to fetch profiles for admin:', error.message)
+      return NextResponse.json({ profiles: [], error: error.message }, { status: 200 })
+    }
 
- const { data: authData, error: authError } = await adminClient.auth.admin.listUsers({
- page: 1,
- perPage: 1000,
- })
+    // Attempt to fetch auth users, but don't fail if it's not possible (e.g. key permissions)
+    let enrichedProfiles = profiles || []
+    try {
+      const { data: authData, error: authError } = await adminClient.auth.admin.listUsers({
+        page: 1,
+        perPage: 1000,
+      })
 
- if (authError) {
- console.error('Failed to fetch auth users for admin list:', authError.message)
- return NextResponse.json({ profiles })
- }
+      if (!authError && authData?.users) {
+        const authUserById = new Map((authData.users || []).map((authUser) => [authUser.id, authUser]))
 
- const authUserById = new Map((authData.users || []).map((authUser) => [authUser.id, authUser]))
+        const profileNameUpdates: Array<{ id: string; name: string }> = []
+        enrichedProfiles = (profiles || []).map((profile) => {
+          const authUser = authUserById.get(profile.id)
+          const resolvedName = resolveProfileDisplayName({
+            profileName: profile.name,
+            email: authUser?.email,
+            metadata: (authUser?.user_metadata as Record<string, unknown> | null) ?? null,
+          })
 
- const profileNameUpdates: Array<{ id: string; name: string }> = []
- const enrichedProfiles = (profiles || []).map((profile) => {
- const authUser = authUserById.get(profile.id)
- const resolvedName = resolveProfileDisplayName({
- profileName: profile.name,
- email: authUser?.email,
- metadata: (authUser?.user_metadata as Record<string, unknown> | null) ?? null,
- })
+          if (resolvedName && resolvedName !== profile.name) {
+            profileNameUpdates.push({ id: profile.id, name: resolvedName })
+          }
 
- if (resolvedName && resolvedName !== profile.name) {
- profileNameUpdates.push({ id: profile.id, name: resolvedName })
- }
+          return {
+            ...profile,
+            name: resolvedName,
+            email: authUser?.email,
+          }
+        })
 
- return {
- ...profile,
- name: resolvedName,
- email: authUser?.email,
- }
- })
+        if (profileNameUpdates.length > 0) {
+          // Fire and forget updates to avoid slowing down the response
+          Promise.all(
+            profileNameUpdates.map(({ id, name }) =>
+              adminClient.from('profiles').update({ name }).eq('id', id)
+            )
+          ).catch(e => console.error('Failed to update profile names:', e))
+        }
+      }
+    } catch (authErr) {
+      console.warn('Auth users fetch skipped:', authErr)
+    }
 
- if (profileNameUpdates.length > 0) {
- await Promise.all(
- profileNameUpdates.map(({ id, name }) =>
- adminClient.from('profiles').update({ name }).eq('id', id)
- )
- )
- }
-
- return NextResponse.json({ profiles: enrichedProfiles })
+    return NextResponse.json({ profiles: enrichedProfiles })
+  } catch (err) {
+    console.error('Admin API error:', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }

@@ -32,10 +32,6 @@ export const counselorNav: NavItem[] = [
 
 export const adminNav: NavItem[] = [
   { href: "/admin/dashboard", label: "Analytics", icon: "tabler:chart-bar" },
-  { href: "/admin/reports", label: "Reports", icon: "tabler:chart-line" },
-  { href: "/admin/resources", label: "Resources", icon: "tabler:books" },
-  { href: "/admin/users", label: "User Management", icon: "tabler:users" },
-  { href: "/admin/settings", label: "Settings", icon: "tabler:settings" },
 ];
 
 export const dashboardMetrics = [
