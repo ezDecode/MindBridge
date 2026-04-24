@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "motion/react";
+
 import { Icon } from "@iconify/react";
 import { Text } from "@/components/ui";
 import { ChatInput } from "@/components/chat";
@@ -30,28 +30,26 @@ export function MindTab({ onOpenSidebar, onOpenCheckIn, onOpenQuestionnaire }: M
   const router = useRouter();
 
   return (
-    <motion.div 
-      initial="hidden"
-      animate="visible"
-      variants={container}
-      className="h-full flex flex-col max-w-4xl mx-auto space-y-12 pb-20"
-    >
+    < 
+      
+      
+      
+      className="h-full flex flex-col max-w-4xl mx-auto space-y-12 pb-20">
       {/* Header */}
-      <motion.header variants={item} className="flex items-center justify-between px-1">
+      <  className="flex items-center justify-between px-1">
         <div>
           <Text as="h2" variant="h3" weight="semibold" className="tracking-tight text-white">MindSpace</Text>
           <p className="text-text-dim text-[10px] font-bold uppercase tracking-[0.15em] mt-1">Your secure conversational AI companion</p>
         </div>
         <button
           onClick={onOpenSidebar}
-          className="flex lg:hidden h-10 w-10 items-center justify-center rounded-md bg-surface border border-border text-text-muted hover:text-white transition-all shadow-sm"
-        >
+          className="flex lg:hidden h-10 w-10 items-center justify-center rounded-md bg-surface border border-border text-text-muted hover:text-white transition-all shadow-sm">
           <Icon icon="tabler:menu-2" className="h-5 w-5" />
         </button>
-      </motion.header>
+      </>
 
       {/* Main Input Area */}
-      <motion.div variants={item} className="relative group flex-1 flex flex-col justify-center">
+      <  className="relative group flex-1 flex flex-col justify-center">
         <div className="absolute -inset-1 rounded-lg bg-primary/20 opacity-0 blur-2xl transition-opacity duration-500 group-focus-within:opacity-100 pointer-events-none" />
         
         <div className="text-center mb-12 relative z-10">
@@ -82,21 +80,19 @@ export function MindTab({ onOpenSidebar, onOpenCheckIn, onOpenQuestionnaire }: M
               <button 
                 key={suggest}
                 onClick={() => router.push(`/student/chat?initial=${encodeURIComponent(suggest)}`)}
-                className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-text-dim uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all active:scale-[0.98]"
-              >
+                className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-text-dim uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all active:scale-[0.98]">
                 {suggest}
               </button>
             ))}
           </div>
         </div>
-      </motion.div>
+      </>
 
       {/* Shortcuts */}
-      <motion.div variants={item} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <  className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <button 
           onClick={onOpenCheckIn}
-          className="group p-6 rounded-lg bg-surface border border-border hover:border-white/20 hover:bg-surface-hover transition-all text-left flex items-center gap-6"
-        >
+          className="group p-6 rounded-lg bg-surface border border-border hover:border-white/20 hover:bg-surface-hover transition-all text-left flex items-center gap-6">
           <div className="size-12 rounded bg-white/5 flex items-center justify-center text-primary border border-white/5 group-hover:bg-primary/10 transition-colors shrink-0">
             <Icon icon="tabler:mood-smile" className="text-2xl" />
           </div>
@@ -109,8 +105,7 @@ export function MindTab({ onOpenSidebar, onOpenCheckIn, onOpenQuestionnaire }: M
 
         <button 
           onClick={onOpenQuestionnaire}
-          className="group p-6 rounded-lg bg-surface border border-border hover:border-white/20 hover:bg-surface-hover transition-all text-left flex items-center gap-6"
-        >
+          className="group p-6 rounded-lg bg-surface border border-border hover:border-white/20 hover:bg-surface-hover transition-all text-left flex items-center gap-6">
           <div className="size-12 rounded bg-white/5 flex items-center justify-center text-secondary border border-white/5 group-hover:bg-secondary/10 transition-colors shrink-0">
             <Icon icon="tabler:bolt" className="text-2xl" />
           </div>
@@ -120,7 +115,7 @@ export function MindTab({ onOpenSidebar, onOpenCheckIn, onOpenQuestionnaire }: M
           </div>
           <Icon icon="tabler:chevron-right" className="ml-auto text-text-dim opacity-0 group-hover:opacity-100 transition-all" />
         </button>
-      </motion.div>
-    </motion.div>
+      </>
+    </>
   );
 }

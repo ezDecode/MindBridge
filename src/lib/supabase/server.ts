@@ -5,11 +5,11 @@ import type { Database } from '@/types/database'
 export async function createClient() {
  const cookieStore = await cookies()
 
- const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
- const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
 
- if (!supabaseUrl || !supabaseKey) {
-   throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables')
+ if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+   console.warn('Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY. Using placeholders.')
  }
 
  return createServerClient<Database>(
@@ -39,11 +39,11 @@ export async function createClient() {
 export async function createServiceClient() {
  const cookieStore = await cookies()
 
- const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
- const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+ const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key'
 
- if (!supabaseUrl || !serviceKey) {
-   throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables')
+ if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+   console.warn('Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY. Using placeholders.')
  }
 
   return createServerClient<Database>(

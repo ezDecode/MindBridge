@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "motion/react";
+
 import { cn } from "@/lib/utils";
 import { Icon } from '@iconify/react';
 import { Button, Card, Text } from "@/components/ui";
@@ -217,32 +217,31 @@ export function QuestionSessionSheet({
  const canGoNext = currentQuestion ? typeof responses[currentQuestion.id] === "number" : false;
 
  return (
- <AnimatePresence>
+ 
  {isOpen && (
  <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:px-4">
- <motion.div
- initial={{ opacity: 0 }}
- animate={{ opacity: 1 }}
- exit={{ opacity: 0 }}
- transition={{ duration: 0.3 }}
+ <
+ }
+ }
+ }
+ 
  className="absolute inset-0 bg-background/80 backdrop-blur-sm"
  onClick={onClose}
  />
 
- <motion.div
-   initial={{ opacity: 0, y: 12, scale: 0.98 }}
-   animate={{ opacity: 1, y: 0, scale: 1 }}
-   exit={{ opacity: 0, y: 12, scale: 0.98 }}
-   transition={{ type: "spring", duration: 0.4, bounce: 0 }}
-   className="relative z-10 flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-lg border border-white/10 bg-surface shadow-2xl sm:max-h-[85vh] sm:rounded-lg"
- >
+ <
+   }
+   }
+   }
+   
+   className="relative z-10 flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-lg border border-white/10 bg-surface shadow-2xl sm:max-h-[85vh] sm:rounded-lg">
  {/* Top Progress Bar */}
  {!summary && session && (
  <div className="absolute inset-x-0 top-0 h-1 w-full bg-white/5">
- <motion.div
- animate={{ width: `${progress}%` }}
+ <
+ %` }}
  className="h-full bg-primary"
- transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+ 
  />
  </div>
  )}
@@ -273,8 +272,7 @@ export function QuestionSessionSheet({
  <button
  type="button"
  onClick={onClose}
- className="flex h-8 w-8 items-center justify-center rounded-md bg-white/5 text-text-dim hover:text-white transition-all active:scale-[0.92] border border-white/5"
- >
+ className="flex h-8 w-8 items-center justify-center rounded-md bg-white/5 text-text-dim hover:text-white transition-all active:scale-[0.92] border border-white/5">
  <Icon icon="tabler:x" className="h-4 w-4" />
  </button>
  </div>
@@ -305,8 +303,7 @@ export function QuestionSessionSheet({
  </Text>
  <Button
  onClick={() => void loadSession()}
- className="mt-8 gap-2 uppercase tracking-widest text-[10px] font-bold"
- >
+ className="mt-8 gap-2 uppercase tracking-widest text-[10px] font-bold">
  <Icon icon="tabler:refresh" className="h-3.5 w-3.5" />
  Try again
  </Button>
@@ -314,11 +311,10 @@ export function QuestionSessionSheet({
  ) : summary ? (
  <div className="mx-auto w-full max-w-2xl space-y-10 pb-4">
  {/* ── Main Mood Result Section ── */}
- <motion.div
- initial={{ opacity: 0, y: 12 }}
- animate={{ opacity: 1, y: 0 }}
- className="rounded-lg border border-border bg-background/50 p-8 sm:p-12 relative overflow-hidden"
- >
+ <
+ }
+ }
+ className="rounded-lg border border-border bg-background/50 p-8 sm:p-12 relative overflow-hidden">
  <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none transform rotate-12">
    <Icon icon="tabler:sparkles" className="h-32 w-32 text-primary" />
  </div>
@@ -345,8 +341,7 @@ export function QuestionSessionSheet({
      <Button
        onClick={() => { onChatRequested?.(); onClose(); }}
        size="lg"
-       className="gap-2"
-     >
+       className="gap-2">
        <Icon icon="tabler:message-circle" className="h-4.5 w-4.5" />
        Talk through it
      </Button>
@@ -354,14 +349,13 @@ export function QuestionSessionSheet({
        variant="warm"
        onClick={() => router.push("/student/book")}
        size="lg"
-       className="gap-2"
-     >
+       className="gap-2">
        <Icon icon="tabler:calendar" className="h-4.5 w-4.5" />
        Book support
      </Button>
    </div>
  </div>
- </motion.div>
+ </>
 
  {summary.hasSafetyConcern && (
  <div className="rounded-lg border border-danger/20 bg-danger/5 p-6 relative group overflow-hidden">
@@ -397,8 +391,7 @@ export function QuestionSessionSheet({
  {summary.topInsights.map((insight) => (
  <div
  key={insight.category}
- className="group flex items-center justify-between rounded-md border border-border bg-white/[0.02] px-4 py-3 hover:border-white/20 hover:bg-white/5 transition-all"
- >
+ className="group flex items-center justify-between rounded-md border border-border bg-white/[0.02] px-4 py-3 hover:border-white/20 hover:bg-white/5 transition-all">
  <Text weight="semibold" className="truncate text-xs text-white">
  {insight.label}
  </Text>
@@ -450,20 +443,19 @@ export function QuestionSessionSheet({
  const selected = responses[currentQuestion.id] === option.value;
 
  return (
- <motion.button
+ <
  key={`${currentQuestion.id}-${option.value}`}
  type="button"
- initial={{ opacity: 0, y: 8 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.3, delay: optionIndex * 0.04, ease: [0.2, 0, 0, 1] }}
+ }
+ }
+ 
  onClick={() => handleAnswerSelect(currentQuestion.id, option.value)}
  className={cn(
  "group flex items-center justify-between gap-4 rounded-md border p-5 text-left transition-all active:scale-[0.99]",
  selected
  ? "border-primary/40 bg-primary/10 shadow-lg shadow-primary/5 ring-1 ring-primary/20"
  : "bg-background border-border hover:border-white/20 hover:bg-white/[0.02]"
- )}
- >
+ )}>
  <span className={cn(
    "text-sm font-semibold transition-colors",
    selected ? "text-white" : "text-text-muted group-hover:text-white"
@@ -476,7 +468,7 @@ export function QuestionSessionSheet({
  )}>
  {selected && <Icon icon="tabler:check" className="h-3 w-3 text-black stroke-[4]" />}
  </div>
- </motion.button>
+ </>
  );
  })}
  </div>
@@ -498,8 +490,7 @@ export function QuestionSessionSheet({
  }}
  disabled={!canGoNext || isSubmitting}
  size="md"
- className="min-w-[100px] gap-2 uppercase tracking-widest text-[10px] font-bold"
- >
+ className="min-w-[100px] gap-2 uppercase tracking-widest text-[10px] font-bold">
  {isSubmitting ? (
  <Icon icon="tabler:loader" className="h-3.5 w-3.5 animate-spin" />
  ) : (
@@ -514,17 +505,16 @@ export function QuestionSessionSheet({
  type="button"
  onClick={() => setStep((current) => Math.max(0, current - 1))}
  disabled={step === 0}
- className="inline-flex h-10 items-center justify-center gap-1.5 px-4 text-[10px] font-bold uppercase tracking-widest text-text-dim transition-colors hover:text-white disabled:invisible"
- >
+ className="inline-flex h-10 items-center justify-center gap-1.5 px-4 text-[10px] font-bold uppercase tracking-widest text-text-dim transition-colors hover:text-white disabled:invisible">
  <Icon icon="tabler:arrow-left" className="h-3.5 w-3.5" />
  Back
  </button>
  </div>
  </div>
  )}
- </motion.div>
+ </>
  </div>
  )}
- </AnimatePresence>
+ 
  );
 }

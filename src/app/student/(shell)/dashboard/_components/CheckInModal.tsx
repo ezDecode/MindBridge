@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+
 import { Icon } from '@iconify/react';
 import { Button, Text } from "@/components/ui";
 
@@ -64,63 +64,58 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
  const selectedMoodData = moodOptions.find(m => m.score === selectedMood);
 
  return (
- <AnimatePresence>
+ 
  {isOpen && (
  <>
  {/* Backdrop */}
- <motion.div
- initial={{ opacity: 0 }}
- animate={{ opacity: 1 }}
- exit={{ opacity: 0 }}
- transition={{ duration: 0.2 }}
+ <
+ }
+ }
+ }
+ 
  className="fixed inset-0 z-50 bg-[var(--action-primary)]/40 backdrop-blur-md"
  onClick={onClose}
  />
  
          {/* Modal */}
-         <motion.div
-           initial={{ opacity: 0, scale: 0.98, y: 8 }}
-           animate={{ opacity: 1, scale: 1, y: 0 }}
-           exit={{ opacity: 0, scale: 0.98, y: 8 }}
-           transition={{ type: "spring", duration: 0.4, bounce: 0 }}
-           className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-[2rem] border border-[var(--border-default)] bg-[var(--surface-default)] p-6 shadow-2xl"
-         >
+         <
+           }
+           }
+           }
+           
+           className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-[2rem] border border-[var(--border-default)] bg-[var(--surface-default)] p-6 shadow-2xl">
            {/* Header */}
            <div className="flex items-center justify-between">
              <div className="flex items-center gap-2.5">
-               <motion.div
-                 animate={{ scale: [1, 1.05, 1] }}
-                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                 className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--status-error-soft)] shadow-sm ring-1 ring-[var(--status-error)]/10"
-               >
+               <
+                 }
+                 
+                 className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--status-error-soft)] shadow-sm ring-1 ring-[var(--status-error)]/10">
                  <Icon icon="tabler:heart" className="h-5 w-5 text-[var(--status-error)]" />
-               </motion.div>
+               </>
                <Text as="p" variant="h6" weight="bold" className="text-wrap-balance">How are you feeling?</Text>
              </div>
              <button
                onClick={onClose}
-               className="flex h-10 w-10 items-center justify-center rounded-xl text-[var(--text-muted)] transition-all hover:bg-[var(--surface-warm)] hover:text-[var(--text-primary)] active:scale-[0.92]"
-             >
+               className="flex h-10 w-10 items-center justify-center rounded-xl text-[var(--text-muted)] transition-all hover:bg-[var(--surface-warm)] hover:text-[var(--text-primary)] active:scale-[0.92]">
                <Icon icon="tabler:x" className="h-5 w-5" />
              </button>
            </div>
 
            {/* Selected mood preview */}
-           <AnimatePresence mode="wait">
+           
              {selectedMoodData && (
-               <motion.div
+               <
                  key={selectedMood}
-                 initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                 animate={{ opacity: 1, height: "auto", marginTop: 16 }}
-                 exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                 transition={{ duration: 0.3, ease: [0.2, 0, 0, 1] }}
-                 className="overflow-hidden"
-               >
-                 <motion.div 
-                   initial={{ opacity: 0, scale: 0.98 }}
-                   animate={{ opacity: 1, scale: 1 }}
-                   className="flex items-center gap-3 rounded-xl bg-[var(--bg-page)] border border-[var(--action-primary)]/10 px-4 py-3 shadow-sm"
-                 >
+                 }
+                 }
+                 }
+                 
+                 className="overflow-hidden">
+                 < 
+                   }
+                   }
+                   className="flex items-center gap-3 rounded-xl bg-[var(--bg-page)] border border-[var(--action-primary)]/10 px-4 py-3 shadow-sm">
                    <span className="text-2xl">{selectedMoodData.emoji}</span>
                    <div>
                      <Text as="span" variant="label" weight="bold" color="brand">
@@ -130,42 +125,40 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
                        {selectedMoodData.note}
                      </Text>
                    </div>
-                 </motion.div>
-               </motion.div>
+                 </>
+               </>
              )}
-           </AnimatePresence>
+           
 
            {/* Mood emoji selector */}
            <div className="mt-6 grid grid-cols-5 gap-3">
              {moodOptions.map((option, index) => (
-               <motion.button
+               <
                  key={option.score}
-                 initial={{ opacity: 0, y: 10 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 transition={{ delay: index * 0.05, duration: 0.3 }}
+                 }
+                 }
+                 
                  onClick={() => setSelectedMood(option.score)}
                  className={`group relative flex flex-col items-center gap-1 rounded-xl p-3 transition-all duration-200 active:scale-[0.92] ${
                    selectedMood === option.score
                      ? "bg-[var(--action-primary-light)] shadow-md ring-1 ring-[var(--action-primary)]/20"
                      : "bg-[var(--surface-warm)] hover:bg-[var(--surface-warm-hover)]"
-                 }`}
-               >
+                 }`}>
                  <span className={`text-2xl transition-transform duration-300 ${selectedMood === option.score ? 'scale-110' : ''}`}>
                    {option.emoji}
                  </span>
-                 <AnimatePresence>
+                 
                    {selectedMood === option.score && (
-                     <motion.div
-                       initial={{ scale: 0, opacity: 0 }}
-                       animate={{ scale: 1, opacity: 1 }}
-                       exit={{ scale: 0, opacity: 0 }}
-                       className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-lg bg-[var(--action-primary)] text-[var(--text-inverse)] shadow-md"
-                     >
+                     <
+                       }
+                       }
+                       }
+                       className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-lg bg-[var(--action-primary)] text-[var(--text-inverse)] shadow-md">
                        <Icon icon="tabler:check" className="h-3 w-3" />
-                     </motion.div>
+                     </>
                    )}
-                 </AnimatePresence>
-               </motion.button>
+                 
+               </>
              ))}
            </div>
 
@@ -183,8 +176,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
              <Button 
                onClick={handleSave} 
                disabled={!selectedMood || isLoading} 
-               className="flex-1 gap-2 rounded-full h-11 active:scale-[0.96] transition-transform"
-             >
+               className="flex-1 gap-2 rounded-full h-11 active:scale-[0.96] transition-transform">
                {isLoading ? (
                  <>
                    <Icon icon="tabler:loader" className="h-4 w-4 animate-spin" />
@@ -202,14 +194,13 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
              <Button 
                onClick={onClose} 
                variant="ghost"
-               className="rounded-full h-11 text-[var(--text-secondary)] px-6 active:scale-[0.96] transition-transform"
-             >
+               className="rounded-full h-11 text-[var(--text-secondary)] px-6 active:scale-[0.96] transition-transform">
                Skip
              </Button>
            </div>
-         </motion.div>
+         </>
  </>
  )}
- </AnimatePresence>
+ 
  );
 }

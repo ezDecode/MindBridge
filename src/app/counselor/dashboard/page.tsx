@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { resolveProfileDisplayName } from '@/lib/profile-name'
-import { motion } from 'motion/react'
+
 import { Icon } from "@iconify/react"
 import { cn } from '@/lib/utils'
 import { Text } from "@/components/ui"
@@ -33,7 +33,7 @@ interface Metrics {
 }
 
 const container = {
-  initial: { opacity: 0 },
+  initial: { opacity: 1 },
   animate: {
     opacity: 1,
     transition: {
@@ -43,7 +43,7 @@ const container = {
 }
 
 const item = {
-  initial: { opacity: 0, y: 20 },
+  initial: { opacity: 1, y: 20 },
   animate: { opacity: 1, y: 0, transition: { type: 'spring' as const, duration: 0.6, bounce: 0 } }
 }
 
@@ -143,9 +143,9 @@ export default function CounselorDashboardPage() {
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-      <motion.div 
-        animate={{ rotate: 360 }}
-        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+      < 
+        }
+        
         className="size-12 rounded-full border-4 border-primary/20 border-t-primary"
       />
       <p className="text-text-muted font-medium animate-pulse font-sans">Opening your professional portal...</p>
@@ -159,8 +159,7 @@ export default function CounselorDashboardPage() {
       <p className="text-text-muted font-medium max-w-md mb-4">{error}</p>
       <button 
         onClick={() => fetchData()}
-        className="px-4 py-2 bg-primary text-white rounded-md text-sm font-bold hover:bg-primary-hover transition-colors"
-      >
+        className="px-4 py-2 bg-primary text-white rounded-md text-sm font-bold hover:bg-primary-hover transition-colors">
         Retry Connection
       </button>
     </div>
@@ -171,15 +170,14 @@ export default function CounselorDashboardPage() {
 
   return (
     <div className="w-full pb-20">
-      <motion.div 
-        variants={container}
-        initial="initial"
-        animate="animate"
-        className="mx-auto max-w-7xl space-y-12"
-      >
+      < 
+        
+        
+        
+        className="mx-auto max-w-7xl space-y-12">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-          <motion.div variants={item}>
+          <>
             <Text as="h2" variant="h1" weight="semibold" className="mb-4 text-balance">
               Support <span className="text-primary">Command</span>
             </Text>
@@ -187,22 +185,21 @@ export default function CounselorDashboardPage() {
               <Icon icon="tabler:calendar-heart" className="text-primary h-4 w-4" />
               Welcome back. You have <span className="text-white font-bold tabular-nums">{metrics.todaySessions}</span> sessions today.
             </div>
-          </motion.div>
+          </>
           
-          <motion.div 
-            variants={item}
+          < 
+            
             className={cn(
               "flex items-center gap-2.5 px-4 py-2 rounded-md border shadow-sm transition-all",
-              metrics.activeAlerts > 0 
+              metrics.activeAlerts> 0 
                 ? "bg-danger/10 border-danger/20 text-danger animate-pulse" 
                 : "bg-success/10 border-success/20 text-success"
-            )}
-          >
-            <Icon icon={metrics.activeAlerts > 0 ? "tabler:alert-triangle" : "tabler:shield-check"} className="text-lg" />
+            )}>
+            <Icon icon={metrics.activeAlerts> 0 ? "tabler:alert-triangle" : "tabler:shield-check"} className="text-lg" />
             <span className="text-[10px] font-bold uppercase tracking-widest">
-              {metrics.activeAlerts > 0 ? `${metrics.activeAlerts} ACTIVE CRISIS` : 'Systems Clear'}
+              {metrics.activeAlerts> 0 ? `${metrics.activeAlerts} ACTIVE CRISIS` : 'Systems Clear'}
             </span>
-          </motion.div>
+          </>
         </div>
 
         {/* Stats Bento */}
@@ -213,17 +210,16 @@ export default function CounselorDashboardPage() {
             { label: "Pending Approvals", value: metrics.pendingBookings, icon: "tabler:clock-pause", color: "text-warning" },
             { label: "Satisfaction Rate", value: "4.9", icon: "tabler:star", color: "text-warning" }
           ].map((stat, i) => (
-            <motion.div 
+            < 
               key={i}
-              variants={item}
-              className="card-raised p-6 group hover:border-white/20 transition-colors"
-            >
+              
+              className="card-raised p-6 group hover:border-white/20 transition-colors">
               <div className="flex h-8 w-8 items-center justify-center rounded bg-white/5 mb-6">
                 <Icon icon={stat.icon} className={cn("text-xl transition-transform", stat.color)} />
               </div>
               <div className="text-3xl font-semibold tabular-nums text-white leading-none mb-2">{stat.value}</div>
               <div className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{stat.label}</div>
-            </motion.div>
+            </>
           ))}
         </div>
 
@@ -231,7 +227,7 @@ export default function CounselorDashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Today's Schedule - Large Block */}
-          <motion.div variants={item} className="card lg:col-span-8 p-8">
+          <  className="card lg:col-span-8 p-8">
             <div className="flex items-center justify-between mb-10">
               <div>
                 <Text as="h3" weight="semibold">Today&apos;s Schedule</Text>
@@ -242,10 +238,9 @@ export default function CounselorDashboardPage() {
             
             <div className="space-y-3">
               {confirmedSessions.map((booking) => (
-                <motion.div 
+                < 
                   key={booking.id} 
-                  className="flex items-center gap-6 p-4 rounded-lg bg-white/[0.02] border border-white/5 group hover:border-white/10 transition-all"
-                >
+                  className="flex items-center gap-6 p-4 rounded-lg bg-white/[0.02] border border-white/5 group hover:border-white/10 transition-all">
                   <div className="flex flex-col items-center justify-center size-14 rounded bg-surface-raised border border-border shadow-sm">
                     <span className="text-[9px] font-bold uppercase text-text-muted">{formatTime(booking.slot_start).split(' ')[1]}</span>
                     <span className="text-xl font-bold text-white leading-tight">{formatTime(booking.slot_start).split(' ')[0]}</span>
@@ -265,7 +260,7 @@ export default function CounselorDashboardPage() {
                   <button className="size-8 rounded bg-white text-black flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <Icon icon="tabler:external-link" className="text-lg" />
                   </button>
-                </motion.div>
+                </>
               ))}
               {confirmedSessions.length === 0 && (
                 <div className="p-16 text-center text-text-dim border border-dashed border-white/5 rounded-lg bg-white/[0.01]">
@@ -275,13 +270,13 @@ export default function CounselorDashboardPage() {
                 </div>
               )}
             </div>
-          </motion.div>
+          </>
 
           {/* Pending & Crisis Side Bento */}
           <div className="lg:col-span-4 space-y-8">
             
             {/* Pending Confirmations */}
-            <motion.div variants={item} className="card p-8 group">
+            <  className="card p-8 group">
               <div className="flex items-center justify-between mb-8">
                 <Text as="h3" weight="semibold">Pending Requests</Text>
                 <span className="badge badge-outline">{metrics.pendingBookings}</span>
@@ -298,8 +293,7 @@ export default function CounselorDashboardPage() {
                     <div className="flex gap-2">
                       <button 
                         onClick={() => handleConfirmBooking(booking.id)}
-                        className="size-7 rounded bg-success/10 text-success flex items-center justify-center border border-success/20 hover:bg-success/20 transition-all"
-                      >
+                        className="size-7 rounded bg-success/10 text-success flex items-center justify-center border border-success/20 hover:bg-success/20 transition-all">
                         <Icon icon="tabler:check" className="text-base" />
                       </button>
                       <button className="size-7 rounded bg-white/5 text-text-muted flex items-center justify-center border border-white/10 hover:bg-white/10 transition-all">
@@ -312,30 +306,29 @@ export default function CounselorDashboardPage() {
                   <p className="text-center text-text-dim text-[10px] font-bold uppercase tracking-widest py-10 opacity-40 italic">All caught up</p>
                 )}
               </div>
-            </motion.div>
+            </>
 
             {/* Crisis Alerts Elevation */}
-            <motion.div variants={item} className={cn(
+            <  className={cn(
               "card p-8 transition-all duration-300",
-              crisisAlerts.length > 0 ? "border-danger/40 bg-danger/[0.02]" : "opacity-40 grayscale"
+              crisisAlerts.length> 0 ? "border-danger/40 bg-danger/[0.02]" : "opacity-40 grayscale"
             )}>
               <div className="flex items-center justify-between mb-8">
                 <Text as="h3" weight="semibold" className="flex items-center gap-2">
-                  <Icon icon="tabler:alert-triangle" className={crisisAlerts.length > 0 ? "text-danger" : "text-text-dim"} />
+                  <Icon icon="tabler:alert-triangle" className={crisisAlerts.length> 0 ? "text-danger" : "text-text-dim"} />
                   Critical Alerts
                 </Text>
-                <span className={cn("badge", crisisAlerts.length > 0 ? "bg-danger text-white border-none" : "badge-outline")}>
+                <span className={cn("badge", crisisAlerts.length> 0 ? "bg-danger text-white border-none" : "badge-outline")}>
                   {crisisAlerts.length}
                 </span>
               </div>
               <div className="space-y-4">
                 {crisisAlerts.map((alert) => (
-                  <motion.div 
+                  < 
                     key={alert.id} 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="p-4 rounded-lg bg-danger/10 border border-danger/20"
-                  >
+                    }
+                    }
+                    className="p-4 rounded-lg bg-danger/10 border border-danger/20">
                     <div className="flex items-center gap-4 mb-4">
                       <div className="size-9 rounded bg-danger text-white flex items-center justify-center shadow-lg shadow-danger/20">
                         <Icon icon="tabler:user-exclamation" className="text-xl" />
@@ -350,7 +343,7 @@ export default function CounselorDashboardPage() {
                     <button className="w-full py-2 bg-danger text-white text-[10px] font-bold uppercase tracking-widest rounded hover:bg-danger-hover transition-colors">
                       Respond now
                     </button>
-                  </motion.div>
+                  </>
                 ))}
                 {crisisAlerts.length === 0 && (
                   <div className="p-10 text-center bg-white/[0.01] rounded-lg border border-dashed border-white/5">
@@ -359,10 +352,10 @@ export default function CounselorDashboardPage() {
                   </div>
                 )}
               </div>
-            </motion.div>
+            </>
           </div>
         </div>
-      </motion.div>
+      </>
     </div>
   )
 }

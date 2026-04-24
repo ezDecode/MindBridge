@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import { Button, Text, Skeleton } from "@/components/ui"
-import { motion, AnimatePresence } from 'motion/react'
 import { Icon } from '@iconify/react'
 import { resolveProfileDisplayName } from '@/lib/profile-name'
 import { cn } from "@/lib/utils"
@@ -42,14 +41,6 @@ const staggerContainer = {
   }
 }
 
-const slideIn = {
-  hidden: { opacity: 0, y: 8 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4 }
-  }
-}
 export function StudentDetailView({ studentId }: StudentDetailViewProps) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [moodLogs, setMoodLogs] = useState<MoodLog[]>([])
@@ -120,8 +111,8 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
   }, [moodLogs])
 
   const status = useMemo(() => {
-    if (avgMood < 2 && moodLogs.length > 0) return { label: 'Priority Escalation', color: 'text-danger', bg: 'bg-danger/10', border: 'border-danger/20' }
-    if (avgMood < 3.5 && moodLogs.length > 0) return { label: 'Active Monitoring', color: 'text-warning', bg: 'bg-warning/10', border: 'border-warning/20' }
+    if (avgMood < 2 && moodLogs.length> 0) return { label: 'Priority Escalation', color: 'text-danger', bg: 'bg-danger/10', border: 'border-danger/20' }
+    if (avgMood < 3.5 && moodLogs.length> 0) return { label: 'Active Monitoring', color: 'text-warning', bg: 'bg-warning/10', border: 'border-warning/20' }
     return { label: 'Stable Index', color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20' }
   }, [avgMood, moodLogs])
 
@@ -147,15 +138,14 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
   const profileDisplayName = resolveProfileDisplayName({ profileName: profile.name }) || 'User'
 
   return (
-    <motion.div 
-      initial="hidden"
-      animate="visible"
-      variants={staggerContainer}
-      className="space-y-12"
-    >
+    < 
+      
+      
+      
+      className="space-y-12">
       
       {/* ── Diagnostic Header ── */}
-      <motion.div variants={slideIn} className="flex items-center justify-between">
+      <  className="flex items-center justify-between">
         <div className="flex items-center gap-5">
           <div className="h-12 w-12 rounded bg-surface-raised text-white flex items-center justify-center font-bold text-xl border border-border shadow-sm uppercase">
             {profileDisplayName.charAt(0)}
@@ -175,29 +165,27 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
           size="sm"
           onClick={handleCriticalHelp} 
           disabled={triggeringHelp}
-          className="uppercase tracking-widest text-[10px] font-bold h-8 px-4"
-        >
+          className="uppercase tracking-widest text-[10px] font-bold h-8 px-4">
           <Icon icon="tabler:alert-octagon" className="mr-2 h-3.5 w-3.5" />
           Escalate
         </Button>
-      </motion.div>
+      </>
 
-      <AnimatePresence initial={false}>
+      
         {helpMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="p-3 rounded-md bg-success/10 border border-success/20 flex items-center gap-3 text-success font-bold text-[11px] uppercase tracking-widest"
-          >
+          <
+            }
+            }
+            }
+            className="p-3 rounded-md bg-success/10 border border-success/20 flex items-center gap-3 text-success font-bold text-[11px] uppercase tracking-widest">
             <Icon icon="tabler:check" className="h-4 w-4" />
             {helpMessage}
-          </motion.div>
+          </>
         )}
-      </AnimatePresence>
+      
 
       {/* ── Resilience Analysis ── */}
-      <motion.div variants={slideIn} className="card p-8 bg-surface-raised">
+      <  className="card p-8 bg-surface-raised">
         <div className="flex items-center justify-between mb-10 px-1">
           <Text variant="small" weight="bold" className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-dim">Resilience Analysis</Text>
           <div className="text-right">
@@ -216,13 +204,13 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
           ) : (
             [...moodLogs].reverse().slice(-20).map((log, i) => (
               <div key={log.id} className="flex-1 group relative h-full flex items-end">
-                <motion.div 
-                  initial={{ height: 0 }}
-                  animate={{ height: `${(log.score / 5) * 100}%` }}
-                  transition={{ delay: i * 0.02, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                < 
+                  }
+                  %` }}
+                  
                   className={cn(
                     "w-full rounded-t-sm transition-all cursor-help origin-bottom",
-                    log.score >= 4 ? "bg-success" : log.score >= 2 ? "bg-warning" : "bg-danger"
+                    log.score>= 4 ? "bg-success" : log.score>= 2 ? "bg-warning" : "bg-danger"
                   )}
                   style={{ opacity: 0.3 + (log.score / 5) * 0.5 }}
                 />
@@ -235,7 +223,7 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
             ))
           )}
         </div>
-      </motion.div>
+      </>
 
       {/* ── Intelligence Feed ── */}
       <div className="space-y-6">
@@ -244,19 +232,17 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
           <button 
             onClick={handleGenerateReport}
             disabled={loadingReport}
-            className="text-[9px] font-bold uppercase tracking-widest text-primary hover:text-primary-hover disabled:opacity-30 transition-all flex items-center gap-2 active:scale-95"
-          >
+            className="text-[9px] font-bold uppercase tracking-widest text-primary hover:text-primary-hover disabled:opacity-30 transition-all flex items-center gap-2 active:scale-95">
             {loadingReport && <Icon icon="tabler:loader-2" className="h-3 w-3 animate-spin" />}
             {loadingReport ? 'Analyzing...' : 'Refresh AI Analysis'}
           </button>
         </div>
 
         {report && (
-          <motion.div 
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="p-6 rounded-lg bg-primary/5 border border-primary/20 space-y-6"
-          >
+          < 
+            }
+            }
+            className="p-6 rounded-lg bg-primary/5 border border-primary/20 space-y-6">
             <div className="flex items-center gap-2">
               <Icon icon="tabler:sparkles" className="h-4 w-4 text-primary" />
               <Text variant="small" weight="bold" className="text-[10px] font-bold uppercase tracking-widest text-primary">AI Clinical Insights</Text>
@@ -269,22 +255,20 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </>
         )}
 
         <div className="space-y-3">
           {moodLogs.slice(0, 10).map((log) => (
-            <motion.div 
+            < 
               key={log.id} 
-              variants={slideIn}
-              className="flex gap-5 p-4 rounded-md bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors group"
-            >
+              
+              className="flex gap-5 p-4 rounded-md bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors group">
               <div 
                 className={cn(
                   "h-10 w-10 shrink-0 rounded flex items-center justify-center font-bold text-xs text-black tabular-nums transition-all opacity-80",
-                  log.score >= 4 ? "bg-success" : log.score >= 2 ? "bg-warning" : "bg-danger"
-                )}
-              >
+                  log.score>= 4 ? "bg-success" : log.score>= 2 ? "bg-warning" : "bg-danger"
+                )}>
                 {log.score}
               </div>
               <div className="min-w-0 flex-1">
@@ -297,10 +281,10 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
                   &ldquo;{log.note || 'No narrative provided.'}&rdquo;
                 </Text>
               </div>
-            </motion.div>
+            </>
           ))}
         </div>
       </div>
-    </motion.div>
+    </>
   )
 }
