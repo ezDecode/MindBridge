@@ -383,7 +383,6 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ delay: index * 0.03 }}
-                        whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setSelectedSlot(slot)}
                         className={`group relative rounded-md px-3 py-2 text-center transition-all ${

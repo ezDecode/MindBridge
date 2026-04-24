@@ -16,7 +16,7 @@ interface CarouselSectionProps {
  tabs: TabConfig[];
 }
 
-const CARD_HEIGHT = "h-[70vh] min-h-[600px]";
+const CARD_HEIGHT = "h-auto lg:h-[600px]";
 
 /* ── Carousel Slide Component ── */
 
@@ -27,7 +27,7 @@ interface SlideProps {
 const Slide = ({ children }: SlideProps) => {
  return (
  <li className="flex-shrink-0 w-full px-4 flex justify-center relative list-none">
- <div className="w-[95vw] md:w-[75vw]">
+ <div className="w-full max-w-5xl">
  {children}
  </div>
  </li>
@@ -45,27 +45,27 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
 
  return (
  <motion.section 
- className="page-section w-full pt-4 pb-16 overflow-hidden" 
+ className="page-section w-full py-20 sm:py-32 border-b border-border" 
  initial="hidden" 
  whileInView="visible" 
  viewport={{ once: true, margin: "-80px" }} 
  variants={sectionReveal}
  >
  <Container size="lg">
- <div className="mb-10 text-center">
- <Text as="h2" variant="h2" weight="bold" className="text-[var(--text-primary)]">Support that fits your moment</Text>
+ <div className="mb-16 text-center">
+ <Text as="h2" variant="h2" weight="semibold">Support that fits your moment</Text>
  </div>
 
  {/* Tab Navigation */}
- <div className="mx-auto mb-10 flex flex-wrap justify-center gap-2">
+ <div className="mx-auto mb-16 flex flex-wrap justify-center gap-2">
  {tabs.map((tab, index) => (
  <button
  key={tab.id}
  onClick={() => handleTabClick(index)}
- className={`h-11 px-6 rounded-full text-label font-bold transition-all duration-300 ${
+ className={`h-9 px-4 rounded-md text-sm font-medium transition-all duration-150 ${
  current === index 
- ? "bg-[var(--action-primary)] text-[var(--text-inverse)]"
- : "bg-[var(--surface-warm)] text-[var(--text-secondary)] hover:bg-[var(--action-primary-light)] hover:text-[var(--text-primary)]"
+ ? "bg-white text-black shadow-sm"
+ : "text-text-muted hover:text-white hover:bg-white/5"
  }`}
  >
  {tab.label}
@@ -75,7 +75,7 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
 
  <div className="relative">
  {/* Main Carousel Track */}
- <div className="flex w-full">
+ <div className="flex w-full overflow-hidden">
  <ul 
  className="flex w-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
  style={{ transform: `translateX(-${current * 100}%)` }}
@@ -83,30 +83,30 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
  {tabs.map((tab) => (
  <Slide key={tab.id}>
  {tab.id === "aicompanion" && (
- <Card variant="elevated" padding="none" className="rounded-md border-[0.125rem] border-[var(--border-default)] overflow-hidden bg-[var(--surface-default)] h-full">
+ <Card variant="elevated" padding="none" className="overflow-hidden bg-surface h-full">
  <div className={`grid lg:grid-cols-2 ${CARD_HEIGHT}`}>
- <div className="relative bg-[var(--action-primary-light)] flex items-center justify-center p-8">
+ <div className="relative bg-white/[0.02] flex items-center justify-center p-8 border-b lg:border-b-0 lg:border-r border-border">
  <div className="text-center">
- <div className="inline-flex items-center justify-center w-20 h-20 rounded-md bg-[var(--surface-default)] shadow-sm mb-4">
- <Icon icon="tabler:message-circle" className="w-10 h-10 text-[var(--action-primary)]" />
+ <div className="inline-flex items-center justify-center w-16 h-16 rounded-lg bg-surface-raised border border-border shadow-sm mb-6">
+ <Icon icon="tabler:message-circle" className="w-8 h-8 text-primary" />
  </div>
- <Text as="h3" variant="h3" weight="bold" className="text-[var(--text-primary)]">AI Companion</Text>
- <Text as="p" variant="small" className="text-[var(--text-secondary)] mt-2">Talk anytime, anonymously</Text>
+ <Text as="h3" variant="h3" weight="semibold">AI Companion</Text>
+ <Text as="p" color="secondary" className="mt-2">Talk anytime, anonymously</Text>
  </div>
  </div>
- <div className="flex flex-col justify-center p-8 lg:p-12">
- <Text as="h3" variant="h3" weight="bold" className="text-[var(--text-primary)] leading-tight">{beKindCTA.headline}</Text>
- <Text as="p" variant="body" className="mt-3.5 text-[var(--text-secondary)] leading-relaxed">{beKindCTA.description}</Text>
- <div className="mt-6 space-y-3">
+ <div className="flex flex-col justify-center p-8 lg:p-16">
+ <Text as="h3" variant="h3" weight="semibold" className="leading-tight">{beKindCTA.headline}</Text>
+ <Text as="p" color="secondary" className="mt-4 leading-relaxed">{beKindCTA.description}</Text>
+ <div className="mt-8 space-y-4">
  {beKindCTA.features.map((f) => (
  <div key={f} className="flex items-center gap-3">
- <Icon icon="tabler:circle-check" className="h-4 w-4 shrink-0 text-[var(--action-primary)]" />
- <Text as="p" variant="small" className="text-[var(--text-secondary)]">{f}</Text>
+ <Icon icon="tabler:circle-check" className="h-4 w-4 shrink-0 text-primary" />
+ <Text as="p" variant="small" color="secondary">{f}</Text>
  </div>
  ))}
  </div>
- <div className="mt-8">
- <Button href="/student/dashboard" variant="primary" size="md">Get started</Button>
+ <div className="mt-10">
+ <Button href="/student/dashboard" size="lg">Get started</Button>
  </div>
  </div>
  </div>
@@ -114,33 +114,37 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
  )}
 
  {tab.id === "wellnesscheck" && (
- <Card variant="elevated" padding="none" className="rounded-md border-[0.125rem] border-[var(--border-default)] overflow-hidden bg-[var(--surface-default)] h-full">
+ <Card variant="elevated" padding="none" className="overflow-hidden bg-surface h-full">
  <div className={`grid lg:grid-cols-2 ${CARD_HEIGHT}`}>
- <div className="relative bg-[var(--action-primary-light)] flex items-center justify-center p-8">
+ <div className="relative bg-white/[0.02] flex items-center justify-center p-8 border-b lg:border-b-0 lg:border-r border-border">
  <div className="text-center">
- <div className="inline-flex items-center justify-center w-20 h-20 rounded-md bg-[var(--surface-default)] shadow-sm mb-4">
- <Icon icon="tabler:clipboard" className="w-10 h-10 text-[var(--action-primary)]" />
+ <div className="inline-flex items-center justify-center w-16 h-16 rounded-lg bg-surface-raised border border-border shadow-sm mb-6">
+ <Icon icon="tabler:clipboard" className="w-8 h-8 text-primary" />
  </div>
- <Text as="h3" variant="h3" weight="bold" className="text-[var(--text-primary)]">Wellness Check</Text>
- <Text as="p" variant="small" className="text-[var(--text-secondary)] mt-2">PHQ-9 & GAD-7 validated tools</Text>
+ <Text as="h3" variant="h3" weight="semibold">Wellness Check</Text>
+ <Text as="p" color="secondary" className="mt-2">PHQ-9 & GAD-7 validated tools</Text>
  </div>
  </div>
- <div className="flex flex-col justify-center p-8 lg:p-12">
- <Text as="h3" variant="h3" weight="bold" className="text-[var(--text-primary)] leading-tight">Understand Your Feelings</Text>
- <Text as="p" variant="body" className="mt-3.5 text-[var(--text-secondary)] leading-relaxed">Track your mental wellness with simple, thoughtful tools designed for students.</Text>
- <div className="mt-6 space-y-4">
- <div className="flex items-start gap-3">
- <Icon icon="tabler:circle-check" className="h-4.5 w-4.5 shrink-0 text-[var(--action-primary)] mt-1" />
+ <div className="flex flex-col justify-center p-8 lg:p-16">
+ <Text as="h3" variant="h3" weight="semibold" className="leading-tight">Understand Your Feelings</Text>
+ <Text as="p" color="secondary" className="mt-4 leading-relaxed">Track your mental wellness with simple, thoughtful tools designed for students.</Text>
+ <div className="mt-8 space-y-6">
+ <div className="flex items-start gap-4">
+ <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-primary/10 text-primary mt-1">
+ <Icon icon="tabler:circle-check" className="h-4 w-4" />
+ </div>
  <div>
- <Text as="p" variant="h6" weight="bold" className="text-[var(--text-primary)]">Daily mood check-ins</Text>
- <Text as="p" variant="small" className="text-[var(--text-secondary)] mt-0.5">Track patterns and build consistent self-awareness</Text>
+ <Text as="p" weight="semibold">Daily mood check-ins</Text>
+ <Text as="p" variant="small" color="secondary" className="mt-1">Track patterns and build consistent self-awareness</Text>
  </div>
  </div>
- <div className="flex items-start gap-3">
- <Icon icon="tabler:circle-check" className="h-4.5 w-4.5 shrink-0 text-[var(--action-primary)] mt-1" />
+ <div className="flex items-start gap-4">
+ <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-primary/10 text-primary mt-1">
+ <Icon icon="tabler:circle-check" className="h-4 w-4" />
+ </div>
  <div>
- <Text as="p" variant="h6" weight="bold" className="text-[var(--text-primary)]">Wellness resources</Text>
- <Text as="p" variant="small" className="text-[var(--text-secondary)] mt-0.5">Curated videos and audio for mental health support</Text>
+ <Text as="p" weight="semibold">Wellness resources</Text>
+ <Text as="p" variant="small" color="secondary" className="mt-1">Curated videos and audio for mental health support</Text>
  </div>
  </div>
  </div>
@@ -150,29 +154,31 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
  )}
 
  {tab.id === "expertsupport" && (
- <Card variant="elevated" padding="none" className="rounded-md border-[0.125rem] border-[var(--border-default)] overflow-hidden bg-[var(--surface-default)] h-full">
+ <Card variant="elevated" padding="none" className="overflow-hidden bg-surface h-full">
  <div className={`grid lg:grid-cols-2 ${CARD_HEIGHT}`}>
- <div className="relative bg-[var(--action-primary-light)] flex items-center justify-center p-8">
+ <div className="relative bg-white/[0.02] flex items-center justify-center p-8 border-b lg:border-b-0 lg:border-r border-border">
  <div className="text-center">
- <div className="inline-flex items-center justify-center w-20 h-20 rounded-md bg-[var(--surface-default)] shadow-sm mb-4">
- <Icon icon="tabler:user" className="w-10 h-10 text-[var(--action-primary)]" />
+ <div className="inline-flex items-center justify-center w-16 h-16 rounded-lg bg-surface-raised border border-border shadow-sm mb-6">
+ <Icon icon="tabler:user" className="w-8 h-8 text-primary" />
  </div>
- <Text as="h3" variant="h3" weight="bold" className="text-[var(--text-primary)]">Expert Support</Text>
- <Text as="p" variant="small" className="text-[var(--text-secondary)] mt-2">Book in under 2 minutes</Text>
+ <Text as="h3" variant="h3" weight="semibold">Expert Support</Text>
+ <Text as="p" color="secondary" className="mt-2">Book in under 2 minutes</Text>
  </div>
  </div>
- <div className="flex flex-col justify-center p-8 lg:p-12">
- <Text as="h3" variant="h3" weight="bold" className="text-[var(--text-primary)] leading-tight">Connect with a Counselor</Text>
- <Text as="p" variant="body" className="mt-3.5 text-[var(--text-secondary)] leading-relaxed">Your choice — anonymous, named, or crisis booking. Get the support you deserve.</Text>
- <div className="mt-6 grid gap-3">
+ <div className="flex flex-col justify-center p-8 lg:p-16">
+ <Text as="h3" variant="h3" weight="semibold" className="leading-tight">Connect with a Counselor</Text>
+ <Text as="p" color="secondary" className="mt-4 leading-relaxed">Your choice — anonymous, named, or crisis booking. Get the support you deserve.</Text>
+ <div className="mt-8 grid gap-4">
  {counselors.slice(0, 2).map((c) => (
- <div key={c.name} className="rounded-md bg-[var(--surface-default)] border border-[var(--border-default)] p-4 shadow-sm">
- <div className="flex items-center justify-between">
+ <div key={c.name} className="rounded-lg bg-surface-raised border border-border p-5 transition-colors hover:bg-surface-hover">
+ <div className="flex items-center justify-between gap-4">
  <div>
- <Text as="p" variant="h6" weight="bold" className="text-[var(--text-primary)]">{c.name}</Text>
- <Text as="p" variant="small" className="text-[var(--text-secondary)]">{c.focus}</Text>
+ <Text as="p" weight="semibold">{c.name}</Text>
+ <Text as="p" variant="small" color="secondary">{c.focus}</Text>
  </div>
- <Text as="p" variant="small" weight="bold" className="text-[var(--action-primary)] bg-[var(--action-primary-light)] px-3 py-1 rounded-full">{c.availability}</Text>
+ <Text as="p" variant="small" weight="bold" className="text-primary bg-primary/10 px-3 py-1 rounded">
+ {c.availability}
+ </Text>
  </div>
  </div>
  ))}
@@ -183,21 +189,21 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
  )}
 
  {tab.id === "feelgood" && (
- <Card variant="elevated" padding="none" className="rounded-md border-[0.125rem] border-[var(--border-default)] overflow-hidden bg-[var(--surface-default)] h-full">
+ <Card variant="elevated" padding="none" className="overflow-hidden bg-surface h-full">
  <div className={`grid lg:grid-cols-2 ${CARD_HEIGHT}`}>
- <div className="relative bg-[var(--action-primary-light)] flex flex-col items-center justify-center p-12 text-center border-r border-white/20">
- <div className="inline-flex items-center justify-center w-20 h-20 rounded-md bg-[var(--surface-default)] shadow-sm mb-6">
- <Icon icon="tabler:book" className="w-10 h-10 text-[var(--action-primary)]" />
+ <div className="relative bg-white/[0.02] flex flex-col items-center justify-center p-12 text-center border-b lg:border-b-0 lg:border-r border-border">
+ <div className="inline-flex items-center justify-center w-16 h-16 rounded-lg bg-surface-raised border border-border shadow-sm mb-6">
+ <Icon icon="tabler:book" className="w-8 h-8 text-primary" />
  </div>
- <Text as="h3" variant="h3" weight="bold" className="text-[var(--text-primary)]">Feel-good Library</Text>
- <Text as="p" variant="body" className="text-[var(--text-secondary)] mt-3 leading-relaxed">Curated collection of guided meditations and mindfulness exercises.</Text>
+ <Text as="h3" variant="h3" weight="semibold">Feel-good Library</Text>
+ <Text as="p" color="secondary" className="mt-3 leading-relaxed">Curated collection of guided meditations and mindfulness exercises.</Text>
  </div>
- <div className="relative bg-[var(--surface-warm)] flex flex-col items-center justify-center p-12 text-center">
- <div className="inline-flex items-center justify-center w-20 h-20 rounded-md bg-[var(--surface-default)] shadow-sm mb-6">
- <Icon icon="tabler:moon" className="w-10 h-10 text-[var(--action-primary)]" />
+ <div className="relative bg-background flex flex-col items-center justify-center p-12 text-center">
+ <div className="inline-flex items-center justify-center w-16 h-16 rounded-lg bg-surface-raised border border-border shadow-sm mb-6">
+ <Icon icon="tabler:moon" className="w-8 h-8 text-primary" />
  </div>
- <Text as="h3" variant="h3" weight="bold" className="text-[var(--text-primary)]">Breathe & Sleep</Text>
- <Text as="p" variant="body" className="text-[var(--text-secondary)] mt-3 leading-relaxed">Calm your mind and improve your sleep with specialized campus routines.</Text>
+ <Text as="h3" variant="h3" weight="semibold">Breathe & Sleep</Text>
+ <Text as="p" color="secondary" className="mt-3 leading-relaxed">Calm your mind and improve your sleep with specialized campus routines.</Text>
  </div>
  </div>
  </Card>
@@ -208,13 +214,13 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
  </div>
 
  {/* Controls */}
- <div className="mt-12 flex justify-center items-center">
- <div className="flex gap-2">
+ <div className="mt-16 flex justify-center items-center">
+ <div className="flex gap-3">
  {tabs.map((_, i) => (
  <button 
  key={i} 
  onClick={() => setCurrent(i)}
- className={`h-2 transition-all duration-300 rounded-full ${current === i ? "w-8 bg-[var(--action-primary)]" : "w-2 bg-[var(--border-default)]"}`}
+ className={`h-1 transition-all duration-300 rounded-full ${current === i ? "w-8 bg-white" : "w-2 bg-border hover:bg-white/20"}`}
  />
  ))}
  </div>
@@ -224,4 +230,3 @@ export function CarouselSection({ tabs }: CarouselSectionProps) {
  </motion.section>
  );
 }
-

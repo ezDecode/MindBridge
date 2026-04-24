@@ -4,7 +4,7 @@ import { BreathingExercise } from "@/components/animations";
 
 export default function BreathingDemoPage() {
  return (
- <div className="min-h-screen bg-[var(--surface-default)] flex items-center justify-center p-4">
+ <div className="min-h-screen bg-background flex items-center justify-center p-4">
  <BreathingExercise 
  defaultTechnique="box"
  onComplete={() => {

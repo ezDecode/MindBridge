@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Easing } from "motion";
 import { Button } from "@/components/ui/Button";
+import { Icon } from "@iconify/react";
 import { useBreathingCycle, TECHNIQUES, type BreathingTechnique } from "./hooks/useBreathingCycle";
 import { BreathingCircle, PhaseIndicator } from "./BreathingCircle";
 
@@ -16,11 +17,10 @@ export interface BreathingExerciseProps {
 const ease: Easing = [0.16, 1, 0.3, 1]; // Matches --ease-out
 
 const fadeInUp = {
-  initial: { opacity: 0, y: 16, filter: "blur(4px)" },
+  initial: { opacity: 0, y: 16 },
   animate: { 
     opacity: 1, 
     y: 0,
-    filter: "blur(0px)",
     transition: { duration: 0.5, ease }
   }
 };
@@ -76,61 +76,58 @@ export function BreathingExercise({
         {showInstructions && !isActive && completedCycles === 0 ? (
           <motion.div
             key="instructions"
-            initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, scale: 0.98, filter: "blur(2px)" }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.3, ease }}
             className="space-y-8"
           >
             <motion.div variants={fadeInUp} className="text-center space-y-4">
-              <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-[var(--action-primary)] to-[var(--action-primary-dark)] flex items-center justify-center shadow-lg">
+              <div className="w-14 h-14 mx-auto rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
                 <motion.div
-                  animate={{ scale: [1, 1.12, 1] }}
+                  animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <svg className="w-8 h-8 text-[var(--text-inverse)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <svg className="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                   </svg>
                 </motion.div>
               </div>
-              <h2 className="text-3xl font-bold text-[var(--text-primary)] tracking-tight text-balance leading-tight">
+              <h2 className="text-2xl font-semibold text-white tracking-tight leading-tight">
                 Breathe & Relax
               </h2>
-              <p className="text-[var(--text-secondary)] text-sm max-w-[240px] mx-auto text-pretty">
+              <p className="text-text-muted text-sm max-w-[240px] mx-auto leading-relaxed">
                 Choose a technique and follow the gentle visual guide
               </p>
             </motion.div>
 
-            <div className="space-y-3">
+            <div className="space-y-2">
               {(Object.keys(TECHNIQUES) as BreathingTechnique[]).map((tech, index) => (
                 <motion.button
                   key={tech}
                   variants={fadeInUp}
-                  initial={{ opacity: 0, x: -16 }}
+                  initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1, ease }}
+                  transition={{ delay: index * 0.05, ease }}
                   onClick={() => setTechnique(tech)}
-                  className={`w-full p-4 rounded-xl border border-2 transition-all duration-300 active:scale-[0.98] transition-transform text-left ${
+                  className={`w-full p-4 rounded-lg border transition-all duration-150 text-left active:scale-[0.99] ${
                     technique === tech
-                      ? "border-[var(--action-primary)] bg-[var(--action-primary-soft)] shadow-md"
-                      : "border-[var(--border-default)] hover:border-[var(--border-strong)] bg-[var(--surface-default)] hover:shadow-sm"
+                      ? "border-primary/40 bg-primary/10 shadow-sm"
+                      : "border-border bg-surface hover:border-white/20 hover:bg-surface-hover"
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
-                      <span className={`font-bold block transition-colors ${technique === tech ? "text-[var(--action-primary)]" : "text-[var(--text-primary)]"}`}>
+                      <span className={`text-sm font-semibold block transition-colors ${technique === tech ? "text-white" : "text-text-muted"}`}>
                         {TECHNIQUES[tech].name}
                       </span>
-                      <p className="text-xs text-[var(--text-muted)] mt-1 truncate">
+                      <p className="text-[11px] text-text-dim mt-1 truncate">
                         {TECHNIQUES[tech].description}
                       </p>
                     </div>
                     <div className="flex flex-col items-end gap-1 ml-3 shrink-0 tabular-nums">
-                      <span className="text-[10px] uppercase font-bold text-[var(--text-secondary)] bg-[var(--surface-tinted)] px-2.5 py-1 rounded-full border border-[var(--border-light)]">
+                      <span className="text-[9px] uppercase font-bold text-text-muted bg-white/5 px-2 py-0.5 rounded border border-white/10">
                         {TECHNIQUES[tech].cycles} cycles
-                      </span>
-                      <span className="text-[10px] text-[var(--text-muted)] font-medium">
-                        ~{Math.floor(TECHNIQUES[tech].totalDuration / 60)}m
                       </span>
                     </div>
                   </div>
@@ -141,7 +138,7 @@ export function BreathingExercise({
             <motion.div variants={fadeInUp}>
               <Button 
                 onClick={handleStart}
-                className="w-full rounded-xl active:scale-[0.96] transition-transform"
+                className="w-full"
                 size="lg"
               >
                 Start Practice
@@ -151,71 +148,53 @@ export function BreathingExercise({
         ) : completedCycles > 0 ? (
           <motion.div
             key="complete"
-            initial={{ opacity: 0, scale: 0.95, filter: "blur(4px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, scale: 0.98, filter: "blur(4px)" }}
-            transition={{ duration: 0.4, ease }}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease }}
             className="text-center py-10"
           >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0, filter: "blur(4px)" }}
-              animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
-              transition={{ type: "spring", duration: 0.8, bounce: 0.4 }}
-              className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-[var(--status-success)] to-[var(--action-primary)] flex items-center justify-center shadow-xl mb-6 ring-8 ring-[var(--status-success-soft)]"
-            >
-              <svg className="w-12 h-12 text-[var(--text-inverse)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
+            <div className="w-20 h-20 mx-auto rounded-full bg-success/10 border border-success/20 flex items-center justify-center mb-8">
+              <svg className="w-10 h-10 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-            </motion.div>
-            <h3 className="text-3xl font-bold text-[var(--text-primary)] mb-2 tracking-tight">
+            </div>
+            <h3 className="text-2xl font-semibold text-white mb-3 tracking-tight">
               Well Done
             </h3>
-            <p className="text-[var(--text-secondary)] mb-8 text-pretty">
-              You've successfully completed {completedCycles} mindful breathing cycles
+            <p className="text-text-muted text-sm mb-10 leading-relaxed">
+              You&apos;ve successfully completed {completedCycles} mindful breathing cycles
             </p>
-            <Button onClick={handleReset} variant="warm" size="lg" className="rounded-xl active:scale-[0.96] transition-transform px-10">
+            <Button onClick={handleReset} variant="warm" size="lg" className="px-10">
               Practice Again
             </Button>
           </motion.div>
         ) : (
           <motion.div
             key="exercise"
-            initial={{ opacity: 0, scale: 0.98, filter: "blur(4px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, scale: 0.95, filter: "blur(4px)" }}
-            transition={{ duration: 0.4, ease }}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease }}
             className="flex flex-col items-center"
           >
-            <div className="flex items-center justify-between w-full mb-8">
-              <motion.button
-                whileTap={{ scale: 0.92 }}
+            <div className="flex items-center justify-between w-full mb-10">
+              <button
                 onClick={handleReset}
-                className="p-3 rounded-xl bg-[var(--surface-warm)] border border-[var(--border-default)] hover:border-[var(--border-strong)] transition-all shadow-sm"
-                style={{ WebkitTapHighlightColor: "transparent" }}
+                className="p-2.5 rounded-md bg-surface border border-border text-text-muted hover:text-white hover:bg-surface-hover transition-all"
               >
-                <svg className="w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-              </motion.button>
+              </button>
               
-              <div className="flex items-center gap-2 px-5 py-2.5 bg-[var(--surface-warm)] rounded-full border border-[var(--border-default)] shadow-sm tabular-nums">
-                <motion.span
-                  key={cycleCount}
-                  initial={{ scale: 1.05, opacity: 0.5 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.3, ease }}
-                  className="text-sm font-bold text-[var(--text-primary)]"
-                >
-                  Cycle {cycleCount + 1}
-                </motion.span>
-                <span className="text-[var(--text-muted)] font-medium">/</span>
-                <span className="text-sm text-[var(--text-muted)] font-medium">
-                  {totalCycles}
+              <div className="flex items-center gap-2 px-4 py-1.5 bg-surface rounded-md border border-border tabular-nums">
+                <span className="text-[10px] font-bold text-white uppercase tracking-widest">
+                  Cycle {cycleCount + 1} <span className="text-text-dim">/ {totalCycles}</span>
                 </span>
               </div>
               
-              <motion.button
-                whileTap={{ scale: 0.92 }}
+              <button
                 onClick={() => {
                   const keys = Object.keys(TECHNIQUES) as BreathingTechnique[];
                   const currentIndex = keys.indexOf(technique);
@@ -224,21 +203,21 @@ export function BreathingExercise({
                   reset();
                   setShowInstructions(true);
                 }}
-                className="p-3 rounded-xl bg-[var(--surface-warm)] border border-[var(--border-default)] hover:border-[var(--border-strong)] transition-all shadow-sm"
+                className="p-2.5 rounded-md bg-surface border border-border text-text-muted hover:text-white hover:bg-surface-hover transition-all"
                 title="Change technique"
               >
-                <svg className="w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
-              </motion.button>
+              </button>
             </div>
 
             <div className="flex flex-col items-center justify-center py-6">
               <motion.div
-                initial={{ scale: 0.92 }}
+                initial={{ scale: 0.98 }}
                 animate={{ scale: 1 }}
                 transition={{ duration: 0.6, ease }}
-                className="mb-10"
+                className="mb-12"
               >
                 <BreathingCircle
                   phase={currentPhase}
@@ -254,12 +233,12 @@ export function BreathingExercise({
               />
             </div>
 
-            <div className="flex items-center justify-center gap-4 mt-10">
+            <div className="flex items-center justify-center gap-4 mt-12 w-full">
               <Button
                 onClick={isActive ? pause : start}
-                variant={isActive ? "warm" : "primary"}
+                variant="warm"
                 size="lg"
-                className="min-w-[140px] rounded-xl active:scale-[0.96] transition-transform"
+                className="flex-1"
               >
                 {isActive ? "Pause" : cycleCount > 0 ? "Resume" : "Start"}
               </Button>
@@ -268,23 +247,20 @@ export function BreathingExercise({
                 onClick={handleReset}
                 variant="ghost"
                 size="lg"
-                className="rounded-xl active:scale-[0.96] transition-transform"
+                className="flex-1"
               >
                 Reset
               </Button>
             </div>
 
-            <div className="mt-8 flex items-center justify-center gap-2 text-[var(--text-muted)] font-medium tabular-nums">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span className="text-sm">{formatTime(totalTimeElapsed)}</span>
-              <span className="text-sm">/ {formatTime(currentTechnique.totalDuration)}</span>
+            <div className="mt-10 flex items-center justify-center gap-2 text-text-dim font-bold text-[10px] uppercase tracking-widest tabular-nums">
+              <Icon icon="tabler:clock" className="h-3 w-3" />
+              <span>{formatTime(totalTimeElapsed)} / {formatTime(currentTechnique.totalDuration)}</span>
             </div>
 
-            <div className="w-full mt-5 h-2 rounded-full bg-[var(--surface-strong)] overflow-hidden shadow-inner ring-1 ring-black/5">
+            <div className="w-full mt-6 h-1 rounded-full bg-white/5 overflow-hidden">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-[var(--action-primary-dark)] to-[var(--action-primary)]"
+                className="h-full bg-primary"
                 animate={{ 
                   width: `${((cycleCount + (currentPhase ? (1 - phaseTimeLeft / currentPhase.duration) : 0) / currentTechnique.phases.length) / totalCycles) * 100}%` 
                 }}
@@ -293,7 +269,7 @@ export function BreathingExercise({
             </div>
           </motion.div>
         )}
- </AnimatePresence>
- </div>
- );
+      </AnimatePresence>
+    </div>
+  );
 }

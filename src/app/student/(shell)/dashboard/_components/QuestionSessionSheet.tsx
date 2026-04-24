@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { Icon } from '@iconify/react';
+import { Button, Card, Text } from "@/components/ui";
 
 interface SessionQuestionOption {
  label: string;
@@ -82,16 +83,16 @@ const severityTone: Record<QuestionSummary["severity"], string> = {
 };
 
 const severityStyles: Record<QuestionSummary["severity"], string> = {
- none: "border-emerald-200 bg-emerald-50 text-emerald-700",
- mild: "border-sky-200 bg-sky-50 text-sky-700",
- moderate: "border-amber-200 bg-amber-50 text-amber-700",
- severe: "border-rose-200 bg-rose-50 text-rose-700",
+ none: "border-success/20 bg-success/10 text-success",
+ mild: "border-primary/20 bg-primary/10 text-primary",
+ moderate: "border-warning/20 bg-warning/10 text-warning",
+ severe: "border-danger/20 bg-danger/10 text-danger",
 };
 
 const intensityStyles: Record<QuestionInsight["intensity"], string> = {
- low: "bg-[var(--surface-warm)] text-[var(--text-secondary)]",
- medium: "bg-[var(--status-info-soft)] text-[var(--status-info)]",
- high: "bg-[var(--status-error-soft)] text-[var(--status-error)]",
+ low: "bg-white/5 text-text-muted border-white/5",
+ medium: "bg-primary/10 text-primary border-primary/20",
+ high: "bg-danger/10 text-danger border-danger/20",
 };
 
 export function QuestionSessionSheet({
@@ -224,7 +225,7 @@ export function QuestionSessionSheet({
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
  transition={{ duration: 0.3 }}
- className="absolute inset-0 bg-[var(--action-primary)]/40 backdrop-blur-sm"
+ className="absolute inset-0 bg-background/80 backdrop-blur-sm"
  onClick={onClose}
  />
 
@@ -233,166 +234,175 @@ export function QuestionSessionSheet({
    animate={{ opacity: 1, y: 0, scale: 1 }}
    exit={{ opacity: 0, y: 12, scale: 0.98 }}
    transition={{ type: "spring", duration: 0.4, bounce: 0 }}
-   className="relative z-10 flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[2rem] border border-[var(--border-default)] bg-[var(--surface-default)] shadow-2xl sm:max-h-[85vh] sm:rounded-[2rem]"
+   className="relative z-10 flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-lg border border-white/10 bg-surface shadow-2xl sm:max-h-[85vh] sm:rounded-lg"
  >
  {/* Top Progress Bar */}
  {!summary && session && (
- <div className="absolute inset-x-0 top-0 h-1 w-full bg-[var(--surface-warm)]">
+ <div className="absolute inset-x-0 top-0 h-1 w-full bg-white/5">
  <motion.div
  animate={{ width: `${progress}%` }}
- className="h-full bg-[var(--action-primary)]"
+ className="h-full bg-primary"
  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
  />
  </div>
  )}
 
  {/* Header */}
- <div className="flex items-center justify-between border-b border-[var(--border-default)] px-6 py-4 pt-5">
- <div className="flex items-center gap-2.5">
+ <div className="flex items-center justify-between border-b border-white/5 px-6 py-4 pt-5 bg-white/[0.02]">
+ <div className="flex items-center gap-3">
  {summary ? (
- <h2 className="text-base font-bold text-[var(--text-primary)] tracking-tight">
+ <Text as="h2" variant="body" weight="semibold" className="text-white tracking-tight">
  Check-in Summary
- </h2>
+ </Text>
  ) : currentQuestion ? (
  <>
- <span className="rounded-xl bg-[var(--surface-warm)] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)] ring-1 ring-[var(--border-default)]/5">
+ <span className="rounded bg-white/5 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-text-dim border border-white/5">
  {categoryLabels[currentQuestion.category] || currentQuestion.category}
  </span>
- <span className="text-xs font-semibold text-[var(--text-muted)] tabular-nums">
+ <span className="text-[10px] font-bold text-text-dim uppercase tracking-widest tabular-nums">
  {step + 1} of {session?.questions.length || 0}
  </span>
  </>
  ) : (
- <h2 className="text-base font-bold text-[var(--text-primary)] tracking-tight">
+ <Text as="h2" variant="body" weight="semibold" className="text-white tracking-tight">
  Guided Check-in
- </h2>
+ </Text>
  )}
  </div>
 
  <button
  type="button"
  onClick={onClose}
- className="flex h-10 w-10 items-center justify-center rounded-xl text-[var(--text-secondary)] transition-all hover:bg-[var(--surface-warm)] hover:text-[var(--text-primary)] active:scale-[0.92]"
+ className="flex h-8 w-8 items-center justify-center rounded-md bg-white/5 text-text-dim hover:text-white transition-all active:scale-[0.92] border border-white/5"
  >
- <Icon icon="tabler:x" className="h-5 w-5" />
+ <Icon icon="tabler:x" className="h-4 w-4" />
  </button>
  </div>
 
  {/* Content Area */}
- <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6 sm:px-10 sm:py-10">
+ <div className="min-h-0 flex-1 overflow-y-auto px-6 py-10 sm:px-10 no-scrollbar">
  {isLoading ? (
  <div className="flex h-full min-h-[30vh] items-center justify-center">
  <div className="text-center">
- <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--surface-warm)] text-[var(--action-primary)] shadow-sm ring-1 ring-[var(--action-primary)]/10">
+ <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-lg bg-white/5 text-primary border border-white/10 shadow-sm">
  <Icon icon="tabler:loader" className="h-7 w-7 animate-spin" />
  </div>
- <p className="mt-5 text-base font-bold text-[var(--text-primary)] tracking-tight">
+ <Text weight="semibold" className="mt-6 text-white tracking-tight">
  Curating your mix...
- </p>
+ </Text>
  </div>
  </div>
  ) : error && !session && !summary ? (
  <div className="mx-auto flex h-full min-h-[30vh] max-w-xs flex-col items-center justify-center text-center">
- <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--status-error-soft)] text-[var(--status-error)] shadow-sm">
+ <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-danger/10 text-danger border border-danger/20">
  <Icon icon="tabler:alert-triangle" className="h-7 w-7" />
  </div>
- <p className="mt-5 text-lg font-bold text-[var(--text-primary)] tracking-tight">
+ <Text weight="semibold" className="mt-6 text-white tracking-tight">
  We hit a small bump
- </p>
- <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)] text-wrap-pretty">
+ </Text>
+ <Text color="secondary" className="mt-2 text-sm leading-relaxed">
  {error}
- </p>
- <button
- type="button"
+ </Text>
+ <Button
  onClick={() => void loadSession()}
- className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[var(--action-primary)] px-6 text-sm font-bold text-[var(--text-inverse)] shadow-md transition-all active:scale-[0.96]"
+ className="mt-8 gap-2 uppercase tracking-widest text-[10px] font-bold"
  >
- <Icon icon="tabler:refresh" className="h-4 w-4" />
+ <Icon icon="tabler:refresh" className="h-3.5 w-3.5" />
  Try again
- </button>
+ </Button>
  </div>
  ) : summary ? (
- <div className="mx-auto w-full max-w-2xl space-y-8 pb-4">
+ <div className="mx-auto w-full max-w-2xl space-y-10 pb-4">
  {/* ── Main Mood Result Section ── */}
  <motion.div
  initial={{ opacity: 0, y: 12 }}
  animate={{ opacity: 1, y: 0 }}
- className="rounded-[2rem] border border-[var(--border-default)] bg-[var(--bg-page)] p-6 sm:p-10 shadow-sm"
+ className="rounded-lg border border-border bg-background/50 p-8 sm:p-12 relative overflow-hidden"
  >
- <div className="flex flex-wrap items-center gap-3">
- <span className={`rounded-full border px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest ${severityStyles[summary.severity]}`}>
- {severityTone[summary.severity]}
- </span>
- <div className="h-4 w-px bg-[var(--border-default)]/60 mx-1" />
- <span className="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-tight tabular-nums">
- Overall Score {summary.derivedMoodScore}/5
- </span>
+ <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none transform rotate-12">
+   <Icon icon="tabler:sparkles" className="h-32 w-32 text-primary" />
  </div>
 
- <h3 className="mt-6 text-4xl font-bold tracking-tight text-[var(--text-primary)] sm:text-5xl text-wrap-balance leading-[1.1]">
- {summary.moodLabel}
- </h3>
- <p className="mt-4 text-lg leading-relaxed text-[var(--text-secondary)] text-wrap-pretty max-w-xl">
- {summary.tone}
- </p>
+ <div className="relative z-10">
+   <div className="flex flex-wrap items-center gap-3 mb-8">
+     <span className={cn("badge px-3 py-1 text-[9px] uppercase tracking-widest", severityStyles[summary.severity])}>
+       {severityTone[summary.severity]}
+     </span>
+     <div className="h-3 w-px bg-white/10 mx-1" />
+     <span className="text-[10px] font-bold text-text-dim uppercase tracking-[0.2em] tabular-nums">
+       Overall Score {summary.derivedMoodScore}/5
+     </span>
+   </div>
 
- <div className="mt-10 flex flex-wrap items-center gap-4">
- <button
- type="button"
- onClick={() => { onChatRequested?.(); onClose(); }}
- className="inline-flex h-11 items-center justify-center gap-2.5 rounded-full bg-[var(--action-primary)] px-6 text-sm font-bold text-[var(--text-inverse)] shadow-md transition-all active:scale-[0.96]"
- >
- <Icon icon="tabler:message-circle" className="h-4.5 w-4.5" />
- Talk through it
- </button>
- <button
- type="button"
- onClick={() => router.push("/student/book")}
- className="inline-flex h-11 items-center justify-center gap-2.5 rounded-full bg-[var(--surface-default)] px-6 text-sm font-bold text-[var(--text-primary)] border border-[var(--border-default)] shadow-sm transition-all hover:bg-[var(--surface-warm)] active:scale-[0.96]"
- >
- <Icon icon="tabler:calendar" className="h-4.5 w-4.5" />
- Book support
- </button>
+   <Text as="h3" variant="h2" weight="semibold" className="text-white tracking-tight leading-tight">
+     {summary.moodLabel}
+   </Text>
+   <Text color="secondary" className="mt-6 text-base leading-relaxed max-w-xl">
+     {summary.tone}
+   </Text>
+
+   <div className="mt-12 flex flex-wrap items-center gap-4">
+     <Button
+       onClick={() => { onChatRequested?.(); onClose(); }}
+       size="lg"
+       className="gap-2"
+     >
+       <Icon icon="tabler:message-circle" className="h-4.5 w-4.5" />
+       Talk through it
+     </Button>
+     <Button
+       variant="warm"
+       onClick={() => router.push("/student/book")}
+       size="lg"
+       className="gap-2"
+     >
+       <Icon icon="tabler:calendar" className="h-4.5 w-4.5" />
+       Book support
+     </Button>
+   </div>
  </div>
  </motion.div>
 
  {summary.hasSafetyConcern && (
- <div className="rounded-2xl border border-[var(--status-error)]/20 bg-[var(--status-error-soft)] p-6 shadow-sm">
- <div className="flex items-start gap-4">
- <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--surface-default)] text-[var(--status-error)] shadow-sm ring-1 ring-[var(--status-error)]/10">
+ <div className="rounded-lg border border-danger/20 bg-danger/5 p-6 relative group overflow-hidden">
+ <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none transition-transform">
+   <Icon icon="tabler:alert-triangle" className="h-16 w-16 text-danger" />
+ </div>
+ <div className="flex items-start gap-4 relative z-10">
+ <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-danger text-white shadow-lg shadow-danger/20">
  <Icon icon="tabler:alert-triangle" className="h-6 w-6" />
  </div>
- <div className="pt-0.5">
- <p className="text-base font-bold text-[var(--text-primary)] tracking-tight">
+ <div>
+ <Text weight="semibold" className="text-white text-base">
  Immediate support is available
- </p>
- <p className="mt-1.5 text-sm leading-relaxed text-[var(--text-secondary)] text-wrap-pretty max-w-lg">
- Please reach out to iCall at <a className="font-bold underline decoration-rose-500/40" href="tel:9152987821">9152987821</a> or your local emergency team right now. You don&apos;t have to carry this alone.
- </p>
+ </Text>
+ <Text color="secondary" className="mt-2 text-sm leading-relaxed max-w-lg">
+ Please reach out to iCall at <a className="text-white font-bold underline underline-offset-4" href="tel:9152987821">9152987821</a> or your local emergency team. You don&apos;t have to carry this alone.
+ </Text>
  </div>
  </div>
  </div>
  )}
 
  {/* ── Insights & Action Grid ── */}
- <div className="grid gap-8 pt-2 sm:grid-cols-2">
+ <div className="grid gap-10 pt-4 sm:grid-cols-2">
  <section>
- <div className="flex items-center gap-2 mb-4 ml-1">
- <div className="h-1.5 w-1.5 rounded-full bg-[var(--action-primary)]" />
- <h4 className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--text-muted)]">
+ <div className="flex items-center gap-2 mb-6 px-1">
+ <div className="h-1 w-1 rounded-full bg-primary" />
+ <Text variant="small" weight="bold" className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-dim">
  Strongest signals
- </h4>
+ </Text>
  </div>
- <div className="space-y-2.5">
+ <div className="space-y-2">
  {summary.topInsights.map((insight) => (
  <div
  key={insight.category}
- className="group flex items-center justify-between rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] px-5 py-3.5 shadow-sm transition-colors hover:border-[var(--border-strong)]"
+ className="group flex items-center justify-between rounded-md border border-border bg-white/[0.02] px-4 py-3 hover:border-white/20 hover:bg-white/5 transition-all"
  >
- <p className="truncate text-[13px] font-bold text-[var(--text-primary)]">
+ <Text weight="semibold" className="truncate text-xs text-white">
  {insight.label}
- </p>
- <span className={`shrink-0 rounded-full px-3 py-1 text-[9px] font-bold uppercase tracking-wider ${intensityStyles[insight.intensity]}`}>
+ </Text>
+ <span className={cn("badge px-2 py-0.5 text-[8px] uppercase tracking-widest", intensityStyles[insight.intensity])}>
  {insight.intensity}
  </span>
  </div>
@@ -401,21 +411,21 @@ export function QuestionSessionSheet({
  </section>
 
  <section>
- <div className="flex items-center gap-2 mb-4 ml-1">
- <div className="h-1.5 w-1.5 rounded-full bg-[var(--status-info)]" />
- <h4 className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--text-muted)]">
+ <div className="flex items-center gap-2 mb-6 px-1">
+ <div className="h-1 w-1 rounded-full bg-primary" />
+ <Text variant="small" weight="bold" className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-dim">
  Recommended steps
- </h4>
+ </Text>
  </div>
  <div className="space-y-3">
  {summary.nextSteps.map((stepText, index) => (
- <div key={stepText} className="flex gap-4 rounded-2xl border border-[var(--border-default)] bg-[var(--surface-default)] px-5 py-4 shadow-sm transition-colors hover:border-[var(--border-strong)]">
- <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--action-primary-light)] text-[11px] font-bold text-[var(--action-primary)] tabular-nums ring-1 ring-[var(--action-primary)]/10">
+ <div key={stepText} className="flex gap-4 p-4 rounded-md border border-white/5 bg-white/[0.01] hover:border-white/10 transition-all">
+ <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[9px] font-bold text-primary border border-primary/20 tabular-nums">
  {index + 1}
  </div>
- <p className="text-[13px] font-medium leading-relaxed text-[var(--text-primary)] text-wrap-pretty">
+ <Text className="text-xs text-text-muted leading-relaxed tracking-tight group-hover:text-white transition-colors">
  {stepText}
- </p>
+ </Text>
  </div>
  ))}
  </div>
@@ -424,18 +434,18 @@ export function QuestionSessionSheet({
  </div>
  ) : currentQuestion ? (
  <div className="mx-auto flex w-full max-w-xl flex-col pb-6">
- <div className="mb-10 text-center sm:text-left">
- <div className="inline-flex items-center justify-center rounded-lg bg-[var(--surface-warm)] px-2.5 py-1 mb-4">
- <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--action-primary)]">
+ <div className="mb-12 text-center sm:text-left">
+ <div className="inline-flex items-center justify-center rounded bg-primary/10 border border-primary/20 px-2.5 py-1 mb-6">
+ <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-primary">
  {categoryLabels[currentQuestion.category] || currentQuestion.category}
  </span>
  </div>
- <h3 className="text-3xl font-bold tracking-tight text-[var(--text-primary)] sm:text-4xl sm:leading-[1.15] text-wrap-balance">
+ <Text as="h3" variant="h3" weight="semibold" className="text-white tracking-tight leading-tight">
  {currentQuestion.question}
- </h3>
+ </Text>
  </div>
 
- <div className="grid gap-3">
+ <div className="space-y-2.5">
  {currentQuestion.options.map((option, optionIndex) => {
  const selected = responses[currentQuestion.id] === option.value;
 
@@ -447,20 +457,24 @@ export function QuestionSessionSheet({
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.3, delay: optionIndex * 0.04, ease: [0.2, 0, 0, 1] }}
  onClick={() => handleAnswerSelect(currentQuestion.id, option.value)}
- className={`group flex items-center justify-between gap-4 rounded-[1.5rem] border px-6 py-5 text-left transition-all active:scale-[0.98] ${
+ className={cn(
+ "group flex items-center justify-between gap-4 rounded-md border p-5 text-left transition-all active:scale-[0.99]",
  selected
- ? "border-[var(--action-primary)] bg-[var(--action-primary-light)] shadow-md ring-1 ring-[var(--action-primary)]/10"
- : "border-[var(--border-default)] bg-[var(--surface-default)] hover:border-[var(--border-strong)] hover:shadow-sm"
- }`}
+ ? "border-primary/40 bg-primary/10 shadow-lg shadow-primary/5 ring-1 ring-primary/20"
+ : "bg-background border-border hover:border-white/20 hover:bg-white/[0.02]"
+ )}
  >
- <span className={`text-lg font-semibold ${selected ? "text-[var(--action-primary)]" : "text-[var(--text-primary)]"}`}>
+ <span className={cn(
+   "text-sm font-semibold transition-colors",
+   selected ? "text-white" : "text-text-muted group-hover:text-white"
+ )}>
  {option.label}
  </span>
  <div className={cn(
- "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border-2 transition-all",
- selected ? "border-[var(--action-primary)] bg-[var(--action-primary)] shadow-sm" : "border-[var(--border-default)] group-hover:border-[var(--border-strong)]"
+ "size-4 rounded-full border flex items-center justify-center transition-all",
+ selected ? "border-primary bg-primary" : "border-text-dim group-hover:border-white/40"
  )}>
- {selected && <Icon icon="tabler:check" className="h-4 w-4 text-[var(--text-inverse)] stroke-[3.5]" />}
+ {selected && <Icon icon="tabler:check" className="h-3 w-3 text-black stroke-[4]" />}
  </div>
  </motion.button>
  );
@@ -472,10 +486,9 @@ export function QuestionSessionSheet({
 
  {/* Footer */}
  {!summary && session && (
- <div className="border-t border-[var(--border-default)] bg-[var(--surface-default)] px-6 py-5 sm:px-10">
+ <div className="border-t border-white/5 bg-background px-6 py-6 sm:px-10">
  <div className="mx-auto flex max-w-lg flex-row-reverse items-center justify-between">
- <button
- type="button"
+ <Button
  onClick={() => {
  if (step === session.questions.length - 1) {
  void handleSubmit();
@@ -484,25 +497,26 @@ export function QuestionSessionSheet({
  }
  }}
  disabled={!canGoNext || isSubmitting}
- className="inline-flex h-11 min-w-[8rem] items-center justify-center gap-2 rounded-full bg-[var(--action-primary)] px-6 text-sm font-bold text-[var(--text-inverse)] shadow-md transition-all active:scale-[0.96] disabled:pointer-events-none disabled:opacity-30"
+ size="md"
+ className="min-w-[100px] gap-2 uppercase tracking-widest text-[10px] font-bold"
  >
  {isSubmitting ? (
- <Icon icon="tabler:loader" className="h-4 w-4 animate-spin" />
+ <Icon icon="tabler:loader" className="h-3.5 w-3.5 animate-spin" />
  ) : (
  <>
  {step === session.questions.length - 1 ? "Complete" : "Continue"}
- <Icon icon="tabler:arrow-right" className="h-4 w-4" />
+ <Icon icon="tabler:arrow-right" className="h-3.5 w-3.5" />
  </>
  )}
- </button>
+ </Button>
 
  <button
  type="button"
  onClick={() => setStep((current) => Math.max(0, current - 1))}
  disabled={step === 0}
- className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full px-4 text-sm font-bold text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] active:scale-[0.96] disabled:invisible"
+ className="inline-flex h-10 items-center justify-center gap-1.5 px-4 text-[10px] font-bold uppercase tracking-widest text-text-dim transition-colors hover:text-white disabled:invisible"
  >
- <Icon icon="tabler:arrow-left" className="h-4 w-4" />
+ <Icon icon="tabler:arrow-left" className="h-3.5 w-3.5" />
  Back
  </button>
  </div>

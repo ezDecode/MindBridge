@@ -1,189 +1,245 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
-import { Icon } from '@iconify/react';
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Modal, Text } from "@/components/ui";
 import { SettingsForm } from "@/components/settings/SettingsForm";
-import type { NavItem } from "@/content/mindbridge";
-import { motion, AnimatePresence } from "motion/react";
-
-const iconMap = {
- grid: "tabler:layout-grid",
- chat: "tabler:message-circle",
- heart: "tabler:heart",
- quiz: "tabler:notes",
- library: "tabler:book",
- calendar: "tabler:calendar",
- shield: "tabler:shield",
- chart: "tabler:chart-pie",
- alert: "tabler:alert-circle",
-};
+import { Icon } from "@iconify/react";
+import { cn } from "@/lib/utils";
+import { signOut } from "@/lib/auth/actions";
+import { AnimatePresence, motion } from "motion/react";
+import { PanicModal } from "./PanicModal";
 
 interface RoleShellProps {
- roleLabel: string;
- roleDescription: string;
- navItems: NavItem[];
- children: React.ReactNode;
+  children: React.ReactNode;
+  navItems: { href: string; label: string; icon: string }[];
+  fullHeight?: boolean;
 }
 
-export function RoleShell({
-  roleLabel,
-  roleDescription,
-  navItems,
-  children,
-}: RoleShellProps) {
+export function RoleShell({ children, navItems, fullHeight = false }: RoleShellProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const isAdmin = pathname?.startsWith('/admin');
-  const isCounselor = pathname?.startsWith('/counselor');
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
 
   useEffect(() => {
     const handleOpenSettings = () => setIsSettingsOpen(true);
-    window.addEventListener('open-settings', handleOpenSettings);
-    return () => window.removeEventListener('open-settings', handleOpenSettings);
+    window.addEventListener("open-settings", handleOpenSettings);
+    return () => window.removeEventListener("open-settings", handleOpenSettings);
   }, []);
 
-  const handleNavItemClick = (item: NavItem, e: React.MouseEvent) => {
-    if (item.label.toLowerCase() === 'settings' || (item.href && item.href.includes('settings'))) {
-      e.preventDefault();
-      setIsSettingsOpen(true);
-    }
+  const user = {
+    name: "Aisha Khan",
+    initials: "AK",
+    role: "Student",
+    dept: "Computer Science",
+  };
+
+  const isAdmin = pathname.startsWith("/admin");
+  const isCounselor = pathname.startsWith("/counselor");
+
+  const pageTitles: Record<string, string> = {
+    "/student/dashboard": "Personal Dashboard",
+    "/student/chat": "MindBot Companion",
+    "/student/resources": "Wellness Library",
+    "/student/book": "Expert Support",
+    "/student/journal": "Thought Journal",
+    "/student/screening": "Clinical Assessments",
+    "/student/wellness": "Wellness Center",
+    "/student/check-in": "Daily Mood Log",
+    "/admin/dashboard": "Campus Intelligence",
+    "/counselor/dashboard": "Support Command",
+  };
+
+  const currentTitle = pageTitles[pathname] || "MindBridge";
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/login");
   };
 
   return (
-    <main id="main-content" className="protected-shell w-full flex h-screen overflow-hidden bg-bg-page text-text-primary antialiased">
-      {/* SIDEBAR */}
-      <aside className="hidden h-full w-[16rem] shrink-0 flex-col border-r border-border-default bg-surface-default lg:flex relative z-20">
-        <div className="flex flex-col gap-8 p-6">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2.5 px-1 transition-transform active:scale-[0.96]"
-          >
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-action-primary text-text-inverse shadow-sm border border-white/10">
-              <Icon icon="tabler:leaf" className="h-5 w-5" />
-            </span>
-            <span className="text-lg font-bold tracking-tight" style={{ fontFamily: 'var(--font-mindbridge)' }}>MindBridge</span>
-          </Link>
-
-          {!isAdmin && !isCounselor && (
-            <button className="flex w-full items-center justify-between gap-2.5 rounded-lg px-3 py-2 text-[13px] font-bold bg-surface-strong text-text-muted hover:bg-action-primary hover:text-text-inverse transition-colors active:scale-[0.96] cursor-pointer group">
-              <span className="flex items-center gap-2.5">
-                <Icon icon="tabler:plus" className="h-4 w-4 group-hover:rotate-90 transition-transform" />
-                New Session
-              </span>
-              <div className="flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-black bg-surface-default/50 text-text-muted group-hover:bg-white/20 group-hover:text-white tabular-nums">
-                <Icon icon="tabler:command" className="h-3 w-3" /> K
-              </div>
-            </button>
-          )}
-
-          <div className="space-y-4">
-            <Text className="text-[10px] font-bold uppercase tracking-wider text-text-muted/50 px-1">{roleLabel}</Text>
-            <div className="px-4 py-3 rounded-xl bg-surface-strong/20 border border-border-default/50">
-              <Text className="text-[11px] leading-relaxed font-medium text-text-secondary text-wrap-pretty opacity-80">{roleDescription}</Text>
+    <div className="flex h-screen w-full bg-[#030406] text-white overflow-hidden selection:bg-primary/30">
+      <aside className="hidden w-64 shrink-0 flex-col bg-transparent lg:flex z-10">
+        <div className="p-6 pb-5">
+          <Link href="/" className="group flex items-center gap-3">
+            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-white text-[10px] font-bold text-black transition-transform group-hover:scale-105">
+              MB
             </div>
-          </div>
+            <Text variant="small" weight="bold" className="uppercase tracking-widest text-white">
+              MindBridge
+            </Text>
+          </Link>
         </div>
 
-        <div className="flex flex-1 flex-col gap-1 px-3 overflow-y-auto no-scrollbar py-2">
+        <nav className="flex-1 space-y-1 px-4 py-4">
           {navItems.map((item) => {
-            const iconName = iconMap[item.icon as keyof typeof iconMap] ?? "tabler:layout-grid";
             const isActive = pathname === item.href;
-
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={(e) => handleNavItemClick(item, e)}
-                aria-current={isActive ? "page" : undefined}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-[13.5px] font-medium transition-colors active:scale-[0.96] ${
-                  isActive 
-                    ? "bg-action-primary/10 text-action-primary shadow-sm" 
-                    : "text-text-muted hover:bg-surface-strong/40 hover:text-text-primary"
-                }`}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
+                  isActive
+                    ? "bg-white/[0.08] text-white shadow-sm"
+                    : "text-text-muted hover:bg-white/[0.04] hover:text-white",
+                )}
               >
-                <Icon icon={iconName} className={`h-5 w-5 transition-colors ${isActive ? 'text-action-primary' : 'text-text-muted/60'}`} />
+                <Icon icon={item.icon} className={cn("h-4.5 w-4.5", isActive ? "text-primary" : "text-text-dim")} />
                 {item.label}
               </Link>
             );
           })}
-        </div>
+        </nav>
 
-        {/* USER PROFILE CARD */}
-        <div className="p-4 border-t border-border-default bg-surface-warm-hover/10">
-          <button 
+        <div className="p-4">
+          <button
             onClick={() => setIsSettingsOpen(true)}
-            className="w-full flex items-center justify-between rounded-lg p-2 transition-colors hover:bg-surface-strong/40 active:scale-[0.98] group"
+            className="group flex w-full items-center gap-3 rounded-xl border border-white/[0.04] bg-white/[0.02] p-2.5 transition-colors hover:border-white/[0.08] hover:bg-white/[0.04]"
           >
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-surface-strong border border-border-default text-text-primary text-[10px] font-bold group-hover:bg-action-primary group-hover:text-text-inverse transition-colors">
-                {isAdmin ? 'A' : (isCounselor ? 'C' : 'U')}
-              </div>
-              <div className="text-left">
-                <Text className="text-[13px] font-semibold text-text-primary leading-none mb-1 tracking-tight">
-                  {isAdmin ? 'Administrator' : (isCounselor ? 'Counselor' : 'Student')}
-                </Text>
-                <Text className="text-[10px] font-medium text-text-muted/60">
-                  Settings
-                </Text>
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10 text-xs font-bold text-primary">
+              {user.initials}
+            </div>
+            <div className="min-w-0 flex-1 text-left">
+              <div className="truncate text-xs font-semibold text-white">{user.name}</div>
+              <div className="truncate text-[10px] uppercase tracking-wider text-text-dim">
+                {user.role} · {user.dept}
               </div>
             </div>
-            <Icon icon="tabler:settings" className="h-3.5 w-3.5 text-text-muted/40 group-hover:text-text-primary transition-colors" />
+            <Icon icon="tabler:settings" className="h-4 w-4 text-text-dim transition-colors group-hover:text-white" />
           </button>
         </div>
       </aside>
 
-      {/* MAIN CONTENT */}
-      <div className="flex flex-1 flex-col min-w-0 bg-bg-page overflow-hidden relative">
-        <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col items-center relative z-10">
+      <div className="flex min-w-0 flex-1 flex-col p-2 sm:p-3 lg:p-4 lg:pl-0">
+        <div className="flex h-full w-full flex-col overflow-hidden rounded-[1.5rem] border border-white/[0.08] bg-[#080a0d] shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-white/5 relative z-20">
           
-          {/* Mobile Header */}
-          <header className="w-full flex items-center justify-between p-4 lg:hidden bg-surface-default/80 backdrop-blur-md border-b border-border-default sticky top-0 z-50">
-            <Link href="/" className="inline-flex items-center gap-2 transition-transform active:scale-[0.96]">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-action-primary text-text-inverse shadow-sm">
-                <Icon icon="tabler:leaf" className="h-4.5 w-4.5" />
-              </span>
-              <span className="text-lg font-bold tracking-tight" style={{ fontFamily: 'var(--font-mindbridge)' }}>MindBridge</span>
-            </Link>
-            <button 
-              onClick={() => setIsSettingsOpen(true)}
-              className="h-9 w-9 flex items-center justify-center rounded-lg bg-surface-default border border-border-default active:scale-[0.92] transition-transform"
-            >
-              <Icon icon="tabler:settings" className="h-5 w-5 text-text-primary" />
-            </button>
+          <header className="z-30 flex h-16 shrink-0 items-center justify-between border-b border-white/[0.04] bg-white/[0.01] px-5 sm:px-8">
+            <Text as="h1" variant="h6" weight="semibold" className="tracking-tight">
+              {currentTitle}
+            </Text>
+
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <button
+                  onClick={() => setIsNotifOpen(!isNotifOpen)}
+                  className="flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] text-text-muted transition-all hover:bg-white/[0.04] hover:text-white"
+                >
+                  <Icon icon="tabler:bell" className="h-4.5 w-4.5" />
+                  <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full border-2 border-[#090d12] bg-primary" />
+                </button>
+
+                <AnimatePresence>
+                  {isNotifOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 z-50 mt-2 w-80 overflow-hidden rounded-xl border border-white/[0.08] bg-surface shadow-2xl"
+                    >
+                      <div className="flex items-center justify-between border-b border-white/[0.06] p-4">
+                        <span className="text-xs font-bold uppercase tracking-widest text-white">Notifications</span>
+                        <button className="text-[10px] font-bold uppercase tracking-widest text-primary transition-colors hover:text-primary-hover">
+                          Mark all read
+                        </button>
+                      </div>
+                      <div className="max-h-96 overflow-y-auto">
+                        <NotificationItem
+                          title="Appointment Reminder"
+                          desc="Dr. Priya session tomorrow at 3 PM"
+                          time="2 hours ago"
+                          unread
+                        />
+                        <NotificationItem
+                          title="Mood Check-in"
+                          desc="How are you feeling today? Log your mood"
+                          time="5 hours ago"
+                          unread
+                        />
+                      </div>
+                      <div className="border-t border-white/[0.06] p-3 text-center">
+                        <button className="text-[10px] font-bold uppercase tracking-widest text-text-muted transition-colors hover:text-white">
+                          See all
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <button
+                onClick={handleLogout}
+                className="group flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] text-text-muted transition-all hover:bg-danger/5 hover:text-danger"
+              >
+                <Icon icon="tabler:logout" className="h-4.5 w-4.5 transition-transform group-hover:-translate-x-0.5" />
+              </button>
+            </div>
           </header>
 
-          {/* Page Body */}
-          <motion.div 
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full flex-1"
-          >
-            <div className="w-full max-w-6xl mx-auto px-6 py-10 sm:px-8 md:px-12">
+          <main className={cn("flex-1 min-h-0 relative", fullHeight ? "h-full overflow-hidden" : "overflow-y-auto")}>
+            {!fullHeight && (
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/[0.02] to-transparent z-0"
+              />
+            )}
+            <div className={cn("relative z-10", fullHeight ? "h-full" : "p-5 md:p-8 lg:p-10")}>
               {children}
             </div>
-          </motion.div>
+          </main>
         </div>
       </div>
 
-      {/* Settings Modal */}
-      <AnimatePresence initial={false}>
-        {isSettingsOpen && (
-          <Modal
-            isOpen={isSettingsOpen}
-            onClose={() => setIsSettingsOpen(false)}
-            title="Security & Preferences"
-            size="md"
-          >
-            <div className="px-6 pb-10 pt-4">
-              <SettingsForm onSuccess={() => setIsSettingsOpen(false)} />
-            </div>
-          </Modal>
-        )}
-      </AnimatePresence>
-    </main>
+      {!isAdmin && !isCounselor && (
+        <button
+          className="group fixed bottom-7 right-7 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-danger text-white shadow-2xl transition-all active:scale-95"
+          onClick={() => (window as unknown as { dispatchEvent: (e: CustomEvent) => void }).dispatchEvent(new CustomEvent("open-panic"))}
+          title="Emergency Help"
+        >
+          <Icon icon="tabler:alert-triangle" className="h-6 w-6 group-hover:animate-pulse" />
+        </button>
+      )}
+
+      <PanicModal />
+
+      {isSettingsOpen && (
+        <Modal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} title="Account Settings" size="md">
+          <div className="px-6 pb-10 pt-4">
+            <SettingsForm onSuccess={() => setIsSettingsOpen(false)} />
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+function NotificationItem({
+  title,
+  desc,
+  time,
+  unread = false,
+}: {
+  title: string;
+  desc: string;
+  time: string;
+  unread?: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        "cursor-pointer border-b border-white/[0.06] p-4 transition-colors hover:bg-white/[0.02]",
+        unread && "bg-white/[0.015]",
+      )}
+    >
+      <div className="mb-1 flex items-center gap-2">
+        <div className="text-xs font-semibold text-white">{title}</div>
+        {unread && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
+      </div>
+      <div className="mb-2 line-clamp-1 text-[11px] text-text-muted">{desc}</div>
+      <div className="text-[9px] font-bold uppercase tracking-widest text-text-dim">{time}</div>
+    </div>
   );
 }

@@ -1,387 +1,361 @@
 'use client'
 
-import { useEffect, useState, useCallback, useMemo } from 'react'
-import { Text, Sheet, Button, Skeleton } from "@/components/ui"
-import { motion, AnimatePresence } from 'motion/react'
-import { Icon } from '@iconify/react'
+import { useEffect, useState } from 'react'
 import { resolveProfileDisplayName } from '@/lib/profile-name'
-import { StudentDetailView } from '../_components/StudentDetailView'
+import { motion } from 'motion/react'
+import { Icon } from "@iconify/react"
+import { cn } from '@/lib/utils'
+import { Button, Text } from "@/components/ui"
 
 interface Profile {
   id: string
   name: string | null
   role: string
   institution: string | null
-  created_at: string
-  email?: string
 }
 
-const ITEMS_PER_PAGE = 10
-
-const containerVariants = {
+const container = {
   hidden: { opacity: 0 },
-  visible: {
+  show: {
     opacity: 1,
-    transition: { staggerChildren: 0.04 }
+    transition: {
+      staggerChildren: 0.05
+    }
   }
 }
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 8 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
-  }
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: 'spring' as const, duration: 0.6, bounce: 0 } }
 }
 
 export default function AdminDashboardPage() {
-  const [profiles, setProfiles] = useState<Profile[]>([])
+  const [students, setStudents] = useState<Profile[]>([])
+  const [counselors, setCounselors] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [activeTab, setActiveTab] = useState<'students' | 'counselors'>('students')
-  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
 
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
     try {
       const res = await fetch('/api/admin/users')
       if (res.ok) {
         const data = await res.json()
-        setProfiles(data.profiles || [])
+        setStudents(data.students || [])
+        setCounselors(data.counselors || [])
       }
     } catch (err) {
       console.error(err)
     } finally {
       setLoading(false)
     }
-  }, [])
+  }
 
   useEffect(() => {
     fetchData()
-  }, [fetchData])
+  }, [])
 
-  const students = useMemo(() => profiles.filter((p) => p.role === 'student'), [profiles])
-  const counselors = useMemo(() => profiles.filter((p) => p.role === 'counselor'), [profiles])
-
-  const priorityStudents = useMemo(() => {
-    return students.slice(0, 4).map((s, i) => ({
-      ...s,
-      reason: i === 0 ? 'Low mood logs' : i === 1 ? 'Sudden activity drop' : i === 2 ? 'Crisis signal' : 'Proactive check-in',
-      severity: i === 2 ? 'high' : 'medium',
-      time: i === 0 ? '12m' : i === 1 ? '45m' : i === 2 ? '2h' : '5h'
-    }))
-  }, [students])
-
-  const getDisplayName = useCallback(
-    (profile: Profile) =>
-      resolveProfileDisplayName({ profileName: profile.name, email: profile.email }) ||
-      (profile.role === 'counselor' ? 'Counselor' : 'Student'),
-    []
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+      <motion.div 
+        animate={{ rotate: 360 }}
+        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+        className="size-12 rounded-full border-4 border-primary/20 border-t-primary"
+      />
+      <p className="text-text-muted font-medium animate-pulse font-sans">Synthesizing campus analytics...</p>
+    </div>
   )
 
-  const filteredList = useMemo(() => {
-    const list = activeTab === 'students' ? students : counselors
-    if (!searchQuery.trim()) return list
-    const q = searchQuery.toLowerCase()
-    return list.filter(
-      (p) =>
-        getDisplayName(p).toLowerCase().includes(q) ||
-        (p.institution || '').toLowerCase().includes(q) ||
-        (p.email || '').toLowerCase().includes(q)
-    )
-  }, [activeTab, students, counselors, searchQuery, getDisplayName])
+  return (
+    <div className="w-full pb-20">
+      <motion.div 
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="mx-auto max-w-7xl space-y-12"
+      >
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
+          <motion.div variants={item}>
+            <Text as="h2" variant="h1" weight="semibold" className="mb-4 text-balance">
+              Campus <span className="text-primary">Intelligence</span>
+            </Text>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 bg-surface border border-border px-3 py-1.5 rounded-md shadow-sm">
+                <Icon icon="tabler:school" className="text-primary h-4 w-4" />
+                <Text as="span" variant="small" weight="medium">Jammu University</Text>
+              </div>
+              <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-md shadow-sm">
+                <Icon icon="tabler:shield-check" className="text-text-muted h-4 w-4" />
+                <Text as="span" variant="small" weight="medium" color="secondary">Anonymized Data</Text>
+              </div>
+            </div>
+          </motion.div>
+          
+          <motion.div variants={item} className="flex items-center gap-3">
+            <div className="relative">
+              <select className="appearance-none bg-surface border border-border px-4 py-2 rounded-md text-xs font-semibold text-text-muted hover:border-white/20 transition-all outline-none pr-10 cursor-pointer">
+                <option>Spring 2025</option>
+                <option>Fall 2024</option>
+              </select>
+              <Icon icon="tabler:chevron-down" className="absolute right-3 top-1/2 -translate-y-1/2 text-text-dim pointer-events-none" />
+            </div>
+            <Button size="md" className="gap-2">
+              <Icon icon="tabler:download" className="text-lg" />
+              <span className="hidden sm:inline">Export intelligence</span>
+            </Button>
+          </motion.div>
+        </div>
 
-  const totalPages = Math.ceil(filteredList.length / ITEMS_PER_PAGE)
-  const paginatedList = useMemo(() => {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE
-    return filteredList.slice(start, start + ITEMS_PER_PAGE)
-  }, [filteredList, currentPage])
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [searchQuery, activeTab])
-
-  if (loading) {
-    return (
-      <div className="w-full space-y-8 p-4 animate-pulse">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map(i => (
-            <Skeleton key={i} className="h-24 rounded-xl bg-surface-strong/50" />
+        {/* Main Stats Bento */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+          {[
+            { label: 'Campus Mood Avg', value: '3.6', sub: '↑ +0.2 this month', icon: 'tabler:mood-smile', color: 'text-primary' },
+            { label: 'Enrolled Students', value: students.length, sub: 'Active in cohort', icon: 'tabler:users', color: 'text-secondary' },
+            { label: 'MindBot Sessions', value: '1,240', sub: '↑ +18% this month', icon: 'tabler:robot', color: 'text-warning' },
+            { label: 'Crisis Alerts', value: '12', sub: 'All resolved', icon: 'tabler:alert-circle', color: 'text-danger', isCritical: true }
+          ].map((stat, i) => (
+            <motion.div 
+              key={i}
+              variants={item}
+              className="card-raised p-6 group hover:border-white/20 transition-colors"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded bg-white/5 mb-6">
+                <Icon icon={stat.icon} className={cn("text-xl transition-transform", stat.color)} />
+              </div>
+              <div className="text-3xl font-semibold tabular-nums text-white leading-none mb-2">{stat.value}</div>
+              <div className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{stat.label}</div>
+              <div className={cn("mt-6 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5", stat.isCritical ? "text-danger" : "text-success")}>
+                {stat.sub}
+                {stat.isCritical && <Icon icon="tabler:check" className="text-success h-3 w-3" />}
+              </div>
+            </motion.div>
           ))}
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <Skeleton className="lg:col-span-4 h-[500px] rounded-2xl bg-surface-strong/30" />
-          <Skeleton className="lg:col-span-8 h-[500px] rounded-2xl bg-surface-strong/30" />
-        </div>
-      </div>
-    )
-  }
 
-  return (
-    <motion.div 
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-      className="w-full space-y-10 pb-20"
-    >
-      <header className="flex flex-col gap-1">
-        <Text className="text-[10px] font-bold uppercase tracking-wider text-action-primary">System Overview</Text>
-        <Text className="text-2xl font-bold tracking-tight">Institutional Dashboard</Text>
-      </header>
-      
-      {/* ── Key Indicators ── */}
-      <motion.section variants={containerVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard 
-          icon="tabler:users" 
-          label="Total Cohort" 
-          value={students.length.toString()} 
-          accent="primary"
-        />
-        <MetricCard 
-          icon="tabler:alert-triangle" 
-          label="Risk Metrics" 
-          value={priorityStudents.length.toString()} 
-          accent="error"
-        />
-        <MetricCard 
-          icon="tabler:activity" 
-          label="Engagement" 
-          value="92%" 
-          accent="success"
-        />
-        <MetricCard 
-          icon="tabler:shield-check" 
-          label="Verified Staff" 
-          value={counselors.length.toString()} 
-          accent="info"
-        />
-      </motion.section>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* ── Priority Feed ── */}
-        <motion.aside variants={itemVariants} className="lg:col-span-4 space-y-6">
-          <div className="bg-surface-default border border-border-default rounded-2xl overflow-hidden shadow-sm">
-            <div className="px-5 py-4 border-b border-border-default flex items-center justify-between">
+        {/* Mid Section Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+          
+          {/* Mood Trend Chart */}
+          <motion.div variants={item} className="card lg:col-span-8 p-8 group">
+            <div className="flex items-center justify-between mb-10">
               <div>
-                <Text className="text-[10px] font-bold uppercase tracking-wider text-text-muted">Triage Queue</Text>
+                <Text as="h3" weight="semibold">Campus Sentiment</Text>
+                <p className="text-[10px] text-text-muted font-bold uppercase tracking-wider mt-1">30-day stability trend</p>
               </div>
-              <div className="h-1.5 w-1.5 rounded-full bg-status-error animate-pulse shadow-[0_0_8px_var(--status-error)]" />
+              <div className="flex gap-2">
+                <span className="badge badge-outline">Peak: 3.9</span>
+                <span className="badge badge-outline border-warning/20 text-warning">Low: 3.1</span>
+              </div>
             </div>
             
-            <div className="divide-y divide-border-default/50">
-              <AnimatePresence mode="popLayout" initial={false}>
-                {priorityStudents.map((s, idx) => (
-                  <motion.button 
-                    key={s.id}
+            <div className="h-44 flex items-end gap-2 px-2 relative">
+              <div className="absolute inset-x-0 top-1/2 border-t border-dashed border-white/5 pointer-events-none" />
+              {Array.from({ length: 20 }).map((_, i) => {
+                const h = 40 + Math.random() * 50;
+                return (
+                  <div key={i} className="flex-1 flex flex-col items-center gap-2 group/bar">
+                    <motion.div 
+                      initial={{ height: 0 }}
+                      animate={{ height: `${h}%` }}
+                      transition={{ duration: 1, delay: 0.5 + (i * 0.05) }}
+                      className={cn(
+                        "w-full rounded-sm transition-all duration-300",
+                        h > 70 ? "bg-primary" : h > 50 ? "bg-primary/60" : "bg-primary/30"
+                      )}
+                    />
+                  </div>
+                )
+              })}
+            </div>
+            <div className="flex justify-between mt-6 px-2 text-[9px] font-bold text-text-dim uppercase tracking-widest">
+              <span>Week 1</span>
+              <span>Week 2</span>
+              <span>Week 3</span>
+              <span>Week 4</span>
+            </div>
+          </motion.div>
+
+          {/* Department Moods */}
+          <motion.div variants={item} className="card lg:col-span-4 p-8">
+            <Text as="h3" weight="semibold" className="mb-10">Departmental Wellness</Text>
+            <div className="space-y-6">
+              {[
+                { name: 'CSE', score: 3.5, width: '70%', color: 'bg-primary' },
+                { name: 'ECE', score: 3.8, width: '76%', color: 'bg-primary/80' },
+                { name: 'Science', score: 3.3, width: '66%', color: 'bg-primary/60' },
+                { name: 'Management', score: 3.0, width: '60%', color: 'bg-warning/60' },
+                { name: 'Arts', score: 4.2, width: '84%', color: 'bg-secondary' }
+              ].map((dept, i) => (
+                <div key={i} className="space-y-3 group">
+                  <div className="flex justify-between items-end">
+                    <span className="text-xs font-bold text-text-muted tracking-wide uppercase">{dept.name}</span>
+                    <span className="text-xs font-bold tabular-nums text-white">{dept.score}</span>
+                  </div>
+                  <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: dept.width }}
+                      transition={{ duration: 1, delay: 0.8 + (i * 0.1) }}
+                      className={cn("h-full rounded-full transition-all duration-500", dept.color)} 
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* PHQ-9 Donut (Simulated with SVG) */}
+          <motion.div variants={item} className="card lg:col-span-4 p-8 flex flex-col items-center justify-center text-center">
+            <Text as="h3" weight="semibold" className="mb-10 self-start">Severity Scan</Text>
+            <div className="relative size-40 mb-10">
+              <svg className="size-full rotate-[-90deg]" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="transparent" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
+                <motion.circle 
+                  cx="50" cy="50" r="40" fill="transparent" 
+                  stroke="var(--primary)" strokeWidth="8" 
+                  strokeDasharray="251.2" 
+                  initial={{ strokeDashoffset: 251.2 }}
+                  animate={{ strokeDashoffset: 251.2 * (1 - 0.45) }}
+                  transition={{ duration: 1.5, delay: 0.5 }}
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-3xl font-semibold tabular-nums text-white">{students.length}</span>
+                <span className="text-[8px] font-bold text-text-dim uppercase tracking-widest mt-1">Assessed</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-y-3 gap-x-6 w-full">
+              <div className="flex items-center gap-2 text-[9px] font-bold text-text-muted uppercase tracking-wider">
+                <div className="size-1.5 rounded-full bg-primary" /> 45% Minimal
+              </div>
+              <div className="flex items-center gap-2 text-[9px] font-bold text-text-muted uppercase tracking-wider">
+                <div className="size-1.5 rounded-full bg-secondary" /> 25% Mild
+              </div>
+              <div className="flex items-center gap-2 text-[9px] font-bold text-text-muted uppercase tracking-wider">
+                <div className="size-1.5 rounded-full bg-warning" /> 18% Moderate
+              </div>
+              <div className="flex items-center gap-2 text-[9px] font-bold text-text-muted uppercase tracking-wider">
+                <div className="size-1.5 rounded-full bg-danger" /> 12% Severe
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Staff Overview */}
+          <motion.div variants={item} className="card lg:col-span-4 p-8">
+            <Text as="h3" weight="semibold" className="mb-8">Staff on Duty</Text>
+            <div className="space-y-3">
+              {counselors.map((c) => (
+                <motion.div 
+                  key={c.id} 
+                  className="flex items-center justify-between p-3 rounded-md bg-white/[0.02] border border-white/5 group hover:border-white/10 transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="size-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                      {c.name?.[0] || 'S'}
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-white leading-none mb-1">{resolveProfileDisplayName({ profileName: c.name }) || 'Staff'}</p>
+                      <p className="text-[9px] font-bold text-text-dim uppercase tracking-wider">Counselor</p>
+                    </div>
+                  </div>
+                  <div className="size-1.5 rounded-full bg-success shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
+                </motion.div>
+              ))}
+              {counselors.length === 0 && (
+                <div className="p-8 text-center text-text-dim border border-dashed border-white/5 rounded-md">
+                  <Icon icon="tabler:users-off" className="text-2xl mx-auto mb-2 opacity-10" />
+                  <p className="text-[10px] font-bold uppercase tracking-wider">No active staff</p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Top Resources */}
+          <motion.div variants={item} className="card lg:col-span-4 p-8">
+            <Text as="h3" weight="semibold" className="mb-8">Content Engagement</Text>
+            <div className="space-y-5">
+              {[
+                { title: 'Exam Stress Relief', count: 892, icon: 'tabler:yoga' },
+                { title: 'Placement Anxiety', count: 741, icon: 'tabler:briefcase' },
+                { title: 'Sleep Hygiene Guide', count: 634, icon: 'tabler:bed' }
+              ].map((res, i) => (
+                <div key={i} className="flex items-center justify-between group cursor-pointer">
+                  <div className="flex items-center gap-4">
+                    <div className="size-9 rounded bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                      <Icon icon={res.icon} className="text-lg text-text-muted group-hover:text-primary transition-colors" />
+                    </div>
+                    <span className="text-xs font-medium text-text-muted group-hover:text-white transition-colors">{res.title}</span>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs font-bold tabular-nums text-white">{res.count}</p>
+                    <p className="text-[8px] font-bold uppercase text-text-dim tracking-tighter">Hits</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className="btn btn-secondary w-full mt-10 text-[10px] uppercase tracking-widest font-bold">
+              Analytics Report
+            </button>
+          </motion.div>
+        </div>
+
+        {/* Heatmap Elevation */}
+        <motion.div variants={item} className="card p-10">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <Text as="h3" variant="h3" weight="semibold">Campus Stress Pulse</Text>
+              <p className="text-text-muted text-sm mt-2">Daily aggregate analysis over the last semester</p>
+            </div>
+            <span className="badge badge-outline px-4 py-1.5">Academic Year 2024-25</span>
+          </div>
+
+          <div className="grid grid-cols-10 sm:grid-cols-20 md:grid-cols-30 lg:grid-cols-40 gap-1">
+            {Array.from({ length: 120 }).map((_, i) => {
+               const lvl = [0, 1, 2, 3, 4][Math.floor(Math.random() * 5)];
+               return (
+                 <motion.div 
+                    key={i} 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: idx * 0.05 }}
-                    onClick={() => setSelectedStudentId(s.id)}
-                    className="w-full text-left px-5 py-4 hover:bg-surface-strong/40 transition-colors group flex items-start gap-4 active:scale-[0.98]"
-                  >
-                    <div className="h-9 w-9 shrink-0 rounded-full bg-surface-strong text-text-primary flex items-center justify-center font-bold text-sm border border-border-default transition-colors group-hover:bg-action-primary group-hover:text-text-inverse">
-                      {getDisplayName(s).charAt(0)}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex justify-between items-center mb-1">
-                        <Text className="text-[14px] font-semibold truncate tracking-tight">{getDisplayName(s)}</Text>
-                        <Text className="text-[10px] text-text-muted font-medium tabular-nums">{s.time}</Text>
-                      </div>
-                      <Text className="text-[12px] text-text-secondary line-clamp-1 italic opacity-80">
-                        {s.reason}
-                      </Text>
-                    </div>
-                  </motion.button>
-                ))}
-              </AnimatePresence>
-              {priorityStudents.length === 0 && (
-                <div className="p-12 text-center opacity-30">
-                  <Icon icon="tabler:shield-check" className="h-8 w-8 mx-auto mb-3" />
-                  <Text className="text-[10px] font-bold uppercase tracking-widest">Queue Clear</Text>
-                </div>
-              )}
-            </div>
+                    transition={{ delay: 0.5 + (i * 0.002) }}
+                    className={cn(
+                      "aspect-square rounded-[1px] transition-all hover:ring-1 hover:ring-white/40 cursor-help",
+                      lvl === 0 ? "bg-white/[0.02]" : 
+                      lvl === 1 ? "bg-primary/20" : 
+                      lvl === 2 ? "bg-primary/40" : 
+                      lvl === 3 ? "bg-primary/70" : "bg-primary"
+                    )} 
+                 />
+               )
+            })}
           </div>
-        </motion.aside>
 
-        {/* ── User Registry ── */}
-        <motion.main variants={itemVariants} className="lg:col-span-8">
-          <div className="bg-surface-default border border-border-default rounded-2xl overflow-hidden shadow-sm flex flex-col min-h-[600px]">
+          <div className="flex flex-wrap items-center gap-8 mt-12 pt-8 border-t border-white/5">
+            <div className="flex items-center gap-3 text-[9px] font-bold text-text-dim uppercase tracking-widest">
+              <span>Low Intensity</span>
+              <div className="flex gap-1">
+                <div className="size-2.5 rounded-[1px] bg-white/5" />
+                <div className="size-2.5 rounded-[1px] bg-primary/20" />
+                <div className="size-2.5 rounded-[1px] bg-primary/40" />
+                <div className="size-2.5 rounded-[1px] bg-primary/70" />
+                <div className="size-2.5 rounded-[1px] bg-primary" />
+              </div>
+              <span>High Intensity</span>
+            </div>
             
-            <div className="px-6 py-4 border-b border-border-default flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex p-1 bg-surface-strong/40 rounded-lg border border-border-default/50">
-                <TabButton 
-                  active={activeTab === 'students'} 
-                  onClick={() => setActiveTab('students')}
-                  label="Students"
-                />
-                <TabButton 
-                  active={activeTab === 'counselors'} 
-                  onClick={() => setActiveTab('counselors')}
-                  label="Counselors"
-                />
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 badge badge-outline border-warning/20 text-warning text-[9px]">
+                <Icon icon="tabler:pin" />
+                Internal Exams
               </div>
-
-              <div className="relative group w-full sm:w-[260px]">
-                <Icon icon="tabler:search" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted transition-colors group-focus-within:text-action-primary" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Find identities..."
-                  className="w-full h-9 bg-surface-strong/30 pl-9 pr-4 text-[13px] font-medium rounded-lg border border-transparent focus:bg-surface-default focus:border-action-primary/30 focus:outline-none transition-all placeholder:text-text-muted/50"
-                />
+              <div className="flex items-center gap-2 badge badge-outline border-danger/20 text-danger text-[9px]">
+                <Icon icon="tabler:alert-triangle" />
+                Finals Week
               </div>
             </div>
-
-            <div className="flex-1 overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-surface-strong/20 border-b border-border-default/50">
-                    <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-text-muted">Identity</th>
-                    <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-text-muted">Organization</th>
-                    <th className="px-6 py-3 text-right text-[10px] font-bold uppercase tracking-wider text-text-muted">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border-default/30">
-                  <AnimatePresence mode="popLayout" initial={false}>
-                    {paginatedList.map((p, idx) => (
-                      <motion.tr
-                        key={p.id}
-                        layout
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="group cursor-pointer hover:bg-surface-strong/20 transition-colors"
-                        onClick={() => p.role === 'student' && setSelectedStudentId(p.id)}
-                      >
-                        <td className="px-6 py-3">
-                          <div className="flex items-center gap-3">
-                            <div className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs border transition-colors ${
-                              p.role === 'student' 
-                                ? 'bg-surface-strong border-border-default text-text-primary group-hover:bg-action-primary/10 group-hover:text-action-primary' 
-                                : 'bg-action-primary text-text-inverse border-transparent'
-                            }`}>
-                              {getDisplayName(p).charAt(0)}
-                            </div>
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2">
-                                <Text className="text-[13.5px] font-semibold truncate tracking-tight group-hover:text-action-primary transition-colors">{getDisplayName(p)}</Text>
-                                {p.role === 'counselor' && (
-                                  <Icon icon="tabler:shield-check" className="h-3.5 w-3.5 text-action-primary" />
-                                )}
-                              </div>
-                              <Text className="text-[11px] text-text-muted truncate font-medium opacity-60 tabular-nums">{p.email || 'Anonymized'}</Text>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-3">
-                          <Text className="text-[13px] text-text-secondary font-medium tracking-tight">{p.institution || 'Independent'}</Text>
-                        </td>
-                        <td className="px-6 py-3 text-right">
-                          {p.role === 'student' ? (
-                            <Icon icon="tabler:arrow-right" className="h-4 w-4 ml-auto text-text-muted opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                          ) : (
-                            <span className="text-[9px] font-bold uppercase tracking-widest text-action-primary bg-action-primary/10 px-2 py-1 rounded">Staff</span>
-                          )}
-                        </td>
-                      </motion.tr>
-                    ))}
-                  </AnimatePresence>
-                </tbody>
-              </table>
-
-              {filteredList.length === 0 && (
-                <div className="py-32 text-center opacity-30">
-                  <Icon icon="tabler:database-search" className="h-10 w-10 mx-auto mb-4" />
-                  <Text className="text-[11px] font-bold uppercase tracking-widest">No results</Text>
-                </div>
-              )}
-            </div>
-
-            {/* ── Pagination Footer ── */}
-            {totalPages > 1 && (
-              <div className="px-6 py-4 border-t border-border-default flex items-center justify-between bg-surface-strong/10">
-                <Text className="text-[10px] font-medium text-text-muted tabular-nums">
-                  {Math.min(currentPage * ITEMS_PER_PAGE, filteredList.length)} of {filteredList.length} identities
-                </Text>
-                <div className="flex items-center gap-2">
-                  <button 
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                    className="h-8 w-8 rounded-lg border border-border-default flex items-center justify-center bg-surface-default hover:bg-surface-strong disabled:opacity-30 transition-colors active:scale-95"
-                  >
-                    <Icon icon="tabler:chevron-left" className="h-4 w-4" />
-                  </button>
-                  <button 
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    disabled={currentPage === totalPages}
-                    className="h-8 w-8 rounded-lg border border-border-default flex items-center justify-center bg-surface-default hover:bg-surface-strong disabled:opacity-30 transition-colors active:scale-95"
-                  >
-                    <Icon icon="tabler:chevron-right" className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
-        </motion.main>
-      </div>
-
-      <Sheet
-        isOpen={!!selectedStudentId}
-        onClose={() => setSelectedStudentId(null)}
-        title="Student Diagnostic"
-      >
-        {selectedStudentId && (
-          <div className="px-4 pb-20">
-            <StudentDetailView studentId={selectedStudentId} />
-          </div>
-        )}
-      </Sheet>
-    </motion.div>
-  )
-}
-
-function MetricCard({ icon, label, value, accent }: { icon: string, label: string, value: string, accent: 'primary' | 'error' | 'success' | 'info' }) {
-  const accentColors = {
-    primary: 'text-action-primary border-action-primary/20 bg-action-primary/5',
-    error: 'text-status-error border-status-error/20 bg-status-error/5',
-    success: 'text-status-success border-status-success/20 bg-status-success/5',
-    info: 'text-status-info border-status-info/20 bg-status-info/5',
-  }
-
-  return (
-    <motion.div 
-      variants={itemVariants}
-      className="bg-surface-default border border-border-default p-5 rounded-2xl flex flex-col gap-4 shadow-sm hover:shadow-md transition-all duration-300 group"
-    >
-      <div className="flex items-center justify-between">
-        <div className={`h-8 w-8 rounded-lg flex items-center justify-center border ${accentColors[accent]} transition-transform duration-500 group-hover:scale-110`}>
-          <Icon icon={icon} className="h-4.5 w-4.5" />
-        </div>
-      </div>
-      <div>
-        <Text className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1 opacity-70">{label}</Text>
-        <Text className="text-3xl font-bold text-text-primary tracking-tight tabular-nums leading-none" style={{ fontFamily: 'var(--font-mindbridge)' }}>{value}</Text>
-      </div>
-    </motion.div>
-  )
-}
-
-function TabButton({ active, onClick, label }: { active: boolean, onClick: () => void, label: string }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`px-4 py-1.5 text-[11px] font-bold rounded-md transition-all active:scale-[0.96] ${
-        active 
-          ? 'bg-surface-default text-action-primary shadow-sm border border-border-default' 
-          : 'text-text-muted hover:text-text-primary'
-      }`}
-    >
-      {label}
-    </button>
+        </motion.div>
+      </motion.div>
+    </div>
   )
 }

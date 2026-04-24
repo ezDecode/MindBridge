@@ -11,25 +11,25 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 const Card = forwardRef<HTMLDivElement, CardProps>(
  ({ className = "", variant = "default", padding = "md", interactive = false, children, ...props }, ref) => {
  const variants = {
- default: "border border-[var(--border-default)] bg-[var(--surface-default)] shadow-none",
+ default: "border border-border bg-surface",
  elevated:
- "border border-[var(--border-default)] bg-[var(--surface-default)] shadow-none",
- outline: "border border-[var(--border-default)] bg-transparent",
- subtle: "border border-[var(--border-default)] bg-[var(--bg-hover)] shadow-none",
- warm: "border border-[var(--border-default)] bg-[var(--surface-default)] shadow-none",
+ "border border-border bg-surface-raised shadow-md",
+ outline: "border border-border bg-transparent",
+ subtle: "border border-border/50 bg-white/[0.02]",
+ warm: "border border-border bg-surface",
  };
 
  const paddings = {
  none: "",
  sm: "p-4",
- md: "p-5 sm:p-6",
- lg: "p-6 sm:p-8",
+ md: "p-6",
+ lg: "p-8 sm:p-10",
  };
 
  return (
  <div
  ref={ref}
- className={`rounded-2xl transition-[border-color,background-color,transform] duration-200 ease-[var(--ease-out)] ${variants[variant]} ${paddings[padding]} ${interactive ? "hover:border-[var(--action-primary)] active:scale-[0.98] cursor-pointer" : ""} ${className}`}
+ className={`rounded-lg transition-all duration-150 ease-out ${variants[variant]} ${paddings[padding]} ${interactive ? "hover:border-border-hover hover:bg-surface-hover active:scale-[0.99] cursor-pointer" : ""} ${className}`}
  {...props}
  >
  {children}

@@ -12,27 +12,30 @@ export const marketingNav = [
 ];
 
 export const studentNav: NavItem[] = [
- { href: "/student/dashboard", label: "User Dashboard", icon: "grid" },
- { href: "/student/chat", label: "Chat", icon: "chat" },
- { href: "/student/check-in", label: "My Mind", icon: "heart" },
- { href: "/student/resources", label: "Resources", icon: "library" },
- { href: "/student/book", label: "Book", icon: "calendar" },
- { href: "#", label: "Settings", icon: "shield" },
-
+  { href: "/student/dashboard", label: "Dashboard", icon: "tabler:home" },
+  { href: "/student/check-in", label: "Mood Tracker", icon: "tabler:mood-smile" },
+  { href: "/student/chat", label: "MindBot", icon: "tabler:robot" },
+  { href: "/student/screening", label: "Screening", icon: "tabler:clipboard-check" },
+  { href: "/student/journal", label: "Journal", icon: "tabler:notebook" },
+  { href: "/student/book", label: "Book Counselor", icon: "tabler:calendar-event" },
+  { href: "/student/resources", label: "Resource Hub", icon: "tabler:books" },
+  { href: "/student/forum", label: "Peer Forum", icon: "tabler:messages" },
+  { href: "/student/wellness", label: "Wellness", icon: "tabler:yoga" },
 ];
 
 export const counselorNav: NavItem[] = [
-  { href: "/counselor/dashboard", label: "Dashboard", icon: "grid" },
-  { href: "/counselor/dashboard?tab=triage", label: "Triage Queue", icon: "alert" },
-  { href: "/counselor/dashboard?tab=caseload", label: "Caseload", icon: "heart" },
-  { href: "/counselor/dashboard?tab=analytics", label: "Insights", icon: "chart" },
+  { href: "/counselor/dashboard", label: "Dashboard", icon: "tabler:home" },
+  { href: "/counselor/appointments", label: "Appointments", icon: "tabler:calendar-event" },
+  { href: "/counselor/notes", label: "Session Notes", icon: "tabler:note" },
+  { href: "/counselor/availability", label: "Availability", icon: "tabler:settings" },
 ];
 
 export const adminNav: NavItem[] = [
-  { href: "/admin/dashboard", label: "Overview", icon: "grid" },
-  { href: "/admin/dashboard?tab=directory", label: "User Directory", icon: "library" },
-  { href: "/admin/dashboard?tab=health", label: "System Health", icon: "chart" },
-  { href: "/admin/dashboard?tab=settings", label: "Settings", icon: "shield" },
+  { href: "/admin/dashboard", label: "Analytics", icon: "tabler:chart-bar" },
+  { href: "/admin/reports", label: "Reports", icon: "tabler:chart-line" },
+  { href: "/admin/resources", label: "Resources", icon: "tabler:books" },
+  { href: "/admin/users", label: "User Management", icon: "tabler:users" },
+  { href: "/admin/settings", label: "Settings", icon: "tabler:settings" },
 ];
 
 export const dashboardMetrics = [

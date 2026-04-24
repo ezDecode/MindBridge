@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Button, Container, Text } from "@/components/ui";
+import { Icon } from '@iconify/react';
+import { Button, Card, Container, Text } from "@/components/ui";
 import { sectionReveal } from "./motion";
 
 const sampleResources = [
@@ -13,42 +14,48 @@ const sampleResources = [
 
 export function ResourcesSection() {
  return (
- <motion.section id="resources" className="page-section w-full pb-3" initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={sectionReveal}>
+ <motion.section id="resources" className="page-section w-full py-20 sm:py-32 bg-background border-b border-border" initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={sectionReveal}>
  <Container size="lg">
- <div className="mx-auto w-full max-w-6xl rounded-3xl bg-[var(--surface-warm)] px-5 py-8 border-[0.125rem] border-[var(--border-default)] sm:px-8 sm:py-10 lg:px-12 lg:py-14">
- <div className="mx-auto max-w-3xl text-center">
- <Text as="h2" variant="h3" weight="bold" className="mx-auto max-w-[20ch] text-[var(--text-primary)] md:text-h2">
- Resources between sessions.
+ <div className="mx-auto w-full max-w-6xl">
+ <div className="mb-16 text-center">
+ <Text as="h2" variant="h2" weight="semibold">
+ Resources between sessions
  </Text>
- <Text as="p" variant="body" color="secondary" className="mx-auto mt-3 max-w-[45ch]">
+ <Text as="p" color="secondary" className="mt-4 max-w-[45ch] mx-auto">
  Curated videos, audio, and articles for your campus mental health journey.
  </Text>
  </div>
 
- <div className="mt-8 grid gap-5 lg:mt-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
- <div className="flex h-full flex-col justify-between rounded-2xl bg-[var(--action-primary-light)] p-6 border-[0.125rem] border-[var(--border-default)] sm:p-8">
+ <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr]">
+ <Card variant="elevated" className="flex flex-col justify-between p-8 sm:p-12 bg-white/[0.02]">
  <div>
- <Text as="p" variant="h4" weight="bold" className="text-[var(--text-primary)] leading-tight md:text-h3">
+ <Text as="h3" variant="h3" weight="semibold" className="leading-tight">
  Simple wellness resources that actually help.
  </Text>
- <Text as="p" variant="body" color="secondary" className="mt-3 max-w-[36ch]">
+ <Text as="p" color="secondary" className="mt-4 max-w-[36ch]">
  Supportive even when you&apos;re not ready to chat or book.
  </Text>
  </div>
- <div className="mt-6 md:mt-8">
- <Button href="/student/resources" variant="primary" size="md">Open resource hub</Button>
+ <div className="mt-10">
+ <Button href="/student/resources" size="lg">Open resource hub</Button>
  </div>
- </div>
+ </Card>
 
- <div className="grid gap-3 sm:grid-cols-2">
+ <div className="grid gap-4 sm:grid-cols-2">
  {sampleResources.map((r) => (
- <article key={r.title} className="group flex h-full flex-col justify-between rounded-2xl bg-[var(--surface-default)] p-4 border-[0.125rem] border-[var(--border-default)] transition-colors duration-200 hover:bg-[var(--chess-light)] sm:p-5">
- <div className="flex items-center gap-2">
- <Text as="span" variant="label" weight="bold" className="text-[var(--action-primary)]">{r.type}</Text>
- <Text as="span" variant="small" color="muted">·</Text>
+ <article key={r.title} className="group flex flex-col justify-between rounded-lg bg-surface p-6 border border-border transition-all duration-150 hover:border-white/20 hover:bg-surface-hover">
+ <div>
+ <div className="flex items-center gap-2 mb-4">
+ <div className="px-2 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
+ {r.type}
+ </div>
  <Text as="span" variant="small" color="muted">{r.duration}</Text>
  </div>
- <Text as="p" variant="h6" weight="bold" className="mt-2 text-[var(--text-primary)] leading-snug">{r.title}</Text>
+ <Text as="p" weight="semibold" className="text-white leading-snug group-hover:text-primary transition-colors">{r.title}</Text>
+ </div>
+ <div className="mt-6 flex justify-end">
+ <Icon icon="tabler:arrow-right" className="h-4 w-4 text-text-dim opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-hover:text-white" />
+ </div>
  </article>
  ))}
  </div>

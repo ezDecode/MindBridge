@@ -3,9 +3,9 @@
 import { Suspense, useActionState, useEffect, useState } from "react";
 import { Icon } from '@iconify/react';
 import { Button, Card, Container, Input, Text } from "@/components/ui";
-import { SiteFooter, SiteHeader } from "@/components/site";
+import { SiteHeader } from "@/components/site";
 import { sendOtp, signInWithPassword, signUpWithPassword, signInWithGoogle, type AuthState } from "@/lib/auth/actions";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const initialState: AuthState = {};
 
@@ -33,76 +33,76 @@ function LoginForm() {
   }, [state.success, state.message]);
 
  return (
- <main id="main-content" className="w-full">
+ <main id="main-content" className="w-full bg-background min-h-screen flex flex-col">
  <SiteHeader />
 
- <section className="w-full py-8 sm:py-12">
+ <section className="flex-1 flex items-center py-12">
  <Container size="md">
- <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
- <Card variant="subtle" padding="lg" className="rounded-2xl">
- <Text as="p" variant="label" color="brand">
- Anonymous-first access
+ <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr] items-stretch">
+ <Card variant="subtle" padding="lg" className="flex flex-col justify-center bg-white/[0.02] border-white/5">
+ <Text as="p" variant="label" className="text-primary tracking-[0.2em] mb-4">
+ Anonymous-first
  </Text>
- <Text as="h1" variant="h3" weight="bold" className="mt-3 max-w-[14ch)] md:text-h2">
+ <Text as="h1" variant="h2" weight="semibold" className="leading-tight">
  College email unlocks the deeper features.
  </Text>
- <Text as="p" variant="body" color="secondary" className="mt-4">
+ <Text as="p" color="secondary" className="mt-6 leading-relaxed">
  Browse chat and resources before sign-in. Sign in to unlock your history, sessions, and secure counseling bookings.
  </Text>
 
- <div className="mt-6 md:mt-8 space-y-3">
- <div className="rounded-lg border border-[var(--border-default)] bg-[var(--surface-default)] p-4">
- <Text as="p" variant="h6" weight="bold">
+ <div className="mt-12 space-y-4">
+ <div className="rounded-lg border border-border bg-surface p-6">
+ <Text as="p" weight="semibold" className="text-sm">
  Secure Password Access
  </Text>
- <Text as="p" variant="small" color="secondary" className="mt-2">
+ <Text as="p" variant="small" color="secondary" className="mt-2 leading-relaxed">
  Quickly return to your sessions securely matching your credentials.
  </Text>
  </div>
- <div className="rounded-lg border border-[var(--border-default)] bg-[var(--surface-default)] p-4">
- <Text as="p" variant="h6" weight="bold">
+ <div className="rounded-lg border border-border bg-surface p-6">
+ <Text as="p" weight="semibold" className="text-sm">
  What stays private
  </Text>
- <Text as="p" variant="small" color="secondary" className="mt-2">
+ <Text as="p" variant="small" color="secondary" className="mt-2 leading-relaxed">
  Anonymous browsing always available. Counselor notes and admin views stay separate.
  </Text>
  </div>
  </div>
  </Card>
 
- <Card variant="elevated" padding="lg" className="rounded-2xl">
- <div className="flex items-center gap-3">
- <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--action-primary-light)] text-[var(--action-primary)]">
+ <Card variant="elevated" padding="lg" className="bg-surface shadow-xl border-border">
+ <div className="flex items-center gap-4 mb-10">
+ <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-primary/10 text-primary border border-primary/20">
  <Icon icon="tabler:lock-password" className="h-5 w-5" />
- </span>
+ </div>
  <div>
- <Text as="p" variant="h4" weight="bold" className="md:text-h3">
- {authMode === 'login' ? "Sign in to MindBridge" : authMode === 'signup' ? "Create an Account" : "Sign in with Magic Link"}
+ <Text as="p" variant="h4" weight="semibold">
+ {authMode === 'login' ? "Sign in" : authMode === 'signup' ? "Create Account" : "Magic Link"}
  </Text>
- <Text as="p" variant="small" color="secondary" className="mt-1">
- {authMode === 'login' ? "Welcome back" : authMode === 'signup' ? "Join your campus community securely" : "Receive a temporary link to sign in"}
+ <Text as="p" variant="small" color="secondary">
+ {authMode === 'login' ? "Welcome back" : authMode === 'signup' ? "Join your campus community" : "Temporary link to sign in"}
  </Text>
  </div>
  </div>
 
- <form action={signInWithGoogle} className="mt-6 md:mt-8">
- <Button type="submit" variant="ghost" className="w-full border border-[var(--border-default)] bg-[var(--surface-default)]">
- <Icon icon="tabler:brand-google" className="mr-2 h-5 w-5" />
+ <form action={signInWithGoogle}>
+ <Button type="submit" variant="warm" className="w-full justify-center">
+ <Icon icon="tabler:brand-google" className="h-4 w-4" />
  Continue with Google
  </Button>
  </form>
 
- <div className="my-6 flex items-center">
- <div className="flex-grow border-t border-[var(--border-default)]"></div>
- <span className="mx-4 text-[13px] font-medium text-[var(--text-secondary)] uppercase">OR</span>
- <div className="flex-grow border-t border-[var(--border-default)]"></div>
+ <div className="my-8 flex items-center gap-4">
+ <div className="flex-grow border-t border-border"></div>
+ <span className="text-[10px] font-bold text-text-dim uppercase tracking-[0.2em]">OR</span>
+ <div className="flex-grow border-t border-border"></div>
  </div>
 
-  <form action={formAction} className="space-y-4 md:space-y-5">
+  <form action={formAction} className="space-y-6">
   {authMode === 'signup' && (
   <>
-  <label className="block">
-  <Text as="span" variant="label" weight="medium">
+  <div className="space-y-2">
+  <Text as="span" variant="label" weight="bold" className="text-text-dim tracking-widest ml-1">
   Full name
   </Text>
   <Input
@@ -113,12 +113,11 @@ function LoginForm() {
   placeholder="e.g. Aisha Khan"
   required
   disabled={isPending}
-  className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--border-default)] bg-[var(--surface-default)]"
   />
-  </label>
+  </div>
 
-  <label className="block">
-  <Text as="span" variant="label" weight="medium">
+  <div className="space-y-2">
+  <Text as="span" variant="label" weight="bold" className="text-text-dim tracking-widest ml-1">
   Role
   </Text>
   <select
@@ -126,17 +125,17 @@ function LoginForm() {
   value={role}
   onChange={(e) => setRole(e.target.value)}
   disabled={isPending}
-  className="mt-2 w-full min-h-[3.25rem] rounded-sm border-[var(--border-default)] bg-[var(--surface-default)] px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--action-primary)] transition-all"
+  className="w-full h-10 rounded-md border border-border bg-background px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
   >
   <option value="student">Student</option>
   <option value="counselor">Counselor / Admin</option>
   </select>
-  </label>
+  </div>
   </>
   )}
 
- <label className="block mt-4 md:mt-5">
- <Text as="span" variant="label" weight="medium">
+ <div className="space-y-2">
+ <Text as="span" variant="label" weight="bold" className="text-text-dim tracking-widest ml-1">
  {role === "counselor" && authMode === 'signup' ? "Staff email" : "Email"}
  </Text>
  <Input
@@ -145,13 +144,12 @@ function LoginForm() {
  placeholder={role === "counselor" && authMode === 'signup' ? "name@uni.edu" : "you@college.edu"}
  required
  disabled={isPending}
- className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--border-default)] bg-[var(--surface-default)]"
  />
- </label>
+ </div>
 
  {authMode !== 'otp' && (
- <label className="block mt-4 md:mt-5">
- <Text as="span" variant="label" weight="medium">
+ <div className="space-y-2">
+ <Text as="span" variant="label" weight="bold" className="text-text-dim tracking-widest ml-1">
  Password
  </Text>
  <Input
@@ -160,16 +158,15 @@ function LoginForm() {
  placeholder="Enter your password"
  required
  disabled={isPending}
- className="mt-2 min-h-[3.25rem] rounded-sm border-[var(--border-default)] bg-[var(--surface-default)]"
  />
- </label>
+ </div>
  )}
 
  {state.error && (
- <div className="rounded-md border border-[var(--status-error)]/30 bg-[var(--status-error-soft)] p-4">
- <div className="flex items-start gap-3">
- <Icon icon="tabler:alert-circle" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--status-error)]" />
- <Text as="p" variant="small" className="text-[var(--status-error)]">
+ <div className="rounded border border-danger/20 bg-danger/10 p-3">
+ <div className="flex items-center gap-3">
+ <Icon icon="tabler:alert-circle" className="h-4 w-4 shrink-0 text-danger" />
+ <Text as="p" variant="small" className="text-danger font-semibold">
  {state.error}
  </Text>
  </div>
@@ -177,30 +174,20 @@ function LoginForm() {
  )}
 
  {state.success && (
- <div className="rounded-md border border-[var(--status-success)]/30 bg-[var(--status-success-soft)] p-4">
- <div className="flex items-start gap-3">
- <Icon icon="tabler:circle-check" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--status-success)]" />
- <Text as="p" variant="small" className="text-[var(--status-success)]">
+ <div className="rounded border border-success/20 bg-success/10 p-3">
+ <div className="flex items-center gap-3">
+ <Icon icon="tabler:circle-check" className="h-4 w-4 shrink-0 text-success" />
+ <Text as="p" variant="small" className="text-success font-semibold">
  {state.message}
  </Text>
  </div>
  </div>
  )}
 
- <div className="rounded-md border border-[var(--border-default)] bg-[var(--surface-soft)] p-4">
- <div className="flex items-start gap-3">
- <Icon icon="tabler:shield-check" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--action-primary)]" />
- <Text as="p" variant="small" color="secondary">
- {authMode === 'login' ? "Secure sign-in. Data remains private." : authMode === 'signup' ? "Creating an account gives you complete access." : "We'll send a secure login link to your email."}
- </Text>
- </div>
- </div>
-
  <Button 
  type="submit" 
- variant="warm" 
- size="md" 
- className="w-full"
+ size="lg" 
+ className="w-full mt-4"
  disabled={isPending}
  >
  {isPending ? (
@@ -217,34 +204,31 @@ function LoginForm() {
  </Button>
  </form>
 
- <div className="mt-6 md:mt-8 grid gap-3 sm:grid-cols-2">
+ <div className="mt-10 pt-8 border-t border-border flex flex-col gap-4">
  {authMode === 'login' ? (
  <>
- <Button type="button" onClick={() => setAuthMode('signup')} variant="ghost" className="w-full">
+ <button type="button" onClick={() => setAuthMode('signup')} className="text-xs font-bold text-text-muted hover:text-white transition-colors uppercase tracking-[0.15em] text-center">
  Need an account? Sign up
- </Button>
- <Button type="button" onClick={() => setAuthMode('otp')} variant="ghost" className="w-full text-[var(--action-primary)]">
+ </button>
+ <button type="button" onClick={() => setAuthMode('otp')} className="text-[10px] font-bold text-text-dim hover:text-white transition-colors uppercase tracking-[0.15em] text-center">
  Lost Password? Use Magic Link
- </Button>
+ </button>
  </>
  ) : (
- <Button type="button" onClick={() => setAuthMode('login')} variant="ghost" className="w-full sm:col-span-2">
+ <button type="button" onClick={() => setAuthMode('login')} className="text-xs font-bold text-text-muted hover:text-white transition-colors uppercase tracking-[0.15em] text-center">
  Back to Sign in
- </Button>
+ </button>
  )}
  </div>
  </Card>
  </div>
  </Container>
  </section>
-
- <SiteFooter />
  </main>
  );
-}
+ }
 
-export default function LoginPage() {
- return (
+ export default function LoginPage() { return (
  <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
  <LoginForm />
  </Suspense>

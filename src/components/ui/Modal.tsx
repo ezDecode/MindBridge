@@ -22,6 +22,8 @@ const sizes = {
   full: 'max-w-[95vw]',
 }
 
+import { Text } from "./Text";
+
 export function Modal({ isOpen, onClose, title, children, className, size = 'md' }: ModalProps) {
   // Prevent scroll when modal is open
   React.useEffect(() => {
@@ -44,31 +46,31 @@ export function Modal({ isOpen, onClose, title, children, className, size = 'md'
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.98, y: 8 }}
+            initial={{ opacity: 0, scale: 0.98, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.98, y: 8 }}
+            exit={{ opacity: 0, scale: 0.98, y: 10 }}
             transition={{ type: 'spring', duration: 0.4, bounce: 0 }}
             className={cn(
-              "relative z-10 w-full overflow-hidden rounded-[2rem] bg-[var(--surface-default)] shadow-xl border border-[var(--border-default)]",
+              "relative z-10 w-full overflow-hidden rounded-lg bg-surface shadow-2xl border border-white/10",
               sizes[size],
               className
             )}
           >
             {title && (
-              <div className="flex items-center justify-between border-b border-[var(--border-default)] px-8 py-5">
-                <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">{title}</h2>
+              <div className="flex items-center justify-between border-b border-white/5 px-6 py-4 bg-white/[0.02]">
+                <Text as="h2" variant="body" weight="semibold" className="text-white tracking-tight">{title}</Text>
                 <button
                   onClick={onClose}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--surface-soft)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all active:scale-[0.92] hover:bg-[var(--surface-strong)]"
+                  className="flex h-8 w-8 items-center justify-center rounded-md bg-white/5 text-text-dim hover:text-white transition-all active:scale-[0.92] hover:bg-white/10 border border-white/5"
                 >
-                  <Icon icon="tabler:x" className="h-5 w-5" />
+                  <Icon icon="tabler:x" className="h-4 w-4" />
                 </button>
               </div>
             )}
-            <div className="max-h-[80vh] overflow-y-auto">
+            <div className="max-h-[85vh] overflow-y-auto no-scrollbar">
               {children}
             </div>
           </motion.div>

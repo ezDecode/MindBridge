@@ -14,6 +14,8 @@ interface SheetProps {
   side?: 'right' | 'left'
 }
 
+import { Text } from "./Text";
+
 export function Sheet({ isOpen, onClose, title, children, className, side = 'right' }: SheetProps) {
   // Prevent scroll when sheet is open
   React.useEffect(() => {
@@ -49,32 +51,32 @@ export function Sheet({ isOpen, onClose, title, children, className, side = 'rig
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/20 backdrop-blur-[2px]"
+            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
           />
           <motion.div
             initial={variants[side].initial}
             animate={variants[side].animate}
             exit={variants[side].exit}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
             className={cn(
-              "relative ml-auto flex h-full w-full max-w-2xl flex-col bg-[var(--surface-default)] shadow-2xl border-l border-[var(--border-default)] sm:rounded-l-[3rem]",
+              "relative ml-auto flex h-full w-full max-w-2xl flex-col bg-surface shadow-2xl border-l border-white/10",
               className
             )}
           >
-            <div className="flex items-center justify-between px-8 py-8">
+            <div className="flex items-center justify-between px-8 py-6 border-b border-white/5 bg-white/[0.02]">
               {title ? (
-                <h2 className="text-2xl font-bold text-[var(--text-primary)]">{title}</h2>
+                <Text as="h2" variant="h4" weight="semibold" className="text-white tracking-tight">{title}</Text>
               ) : (
                 <div />
               )}
               <button
                 onClick={onClose}
-                className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                className="flex h-9 w-9 items-center justify-center rounded-md bg-white/5 text-text-dim hover:text-white transition-all active:scale-[0.92] hover:bg-white/10 border border-white/5"
               >
-                <Icon icon="tabler:x" className="h-6 w-6" />
+                <Icon icon="tabler:x" className="h-5 w-5" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto px-8 pb-12">
+            <div className="flex-1 overflow-y-auto px-8 py-10 no-scrollbar">
               {children}
             </div>
           </motion.div>

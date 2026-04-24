@@ -24,21 +24,21 @@ type PolymorphicComponentProp<T extends ElementType, Props = object> = {
 
 const variantStyles: Record<ButtonVariant, string> = {
  primary:
- "border-none bg-[var(--action-primary)] text-[var(--text-inverse)] hover:bg-[var(--action-primary-hover)] shadow-none hover:shadow-none",
+ "bg-white text-black hover:bg-white/90 shadow-sm",
  warm:
- "border border-[var(--border-default)] bg-[var(--surface-default)] text-[var(--text-primary)] hover:bg-[var(--bg-hover)] shadow-none hover:shadow-none",
+ "bg-surface-raised text-white border border-border hover:bg-surface-hover hover:border-border-hover",
  ghost:
- "border-none bg-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]",
+ "bg-transparent text-text-muted hover:text-white hover:bg-white/5",
  link:
- "bg-transparent text-[var(--action-primary)] hover:text-[var(--action-primary)] underline-offset-4 hover:underline p-0 h-auto",
+ "bg-transparent text-primary hover:text-primary-hover underline-offset-4 hover:underline p-0 h-auto",
  danger:
- "border border-[var(--status-error)]/30 bg-[var(--status-error-soft)] text-[var(--text-primary)] shadow-none hover:bg-[var(--status-error)]/20",
+ "bg-danger/10 text-danger border border-danger/20 hover:bg-danger/20",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
- sm: "h-9 px-4 text-sm",
- md: "h-11 px-5 text-sm",
- lg: "h-12 px-6 text-sm",
+ sm: "h-8 px-3 text-xs",
+ md: "h-10 px-4 text-sm",
+ lg: "h-12 px-6 text-base",
 };
 
 const weightStyles: Record<ButtonWeight, string> = {
@@ -50,7 +50,7 @@ const weightStyles: Record<ButtonWeight, string> = {
 };
 
 const baseStyles =
- "inline-flex shrink-0 items-center justify-center gap-2 rounded-full whitespace-nowrap transition-all duration-200 ease-[var(--ease-out)] disabled:pointer-events-none disabled:opacity-50 outline-none active:scale-[0.96] active:opacity-90 cursor-pointer min-h-[2.5rem] min-w-[2.5rem]";
+ "inline-flex shrink-0 items-center justify-center gap-2 rounded-md whitespace-nowrap transition-all duration-150 ease-out disabled:pointer-events-none disabled:opacity-50 outline-none active:scale-[0.98] cursor-pointer";
 
 export function Button<T extends ElementType = "button">({
  as,

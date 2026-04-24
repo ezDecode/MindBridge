@@ -54,52 +54,52 @@ export function ResourceCard({ resource, className = "", style }: ResourceCardPr
  
  
   className={cn(
-    "group block p-4 rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)]",
-    "transition-all duration-300 hover:border-[var(--border-strong)] hover:shadow-lg active:scale-[0.96] transition-transform",
+    "group block p-4 rounded-lg border border-border bg-surface",
+    "transition-all duration-150 hover:border-white/20 hover:bg-surface-hover active:scale-[0.98]",
     className
   )}
 >
   {thumbnail && (
-    <div className="relative aspect-video rounded-md overflow-hidden mb-4 bg-[var(--surface-tinted)] ring-1 ring-black/5">
+    <div className="relative aspect-video rounded-md overflow-hidden mb-4 bg-background border border-white/5">
       <img
         src={thumbnail}
         alt={resource.title}
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        className="w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-80"
       />
-      <div className="absolute inset-0 flex items-center justify-center bg-[var(--action-primary)]/0 group-hover:bg-[var(--action-primary)]/10 transition-colors duration-300">
-        <div className="w-11 h-11 rounded-full bg-[var(--surface-default)]/95 flex items-center justify-center shadow-md scale-90 group-hover:scale-100 transition-transform duration-300">
-          <svg className="w-5 h-5 text-[var(--text-primary)] ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+      <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="w-11 h-11 rounded-full bg-white text-black flex items-center justify-center shadow-lg transition-transform duration-300">
+          <svg className="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8 5v14l11-7z" />
           </svg>
         </div>
       </div>
-      <div className="absolute bottom-2.5 right-2.5 bg-black/60 text-white text-[10px] tabular-nums font-semibold px-2 py-0.5 rounded-sm backdrop-blur-md tracking-wider">
+      <div className="absolute bottom-2.5 right-2.5 bg-black/80 text-white text-[10px] tabular-nums font-bold px-2 py-0.5 rounded-sm backdrop-blur-md tracking-wider">
         {resource.duration}
       </div>
     </div>
   )}
 
-  <div className="flex items-center gap-2.5 mb-2.5">
+  <div className="flex items-center gap-2.5 mb-3">
     <span className={cn(
-      "text-[10px] uppercase font-bold px-2 py-0.5 rounded-full tracking-widest",
+      "text-[9px] uppercase font-bold px-2 py-0.5 rounded border tracking-widest",
       isYouTube 
-        ? "bg-[var(--status-error-soft)] text-[var(--status-error)]" 
-        : "bg-[var(--action-primary-soft)] text-[var(--action-primary)]"
+        ? "bg-danger/10 text-danger border-danger/20" 
+        : "bg-primary/10 text-primary border-primary/20"
     )}>
       {resource.type}
     </span>
     {!isYouTube && (
-      <span className="text-xs text-[var(--text-muted)] tabular-nums">
+      <span className="text-[10px] font-bold text-text-dim uppercase tracking-widest tabular-nums">
         {resource.duration}
       </span>
     )}
   </div>
 
-  <Text as="h3" variant="h6" weight="semibold" className="text-[var(--text-primary)] group-hover:text-[var(--action-primary)] transition-colors duration-200 line-clamp-2 leading-snug text-balance">
+  <Text as="h3" variant="body" weight="semibold" className="text-white group-hover:text-primary transition-colors duration-150 line-clamp-2 leading-snug">
     {resource.title}
   </Text>
   
-  <Text as="p" variant="small" color="muted" className="mt-1.5 line-clamp-2 leading-relaxed text-pretty">
+  <Text as="p" variant="small" color="secondary" className="mt-2 line-clamp-2 leading-relaxed">
     {resource.description}
   </Text>
  </motion.a>
@@ -121,21 +121,22 @@ export function ResourceSection({
 }) {
  return (
  <section className={className}>
- <div className="flex items-center gap-4 mb-6">
- {icon && <div className="text-[var(--action-primary)]">{icon}</div>}
+ <div className="flex items-center gap-4 mb-8">
+ {icon && <div className="h-10 w-10 flex items-center justify-center rounded bg-primary/10 text-primary border border-primary/20">{icon}</div>}
  <div>
- <Text as="h2" variant="h4" weight="bold" className="text-[var(--text-primary)]">
+ <Text as="h2" variant="h3" weight="semibold" className="text-white tracking-tight">
  {title}
  </Text>
  {description && (
- <Text as="p" variant="body" color="secondary" className="mt-1">
+ <Text as="p" color="secondary" className="mt-1 text-sm leading-relaxed max-w-[60ch]">
  {description}
  </Text>
  )}
  </div>
  </div>
  
- <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+ <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
  {resources.map((resource, index) => (
  <ResourceCard 
  key={index} 

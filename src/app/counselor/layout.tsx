@@ -6,8 +6,6 @@ export default function CounselorLayout({
 }: Readonly<{ children: React.ReactNode }>) {
  return (
  <RoleShell
- roleLabel="Counselor space"
- roleDescription="Upcoming sessions, urgent flags, notes, and slot management."
  navItems={counselorNav}
  >
  {children}

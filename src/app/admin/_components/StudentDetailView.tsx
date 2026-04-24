@@ -5,6 +5,7 @@ import { Button, Text, Skeleton } from "@/components/ui"
 import { motion, AnimatePresence } from 'motion/react'
 import { Icon } from '@iconify/react'
 import { resolveProfileDisplayName } from '@/lib/profile-name'
+import { cn } from "@/lib/utils"
 
 interface Profile {
   id: string
@@ -43,13 +44,12 @@ const staggerContainer = {
 
 const slideIn = {
   hidden: { opacity: 0, y: 8 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
+    transition: { duration: 0.4 }
   }
 }
-
 export function StudentDetailView({ studentId }: StudentDetailViewProps) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [moodLogs, setMoodLogs] = useState<MoodLog[]>([])
@@ -120,18 +120,18 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
   }, [moodLogs])
 
   const status = useMemo(() => {
-    if (avgMood < 2 && moodLogs.length > 0) return { label: 'Priority Escalation', color: 'text-status-error', bg: 'bg-status-error/5', border: 'border-status-error/20' }
-    if (avgMood < 3.5 && moodLogs.length > 0) return { label: 'Active Monitoring', color: 'text-status-warning', bg: 'bg-status-warning/5', border: 'border-status-warning/20' }
-    return { label: 'Stable Index', color: 'text-action-primary', bg: 'bg-action-primary/5', border: 'border-action-primary/20' }
+    if (avgMood < 2 && moodLogs.length > 0) return { label: 'Priority Escalation', color: 'text-danger', bg: 'bg-danger/10', border: 'border-danger/20' }
+    if (avgMood < 3.5 && moodLogs.length > 0) return { label: 'Active Monitoring', color: 'text-warning', bg: 'bg-warning/10', border: 'border-warning/20' }
+    return { label: 'Stable Index', color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20' }
   }, [avgMood, moodLogs])
 
   if (loading) {
     return (
-      <div className="space-y-8 animate-pulse">
-        <Skeleton className="h-24 bg-surface-strong/30 rounded-xl" />
-        <Skeleton className="h-48 bg-surface-strong/20 rounded-xl" />
+      <div className="space-y-8 p-1">
+        <Skeleton className="h-20 w-full rounded-md" />
+        <Skeleton className="h-48 w-full rounded-md" />
         <div className="space-y-3">
-          {[1, 2, 3].map(i => <Skeleton key={i} className="h-16 bg-surface-strong/10 rounded-lg" />)}
+          {[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full rounded-md" />)}
         </div>
       </div>
     )
@@ -151,22 +151,22 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
       initial="hidden"
       animate="visible"
       variants={staggerContainer}
-      className="space-y-10"
+      className="space-y-12"
     >
       
       {/* ── Diagnostic Header ── */}
       <motion.div variants={slideIn} className="flex items-center justify-between">
         <div className="flex items-center gap-5">
-          <div className="h-14 w-14 rounded-full bg-surface-strong text-text-primary flex items-center justify-center font-bold text-xl border border-border-default shadow-sm">
+          <div className="h-12 w-12 rounded bg-surface-raised text-white flex items-center justify-center font-bold text-xl border border-border shadow-sm uppercase">
             {profileDisplayName.charAt(0)}
           </div>
           <div>
-            <Text className="text-xl font-bold tracking-tight">{profileDisplayName}</Text>
-            <div className="flex items-center gap-3 mt-1.5">
-              <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider border ${status.bg} ${status.border} ${status.color}`}>
+            <Text weight="semibold" className="text-lg text-white leading-none">{profileDisplayName}</Text>
+            <div className="flex items-center gap-3 mt-2">
+              <span className={cn("badge px-2 py-0.5 uppercase tracking-widest text-[9px]", status.bg, status.border, status.color)}>
                 {status.label}
               </span>
-              <Text className="text-[10px] text-text-muted font-medium tabular-nums opacity-60">REF: {profile.id.split('-')[0]}</Text>
+              <Text variant="small" className="text-[9px] text-text-dim font-bold uppercase tracking-[0.2em] tabular-nums">REF: {profile.id.split('-')[0]}</Text>
             </div>
           </div>
         </div>
@@ -175,10 +175,10 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
           size="sm"
           onClick={handleCriticalHelp} 
           disabled={triggeringHelp}
-          className="rounded-lg h-9 px-4 active:scale-[0.96] transition-transform"
+          className="uppercase tracking-widest text-[10px] font-bold h-8 px-4"
         >
-          <Icon icon="tabler:alert-octagon" className="mr-2 h-4 w-4" />
-          <span className="text-[11px] font-bold uppercase tracking-wider">Escalate</span>
+          <Icon icon="tabler:alert-octagon" className="mr-2 h-3.5 w-3.5" />
+          Escalate
         </Button>
       </motion.div>
 
@@ -188,7 +188,7 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            className="p-3 rounded-lg bg-status-success/5 border border-status-success/20 flex items-center gap-3 text-status-success font-bold text-[13px]"
+            className="p-3 rounded-md bg-success/10 border border-success/20 flex items-center gap-3 text-success font-bold text-[11px] uppercase tracking-widest"
           >
             <Icon icon="tabler:check" className="h-4 w-4" />
             {helpMessage}
@@ -197,23 +197,21 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
       </AnimatePresence>
 
       {/* ── Resilience Analysis ── */}
-      <motion.div variants={slideIn} className="bg-surface-default border border-border-default rounded-xl p-6 shadow-sm relative overflow-hidden">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <Text className="text-[10px] font-bold uppercase tracking-wider text-text-muted opacity-60">Resilience Analysis</Text>
-          </div>
+      <motion.div variants={slideIn} className="card p-8 bg-surface-raised">
+        <div className="flex items-center justify-between mb-10 px-1">
+          <Text variant="small" weight="bold" className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-dim">Resilience Analysis</Text>
           <div className="text-right">
             <div className="flex items-baseline justify-end gap-1">
-              <Text className="text-3xl font-bold text-text-primary tracking-tight tabular-nums">{avgMood.toFixed(1)}</Text>
-              <Text className="text-sm font-medium text-text-muted/40">/ 5.0</Text>
+              <Text className="text-3xl font-bold text-white tracking-tight tabular-nums leading-none">{avgMood.toFixed(1)}</Text>
+              <Text variant="small" className="text-xs font-bold text-text-dim uppercase tracking-widest">/ 5.0</Text>
             </div>
           </div>
         </div>
         
         <div className="flex items-end gap-1.5 h-24 px-1">
           {moodLogs.length === 0 ? (
-            <div className="w-full h-full flex items-center justify-center border border-dashed border-border-default rounded-lg opacity-20">
-              <Text className="text-[10px] font-bold uppercase tracking-widest">Baseline Pending</Text>
+            <div className="w-full h-full flex items-center justify-center border border-dashed border-border rounded opacity-20">
+              <Text className="text-[9px] font-bold uppercase tracking-widest text-text-dim">Baseline Pending</Text>
             </div>
           ) : (
             [...moodLogs].reverse().slice(-20).map((log, i) => (
@@ -222,14 +220,14 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
                   initial={{ height: 0 }}
                   animate={{ height: `${(log.score / 5) * 100}%` }}
                   transition={{ delay: i * 0.02, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  className="w-full rounded-t-[2px] transition-colors cursor-help origin-bottom"
-                  style={{ 
-                    backgroundColor: log.score >= 4 ? 'var(--status-success)' : log.score >= 2 ? 'var(--status-warning)' : 'var(--status-error)',
-                    opacity: 0.5 + (log.score / 5) * 0.5
-                  }}
+                  className={cn(
+                    "w-full rounded-t-sm transition-all cursor-help origin-bottom",
+                    log.score >= 4 ? "bg-success" : log.score >= 2 ? "bg-warning" : "bg-danger"
+                  )}
+                  style={{ opacity: 0.3 + (log.score / 5) * 0.5 }}
                 />
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
-                  <div className="bg-text-primary text-text-inverse text-[9px] font-bold px-1.5 py-0.5 rounded shadow-xl tabular-nums">
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-all z-20 pointer-events-none">
+                  <div className="bg-white text-black text-[9px] font-bold px-1.5 py-0.5 rounded shadow-xl tabular-nums">
                     {log.score}
                   </div>
                 </div>
@@ -241,12 +239,12 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
 
       {/* ── Intelligence Feed ── */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-border-default/50 pb-3">
-          <Text className="text-[10px] font-bold uppercase tracking-wider text-text-muted opacity-60">Diagnostic Narrative</Text>
+        <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <Text variant="small" weight="bold" className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-dim">Diagnostic Narrative</Text>
           <button 
             onClick={handleGenerateReport}
             disabled={loadingReport}
-            className="text-[10px] font-bold uppercase tracking-wider text-action-primary hover:opacity-70 disabled:opacity-30 transition-all flex items-center gap-2 active:scale-95"
+            className="text-[9px] font-bold uppercase tracking-widest text-primary hover:text-primary-hover disabled:opacity-30 transition-all flex items-center gap-2 active:scale-95"
           >
             {loadingReport && <Icon icon="tabler:loader-2" className="h-3 w-3 animate-spin" />}
             {loadingReport ? 'Analyzing...' : 'Refresh AI Analysis'}
@@ -257,17 +255,17 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
           <motion.div 
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-5 rounded-xl bg-action-primary/5 border border-action-primary/10 space-y-4"
+            className="p-6 rounded-lg bg-primary/5 border border-primary/20 space-y-6"
           >
-            <div className="flex items-center gap-2 opacity-60">
-              <Icon icon="tabler:sparkles" className="h-3.5 w-3.5 text-action-primary" />
-              <Text className="text-[10px] font-bold uppercase tracking-wider text-action-primary">AI Clinical Insights</Text>
+            <div className="flex items-center gap-2">
+              <Icon icon="tabler:sparkles" className="h-4 w-4 text-primary" />
+              <Text variant="small" weight="bold" className="text-[10px] font-bold uppercase tracking-widest text-primary">AI Clinical Insights</Text>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {report.insights.map((insight: string, idx: number) => (
-                <div key={idx} className="flex gap-3 group">
-                  <div className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-action-primary/40" />
-                  <Text className="text-[13.5px] text-text-secondary leading-relaxed font-medium tracking-tight group-hover:text-text-primary transition-colors">{insight}</Text>
+                <div key={idx} className="flex gap-4 group">
+                  <div className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary/40" />
+                  <Text className="text-sm text-text-muted leading-relaxed tracking-tight group-hover:text-white transition-colors">{insight}</Text>
                 </div>
               ))}
             </div>
@@ -279,22 +277,24 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
             <motion.div 
               key={log.id} 
               variants={slideIn}
-              className="flex gap-4 p-4 rounded-xl bg-surface-default border border-border-default/50 hover:border-action-primary/20 transition-colors group"
+              className="flex gap-5 p-4 rounded-md bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors group"
             >
               <div 
-                className="h-10 w-10 shrink-0 rounded-lg flex items-center justify-center font-bold text-sm text-text-inverse tabular-nums shadow-sm"
-                style={{ backgroundColor: log.score >= 4 ? 'var(--status-success)' : log.score >= 2 ? 'var(--status-warning)' : 'var(--status-error)', opacity: 0.8 }}
+                className={cn(
+                  "h-10 w-10 shrink-0 rounded flex items-center justify-center font-bold text-xs text-black tabular-nums transition-all opacity-80",
+                  log.score >= 4 ? "bg-success" : log.score >= 2 ? "bg-warning" : "bg-danger"
+                )}
               >
                 {log.score}
               </div>
               <div className="min-w-0 flex-1">
-                <div className="flex justify-between items-center mb-1">
-                  <Text className="text-[10px] font-bold uppercase tracking-wider text-text-muted/60">
-                    {new Date(log.logged_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} at {new Date(log.logged_at).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
+                <div className="flex justify-between items-center mb-1.5">
+                  <Text variant="small" className="text-[9px] font-bold uppercase tracking-widest text-text-dim tabular-nums">
+                    {new Date(log.logged_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} · {new Date(log.logged_at).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                   </Text>
                 </div>
-                <Text className="text-[13px] text-text-secondary leading-relaxed italic font-medium tracking-tight">
-                  {log.note || 'No narrative provided.'}
+                <Text className="text-sm text-text-muted leading-relaxed italic group-hover:text-white transition-colors">
+                  &ldquo;{log.note || 'No narrative provided.'}&rdquo;
                 </Text>
               </div>
             </motion.div>

@@ -3,8 +3,9 @@
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import { Button, Text, Input, Skeleton } from "@/components/ui"
 import { createClient } from '@/lib/supabase/client'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'motion/react'
 import { Icon } from '@iconify/react'
+import { cn } from "@/lib/utils"
 
 export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
   const [loading, setLoading] = useState(true)
@@ -80,19 +81,22 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
 
   if (loading) {
     return (
-      <div className="space-y-6 p-4">
-        <Skeleton className="w-full h-12 rounded-2xl" />
-        <Skeleton className="w-full h-12 rounded-2xl" />
-        <Skeleton className="w-full h-32 rounded-2xl" />
+      <div className="space-y-6 p-1">
+        <Skeleton className="w-full h-10 rounded-md" />
+        <Skeleton className="w-full h-10 rounded-md" />
+        <div className="flex justify-between pt-4">
+          <Skeleton className="w-24 h-8 rounded-md" />
+          <Skeleton className="w-32 h-8 rounded-md" />
+        </div>
       </div>
     )
   }
 
   return (
     <div className="space-y-8 p-1">
-      <section className="space-y-4">
+      <section className="space-y-6">
         <div className="space-y-2">
-          <Text variant="small" weight="bold" className="uppercase tracking-widest text-[var(--text-muted)] text-[10px]">
+          <Text variant="small" weight="bold" className="uppercase tracking-widest text-text-dim text-[10px]">
             Display Name
           </Text>
           <Input 
@@ -101,12 +105,11 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
             onChange={e => setName(e.target.value)}
             placeholder="How should we call you?"
             disabled={saving}
-            className="rounded-2xl py-6"
           />
         </div>
 
         <div className="space-y-2">
-          <Text variant="small" weight="bold" className="uppercase tracking-widest text-[var(--text-muted)] text-[10px]">
+          <Text variant="small" weight="bold" className="uppercase tracking-widest text-text-dim text-[10px]">
             Institution
           </Text>
           <Input 
@@ -115,24 +118,24 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
             onChange={e => setInstitution(e.target.value)}
             placeholder="Your University or School"
             disabled={saving}
-            className="rounded-2xl py-6"
           />
         </div>
       </section>
 
-      <div className="flex items-center justify-between pt-4">
+      <div className="flex items-center justify-between pt-6 border-t border-white/5">
         <button 
           onClick={handleSignOut}
-          className="flex items-center gap-2 text-sm font-bold text-[var(--status-error)] hover:opacity-80 transition-opacity"
+          className="flex items-center gap-2 text-xs font-bold text-danger hover:opacity-80 transition-opacity uppercase tracking-widest"
         >
-          <Icon icon="tabler:logout-2" className="h-5 w-5" />
+          <Icon icon="tabler:logout-2" className="h-4 w-4" />
           Sign Out
         </button>
         
         <Button 
           onClick={handleSave} 
           disabled={saving}
-          className="rounded-2xl px-8"
+          size="md"
+          className="px-8"
         >
           {saving ? 'Saving...' : 'Save Changes'}
         </Button>
@@ -144,13 +147,14 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className={`p-4 rounded-2xl flex items-center gap-3 text-sm font-bold ${
+            className={cn(
+              "p-4 rounded-md flex items-center gap-3 text-[11px] font-bold uppercase tracking-widest border",
               message.type === 'success' 
-              ? 'bg-[var(--status-success-light)] text-[var(--status-success)]' 
-              : 'bg-[var(--status-error-light)] text-[var(--status-error)]'
-            }`}
+              ? "bg-success/5 text-success border-success/20" 
+              : "bg-danger/5 text-danger border-danger/20"
+            )}
           >
-            <Icon icon={message.type === 'success' ? 'tabler:circle-check' : 'tabler:alert-circle'} className="h-5 w-5" />
+            <Icon icon={message.type === 'success' ? 'tabler:circle-check' : 'tabler:alert-circle'} className="h-4 w-4" />
             {message.text}
           </motion.div>
         )}
