@@ -75,8 +75,8 @@ export default function AdminDashboardPage() {
                 <Icon icon={stat.icon} className={cn("text-xl transition-transform", stat.color)} />
               </div>
               <div className="text-3xl font-semibold tabular-nums text-white leading-none mb-2">{stat.value}</div>
-              <div className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{stat.label}</div>
-              <div className={cn("mt-6 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5", stat.isCritical ? "text-danger animate-pulse" : "text-success")}>
+              <div className="text-[10px] font-medium text-text-muted ">{stat.label}</div>
+              <div className={cn("mt-6 text-[10px] font-medium flex items-center gap-1.5", stat.isCritical ? "text-danger animate-pulse" : "text-success")}>
                 {stat.sub}
               </div>
             </div>
@@ -91,7 +91,7 @@ export default function AdminDashboardPage() {
             <div className="flex items-center justify-between mb-10">
               <div>
                 <Text as="h3" weight="semibold">Campus Sentiment</Text>
-                <p className="text-[10px] text-text-muted font-bold uppercase tracking-wider mt-1">Stability trend</p>
+                <p className="text-[10px] text-text-muted font-medium mt-1">Stability trend</p>
               </div>
             </div>
             
@@ -113,7 +113,7 @@ export default function AdminDashboardPage() {
                 )
               })}
             </div>
-            <div className="flex justify-between mt-6 px-2 text-[9px] font-bold text-text-dim uppercase tracking-widest">
+            <div className="flex justify-between mt-6 px-2 text-[9px] font-medium text-text-dim ">
               <span>Past Period</span>
               <span>Present</span>
             </div>
@@ -126,7 +126,7 @@ export default function AdminDashboardPage() {
               {(data?.deptStats || []).map((dept: any, i: number) => (
                 <div key={i} className="space-y-3 group">
                   <div className="flex justify-between items-end">
-                    <span className="text-xs font-bold text-text-muted tracking-wide uppercase truncate max-w-[150px]">{dept.name}</span>
+                    <span className="text-xs font-medium text-text-muted tracking-wide truncate max-w-[150px]">{dept.name}</span>
                     <span className="text-xs font-bold tabular-nums text-white">{dept.score}</span>
                   </div>
                   <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
@@ -155,20 +155,20 @@ export default function AdminDashboardPage() {
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-3xl font-semibold tabular-nums text-white">{data?.studentCount || 0}</span>
-                <span className="text-[8px] font-bold text-text-dim uppercase tracking-widest mt-1">Assessed</span>
+                <span className="text-[8px] font-medium text-text-dim mt-1">Assessed</span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-y-3 gap-x-6 w-full">
-              <div className="flex items-center gap-2 text-[9px] font-bold text-text-muted uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-[9px] font-medium text-text-muted ">
                 <div className="size-1.5 rounded-full bg-primary" /> 45% Minimal
               </div>
-              <div className="flex items-center gap-2 text-[9px] font-bold text-text-muted uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-[9px] font-medium text-text-muted ">
                 <div className="size-1.5 rounded-full bg-secondary" /> 25% Mild
               </div>
-              <div className="flex items-center gap-2 text-[9px] font-bold text-text-muted uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-[9px] font-medium text-text-muted ">
                 <div className="size-1.5 rounded-full bg-warning" /> 18% Moderate
               </div>
-              <div className="flex items-center gap-2 text-[9px] font-bold text-text-muted uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-[9px] font-medium text-text-muted ">
                 <div className="size-1.5 rounded-full bg-danger" /> 12% Severe
               </div>
             </div>
@@ -183,7 +183,7 @@ export default function AdminDashboardPage() {
                   <div className="size-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">D</div>
                   <div>
                     <p className="text-xs font-semibold text-white leading-none mb-1">Dr. Radha Sharma</p>
-                    <p className="text-[9px] font-bold text-text-dim uppercase tracking-wider">Counselor</p>
+                    <p className="text-[9px] font-medium text-text-dim ">Counselor</p>
                   </div>
                 </div>
                 <div className="size-1.5 rounded-full bg-success shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
@@ -209,7 +209,7 @@ export default function AdminDashboardPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-xs font-bold tabular-nums text-white">{res.count}</p>
-                    <p className="text-[8px] font-bold uppercase text-text-dim tracking-tighter">Hits</p>
+                    <p className="text-[8px] font-medium text-text-dim ">Hits</p>
                   </div>
                 </div>
               ))}
@@ -246,7 +246,7 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-8 mt-12 pt-8 border-t border-white/5">
-            <div className="flex items-center gap-3 text-[9px] font-bold text-text-dim uppercase tracking-widest">
+            <div className="flex items-center gap-3 text-[9px] font-medium text-text-dim ">
               <span>Low Intensity</span>
               <div className="flex gap-1">
                 <div className="size-2.5 rounded-[1px] bg-white/5" />

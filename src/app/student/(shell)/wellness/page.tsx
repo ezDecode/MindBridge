@@ -62,20 +62,20 @@ export default function WellnessPage() {
     <div className="max-w-6xl mx-auto space-y-10 pb-20">
       <div>
         <Text as="h2" variant="h3" weight="semibold" className="tracking-tight">Wellness Center</Text>
-        <p className="text-text-dim text-xs font-bold uppercase tracking-[0.15em] mt-1">Interactive activities & tools</p>
+        <p className="text-text-dim text-xs font-medium tracking-[0.15em] mt-1">Interactive activities & tools</p>
       </div>
 
       <Card padding="lg" className="bg-surface border-border">
         <div className="flex items-center gap-6">
           <div className="h-16 w-16 rounded bg-primary/10 border border-primary/20 flex flex-col items-center justify-center text-primary">
-            <span className="text-xs font-bold uppercase">Level</span>
+            <span className="text-xs font-medium ">Level</span>
             <span className="text-2xl font-bold leading-none tabular-nums">3</span>
           </div>
           <div className="flex-1">
             <div className="flex justify-between items-end mb-4">
               <div>
                 <Text weight="semibold" className="text-white text-base">Wellness Warrior</Text>
-                <Text variant="small" className="text-text-dim text-[10px] font-bold uppercase tracking-widest mt-1">Journey to level 4</Text>
+                <Text variant="small" className="text-text-dim text-[10px] font-medium mt-1">Journey to level 4</Text>
               </div>
               <Text weight="bold" className="text-sm tabular-nums text-white">240 <span className="text-text-dim">/ 300 XP</span></Text>
             </div>
@@ -87,7 +87,7 @@ export default function WellnessPage() {
                 className="h-full bg-primary" 
               />
             </div>
-            <p className="text-[10px] font-bold text-text-dim uppercase tracking-widest mt-3">60 XP more to level up · Keep going!</p>
+            <p className="text-[10px] font-medium text-text-dim mt-3">60 XP more to level up · Keep going!</p>
           </div>
         </div>
       </Card>
@@ -113,7 +113,7 @@ export default function WellnessPage() {
               <Icon icon={act.icon} className="text-2xl" />
             </div>
             <Text weight="semibold" className="text-white text-sm mb-1">{act.label}</Text>
-            <Text variant="small" className="text-text-dim text-[10px] font-bold uppercase tracking-widest">{act.sub}</Text>
+            <Text variant="small" className="text-text-dim text-[10px] font-medium ">{act.sub}</Text>
             <div className="absolute top-4 right-4 badge badge-primary bg-primary/10 text-primary border-primary/20 text-[9px]">
               {act.xp} XP
             </div>
@@ -138,11 +138,11 @@ export default function WellnessPage() {
                   <Text weight="bold" className="text-white text-xl">
                     {breathRunning ? phases[breathPhase].label : "Ready?"}
                   </Text>
-                  {!breathRunning && <Text variant="small" className="text-text-dim uppercase tracking-widest mt-2">Press Start</Text>}
+                  {!breathRunning && <Text variant="small" className="text-text-dim mt-2">Press Start</Text>}
                 </div>
               </div>
 
-              <Text variant="small" className="text-text-dim text-[10px] font-bold uppercase tracking-[0.2em] mt-12 mb-10">
+              <Text variant="small" className="text-text-dim text-[10px] font-medium tracking-[0.2em] mt-12 mb-10">
                 Inhale 4s · Hold 7s · Exhale 8s
               </Text>
 
@@ -182,7 +182,7 @@ export default function WellnessPage() {
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <span className="text-4xl font-bold tabular-nums text-white">{formatTime(pomSeconds)}</span>
-                  <span className="text-[9px] font-bold text-text-dim uppercase tracking-widest mt-1">Focus Time</span>
+                  <span className="text-[9px] font-medium text-text-dim mt-1">Focus Time</span>
                 </div>
               </div>
 
@@ -210,7 +210,7 @@ export default function WellnessPage() {
             </div>
             <Text as="h3" variant="body" weight="semibold" className="text-white">Mindfulness Challenge</Text>
           </div>
-          <span className="badge badge-primary bg-primary/10 text-primary border-primary/20 uppercase tracking-[0.2em] text-[9px]">Day 4 of 7</span>
+          <span className="badge badge-primary bg-primary/10 text-primary border-primary/20 tracking-[0.2em] text-[9px]">Day 4 of 7</span>
         </div>
 
         <div className="grid grid-cols-7 gap-2 mb-10">
@@ -227,7 +227,7 @@ export default function WellnessPage() {
               <div className="flex justify-center mb-1">
                 <Icon icon={d < 4 ? "tabler:check" : d === 4 ? "tabler:target" : "tabler:circle"} className="text-sm" />
               </div>
-              <div className="text-[9px] font-bold uppercase tracking-widest">Day {d}</div>
+              <div className="text-[9px] font-medium ">Day {d}</div>
             </div>
           ))}
         </div>
@@ -237,7 +237,7 @@ export default function WellnessPage() {
             <Icon icon="tabler:pin" className="h-16 w-16" />
           </div>
           <div className="relative z-10">
-            <Text variant="small" weight="bold" className="text-primary uppercase tracking-widest mb-2 flex items-center gap-2">
+            <Text variant="small" weight="medium" className="text-primary mb-2 flex items-center gap-2">
               <Icon icon="tabler:pin" />
               Today&apos;s Task
             </Text>

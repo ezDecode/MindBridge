@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { getClient } from "@/lib/supabase/client";
 
 import { Icon } from "@iconify/react";
@@ -88,7 +89,7 @@ export default function MoodTrackerPage() {
             <div className="flex items-center justify-between mb-10">
               <div>
                 <Text as="h3" variant="h4" weight="semibold">Daily Check-in</Text>
-                <p className="text-text-dim text-[10px] font-bold uppercase tracking-widest mt-1">Consistency build clarity</p>
+                <p className="text-text-dim text-[10px] font-medium mt-1">Consistency build clarity</p>
               </div>
               <div className="badge badge-primary bg-primary/10 text-primary border-primary/20 flex items-center gap-2 px-3">
                 <Icon icon="tabler:flame" className="animate-pulse" />
@@ -112,7 +113,7 @@ export default function MoodTrackerPage() {
                 >
                   <Icon icon={m.icon} className={cn("text-3xl transition-transform", selectedMood === m.val ? cn("scale-110", m.color) : "text-text-dim group-hover:text-text-muted")} />
                   <span className={cn(
-                    "text-[10px] font-bold uppercase tracking-widest",
+                    "text-[10px] font-medium ",
                     selectedMood === m.val ? "text-white" : "text-text-dim group-hover:text-text-muted"
                   )}>{m.label}</span>
                 </button>
@@ -126,7 +127,7 @@ export default function MoodTrackerPage() {
                   key={tag}
                   onClick={() => toggleTag(tag)}
                   className={cn(
-                    "px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-widest border transition-all",
+                    "px-3 py-1.5 rounded-md text-[10px] font-medium border transition-all",
                     selectedTags.includes(tag)
                       ? "bg-primary/10 border-primary text-primary"
                       : "bg-background border-border text-text-muted hover:border-white/20 hover:text-white"
@@ -148,7 +149,7 @@ export default function MoodTrackerPage() {
             </div>
 
             <Button onClick={saveMood} size="lg" className="w-full">
-              Log Entry <span className="text-[10px] font-bold opacity-60 ml-2 uppercase">+10 XP</span>
+              Log Entry <span className="text-[10px] font-medium opacity-60 ml-2 ">+10 XP</span>
             </Button>
           </Card>
         </div>
@@ -157,30 +158,30 @@ export default function MoodTrackerPage() {
         <div className="lg:col-span-5 space-y-6">
           <Card padding="md" className="bg-surface border-border">
             <div className="flex items-center justify-between mb-8 px-1">
-              <Text as="h3" variant="small" weight="bold" className="text-text-dim uppercase tracking-widest">Monthly Overview</Text>
+              <Text as="h3" variant="small" weight="medium" className="text-text-dim ">Monthly Overview</Text>
               <span className="badge badge-outline">April</span>
             </div>
             
             <div className="grid grid-cols-3 gap-4">
               <div className="bg-white/[0.02] border border-white/5 p-4 rounded-lg text-center">
                 <Text weight="bold" className="text-2xl text-white tabular-nums leading-none mb-1">{monthlyAvg}</Text>
-                <Text variant="small" className="text-[9px] font-bold text-text-dim uppercase tracking-widest">Average</Text>
+                <Text variant="small" className="text-[9px] font-medium text-text-dim ">Average</Text>
               </div>
               <div className="bg-white/[0.02] border border-white/5 p-4 rounded-lg text-center">
                 <Text weight="bold" className="text-2xl text-white tabular-nums leading-none mb-1">{moodHistory.length}</Text>
-                <Text variant="small" className="text-[9px] font-bold text-text-dim uppercase tracking-widest">Logged</Text>
+                <Text variant="small" className="text-[9px] font-medium text-text-dim ">Logged</Text>
               </div>
               <div className="bg-white/[0.02] border border-white/5 p-4 rounded-lg text-center">
                 <Text weight="bold" className="text-2xl text-white tabular-nums leading-none mb-1">{streak}</Text>
-                <Text variant="small" className="text-[9px] font-bold text-text-dim uppercase tracking-widest">Streak</Text>
+                <Text variant="small" className="text-[9px] font-medium text-text-dim ">Streak</Text>
               </div>
             </div>
           </Card>
 
           <Card padding="md" className="bg-surface border-border">
             <div className="flex items-center justify-between mb-10 px-1">
-              <Text as="h3" variant="small" weight="bold" className="text-text-dim uppercase tracking-widest">30-Day Trend</Text>
-              <p className="text-[9px] font-bold text-success uppercase tracking-widest flex items-center gap-1">
+              <Text as="h3" variant="small" weight="medium" className="text-text-dim ">30-Day Trend</Text>
+              <p className="text-[9px] font-medium text-success flex items-center gap-1">
                 <Icon icon="tabler:trending-up" /> Improved
               </p>
             </div>
@@ -206,8 +207,8 @@ export default function MoodTrackerPage() {
             </div>
             
             <div className="flex gap-2 mt-8 flex-wrap">
-              <span className="badge badge-outline border-white/5 bg-white/5 text-[9px] font-bold uppercase tracking-widest">Best day: Thursday</span>
-              <span className="badge badge-outline border-white/5 bg-white/5 text-[9px] font-bold uppercase tracking-widest">Most common: Neutral</span>
+              <span className="badge badge-outline border-white/5 bg-white/5 text-[9px] font-medium ">Best day: Thursday</span>
+              <span className="badge badge-outline border-white/5 bg-white/5 text-[9px] font-medium ">Most common: Neutral</span>
             </div>
           </Card>
         </div>
@@ -217,7 +218,7 @@ export default function MoodTrackerPage() {
       <Card padding="lg" className="bg-surface border-border">
         <div className="flex items-center justify-between mb-10 px-1">
           <Text as="h3" variant="body" weight="semibold" className="text-white">Mood History</Text>
-          <button className="text-[10px] font-bold text-text-dim hover:text-white transition-colors uppercase tracking-widest">Export intelligence →</button>
+          <Link href="/student/mood-history" className="text-[10px] font-medium text-text-dim hover:text-white transition-colors ">Export intelligence →</Link>
         </div>
 
         <div className="space-y-3">
@@ -232,7 +233,7 @@ export default function MoodTrackerPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-1">
                     <Text weight="semibold" className="text-white text-sm">{new Date(entry.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}</Text>
-                    <span className={cn("text-[9px] font-bold uppercase tracking-widest", mood?.color)}>{mood?.label}</span>
+                    <span className={cn("text-[9px] font-medium ", mood?.color)}>{mood?.label}</span>
                   </div>
                   <Text color="secondary" className="text-xs line-clamp-1">{entry.note || "No additional notes"}</Text>
                 </div>

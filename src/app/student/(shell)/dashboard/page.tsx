@@ -154,7 +154,7 @@ function StudentDashboardPageContent() {
                 <Icon icon="tabler:alert-triangle" className="text-4xl mx-auto mb-4" />
                 <h3 className="font-bold text-lg mb-2">Failed to load dashboard</h3>
                 <p className="text-sm font-mono break-all">{initError}</p>
-                <button onClick={() => window.location.reload()} className="mt-6 px-4 py-2 bg-red-500 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-red-600 transition-colors">Reload Page</button>
+                <button onClick={() => window.location.reload()} className="mt-6 px-4 py-2 bg-red-500 text-white rounded font-medium text-xs hover:bg-red-600 transition-colors">Reload Page</button>
             </div>
         </div>
     )
@@ -254,7 +254,7 @@ function StudentDashboardPageContent() {
                                             )}
                                         >
                                             <Icon icon={mood.icon} className={cn("text-3xl", mood.color)} />
-                                            <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">{mood.label}</span>
+                                            <span className="text-[10px] font-medium text-text-muted">{mood.label}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -278,7 +278,7 @@ function StudentDashboardPageContent() {
                             <div className="flex items-center justify-between mb-10">
                                 <div>
                                     <Text as="h3" weight="semibold">Mood Trends</Text>
-                                    <p className="text-[10px] text-text-dim font-bold uppercase tracking-widest mt-1">Weekly stability overview</p>
+                                    <p className="text-[10px] text-text-dim font-medium mt-1">Weekly stability overview</p>
                                 </div>
                                 <div className="flex gap-2">
                                     <button className="px-3 py-1 rounded bg-white/5 text-white text-[10px] font-bold border border-white/10 transition-colors hover:bg-white/10">Week</button>
@@ -306,7 +306,7 @@ function StudentDashboardPageContent() {
                                                 </div>
                                             )}
                                         </div>
-                                        <span className="text-[10px] font-bold text-text-dim uppercase tracking-tighter tabular-nums">{entry.day}</span>
+                                        <span className="text-[10px] font-medium text-text-dim tabular-nums">{entry.day}</span>
                                     </div>
                                 ))}
                             </div>
@@ -328,7 +328,7 @@ function StudentDashboardPageContent() {
                                         <Icon icon={stat.icon} className={cn("text-xl", stat.color)} />
                                     </div>
                                     <div className="text-2xl font-semibold tabular-nums text-white leading-none">{stat.value}</div>
-                                    <div className="text-[9px] font-bold text-text-dim uppercase tracking-widest mt-1">{stat.label}</div>
+                                    <div className="text-[9px] font-medium text-text-dim mt-1">{stat.label}</div>
                                 </div>
                             ))}
                         </div>
@@ -341,12 +341,12 @@ function StudentDashboardPageContent() {
                                 <div className="rounded-lg p-5 bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all mb-6 cursor-pointer group">
                                     <div className="flex items-center gap-4">
                                         <div className="flex flex-col items-center justify-center size-14 rounded bg-surface-raised border border-border shadow-sm group-hover:bg-surface-hover transition-colors shrink-0">
-                                            <span className="text-[9px] font-bold uppercase text-text-dim">{data.nextSession.replace(',', '').split(' ')[0]}</span>
+                                            <span className="text-[9px] font-medium text-text-dim">{data.nextSession.replace(',', '').split(' ')[0]}</span>
                                             <span className="text-xl font-bold text-white leading-tight tabular-nums">{data.nextSession.replace(',', '').split(' ')[1]}</span>
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <h4 className="font-semibold text-sm mb-1 text-white truncate">Campus Counselor</h4>
-                                            <div className="flex flex-col gap-1 text-[10px] font-bold text-text-dim uppercase tracking-widest">
+                                            <div className="flex flex-col gap-1 text-[10px] font-medium text-text-dim ">
                                                 <span className="flex items-center gap-1.5"><Icon icon="tabler:clock" className="text-primary" /> {data.nextSession.replace(',', '').split(' ').slice(1).join(' ')}</span>
                                                 <span className="flex items-center gap-1.5"><Icon icon="tabler:video" className="text-secondary" /> Video Call</span>
                                             </div>
@@ -359,19 +359,19 @@ function StudentDashboardPageContent() {
                             ) : (
                                 <div className="p-8 text-center text-text-dim border border-dashed border-border rounded-lg mb-8 bg-white/[0.01]">
                                     <Icon icon="tabler:calendar-cancel" className="text-3xl mx-auto mb-4 opacity-20" />
-                                    <p className="text-[10px] font-bold uppercase tracking-widest">No sessions scheduled</p>
-                                    <Link href="/student/book" className="text-primary text-[10px] font-bold hover:text-primary-hover mt-3 inline-block uppercase tracking-[0.2em]">Book a slot →</Link>
+                                    <p className="text-[10px] font-medium ">No sessions scheduled</p>
+                                    <Link href="/student/book" className="text-primary text-[10px] font-medium hover:text-primary-hover mt-3 inline-block tracking-[0.2em]">Book a slot →</Link>
                                 </div>
                             )}
 
                             <div className="grid grid-cols-2 gap-3">
                                 <Link href="/student/chat" className="flex items-center justify-center gap-3 bg-surface-raised border border-border rounded-md px-4 py-3 hover:bg-surface-hover hover:border-white/20 transition-all group">
                                     <Icon icon="tabler:robot" className="text-lg text-primary" />
-                                    <span className="text-[10px] font-bold text-white uppercase tracking-widest">MindBot</span>
+                                    <span className="text-[10px] font-medium text-white ">MindBot</span>
                                 </Link>
                                 <Link href="/student/screening" className="flex items-center justify-center gap-3 bg-surface-raised border border-border rounded-md px-4 py-3 hover:bg-surface-hover hover:border-white/20 transition-all group">
                                     <Icon icon="tabler:clipboard-check" className="text-lg text-secondary" />
-                                    <span className="text-[10px] font-bold text-white uppercase tracking-widest">Assess</span>
+                                    <span className="text-[10px] font-medium text-white ">Assess</span>
                                 </Link>
                             </div>
                         </div>
@@ -383,9 +383,9 @@ function StudentDashboardPageContent() {
                     <div  className="flex items-end justify-between mb-10 px-1">
                         <div>
                             <Text as="h3" variant="h3" weight="semibold">Curated for You</Text>
-                            <p className="text-text-dim text-[10px] font-bold uppercase tracking-widest mt-1">Personalized wellness recommendations</p>
+                            <p className="text-text-dim text-[10px] font-medium mt-1">Personalized wellness recommendations</p>
                         </div>
-                        <Link href="/student/resources" className="text-[10px] font-bold text-text-dim hover:text-white transition-colors flex items-center gap-2 group uppercase tracking-widest">
+                        <Link href="/student/resources" className="text-[10px] font-medium text-text-dim hover:text-white transition-colors flex items-center gap-2 group ">
                             Explore All <Icon icon="tabler:arrow-up-right" />
                         </Link>
                     </div>
@@ -425,14 +425,14 @@ function StudentDashboardPageContent() {
                                 <div className="h-40 bg-white/[0.02] border-b border-white/5 flex items-center justify-center relative overflow-hidden shrink-0">
                                     <Icon icon={res.icon} className={cn("text-6xl opacity-5 transition-transform duration-500", res.color)} />
                                     <div className="absolute top-4 right-4">
-                                        <span className="px-2 py-0.5 rounded bg-white/5 text-white text-[9px] font-bold uppercase tracking-widest border border-white/10">
+                                        <span className="px-2 py-0.5 rounded bg-white/5 text-white text-[9px] font-medium border border-white/10">
                                             {res.type}
                                         </span>
                                     </div>
                                 </div>
                                 <div className="p-6 flex-1 flex flex-col">
                                     <h4 className="text-sm font-semibold mb-6 leading-snug group-hover:text-primary transition-colors text-white flex-1">{res.title}</h4>
-                                    <div className="flex items-center gap-4 text-[9px] font-bold text-text-dim uppercase tracking-[0.15em]">
+                                    <div className="flex items-center gap-4 text-[9px] font-medium text-text-dim tracking-[0.15em]">
                                         <span className="flex items-center gap-1.5"><Icon icon="tabler:clock" /> {res.time}</span>
                                         <span className="flex items-center gap-1.5"><Icon icon="tabler:world" /> Bilingual</span>
                                     </div>

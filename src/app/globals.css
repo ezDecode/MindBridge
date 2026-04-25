@@ -55,6 +55,11 @@
     @apply border-border selection:bg-primary/20 selection:text-white;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scrollbar-width: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
   }
 
   body {
@@ -124,7 +129,7 @@
 }
 
 .badge {
-  @apply inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider border;
+  @apply inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium border;
 }
 
 .badge-primary {

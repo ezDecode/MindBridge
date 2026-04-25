@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Modal, Text } from "@/components/ui";
 import { SettingsForm } from "@/components/settings/SettingsForm";
@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { signOut } from "@/lib/auth/actions";
 import { AnimatePresence, motion } from "motion/react";
 import { PanicModal } from "./PanicModal";
-import { getCurrentDemoUser } from "@/lib/auth/demo-session";
+import { getCurrentDemoUser, clearDemoSession } from "@/lib/auth/demo-session";
 
 interface RoleShellProps {
   children: React.ReactNode;
@@ -22,7 +22,6 @@ import { DEMO_USERS } from "@/lib/auth/demo-users";
 
 export function RoleShell({ children, navItems, fullHeight = false }: RoleShellProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -70,8 +69,8 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
   const currentTitle = pageTitles[pathname] || "MindBridge";
 
   const handleLogout = async () => {
+    clearDemoSession();
     await signOut();
-    router.push("/login");
   };
 
   return (
@@ -79,10 +78,8 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
       <aside className="hidden w-64 shrink-0 flex-col bg-transparent lg:flex z-10">
         <div className="p-6 pb-5">
           <Link href="/" className="group flex items-center gap-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-white text-[10px] font-bold text-black transition-transform group-hover:scale-105">
-              MB
-            </div>
-            <Text variant="small" weight="bold" className="uppercase tracking-widest text-white">
+            <BrandLogo className="h-7 w-7 text-white transition-transform group-hover:scale-105" />
+            <Text variant="small" weight="medium" className=" text-white">
               MindBridge
             </Text>
           </Link>
@@ -136,8 +133,8 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
                   className="absolute bottom-full left-0 z-50 mb-2 w-72 overflow-hidden rounded-xl border border-white/[0.08] bg-[#0c0f14] shadow-2xl"
                 >
                   <div className="flex items-center justify-between border-b border-white/[0.06] p-4">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-white">Alerts</span>
-                    <button className="text-[9px] font-bold uppercase tracking-widest text-primary hover:text-primary-hover">
+                    <span className="text-[10px] font-medium text-white">Alerts</span>
+                    <button className="text-[9px] font-medium text-primary hover:text-primary-hover">
                       Clear
                     </button>
                   </div>
@@ -169,11 +166,19 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
             </div>
             <div className="min-w-0 flex-1 text-left">
               <div className="truncate text-xs font-semibold text-white">{user.name}</div>
-              <div className="truncate text-[10px] uppercase tracking-wider text-text-dim">
+              <div className="truncate text-[10px] text-text-dim">
                 {user.role} · {user.dept}
               </div>
             </div>
             <Icon icon="tabler:settings" className="h-4 w-4 text-text-dim transition-colors group-hover:text-white" />
+          </button>
+          
+          <button
+            onClick={handleLogout}
+            className="group flex w-full items-center justify-center gap-2 rounded-xl bg-danger/10 text-danger p-2.5 text-xs font-medium transition-colors hover:bg-danger/20"
+          >
+            <Icon icon="tabler:logout" className="h-4 w-4" />
+            Sign Out
           </button>
         </div>
       </aside>
@@ -195,7 +200,7 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
             </div>
           </header>
 
-          <main className={cn("flex-1 min-h-0 relative", fullHeight ? "h-full overflow-hidden" : "overflow-y-auto")}>
+          <main className={`flex-1 min-h-0 relative no-scrollbar ${fullHeight ? "h-full overflow-hidden" : "overflow-y-auto"}`}>
             {!fullHeight && (
               <div
                 aria-hidden
@@ -241,10 +246,8 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
             >
               <div className="mb-10 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-3">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-md bg-white text-[10px] font-bold text-black">
-                    MB
-                  </div>
-                  <Text variant="small" weight="bold" className="uppercase tracking-widest text-white">
+                  <BrandLogo className="h-7 w-7 text-white" />
+                  <Text variant="small" weight="medium" className=" text-white">
                     MindBridge
                   </Text>
                 </Link>
@@ -290,7 +293,7 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
                   </div>
                   <div className="min-w-0 flex-1 text-left">
                     <div className="truncate text-xs font-semibold text-white">{user.name}</div>
-                    <div className="truncate text-[10px] uppercase tracking-wider text-text-dim">
+                    <div className="truncate text-[10px] text-text-dim">
                       {user.role}
                     </div>
                   </div>
@@ -336,7 +339,29 @@ function NotificationItem({
         {unread && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
       </div>
       <div className="mb-2 line-clamp-1 text-[11px] text-text-muted">{desc}</div>
-      <div className="text-[9px] font-bold uppercase tracking-widest text-text-dim">{time}</div>
+      <div className="text-[9px] font-medium text-text-dim">{time}</div>
     </div>
+  );
+}
+
+function BrandLogo({ className }: { className?: string }) {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      role="img"
+      focusable="false"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn("shrink-0", className)}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M11.3354 1.08228C11.7059 1.27438 11.8561 1.74156 11.6708 2.12576L9.5593 6.50508C9.39923 6.83707 9.64113 7.22224 10.0097 7.22224H14C14 7.22224 14.2275 7.22219 14.25 7.22219C14.6642 7.22219 15 7.57041 15 7.99996C15 8.4295 14.6642 8.77772 14.25 8.77772C10.4465 8.77772 7.32888 11.131 5.67083 14.5699C5.48559 14.9541 5.03507 15.1098 4.66459 14.9177C4.29411 14.7256 4.14394 14.2584 4.32918 13.8742L6.44081 9.49467C6.60085 9.16275 6.35907 8.77764 5.99059 8.77759C4.57706 8.7774 3.16352 8.77781 1.75 8.77781C1.33579 8.77781 1 8.42959 1 8.00004C1 7.5705 1.33579 7.22228 1.75 7.22228C5.55362 7.22228 8.67116 4.86885 10.3292 1.43003C10.5145 1.04588 10.965 0.890196 11.3354 1.08228Z"
+        fill="currentColor"
+      />
+    </svg>
   );
 }

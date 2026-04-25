@@ -56,7 +56,7 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
  {label}
  </Text>
  {sublabel && (
- <Text variant="small" className="text-text-dim text-[10px] font-bold uppercase tracking-widest mt-1">
+ <Text variant="small" className="text-text-dim text-[10px] font-medium mt-1">
  {sublabel}
  </Text>
  )}

@@ -136,7 +136,7 @@ function LoginForm() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 1 }}
           >
-            <Text as="p" variant="small" className="text-white/20 uppercase tracking-[0.2em] font-bold">
+            <Text as="p" variant="small" className="text-white/20 tracking-[0.2em] font-medium">
               Demo environment — no real data is stored
             </Text>
           </motion.div>

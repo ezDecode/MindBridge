@@ -131,7 +131,7 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
   if (!profile) return (
     <div className="py-20 text-center opacity-30">
       <Icon icon="tabler:lock-access" className="h-10 w-10 mx-auto mb-4" />
-      <Text className="text-[10px] font-bold uppercase tracking-widest">Restricted Record</Text>
+      <Text className="text-[10px] font-medium ">Restricted Record</Text>
     </div>
   )
 
@@ -148,16 +148,16 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
       {/* ── Diagnostic Header ── */}
       <div  className="flex items-center justify-between">
         <div className="flex items-center gap-5">
-          <div className="h-12 w-12 rounded bg-surface-raised text-white flex items-center justify-center font-bold text-xl border border-border shadow-sm uppercase">
+          <div className="h-12 w-12 rounded bg-surface-raised text-white flex items-center justify-center font-medium text-xl border border-border shadow-sm ">
             {profileDisplayName.charAt(0)}
           </div>
           <div>
             <Text weight="semibold" className="text-lg text-white leading-none">{profileDisplayName}</Text>
             <div className="flex items-center gap-3 mt-2">
-              <span className={cn("badge px-2 py-0.5 uppercase tracking-widest text-[9px]", status.bg, status.border, status.color)}>
+              <span className={cn("badge px-2 py-0.5 text-[9px]", status.bg, status.border, status.color)}>
                 {status.label}
               </span>
-              <Text variant="small" className="text-[9px] text-text-dim font-bold uppercase tracking-[0.2em] tabular-nums">REF: {profile.id.split('-')[0]}</Text>
+              <Text variant="small" className="text-[9px] text-text-dim font-medium tracking-[0.2em] tabular-nums">REF: {profile.id.split('-')[0]}</Text>
             </div>
           </div>
         </div>
@@ -166,7 +166,7 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
           size="sm"
           onClick={handleCriticalHelp} 
           disabled={triggeringHelp}
-          className="uppercase tracking-widest text-[10px] font-bold h-8 px-4"
+          className=" text-[10px] font-medium h-8 px-4"
         >
           <Icon icon="tabler:alert-octagon" className="mr-2 h-3.5 w-3.5" />
           Escalate
@@ -179,7 +179,7 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
             
             
             
-            className="p-3 rounded-md bg-success/10 border border-success/20 flex items-center gap-3 text-success font-bold text-[11px] uppercase tracking-widest"
+            className="p-3 rounded-md bg-success/10 border border-success/20 flex items-center gap-3 text-success font-medium text-[11px] "
           >
             <Icon icon="tabler:check" className="h-4 w-4" />
             {helpMessage}
@@ -190,11 +190,11 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
       {/* ── Resilience Analysis ── */}
       <div  className="card p-8 bg-surface-raised">
         <div className="flex items-center justify-between mb-10 px-1">
-          <Text variant="small" weight="bold" className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-dim">Resilience Analysis</Text>
+          <Text variant="small" weight="medium" className="text-[10px] font-medium tracking-[0.2em] text-text-dim">Resilience Analysis</Text>
           <div className="text-right">
             <div className="flex items-baseline justify-end gap-1">
               <Text className="text-3xl font-bold text-white tracking-tight tabular-nums leading-none">{avgMood.toFixed(1)}</Text>
-              <Text variant="small" className="text-xs font-bold text-text-dim uppercase tracking-widest">/ 5.0</Text>
+              <Text variant="small" className="text-xs font-medium text-text-dim ">/ 5.0</Text>
             </div>
           </div>
         </div>
@@ -202,7 +202,7 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
         <div className="flex items-end gap-1.5 h-24 px-1">
           {moodLogs.length === 0 ? (
             <div className="w-full h-full flex items-center justify-center border border-dashed border-border rounded opacity-20">
-              <Text className="text-[9px] font-bold uppercase tracking-widest text-text-dim">Baseline Pending</Text>
+              <Text className="text-[9px] font-medium text-text-dim">Baseline Pending</Text>
             </div>
           ) : (
             [...moodLogs].reverse().slice(-20).map((log, i) => (
@@ -231,11 +231,11 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
       {/* ── Intelligence Feed ── */}
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b border-white/5 pb-3">
-          <Text variant="small" weight="bold" className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-dim">Diagnostic Narrative</Text>
+          <Text variant="small" weight="medium" className="text-[10px] font-medium tracking-[0.2em] text-text-dim">Diagnostic Narrative</Text>
           <button 
             onClick={handleGenerateReport}
             disabled={loadingReport}
-            className="text-[9px] font-bold uppercase tracking-widest text-primary hover:text-primary-hover disabled:opacity-30 transition-all flex items-center gap-2 active:scale-95"
+            className="text-[9px] font-medium text-primary hover:text-primary-hover disabled:opacity-30 transition-all flex items-center gap-2 active:scale-95"
           >
             {loadingReport && <Icon icon="tabler:loader-2" className="h-3 w-3 animate-spin" />}
             {loadingReport ? 'Analyzing...' : 'Refresh AI Analysis'}
@@ -250,7 +250,7 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
           >
             <div className="flex items-center gap-2">
               <Icon icon="tabler:sparkles" className="h-4 w-4 text-primary" />
-              <Text variant="small" weight="bold" className="text-[10px] font-bold uppercase tracking-widest text-primary">AI Clinical Insights</Text>
+              <Text variant="small" weight="medium" className="text-[10px] font-medium text-primary">AI Clinical Insights</Text>
             </div>
             <div className="space-y-4">
               {report.insights.map((insight: string, idx: number) => (
@@ -280,7 +280,7 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex justify-between items-center mb-1.5">
-                  <Text variant="small" className="text-[9px] font-bold uppercase tracking-widest text-text-dim tabular-nums">
+                  <Text variant="small" className="text-[9px] font-medium text-text-dim tabular-nums">
                     {new Date(log.logged_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} · {new Date(log.logged_at).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                   </Text>
                 </div>

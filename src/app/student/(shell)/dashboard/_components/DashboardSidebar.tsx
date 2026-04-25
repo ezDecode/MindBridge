@@ -56,7 +56,7 @@ export function DashboardSidebar({
               <div className="flex h-7 w-7 items-center justify-center rounded bg-white text-black text-xs font-bold transition-transform">
                 MB
               </div>
-              <span className="text-sm font-bold tracking-tight text-white uppercase tracking-widest">MindBridge</span>
+              <span className="text-sm font-medium tracking-tight text-white ">MindBridge</span>
             </Link>
             <button
               type="button"
@@ -90,7 +90,7 @@ export function DashboardSidebar({
           <div className="flex-1 overflow-y-auto no-scrollbar -mx-2 px-2">
             
             <div className="mb-8">
-              <h3 className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-text-dim">
+              <h3 className="mb-3 px-3 text-[10px] font-medium tracking-[0.15em] text-text-dim">
                 Analyze
               </h3>
               <nav className="flex flex-col gap-1">
@@ -103,7 +103,7 @@ export function DashboardSidebar({
             </div>
 
             <div className="mb-8">
-              <h3 className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-text-dim">
+              <h3 className="mb-3 px-3 text-[10px] font-medium tracking-[0.15em] text-text-dim">
                 Support
               </h3>
               <nav className="flex flex-col gap-1">
@@ -141,7 +141,7 @@ export function DashboardSidebar({
                  </div>
                  <div className="flex flex-col items-start justify-center">
                    <span className="text-[13px] font-semibold text-white leading-none">{userName}</span>
-                   <span className="text-[9px] font-bold tracking-widest text-text-dim mt-1 leading-none uppercase">Student</span>
+                   <span className="text-[9px] font-medium text-text-dim mt-1 leading-none ">Student</span>
                  </div>
                </div>
                <Icon icon="tabler:settings" className="h-4 w-4 text-text-dim transition-colors group-hover:text-white" />

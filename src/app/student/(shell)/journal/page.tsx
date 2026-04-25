@@ -66,11 +66,11 @@ export default function JournalPage() {
               >
                 <Icon icon="tabler:bulb" className="mt-0.5 shrink-0 text-primary" />
                 <div className="flex-1">
-                  <Text as="span" variant="small" weight="bold" className="text-primary uppercase tracking-widest block mb-1">Today&apos;s Prompt</Text>
+                  <Text as="span" variant="small" weight="medium" className="text-primary block mb-1">Today&apos;s Prompt</Text>
                   <Text as="p" className="text-sm text-text-muted leading-relaxed italic group-hover:text-white transition-colors">
                     &ldquo;{prompts[promptIdx]}&rdquo;
                   </Text>
-                  <span className="text-[10px] font-bold text-text-dim uppercase tracking-widest mt-3 block group-hover:text-primary transition-colors">Click for new prompt →</span>
+                  <span className="text-[10px] font-medium text-text-dim mt-3 block group-hover:text-primary transition-colors">Click for new prompt →</span>
                 </div>
               </button>
 
@@ -83,7 +83,7 @@ export default function JournalPage() {
             </div>
 
             <div className="flex justify-between items-center mt-8 pt-6 border-t border-white/5">
-              <Text variant="small" weight="bold" className="text-text-dim uppercase tracking-widest">
+              <Text variant="small" weight="medium" className="text-text-dim ">
                 {journalContent.split(/\s+/).filter(Boolean).length} words
               </Text>
               <Button onClick={saveJournal} size="md" className="gap-2">
@@ -103,7 +103,7 @@ export default function JournalPage() {
                 <div className="relative z-10">
                   <div className="flex items-center gap-2 mb-6">
                     <Icon icon="tabler:sparkles" className="text-primary text-lg" />
-                    <Text variant="small" weight="bold" className="text-primary uppercase tracking-widest">MindBot Reflection</Text>
+                    <Text variant="small" weight="medium" className="text-primary ">MindBot Reflection</Text>
                   </div>
 
                   <Text className="text-white text-sm leading-relaxed mb-8 max-w-[65ch]">
@@ -117,7 +117,7 @@ export default function JournalPage() {
                   </div>
 
                   <div className="flex items-center gap-3 pt-6 border-t border-white/5">
-                    <Text variant="small" weight="bold" className="text-text-dim uppercase tracking-widest">Sentiment:</Text>
+                    <Text variant="small" weight="medium" className="text-text-dim ">Sentiment:</Text>
                     <span className="badge badge-primary bg-warning/10 text-warning border-warning/20">Neutral leaning negative</span>
                   </div>
                 </div>
@@ -129,7 +129,7 @@ export default function JournalPage() {
         {/* Sidebar Info */}
         <div className="lg:col-span-4 space-y-6">
           <Card padding="md" className="bg-surface border-border">
-            <Text as="h3" variant="small" weight="bold" className="text-text-dim uppercase tracking-widest mb-6 px-1">Journal Streak</Text>
+            <Text as="h3" variant="small" weight="medium" className="text-text-dim mb-6 px-1">Journal Streak</Text>
             <div className="flex items-center gap-6">
               <div className="h-14 w-14 rounded bg-primary/10 border border-primary/20 flex flex-col items-center justify-center text-primary">
                 <Icon icon="tabler:flame" className="text-xl mb-0.5" />
@@ -145,14 +145,14 @@ export default function JournalPage() {
                     className="h-full bg-primary" 
                   />
                 </div>
-                <Text variant="small" className="text-text-dim text-[10px] font-bold uppercase tracking-widest">2 days to next badge</Text>
+                <Text variant="small" className="text-text-dim text-[10px] font-medium ">2 days to next badge</Text>
               </div>
             </div>
           </Card>
 
           <Card padding="md" className="bg-surface border-border">
             <div className="flex items-center justify-between mb-8 px-1">
-              <Text as="h3" variant="small" weight="bold" className="text-text-dim uppercase tracking-widest">Past Entries</Text>
+              <Text as="h3" variant="small" weight="medium" className="text-text-dim ">Past Entries</Text>
               <span className="badge badge-outline">April</span>
             </div>
 
@@ -167,14 +167,14 @@ export default function JournalPage() {
                     <Text weight="semibold" className="text-xs text-white group-hover:text-primary transition-colors line-clamp-1">{entry.title}</Text>
                     <div className={cn("shrink-0 size-1.5 rounded-full mt-1.5", entry.bg)} />
                   </div>
-                  <Text variant="small" className="text-text-dim text-[10px] font-bold uppercase tracking-widest">{entry.date} · {entry.words} words</Text>
+                  <Text variant="small" className="text-text-dim text-[10px] font-medium ">{entry.date} · {entry.words} words</Text>
                 </div>
               ))}
             </div>
 
-            <button className="w-full mt-6 py-2 text-[10px] font-bold text-text-muted hover:text-white transition-colors uppercase tracking-[0.2em] border-t border-white/5 pt-6">
+            <Link href="/student/mood-history" className="w-full mt-6 py-2 text-[10px] font-medium text-text-muted hover:text-white transition-colors tracking-[0.2em] border-t border-white/5 pt-6 text-center block">
               View full history →
-            </button>
+            </Link>
           </Card>
         </div>
       </div>

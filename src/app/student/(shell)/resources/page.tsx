@@ -36,7 +36,7 @@ export default function ResourcesPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <Text as="h2" variant="h3" weight="semibold" className="tracking-tight">Wellness Library</Text>
-          <p className="text-text-dim text-xs font-bold uppercase tracking-[0.15em] mt-1">Curated knowledge hub</p>
+          <p className="text-text-dim text-xs font-medium tracking-[0.15em] mt-1">Curated knowledge hub</p>
         </div>
         <div className="relative w-full md:w-[320px]">
           <Icon icon="tabler:search" className="absolute left-3 top-1/2 -translate-y-1/2 text-text-dim" />
@@ -56,7 +56,7 @@ export default function ResourcesPage() {
         </div>
         
         <div className="relative z-10 flex-1">
-          <div className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mb-4">Featured Resource</div>
+          <div className="text-[10px] font-medium text-primary tracking-[0.2em] mb-4">Featured Resource</div>
           <Text as="h3" variant="h3" weight="semibold" className="mb-4 leading-tight">5-Minute Breathing Meditation for Exam Week</Text>
           <Text color="secondary" className="max-w-[50ch] text-sm leading-relaxed mb-8">A guided audio meditation specifically designed for Indian students during exam season. Available in Hindi and English.</Text>
           <div className="flex flex-wrap gap-3">
@@ -77,7 +77,7 @@ export default function ResourcesPage() {
         {categories.map(cat => (
           <button 
             key={cat}
-            className={`flex-shrink-0 h-8 px-4 rounded-md text-[11px] font-bold uppercase tracking-widest transition-all ${
+            className={`flex-shrink-0 h-8 px-4 rounded-md text-[11px] font-medium transition-all ${
               activeCategory === cat 
                 ? "bg-white text-black shadow-sm" 
                 : "text-text-muted hover:text-white hover:bg-white/5"
@@ -99,7 +99,7 @@ export default function ResourcesPage() {
               />
               <div className="absolute top-4 right-4">
                 <span className={cn(
-                  "px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest border",
+                  "px-2 py-0.5 rounded text-[9px] font-medium border",
                   resource.type === "YouTube" ? "bg-secondary/10 text-secondary border-secondary/20" : 
                   resource.type === "Audio" ? "bg-primary/10 text-primary border-primary/20" : 
                   "bg-warning/10 text-warning border-warning/20"
@@ -111,7 +111,7 @@ export default function ResourcesPage() {
             <div className="p-6 flex-1 flex flex-col">
               <Text as="h4" weight="semibold" className="text-sm mb-4 leading-snug group-hover:text-primary transition-colors flex-1">{resource.title}</Text>
               <div className="flex items-center justify-between mt-6">
-                <div className="flex items-center gap-3 text-[10px] font-bold text-text-dim uppercase tracking-widest tabular-nums">
+                <div className="flex items-center gap-3 text-[10px] font-medium text-text-dim tabular-nums">
                   {resource.duration && (
                     <span className="flex items-center gap-1.5"><Icon icon="tabler:clock" /> {resource.duration}</span>
                   )} 

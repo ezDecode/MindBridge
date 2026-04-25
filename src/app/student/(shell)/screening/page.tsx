@@ -91,7 +91,7 @@ export default function ScreeningPage() {
     return (
       <div className="max-w-2xl mx-auto space-y-8 pb-20">
         <button 
-          className="flex items-center gap-2 text-xs font-bold text-text-dim hover:text-white transition-colors uppercase tracking-widest" 
+          className="flex items-center gap-2 text-xs font-medium text-text-dim hover:text-white transition-colors " 
           onClick={() => setActiveQuiz(null)}
         >
           <Icon icon="tabler:arrow-left" /> Back to assessments
@@ -103,14 +103,14 @@ export default function ScreeningPage() {
           </div>
           <Text as="h3" variant="h3" weight="semibold" className="mb-2">{activeQuiz} Results</Text>
           <div className="text-6xl font-bold tabular-nums text-white my-8 tracking-tight">{results.score}</div>
-          <span className={cn("badge px-4 py-1.5 uppercase tracking-[0.2em] text-[10px]", results.badge)}>{results.severity}</span>
+          <span className={cn("badge px-4 py-1.5 tracking-[0.2em] text-[10px]", results.badge)}>{results.severity}</span>
           
           <div className="bg-background/50 border border-white/5 rounded-lg p-6 my-10 text-left relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none transition-transform">
               <Icon icon="tabler:info-circle" className="h-12 w-12" />
             </div>
             <div className="relative z-10">
-              <Text variant="small" weight="bold" className="text-primary uppercase tracking-widest mb-3 flex items-center gap-2">
+              <Text variant="small" weight="medium" className="text-primary mb-3 flex items-center gap-2">
                 <Icon icon="tabler:info-circle" />
                 What this means
               </Text>
@@ -129,7 +129,7 @@ export default function ScreeningPage() {
             </Button>
           </div>
           
-          <Text variant="small" className="text-text-dim text-[10px] font-bold uppercase tracking-[0.2em] mt-12 block">
+          <Text variant="small" className="text-text-dim text-[10px] font-medium tracking-[0.2em] mt-12 block">
             Standardized screening · Not a clinical diagnosis
           </Text>
         </Card>
@@ -142,7 +142,7 @@ export default function ScreeningPage() {
     return (
       <div className="max-w-2xl mx-auto space-y-8 pb-20">
         <button 
-          className="flex items-center gap-2 text-xs font-bold text-text-dim hover:text-white transition-colors uppercase tracking-widest" 
+          className="flex items-center gap-2 text-xs font-medium text-text-dim hover:text-white transition-colors " 
           onClick={() => setActiveQuiz(null)}
         >
           <Icon icon="tabler:arrow-left" /> Back to assessments
@@ -151,7 +151,7 @@ export default function ScreeningPage() {
         <Card padding="lg" className="bg-surface border-border">
           <div className="flex items-center justify-between mb-10">
             <Text as="h3" variant="body" weight="semibold" className="text-white">{q.title}</Text>
-            <span className="badge badge-outline text-[9px] uppercase tracking-widest px-3">Question {currentStep + 1} <span className="text-text-dim">/ {q.questions.length}</span></span>
+            <span className="badge badge-outline text-[9px] px-3">Question {currentStep + 1} <span className="text-text-dim">/ {q.questions.length}</span></span>
           </div>
 
           <div className="flex gap-1.5 mb-12">
@@ -213,7 +213,7 @@ export default function ScreeningPage() {
     <div className="max-w-6xl mx-auto space-y-10 pb-20">
       <div>
         <Text as="h2" variant="h3" weight="semibold" className="tracking-tight">Clinical Assessments</Text>
-        <p className="text-text-dim text-xs font-bold uppercase tracking-[0.15em] mt-1">Standardized PHQ-9 & GAD-7 screening tools</p>
+        <p className="text-text-dim text-xs font-medium tracking-[0.15em] mt-1">Standardized PHQ-9 & GAD-7 screening tools</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -228,13 +228,13 @@ export default function ScreeningPage() {
             <div className="mb-8 flex-1">
               <div className="flex items-center justify-between mb-2">
                 <Text weight="semibold" className="text-white text-lg">{quiz.title}</Text>
-                <span className="badge badge-outline text-[9px] uppercase tracking-widest border-white/5 bg-white/5">Confidential</span>
+                <span className="badge badge-outline text-[9px] border-white/5 bg-white/5">Confidential</span>
               </div>
-              <Text variant="small" className="text-text-dim text-[10px] font-bold uppercase tracking-widest mb-4 block">{quiz.sub}</Text>
+              <Text variant="small" className="text-text-dim text-[10px] font-medium mb-4 block">{quiz.sub}</Text>
               <Text color="secondary" className="text-sm leading-relaxed">{quiz.desc}</Text>
             </div>
             <div className="pt-6 border-t border-white/5 flex items-center justify-between">
-              <Text variant="small" className="text-text-dim text-[10px] font-bold uppercase tracking-widest">{quiz.meta}</Text>
+              <Text variant="small" className="text-text-dim text-[10px] font-medium ">{quiz.meta}</Text>
               <Button size="sm" className="gap-1">
                 Start <Icon icon="tabler:chevron-right" className="text-xs" />
               </Button>

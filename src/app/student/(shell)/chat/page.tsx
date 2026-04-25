@@ -91,7 +91,7 @@ export default function StudentChatPage() {
             <Text as="h3" variant="body" weight="semibold" className="text-white">MindBot</Text>
             <div className="flex items-center gap-2 mt-0.5">
               <div className="size-1.5 rounded-full bg-success animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
-              <p className="text-[10px] font-bold text-text-dim uppercase tracking-widest">Active session</p>
+              <p className="text-[10px] font-medium text-text-dim ">Active session</p>
             </div>
           </div>
         </div>
@@ -117,10 +117,10 @@ export default function StudentChatPage() {
               </div>
               <div className="flex flex-col gap-2">
                 <div className="bg-surface-raised border border-border px-5 py-3 rounded-lg rounded-tl-none shadow-sm text-sm leading-relaxed text-white">
-                  <span className="font-bold text-primary block mb-1 text-base tracking-tight uppercase text-xs">MindBot</span>
+                  <span className="font-medium text-primary block mb-1 text-base tracking-tight text-xs">MindBot</span>
                   Hello! I&apos;m your MindBot companion. I&apos;m here to listen, support, and help you navigate campus life. How are you feeling right now?
                 </div>
-                <span className="text-[9px] font-bold text-text-dim uppercase tracking-widest px-1">Just now</span>
+                <span className="text-[9px] font-medium text-text-dim px-1">Just now</span>
               </div>
             </motion.div>
           ) : (
@@ -149,7 +149,7 @@ export default function StudentChatPage() {
                   )}>
                     {cleanMessageContent(msg.content)}
                   </div>
-                  <span className="text-[9px] font-bold text-text-dim uppercase tracking-widest px-1">
+                  <span className="text-[9px] font-medium text-text-dim px-1">
                     {msg.role === 'user' ? 'Sent' : 'MindBot'}
                   </span>
                 </div>
@@ -196,7 +196,7 @@ export default function StudentChatPage() {
                   animate="show"
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleQuickReply(reply.text)}
-                  className="flex-shrink-0 px-4 py-2 rounded-md bg-white/5 border border-white/5 text-[10px] font-bold text-text-muted hover:text-white transition-all flex items-center gap-2 uppercase tracking-widest"
+                  className="flex-shrink-0 px-4 py-2 rounded-md bg-white/5 border border-white/5 text-[10px] font-medium text-text-muted hover:text-white transition-all flex items-center gap-2 "
                 >
                   <Icon icon={reply.icon} className="text-sm text-primary" />
                   {reply.label}

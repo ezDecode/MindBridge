@@ -46,7 +46,7 @@ export function ResourcesSection() {
  <article key={r.title} className="group flex flex-col justify-between rounded-lg bg-surface p-6 border border-border transition-all duration-150 hover:border-white/20 hover:bg-surface-hover">
  <div>
  <div className="flex items-center gap-2 mb-4">
- <div className="px-2 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
+ <div className="px-2 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-medium ">
  {r.type}
  </div>
  <Text as="span" variant="small" color="muted">{r.duration}</Text>

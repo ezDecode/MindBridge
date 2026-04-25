@@ -126,7 +126,7 @@ export function BreathingExercise({
                       </p>
                     </div>
                     <div className="flex flex-col items-end gap-1 ml-3 shrink-0 tabular-nums">
-                      <span className="text-[9px] uppercase font-bold text-text-muted bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                      <span className="text-[9px] font-medium text-text-muted bg-white/5 px-2 py-0.5 rounded border border-white/10">
                         {TECHNIQUES[tech].cycles} cycles
                       </span>
                     </div>
@@ -189,7 +189,7 @@ export function BreathingExercise({
               </button>
               
               <div className="flex items-center gap-2 px-4 py-1.5 bg-surface rounded-md border border-border tabular-nums">
-                <span className="text-[10px] font-bold text-white uppercase tracking-widest">
+                <span className="text-[10px] font-medium text-white ">
                   Cycle {cycleCount + 1} <span className="text-text-dim">/ {totalCycles}</span>
                 </span>
               </div>
@@ -253,7 +253,7 @@ export function BreathingExercise({
               </Button>
             </div>
 
-            <div className="mt-10 flex items-center justify-center gap-2 text-text-dim font-bold text-[10px] uppercase tracking-widest tabular-nums">
+            <div className="mt-10 flex items-center justify-center gap-2 text-text-dim font-medium text-[10px] tabular-nums">
               <Icon icon="tabler:clock" className="h-3 w-3" />
               <span>{formatTime(totalTimeElapsed)} / {formatTime(currentTechnique.totalDuration)}</span>
             </div>

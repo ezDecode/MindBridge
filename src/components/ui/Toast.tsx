@@ -48,9 +48,8 @@ export function ToastProvider({ children }: ToastProviderProps) {
  {children}
  
  {/* Toast Container */}
- <div className="fixed bottom-20 left-1/2 z-[60] -translate-x-1/2 sm:bottom-24">
- <AnimatePresence>
- {toasts.map((toast) => (
+ <div className="fixed bottom-20 left-1/2 z-[100] -translate-x-1/2 sm:bottom-24">
+ <AnimatePresence> {toasts.map((toast) => (
  <motion.div
  key={toast.id}
  initial={{ opacity: 0, y: 20, scale: 0.95 }}

@@ -101,7 +101,7 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
     <div className="space-y-8 p-1">
       <section className="space-y-6">
         <div className="space-y-2">
-          <Text variant="small" weight="bold" className="uppercase tracking-widest text-text-dim text-[10px]">
+          <Text variant="small" weight="medium" className=" text-text-dim text-[10px]">
             Display Name
           </Text>
           <Input 
@@ -114,7 +114,7 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
         </div>
 
         <div className="space-y-2">
-          <Text variant="small" weight="bold" className="uppercase tracking-widest text-text-dim text-[10px]">
+          <Text variant="small" weight="medium" className=" text-text-dim text-[10px]">
             Institution
           </Text>
           <Input 
@@ -130,7 +130,7 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
       <div className="flex items-center justify-between pt-6 border-t border-white/5">
         <button 
           onClick={handleSignOut}
-          className="flex items-center gap-2 text-xs font-bold text-danger hover:opacity-80 transition-opacity uppercase tracking-widest"
+          className="flex items-center gap-2 text-xs font-medium text-danger hover:opacity-80 transition-opacity "
         >
           <Icon icon="tabler:logout-2" className="h-4 w-4" />
           Sign Out
@@ -153,7 +153,7 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             className={cn(
-              "p-4 rounded-md flex items-center gap-3 text-[11px] font-bold uppercase tracking-widest border",
+              "p-4 rounded-md flex items-center gap-3 text-[11px] font-medium border",
               message.type === 'success' 
               ? "bg-success/5 text-success border-success/20" 
               : "bg-danger/5 text-danger border-danger/20"

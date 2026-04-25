@@ -33,7 +33,7 @@ const Text = forwardRef<HTMLElement, TextProps>(
  h6: "text-base sm:text-lg font-display tracking-tight",
  body: "text-base leading-relaxed",
  small: "text-sm",
- label: "text-xs font-semibold uppercase tracking-wider",
+ label: "text-xs font-medium ",
  };
 
  const weightOptions = {

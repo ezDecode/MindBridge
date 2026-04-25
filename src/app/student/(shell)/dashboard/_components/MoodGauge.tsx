@@ -116,7 +116,7 @@ export function MoodGauge({ value, max = 5, size = 140 }: { value: number; max?:
  </div>
  {/* Label below */}
  <span
- className="mt-1 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+ className="mt-1 rounded-full px-3 py-1 text-[11px] font-medium "
  style={{
  color: moodColor,
  backgroundColor: `${moodColor}15`,

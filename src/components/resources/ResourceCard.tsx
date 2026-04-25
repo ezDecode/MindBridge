@@ -81,7 +81,7 @@ export function ResourceCard({ resource, className = "", style }: ResourceCardPr
 
   <div className="flex items-center gap-2.5 mb-3">
     <span className={cn(
-      "text-[9px] uppercase font-bold px-2 py-0.5 rounded border tracking-widest",
+      "text-[9px] font-medium px-2 py-0.5 rounded border ",
       isYouTube 
         ? "bg-danger/10 text-danger border-danger/20" 
         : "bg-primary/10 text-primary border-primary/20"
@@ -89,7 +89,7 @@ export function ResourceCard({ resource, className = "", style }: ResourceCardPr
       {resource.type}
     </span>
     {!isYouTube && (
-      <span className="text-[10px] font-bold text-text-dim uppercase tracking-widest tabular-nums">
+      <span className="text-[10px] font-medium text-text-dim tabular-nums">
         {resource.duration}
       </span>
     )}

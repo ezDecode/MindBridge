@@ -199,7 +199,7 @@ export default function CounselorDashboardPage() {
             )}
           >
             <Icon icon={metrics.activeAlerts > 0 ? "tabler:alert-triangle" : "tabler:shield-check"} className="text-lg" />
-            <span className="text-[10px] font-bold uppercase tracking-widest">
+            <span className="text-[10px] font-medium ">
               {metrics.activeAlerts > 0 ? `${metrics.activeAlerts} ACTIVE CRISIS` : 'Systems Clear'}
             </span>
           </div>
@@ -222,7 +222,7 @@ export default function CounselorDashboardPage() {
                 <Icon icon={stat.icon} className={cn("text-xl transition-transform", stat.color)} />
               </div>
               <div className="text-3xl font-semibold tabular-nums text-white leading-none mb-2">{stat.value}</div>
-              <div className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{stat.label}</div>
+              <div className="text-[10px] font-medium text-text-muted ">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -235,9 +235,9 @@ export default function CounselorDashboardPage() {
             <div className="flex items-center justify-between mb-10">
               <div>
                 <Text as="h3" weight="semibold">Today&apos;s Schedule</Text>
-                <p className="text-[10px] text-text-muted font-bold uppercase tracking-wider mt-1">Confirmed appointments</p>
+                <p className="text-[10px] text-text-muted font-medium mt-1">Confirmed appointments</p>
               </div>
-              <button className="text-[10px] font-bold text-text-muted hover:text-white transition-colors uppercase tracking-widest">Full View</button>
+              <button className="text-[10px] font-medium text-text-muted hover:text-white transition-colors ">Full View</button>
             </div>
             
             <div className="space-y-3">
@@ -247,7 +247,7 @@ export default function CounselorDashboardPage() {
                   className="flex items-center gap-6 p-4 rounded-lg bg-white/[0.02] border border-white/5 group hover:border-white/10 transition-all"
                 >
                   <div className="flex flex-col items-center justify-center size-14 rounded bg-surface-raised border border-border shadow-sm">
-                    <span className="text-[9px] font-bold uppercase text-text-muted">{formatTime(booking.slot_start).split(' ')[1]}</span>
+                    <span className="text-[9px] font-medium text-text-muted">{formatTime(booking.slot_start).split(' ')[1]}</span>
                     <span className="text-xl font-bold text-white leading-tight">{formatTime(booking.slot_start).split(' ')[0]}</span>
                   </div>
                   <div className="flex-1">
@@ -257,7 +257,7 @@ export default function CounselorDashboardPage() {
                       </span>
                       <span className="badge badge-primary text-[8px]">Active</span>
                     </div>
-                    <div className="flex items-center gap-4 text-[10px] font-bold text-text-dim uppercase tracking-widest">
+                    <div className="flex items-center gap-4 text-[10px] font-medium text-text-dim ">
                       <span className="flex items-center gap-1.5"><Icon icon="tabler:video" className="text-secondary" /> {booking.type}</span>
                       <span className="flex items-center gap-1.5"><Icon icon="tabler:clock" className="text-primary" /> 45 Mins</span>
                     </div>
@@ -271,7 +271,7 @@ export default function CounselorDashboardPage() {
                 <div className="p-16 text-center text-text-dim border border-dashed border-white/5 rounded-lg bg-white/[0.01]">
                   <Icon icon="tabler:calendar-cancel" className="text-4xl mx-auto mb-4 opacity-10" />
                   <p className="text-sm font-medium italic opacity-60">A quiet day ahead.</p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest mt-2">No sessions scheduled</p>
+                  <p className="text-[10px] font-medium mt-2">No sessions scheduled</p>
                 </div>
               )}
             </div>
@@ -291,7 +291,7 @@ export default function CounselorDashboardPage() {
                   <div key={booking.id} className="flex items-center justify-between p-4 rounded-lg bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all">
                     <div className="flex-1">
                       <div className="text-xs font-semibold text-white mb-1">{resolveProfileDisplayName({ profileName: booking.student?.name }) || 'Student'}</div>
-                      <div className="text-[9px] font-bold text-text-dim uppercase tracking-widest">
+                      <div className="text-[9px] font-medium text-text-dim ">
                         {new Date(booking.slot_start).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })} · {formatTime(booking.slot_start)}
                       </div>
                     </div>
@@ -309,7 +309,7 @@ export default function CounselorDashboardPage() {
                   </div>
                 ))}
                 {metrics.pendingBookings === 0 && (
-                  <p className="text-center text-text-dim text-[10px] font-bold uppercase tracking-widest py-10 opacity-40 italic">All caught up</p>
+                  <p className="text-center text-text-dim text-[10px] font-medium py-10 opacity-40 italic">All caught up</p>
                 )}
               </div>
             </div>
@@ -342,12 +342,12 @@ export default function CounselorDashboardPage() {
                       </div>
                       <div>
                         <div className="text-xs font-bold text-white leading-none mb-1">Student ID: {alert.student_id.split('-')[0]}</div>
-                        <div className="text-[9px] font-bold text-danger uppercase tracking-widest opacity-80">
+                        <div className="text-[9px] font-medium text-danger opacity-80">
                           {new Date(alert.created_at).toLocaleTimeString()} · {alert.severity}
                         </div>
                       </div>
                     </div>
-                    <button className="w-full py-2 bg-danger text-white text-[10px] font-bold uppercase tracking-widest rounded hover:bg-danger-hover transition-colors">
+                    <button className="w-full py-2 bg-danger text-white text-[10px] font-medium rounded hover:bg-danger-hover transition-colors">
                       Respond now
                     </button>
                   </div>
@@ -355,7 +355,7 @@ export default function CounselorDashboardPage() {
                 {crisisAlerts.length === 0 && (
                   <div className="p-10 text-center bg-white/[0.01] rounded-lg border border-dashed border-white/5">
                     <Icon icon="tabler:mood-heart" className="text-3xl mx-auto mb-2 opacity-5" />
-                    <p className="text-[10px] font-bold text-text-dim uppercase tracking-widest opacity-40">Wellbeing Stable</p>
+                    <p className="text-[10px] font-medium text-text-dim opacity-40">Wellbeing Stable</p>
                   </div>
                 )}
               </div>

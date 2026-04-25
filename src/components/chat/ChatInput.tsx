@@ -162,7 +162,7 @@ export function ChatInput({
  }
  }}
  title={action.prompt}
- className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-widest text-text-dim transition-all duration-150 hover:bg-white/5 hover:text-white active:scale-[0.98]"
+ className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[10px] font-medium text-text-dim transition-all duration-150 hover:bg-white/5 hover:text-white active:scale-[0.98]"
  aria-label={action.prompt}
  >
  <Icon icon={action.icon} className="h-3.5 w-3.5 text-primary" />

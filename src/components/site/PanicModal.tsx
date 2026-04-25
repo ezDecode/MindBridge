@@ -59,7 +59,7 @@ export function PanicModal() {
               <div>
                 <div className="text-sm font-semibold text-white">{h.name}</div>
                 <div className="text-lg font-bold text-primary tracking-tight">{h.number}</div>
-                <div className="text-[10px] font-bold text-text-dim uppercase tracking-wider mt-1">{h.hours}</div>
+                <div className="text-[10px] font-medium text-text-dim mt-1">{h.hours}</div>
               </div>
             </button>
           ))}
@@ -76,7 +76,7 @@ export function PanicModal() {
           </Button>
         </div>
         <button 
-          className="w-full py-2 text-[10px] font-bold text-text-dim hover:text-white transition-colors uppercase tracking-[0.2em]" 
+          className="w-full py-2 text-[10px] font-medium text-text-dim hover:text-white transition-colors tracking-[0.2em]" 
           onClick={() => setIsOpen(false)}
         >
           I am safe right now
