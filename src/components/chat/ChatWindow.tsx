@@ -49,14 +49,12 @@ export function ChatWindow({
         <AnimatePresence initial={false} mode="popLayout">
           {messages.map((message, index) => {
             const isFirst = index === 0 || messages[index - 1]?.role !== message.role
-            const isLast = index === messages.length - 1 || messages[index + 1]?.role !== message.role
 
             return (
               <MessageBubble
                 key={message.id || index}
                 message={message}
                 isFirst={isFirst}
-                isLast={isLast}
                 previousRole={index > 0 ? messages[index - 1]?.role : null}
                 dismissed={dismissedMessageIds.includes(message.id)}
                 onSuggestionSelect={(suggestion) => {

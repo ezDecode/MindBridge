@@ -37,11 +37,14 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
     // Fetch real profile
     getProfile().then(profile => {
       if (profile) {
+        const hasRole = 'role' in profile;
+        const hasInstitution = 'institution' in profile;
+        
         setUser({
           name: profile.name || 'User',
           initials: (profile.name || 'User').split(' ').map((n: string) => n[0]).join('').slice(0, 2),
-          role: profile.role ? (profile.role.charAt(0).toUpperCase() + profile.role.slice(1)) : 'Student',
-          dept: profile.institution || 'Wellness',
+          role: hasRole && profile.role ? (profile.role.charAt(0).toUpperCase() + profile.role.slice(1)) : 'Student',
+          dept: hasInstitution && profile.institution ? profile.institution : 'Wellness',
         });
       }
     });

@@ -13,26 +13,29 @@ export type Database = {
  Row: {
  id: string
  name: string | null
- role: 'student' | 'counselor'
+ role: 'student' | 'counselor' | 'admin'
  institution: string | null
  counselor_id: string | null
  created_at: string
+ xp: number
  }
  Insert: {
  id: string
  name?: string | null
- role: 'student' | 'counselor'
+ role: 'student' | 'counselor' | 'admin'
  institution?: string | null
  counselor_id?: string | null
  created_at?: string
+ xp?: number
  }
  Update: {
  id?: string
  name?: string | null
- role?: 'student' | 'counselor'
+ role?: 'student' | 'counselor' | 'admin'
  institution?: string | null
  counselor_id?: string | null
  created_at?: string
+ xp?: number
  }
  Relationships: [
  {
@@ -345,12 +348,51 @@ export type Database = {
  }
  ]
  }
+ wellness_resources: {
+  Row: {
+  id: string
+  title: string
+  description: string | null
+  link: string | null
+  type: string
+  category: string
+  image_url: string | null
+  created_at: string
+  }
+  Insert: {
+  id?: string
+  title: string
+  description?: string | null
+  link?: string | null
+  type: string
+  category: string
+  image_url?: string | null
+  created_at?: string
+  }
+  Update: {
+  id?: string
+  title?: string
+  description?: string | null
+  link?: string | null
+  type?: string
+  category?: string
+  image_url?: string | null
+  created_at?: string
+  }
+  Relationships: []
+  }
  }
  Views: {
  [_ in never]: never
  }
  Functions: {
- [_ in never]: never
+  increment_xp: {
+  Args: {
+  user_id: string
+  amount: number
+  }
+  Returns: undefined
+  }
  }
  Enums: {
  [_ in never]: never

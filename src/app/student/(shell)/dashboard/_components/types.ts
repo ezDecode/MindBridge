@@ -16,6 +16,7 @@ export type TabId = "mind" | "bridge";
 export interface MoodRecord {
   score: number;
   logged_at: string;
+  note?: string | null;
 }
 
 export function generateWeekMoodHistory(

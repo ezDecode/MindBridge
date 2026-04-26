@@ -13,7 +13,8 @@ import { ChatActionCard } from "./_components/ChatActionCard";
 const STORAGE_KEY = "currentChatSession";
 
 // Sophisticated compact easing
-const transition = { duration: 0.5, ease: [0.16, 1, 0.3, 1] };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const transition = { duration: 0.5, ease: [0.16, 1, 0.3, 1] } as any;
 
 const messageVariants = {
   initial: { opacity: 0, y: 12, scale: 0.98 },
