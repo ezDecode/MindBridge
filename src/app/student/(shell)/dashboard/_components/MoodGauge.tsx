@@ -63,7 +63,6 @@ export function MoodGauge({ value, max = 5, size = 140 }: { value: number; max?:
  // Semicircle: only use half the circumference
  const semiCircumference = circumference / 2;
  const dashFilled = (animPercent / 100) * semiCircumference;
- const dasharray = `${dashFilled} ${circumference}`;
 
  const moodColor = getMoodColor(value);
  const moodLabel = getMoodLabel(value);

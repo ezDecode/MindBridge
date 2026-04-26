@@ -72,7 +72,7 @@ export default function BookCounselorClient({ initialCounselors, initialSlots }:
       } else {
         showToast('Failed to book session', 'error')
       }
-    } catch (err) {
+    } catch {
       showToast('Error booking session', 'error')
     } finally {
       setIsBooking(false)

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { useToast } from "@/components/ui/Toast";
@@ -14,7 +14,7 @@ export default function JournalPage() {
   const [journalTitle, setJournalTitle] = useState("");
   const [journalContent, setJournalContent] = useState("");
   const [showAiInsight, setShowAiInsight] = useState(false);
-  const [streak, setStreak] = useState(8);
+  const streak = 8;
 
   const prompts = [
     'What is one thing you are grateful for today, even if small?',

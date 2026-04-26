@@ -2,7 +2,8 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { nim, DEFAULT_CHAT_PARAMS, parseCompanionResponse } from '@/lib/nvidia-nim'
 import { buildQuickContext, contextToPrompt } from '@/lib/simple-context'
 import { buildSystemPrompt } from '@/lib/agents/companion-agent'
-import { buildMemoryContext } from '@/lib/agents/memory-agent'
+import { buildFastMemoryContext, snapshotToPrompt } from '@/lib/agents/memory-agent'
+import { getCoreMemory, maybeCompressMemory } from '@/lib/agents/compression-agent'
 import { triggerCrisisAlert } from '@/lib/crisis'
 import { executeBooking } from '@/lib/agents/action-agent'
 import { NextResponse } from 'next/server'
@@ -166,6 +167,47 @@ function buildSuggestions({
 interface ChatRequest {
  message: string
  sessionId: string
+ clientContext?: {
+  currentPage?: string
+  idleSeconds?: number
+ }
+}
+
+interface SanitizedClientContext {
+ currentPage: string | null
+ idleSeconds: number | null
+}
+
+function sanitizeClientContext(
+ raw: ChatRequest['clientContext']
+): SanitizedClientContext {
+ const result: SanitizedClientContext = { currentPage: null, idleSeconds: null }
+ if (!raw || typeof raw !== 'object') return result
+
+ if (typeof raw.currentPage === 'string') {
+  // ASCII-only, trimmed, capped at 200 chars. Drop control chars.
+  const ascii = raw.currentPage.replace(/[^\x20-\x7E]/g, '').trim()
+  if (ascii.length > 0) {
+   result.currentPage = ascii.slice(0, 200)
+  }
+ }
+
+ if (raw.idleSeconds !== undefined && raw.idleSeconds !== null) {
+  const n = Number(raw.idleSeconds)
+  if (Number.isFinite(n)) {
+   result.idleSeconds = Math.max(0, Math.min(86400, n | 0))
+  }
+ }
+
+ return result
+}
+
+function clientContextToPrompt(ctx: SanitizedClientContext): string {
+ if (ctx.currentPage === null && ctx.idleSeconds === null) return ''
+ const lines = ['CURRENT SESSION:']
+ if (ctx.currentPage !== null) lines.push(`- page: ${ctx.currentPage}`)
+ if (ctx.idleSeconds !== null) lines.push(`- idle: ${ctx.idleSeconds}s`)
+ return lines.join('\n')
 }
 
 export async function POST(request: Request) {
@@ -184,7 +226,8 @@ export async function POST(request: Request) {
  )
  }
 
- const { message, sessionId }: ChatRequest = await request.json()
+ const body: ChatRequest = await request.json()
+ const { message, sessionId } = body
 
  if (!message || !sessionId) {
  return NextResponse.json(
@@ -193,28 +236,45 @@ export async function POST(request: Request) {
  )
  }
 
- // 1. Build Context (Quick Structured + Rich Synthesized)
- const [quickContext, memorySummary, historyResult] = await Promise.all([
- buildQuickContext(user.id),
- buildMemoryContext(user.id),
- supabase
- .from('chat_messages')
- .select('role, content')
- .eq('user_id', user.id)
- .eq('session_id', sessionId)
- .order('sent_at', { ascending: true })
- .limit(20),
+ const sanitizedClientContext = sanitizeClientContext(body.clientContext)
+
+ // 1. Build Context (parallel: quick + fast snapshot + core memory)
+ const [quickContext, snapshot, coreMemory] = await Promise.all([
+  buildQuickContext(user.id),
+  buildFastMemoryContext(user.id),
+  getCoreMemory(user.id),
  ])
 
- const history = historyResult.data ?? []
- 
- // Combine both contexts
- const contextString = `${contextToPrompt(quickContext)}\n\nRECENT HISTORY SUMMARY:\n${memorySummary}`
+ // 2. Fetch chat history. If we have a compressed summary, only pull the
+ // last 5 messages of this session. Otherwise fall back to last 20 so the
+ // chat keeps working before any compression has run.
+ const hasSummary = !!coreMemory?.summary_text?.trim()
+ const historyLimit = hasSummary ? 5 : 20
 
- // 2. Build system prompt
+ const historyResult = await supabase
+  .from('chat_messages')
+  .select('role, content, sent_at')
+  .eq('user_id', user.id)
+  .eq('session_id', sessionId)
+  .order('sent_at', { ascending: false })
+  .limit(historyLimit)
+
+ const history = (historyResult.data ?? []).slice().reverse()
+
+ // 3. Assemble context string
+ const parts: string[] = [contextToPrompt(quickContext), snapshotToPrompt(snapshot)]
+ if (hasSummary) {
+  parts.push(`LONG-TERM MEMORY (compressed):\n${coreMemory!.summary_text.trim()}`)
+ }
+ const clientCtxBlock = clientContextToPrompt(sanitizedClientContext)
+ if (clientCtxBlock) parts.push(clientCtxBlock)
+
+ const contextString = parts.join('\n\n')
+
+ // 4. Build system prompt
  const systemPrompt = buildSystemPrompt(contextString)
 
- // 3. Create the streaming response from NIM with timeout protection
+ // 5. Create the streaming response from NIM with timeout protection
  let stream: AsyncIterable<unknown>
  let usesFallback = false
  
@@ -247,7 +307,7 @@ export async function POST(request: Request) {
  }
  }
 
- // 4. Create a readable stream to send to the client
+ // 6. Create a readable stream to send to the client
  const encoder = new TextEncoder()
  const readable = new ReadableStream({
  async start(controller) {
@@ -281,10 +341,10 @@ export async function POST(request: Request) {
  }
  }
 
-          // 5. Parse the complete response
+          // 7. Parse the complete response
           const parsed = parseCompanionResponse(fullResponse)
           
-          // 6. Save messages to database
+          // 8. Save messages to database
           await saveMessages(
             supabase,
             user.id,
@@ -294,7 +354,10 @@ export async function POST(request: Request) {
             parsed?.crisis ?? false
           )
 
-          // 7. Handle actions
+          // 9. Fire-and-forget compression check
+          void maybeCompressMemory(user.id).catch(console.error)
+
+          // 10. Handle actions
           let actionContext = parsed?.action_context || null
           if (parsed?.suggested_action === 'book_counselor') {
             const result = await executeBooking(user.id)
@@ -303,17 +366,17 @@ export async function POST(request: Request) {
             }
           }
 
-          // 8. Handle crisis
+          // 11. Handle crisis
           if (parsed?.crisis) {
             await triggerCrisisAlert(user.id)
           }
 
-          // 9. Update assessment if new signals found
+          // 12. Update assessment if new signals found
           if (parsed?.assessment_update?.criteria_flagged && parsed.assessment_update.criteria_flagged.length > 0) {
             await updateAssessment(supabase, user.id, parsed.assessment_update)
           }
 
-          // 10. Send final metadata with smart suggestions
+          // 13. Send final metadata with smart suggestions
           const suggestions = parsed?.suggestions?.length
             ? parsed.suggestions.slice(0, 3)
             : buildSuggestions({

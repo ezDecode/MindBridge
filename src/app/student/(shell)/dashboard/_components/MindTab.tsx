@@ -5,20 +5,6 @@ import { useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
 import { Text } from "@/components/ui";
 import { ChatInput } from "@/components/chat";
-import { cn } from "@/lib/utils";
-
-const container = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 }
-  }
-};
-
-const item = {
-  hidden: { opacity: 0, y: 10 },
-  visible: { opacity: 1, y: 0 }
-};
 
 interface MindTabProps {
   onOpenSidebar?: () => void;

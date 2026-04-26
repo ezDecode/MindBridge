@@ -45,7 +45,7 @@ export default function AvailabilityClient({ initialSlots, initialBookings }: { 
       } else {
         showToast('Failed to add slot', 'error')
       }
-    } catch (err) {
+    } catch {
       showToast('Error adding slot', 'error')
     } finally {
       setIsAdding(false)

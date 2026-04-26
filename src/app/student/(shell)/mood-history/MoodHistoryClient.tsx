@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { Icon } from '@iconify/react'
-import { Card, Text, Button } from '@/components/ui'
+import { Card, Text } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
 type MoodLog = {
@@ -36,7 +36,7 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
     const end = new Date(filteredLogs[filteredLogs.length - 1].logged_at).getTime()
     const range = end - start || 1
     
-    return filteredLogs.map((log, i) => {
+    return filteredLogs.map((log) => {
       const x = ((new Date(log.logged_at).getTime() - start) / range) * 100
       const y = 50 - (log.score * 10) // Score 1-5 maps to 40-0
       return { ...log, x, y }
@@ -65,14 +65,14 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
         </div>
         
         <div className="flex p-1 bg-surface-raised rounded-lg border border-border">
-          {[
+          {([
             { id: '7', label: '7 Days' },
             { id: '30', label: '30 Days' },
             { id: 'all', label: 'All Time' }
-          ].map(t => (
+          ] as const).map((t) => (
             <button
               key={t.id}
-              onClick={() => setTimeframe(t.id as any)}
+              onClick={() => setTimeframe(t.id)}
               className={cn(
                 "px-4 py-1.5 rounded-md text-base font-medium transition-all",
                 timeframe === t.id 
@@ -195,7 +195,7 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
                 </Text>
                 {log.note && (
                   <Text variant="small" className="text-text-muted mt-2 leading-relaxed">
-                    "{log.note}"
+                    &quot;{log.note}&quot;
                   </Text>
                 )}
               </div>
@@ -204,14 +204,6 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
           {filteredLogs.length === 0 && (
             <div className="col-span-full py-12 text-center text-text-dim border border-dashed border-border rounded-lg">
               No logs found for this timeframe.
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
-          No logs found for this timeframe.
             </div>
           )}
         </div>

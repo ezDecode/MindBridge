@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { Icon } from '@iconify/react';
-import { Button, Card, Text } from "@/components/ui";
+import { Button, Text } from "@/components/ui";
 
 interface SessionQuestionOption {
  label: string;
@@ -111,11 +111,6 @@ export function QuestionSessionSheet({
  const [error, setError] = useState<string | null>(null);
 
  const currentQuestion = session?.questions[step] ?? null;
- const progress = session?.questions.length
- ? summary
- ? 100
- : ((step + 1) / session.questions.length) * 100
- : 0;
 
 
  const loadSession = async () => {
@@ -446,7 +441,7 @@ export function QuestionSessionSheet({
  </div>
 
  <div className="space-y-2.5">
- {currentQuestion.options.map((option, optionIndex) => {
+ {currentQuestion.options.map((option) => {
  const selected = responses[currentQuestion.id] === option.value;
 
  return (

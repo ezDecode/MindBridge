@@ -94,14 +94,14 @@ export default function ForumPage() {
       </div>
 
       <div className="flex gap-2 border-b border-border pb-px">
-        {[
+        {([
           { id: 'trending', label: 'Trending', icon: 'tabler:flame' },
           { id: 'recent', label: 'Recent', icon: 'tabler:clock' },
           { id: 'mine', label: 'My Posts', icon: 'tabler:user' }
-        ].map(tab => (
+        ] as const).map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => setActiveTab(tab.id)}
             className={cn(
               "flex items-center gap-2 px-4 py-2.5 text-[1.0625rem] font-medium transition-all relative",
               activeTab === tab.id ? "text-white" : "text-text-muted hover:text-white"

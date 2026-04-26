@@ -4,7 +4,6 @@ import { Icon } from "@iconify/react";
 
 import type { TabId } from "./types";
 import Link from "next/link";
-import { Text } from "@/components/ui";
 
 interface DashboardSidebarProps {
   userName: string;

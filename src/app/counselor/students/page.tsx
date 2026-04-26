@@ -1,9 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
-import { getCurrentDemoUserServer } from '@/lib/auth/demo-cookie'
 import StudentsClient from './StudentsClient'
 
 export default async function StudentsPage() {
-  const user = await getCurrentDemoUserServer()
   const supabase = await createClient()
 
   // In demo we fetch all students to populate UI

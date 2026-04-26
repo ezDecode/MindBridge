@@ -37,8 +37,6 @@ export async function createClient() {
 
 // For Route Handlers - creates client with service role for admin operations
 export async function createServiceClient() {
- const cookieStore = await cookies()
-
  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key'
 

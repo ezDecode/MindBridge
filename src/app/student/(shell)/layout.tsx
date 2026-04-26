@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation"
 import { RoleShell } from "@/components/site"
+import { AgentProvider, FloatingAgentBubble } from "@/components/chat"
 import { studentNav } from "@/content/mindbridge"
 
 export default function StudentShellLayout({
@@ -11,11 +12,14 @@ export default function StudentShellLayout({
  const isChat = pathname === "/student/chat"
 
  return (
- <RoleShell
- navItems={studentNav}
- fullHeight={isChat}
- >
- {children}
- </RoleShell>
+  <AgentProvider>
+   <RoleShell
+    navItems={studentNav}
+    fullHeight={isChat}
+   >
+    {children}
+   </RoleShell>
+   <FloatingAgentBubble />
+  </AgentProvider>
  )
 }

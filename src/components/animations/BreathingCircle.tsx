@@ -47,7 +47,7 @@ export function BreathingCircle({ phase, isActive, progress, className = "" }: B
  }, [isActive, phase, controls]);
 
  return (
- <div className={`relative ${className}`}>
+ <div className={`relative ${className}`} data-progress={Math.round(progress)}>
  <motion.div
  animate={controls}
  initial={{ scale: 0.6, opacity: 0.25 }}

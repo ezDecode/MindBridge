@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { cookies } from "next/headers"
 import { DEMO_USERS, type DemoRole } from "@/lib/auth/demo-users"
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const supabase = await createServiceClient()
     

@@ -5,8 +5,18 @@ import { Icon } from "@iconify/react"
 import { cn } from '@/lib/utils'
 import { Button, Text } from "@/components/ui"
 
+type AdminDashboardData = {
+  moodAvg?: string | number
+  studentCount?: number
+  bookingCount?: number
+  pendingCrisisCount?: number
+  crisisCount?: number
+  moodLogs?: Array<{ score?: number }>
+  deptStats?: Array<{ name: string; score: number }>
+}
+
 export default function AdminDashboardPage() {
-  const [data, setData] = useState<any>(null)
+  const [data, setData] = useState<AdminDashboardData | null>(null)
   const [loading, setLoading] = useState(true)
 
   const fetchData = async () => {
@@ -100,7 +110,7 @@ export default function AdminDashboardPage() {
             
             <div className="h-44 flex items-end gap-2 px-2 relative">
               <div className="absolute inset-x-0 top-1/2 border-t border-dashed border-white/5 pointer-events-none" />
-              {(data?.moodLogs || Array.from({ length: 20 })).slice(0, 30).reverse().map((log: any, i: number) => {
+              {(data?.moodLogs || Array.from({ length: 20 })).slice(0, 30).reverse().map((log: { score?: number }, i: number) => {
                 const score = log?.score || (3 + Math.random() * 2)
                 const h = (score / 5) * 100;
                 return (

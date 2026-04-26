@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { type DemoRole, DEMO_USERS } from './demo-users'
+import { type DemoRole } from './demo-users'
 import { setDemoRoleCookie, clearDemoRoleCookie, getCurrentDemoUserServer } from './demo-cookie'
 
 export async function loginAsRole(role: DemoRole) {

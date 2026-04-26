@@ -44,7 +44,7 @@ export default function AppointmentsClient({ initialBookings }: { initialBooking
       } else {
         showToast('Action failed', 'error')
       }
-    } catch (err) {
+    } catch {
       showToast('Action failed', 'error')
     }
   }
@@ -58,14 +58,14 @@ export default function AppointmentsClient({ initialBookings }: { initialBooking
         </div>
         
         <div className="flex p-1 bg-surface-raised rounded-lg border border-border">
-          {[
+          {([
             { id: 'upcoming', label: 'Upcoming' },
             { id: 'pending', label: 'Pending' },
             { id: 'past', label: 'Past' }
-          ].map(t => (
+          ] as const).map((t) => (
             <button
               key={t.id}
-              onClick={() => setFilter(t.id as any)}
+              onClick={() => setFilter(t.id)}
               className={cn(
                 "px-4 py-1.5 rounded-md text-base font-medium transition-all",
                 filter === t.id 

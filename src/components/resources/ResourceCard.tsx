@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import Image from "next/image";
 import { Text } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
@@ -61,10 +62,13 @@ export function ResourceCard({ resource, className = "", style }: ResourceCardPr
 >
   {thumbnail && (
     <div className="relative aspect-video rounded-md overflow-hidden mb-4 bg-background border border-white/5">
-      <img
+      <Image
         src={thumbnail}
         alt={resource.title}
-        className="w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-80"
+        fill
+        unoptimized
+        sizes="(max-width: 768px) 100vw, 50vw"
+        className="object-cover transition-opacity duration-500 group-hover:opacity-80"
       />
       <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <div className="w-11 h-11 rounded-full bg-white text-black flex items-center justify-center shadow-lg transition-transform duration-300">

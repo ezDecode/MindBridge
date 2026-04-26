@@ -33,14 +33,6 @@ interface StudentDetailViewProps {
   studentId: string
 }
 
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.05 }
-  }
-}
-
 export function StudentDetailView({ studentId }: StudentDetailViewProps) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [moodLogs, setMoodLogs] = useState<MoodLog[]>([])
@@ -195,7 +187,7 @@ export function StudentDetailView({ studentId }: StudentDetailViewProps) {
               <Text variant="small" color="muted" weight="medium">Baseline Pending</Text>
             </div>
           ) : (
-            [...moodLogs].reverse().slice(-20).map((log, i) => (
+            [...moodLogs].reverse().slice(-20).map((log) => (
               <div key={log.id} className="flex-1 group relative h-full flex items-end">
                 <div 
                   className={cn(

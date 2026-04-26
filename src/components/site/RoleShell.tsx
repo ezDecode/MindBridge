@@ -33,16 +33,7 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
     return () => window.removeEventListener("open-settings", handleOpenSettings);
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [pathname]);
-
-  const [demoUser, setDemoUser] = useState(DEMO_USERS.student);
-
-  useEffect(() => {
-    setDemoUser(getCurrentDemoUser());
-  }, []);
+  const [demoUser] = useState(() => getCurrentDemoUser() || DEMO_USERS.student);
 
   const user = {
     name: demoUser.name,

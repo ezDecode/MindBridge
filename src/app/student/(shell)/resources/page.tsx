@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
+import Image from "next/image";
 import { Button, Text } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
@@ -163,7 +164,14 @@ export default function ResourcesPage() {
               >
                 <div className="h-40 bg-white/[0.02] border-b border-border flex items-center justify-center relative overflow-hidden">
                   {thumb ? (
-                    <img src={thumb} alt={resource.title} className="w-full h-full object-cover transition-opacity group-hover:opacity-80" />
+                    <Image
+                      src={thumb}
+                      alt={resource.title}
+                      fill
+                      unoptimized
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover transition-opacity group-hover:opacity-80"
+                    />
                   ) : (
                     <Icon icon={styles.icon} className="text-primary typo-metric opacity-10" />
                   )}

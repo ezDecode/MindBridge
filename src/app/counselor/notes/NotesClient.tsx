@@ -36,7 +36,7 @@ export default function NotesClient({ initialBookings }: { initialBookings: Book
       // In a real app we'd save to the database. For demo, we just simulate network delay
       await new Promise(r => setTimeout(r, 600))
       showToast('Notes securely saved', 'success')
-    } catch (err) {
+    } catch {
       showToast('Failed to save notes', 'error')
     } finally {
       setIsSaving(false)

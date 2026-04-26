@@ -274,15 +274,46 @@ export type Database = {
  }
  ]
  }
+ user_core_memories: {
+  Row: {
+  user_id: string
+  summary_text: string
+  message_count: number
+  last_compressed_at: string
+  last_compressed_message_at: string | null
+  }
+  Insert: {
+  user_id: string
+  summary_text?: string
+  message_count?: number
+  last_compressed_at?: string
+  last_compressed_message_at?: string | null
+  }
+  Update: {
+  user_id?: string
+  summary_text?: string
+  message_count?: number
+  last_compressed_at?: string
+  last_compressed_message_at?: string | null
+  }
+  Relationships: [
+  {
+  foreignKeyName: 'user_core_memories_user_id_fkey'
+  columns: ['user_id']
+  referencedRelation: 'profiles'
+  referencedColumns: ['id']
+  }
+  ]
+  }
  crisis_logs: {
- Row: {
- id: string
- student_id: string
- counselor_id: string
- severity: string
- acknowledged: boolean
- triggered_at: string
- }
+  Row: {
+  id: string
+  student_id: string
+  counselor_id: string
+  severity: string
+  acknowledged: boolean
+  triggered_at: string
+  }
  Insert: {
  id?: string
  student_id: string

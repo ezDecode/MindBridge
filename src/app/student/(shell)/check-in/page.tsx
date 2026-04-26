@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getClient } from "@/lib/supabase/client";
 
 import { Icon } from "@iconify/react";
 import { useToast } from "@/components/ui/Toast";

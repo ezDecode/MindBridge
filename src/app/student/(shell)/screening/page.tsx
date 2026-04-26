@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import { Button, Card, Text } from "@/components/ui";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "motion/react";
 
 const quizzes: Record<string, { title: string; questions: string[] }> = {
   'PHQ-9': {

@@ -261,7 +261,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
 
               {/* Booking type selector */}
               <div className="mt-4 grid grid-cols-2 gap-3">
-                {bookingTypes.map((type, index) => {
+                {bookingTypes.map((type) => {
                   const typeKey = type.label.toLowerCase().split(" ")[0] as BookingType;
                   return (
                     <div
@@ -372,7 +372,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                       const m = String(date.getMonth() + 1).padStart(2, '0');
                       const d = String(date.getDate()).padStart(2, '0');
                       return s.counselor_id === selectedCounselorId && `${y}-${m}-${d}` === selectedDate;
-                    }).map((slot, index) => (
+                    }).map((slot) => (
                       <button
                         key={slot.id}
                         

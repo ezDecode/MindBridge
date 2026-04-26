@@ -34,6 +34,10 @@ export async function GET(request: Request) {
       .select('id, name, institution')
       .eq('role', 'counselor')
 
+    if (counselorErr) {
+      console.error('Failed to fetch counselors:', counselorErr)
+    }
+
     // Get available slots - Use admin client to bypass RLS
     let slotsQuery = adminSupabase
       .from('counselor_slots')

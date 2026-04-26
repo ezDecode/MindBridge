@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Icon } from "@iconify/react";
 import { useToast } from "@/components/ui/Toast";
 import { Button, Card, Text } from "@/components/ui";

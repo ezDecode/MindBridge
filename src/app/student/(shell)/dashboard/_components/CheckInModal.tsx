@@ -137,7 +137,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
 
            {/* Mood emoji selector */}
            <div className="mt-6 grid grid-cols-5 gap-3">
-             {moodOptions.map((option, index) => (
+             {moodOptions.map((option) => (
                <button
                  key={option.score}
                  
