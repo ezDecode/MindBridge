@@ -73,7 +73,7 @@ export function ResourceCard({ resource, className = "", style }: ResourceCardPr
           </svg>
         </div>
       </div>
-      <div className="absolute bottom-2.5 right-2.5 bg-black/80 text-white text-[10px] tabular-nums font-bold px-2 py-0.5 rounded-sm backdrop-blur-md tracking-wider">
+      <div className="absolute bottom-2.5 right-2.5 bg-black/80 text-white text-base tabular-nums font-bold px-2 py-0.5 rounded-sm backdrop-blur-md tracking-wider">
         {resource.duration}
       </div>
     </div>
@@ -81,7 +81,7 @@ export function ResourceCard({ resource, className = "", style }: ResourceCardPr
 
   <div className="flex items-center gap-2.5 mb-3">
     <span className={cn(
-      "text-[9px] font-medium px-2 py-0.5 rounded border ",
+      "text-base font-medium px-2 py-0.5 rounded border ",
       isYouTube 
         ? "bg-danger/10 text-danger border-danger/20" 
         : "bg-primary/10 text-primary border-primary/20"
@@ -89,7 +89,7 @@ export function ResourceCard({ resource, className = "", style }: ResourceCardPr
       {resource.type}
     </span>
     {!isYouTube && (
-      <span className="text-[10px] font-medium text-text-dim tabular-nums">
+      <span className="text-base font-medium text-text-dim tabular-nums">
         {resource.duration}
       </span>
     )}
@@ -128,7 +128,7 @@ export function ResourceSection({
  {title}
  </Text>
  {description && (
- <Text as="p" color="secondary" className="mt-1 text-sm leading-relaxed max-w-[60ch]">
+ <Text as="p" color="secondary" className="mt-1 text-[1.0625rem] leading-relaxed max-w-[60ch]">
  {description}
  </Text>
  )}

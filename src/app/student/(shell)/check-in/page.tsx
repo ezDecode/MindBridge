@@ -89,7 +89,7 @@ export default function MoodTrackerPage() {
             <div className="flex items-center justify-between mb-10">
               <div>
                 <Text as="h3" variant="h4" weight="semibold">Daily Check-in</Text>
-                <p className="text-text-dim text-[10px] font-medium mt-1">Consistency build clarity</p>
+                <p className="text-text-dim text-base font-medium mt-1">Consistency build clarity</p>
               </div>
               <div className="badge badge-primary bg-primary/10 text-primary border-primary/20 flex items-center gap-2 px-3">
                 <Icon icon="tabler:flame" className="animate-pulse" />
@@ -97,7 +97,7 @@ export default function MoodTrackerPage() {
               </div>
             </div>
 
-            <Text weight="semibold" className="text-white text-sm mb-6 block">How are you feeling right now?</Text>
+            <Text weight="semibold" className="text-white text-[1.0625rem] mb-6 block">How are you feeling right now?</Text>
             
             <div className="grid grid-cols-5 gap-3 mb-10">
               {moodItems.map(m => (
@@ -111,23 +111,23 @@ export default function MoodTrackerPage() {
                       : "bg-background border-border hover:border-white/10 hover:bg-white/[0.02]"
                   )}
                 >
-                  <Icon icon={m.icon} className={cn("text-3xl transition-transform", selectedMood === m.val ? cn("scale-110", m.color) : "text-text-dim group-hover:text-text-muted")} />
+                  <Icon icon={m.icon} className={cn("text-2xl transition-transform", selectedMood === m.val ? cn("scale-110", m.color) : "text-text-dim group-hover:text-text-muted")} />
                   <span className={cn(
-                    "text-[10px] font-medium ",
+                    "text-base font-medium ",
                     selectedMood === m.val ? "text-white" : "text-text-dim group-hover:text-text-muted"
                   )}>{m.label}</span>
                 </button>
               ))}
             </div>
 
-            <Text weight="semibold" className="text-white text-sm mb-4 block">What&apos;s on your mind?</Text>
+            <Text weight="semibold" className="text-white text-[1.0625rem] mb-4 block">What&apos;s on your mind?</Text>
             <div className="flex flex-wrap gap-2 mb-10">
               {tags.map(tag => (
                 <button 
                   key={tag}
                   onClick={() => toggleTag(tag)}
                   className={cn(
-                    "px-3 py-1.5 rounded-md text-[10px] font-medium border transition-all",
+                    "px-3 py-1.5 rounded-md text-base font-medium border transition-all",
                     selectedTags.includes(tag)
                       ? "bg-primary/10 border-primary text-primary"
                       : "bg-background border-border text-text-muted hover:border-white/20 hover:text-white"
@@ -139,9 +139,9 @@ export default function MoodTrackerPage() {
             </div>
 
             <div className="space-y-4 mb-10">
-              <Text weight="semibold" className="text-white text-sm block">Add a note (optional)</Text>
+              <Text weight="semibold" className="text-white text-[1.0625rem] block">Add a note (optional)</Text>
               <textarea 
-                className="w-full min-h-[120px] bg-background border border-border rounded-md px-4 py-3 text-sm text-white placeholder:text-text-dim focus:border-white/20 transition-all outline-none resize-none leading-relaxed" 
+                className="w-full min-h-[120px] bg-background border border-border rounded-md px-4 py-3 text-[1.0625rem] text-white placeholder:text-text-dim focus:border-white/20 transition-all outline-none resize-none leading-relaxed" 
                 placeholder="What's causing these feelings..."
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
@@ -149,7 +149,7 @@ export default function MoodTrackerPage() {
             </div>
 
             <Button onClick={saveMood} size="lg" className="w-full">
-              Log Entry <span className="text-[10px] font-medium opacity-60 ml-2 ">+10 XP</span>
+              Log Entry <span className="text-base font-medium opacity-60 ml-2 ">+10 XP</span>
             </Button>
           </Card>
         </div>
@@ -165,15 +165,15 @@ export default function MoodTrackerPage() {
             <div className="grid grid-cols-3 gap-4">
               <div className="bg-white/[0.02] border border-white/5 p-4 rounded-lg text-center">
                 <Text weight="bold" className="text-2xl text-white tabular-nums leading-none mb-1">{monthlyAvg}</Text>
-                <Text variant="small" className="text-[9px] font-medium text-text-dim ">Average</Text>
+                <Text variant="small" className="text-base font-medium text-text-dim ">Average</Text>
               </div>
               <div className="bg-white/[0.02] border border-white/5 p-4 rounded-lg text-center">
                 <Text weight="bold" className="text-2xl text-white tabular-nums leading-none mb-1">{moodHistory.length}</Text>
-                <Text variant="small" className="text-[9px] font-medium text-text-dim ">Logged</Text>
+                <Text variant="small" className="text-base font-medium text-text-dim ">Logged</Text>
               </div>
               <div className="bg-white/[0.02] border border-white/5 p-4 rounded-lg text-center">
                 <Text weight="bold" className="text-2xl text-white tabular-nums leading-none mb-1">{streak}</Text>
-                <Text variant="small" className="text-[9px] font-medium text-text-dim ">Streak</Text>
+                <Text variant="small" className="text-base font-medium text-text-dim ">Streak</Text>
               </div>
             </div>
           </Card>
@@ -181,7 +181,7 @@ export default function MoodTrackerPage() {
           <Card padding="md" className="bg-surface border-border">
             <div className="flex items-center justify-between mb-10 px-1">
               <Text as="h3" variant="small" weight="medium" className="text-text-dim ">30-Day Trend</Text>
-              <p className="text-[9px] font-medium text-success flex items-center gap-1">
+              <p className="text-base font-medium text-success flex items-center gap-1">
                 <Icon icon="tabler:trending-up" /> Improved
               </p>
             </div>
@@ -202,13 +202,13 @@ export default function MoodTrackerPage() {
                 </div>
               ))}
               {moodHistory.length === 0 && (
-                <div className="w-full h-full flex items-center justify-center italic text-text-dim text-xs">No data available</div>
+                <div className="w-full h-full flex items-center justify-center italic text-text-dim text-base">No data available</div>
               )}
             </div>
             
             <div className="flex gap-2 mt-8 flex-wrap">
-              <span className="badge badge-outline border-white/5 bg-white/5 text-[9px] font-medium ">Best day: Thursday</span>
-              <span className="badge badge-outline border-white/5 bg-white/5 text-[9px] font-medium ">Most common: Neutral</span>
+              <span className="badge badge-outline border-white/5 bg-white/5 text-base font-medium ">Best day: Thursday</span>
+              <span className="badge badge-outline border-white/5 bg-white/5 text-base font-medium ">Most common: Neutral</span>
             </div>
           </Card>
         </div>
@@ -218,7 +218,10 @@ export default function MoodTrackerPage() {
       <Card padding="lg" className="bg-surface border-border">
         <div className="flex items-center justify-between mb-10 px-1">
           <Text as="h3" variant="body" weight="semibold" className="text-white">Mood History</Text>
-          <Link href="/student/mood-history" className="text-[10px] font-medium text-text-dim hover:text-white transition-colors ">Export intelligence →</Link>
+          <Link href="/student/mood-history" className="flex items-center justify-center gap-2 text-base font-medium text-text-dim hover:text-white transition-colors ">
+            Export intelligence
+            <Icon icon="tabler:arrow-right" className="text-lg" />
+          </Link>
         </div>
 
         <div className="space-y-3">
@@ -232,25 +235,25 @@ export default function MoodTrackerPage() {
                 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-1">
-                    <Text weight="semibold" className="text-white text-sm">{new Date(entry.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}</Text>
-                    <span className={cn("text-[9px] font-medium ", mood?.color)}>{mood?.label}</span>
+                    <Text weight="semibold" className="text-white text-[1.0625rem]">{new Date(entry.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}</Text>
+                    <span className={cn("text-base font-medium ", mood?.color)}>{mood?.label}</span>
                   </div>
-                  <Text color="secondary" className="text-xs line-clamp-1">{entry.note || "No additional notes"}</Text>
+                  <Text color="secondary" className="text-base line-clamp-1">{entry.note || "No additional notes"}</Text>
                 </div>
 
                 <div className="hidden md:flex items-center gap-4 shrink-0">
                   <div className="w-24 h-1 bg-white/5 rounded-full overflow-hidden">
                     <div className={cn("h-full transition-all", mood?.color.replace('text', 'bg'))} style={{ width: `${(entry.score / 5) * 100}%` }} />
                   </div>
-                  <Text weight="bold" className="text-xs tabular-nums text-white w-6">{entry.score}<span className="text-text-dim">/5</span></Text>
+                  <Text weight="bold" className="text-base tabular-nums text-white w-6">{entry.score}<span className="text-text-dim">/5</span></Text>
                 </div>
               </div>
             );
           })}
           {moodHistory.length === 0 && (
             <div className="p-20 text-center text-text-dim border border-dashed border-white/5 rounded-lg bg-white/[0.01]">
-              <Icon icon="tabler:history-off" className="text-4xl mx-auto mb-4 opacity-10" />
-              <p className="text-sm font-medium italic opacity-60">Your journey hasn&apos;t started yet.</p>
+              <Icon icon="tabler:history-off" className="text-2xl mx-auto mb-4 opacity-10" />
+              <p className="text-[1.0625rem] font-medium italic opacity-60">Your journey hasn&apos;t started yet.</p>
             </div>
           )}
         </div>

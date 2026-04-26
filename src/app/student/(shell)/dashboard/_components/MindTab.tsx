@@ -40,7 +40,7 @@ export function MindTab({ onOpenSidebar, onOpenCheckIn, onOpenQuestionnaire }: M
       <header  className="flex items-center justify-between px-1">
         <div>
           <Text as="h2" variant="h3" weight="semibold" className="tracking-tight text-white">MindSpace</Text>
-          <p className="text-text-dim text-[10px] font-medium tracking-[0.15em] mt-1">Your secure conversational AI companion</p>
+          <p className="text-text-dim text-base font-medium mt-1">Your secure conversational AI companion</p>
         </div>
         <button
           onClick={onOpenSidebar}
@@ -56,10 +56,10 @@ export function MindTab({ onOpenSidebar, onOpenCheckIn, onOpenQuestionnaire }: M
         
         <div className="text-center mb-12 relative z-10">
           <div className="size-16 rounded bg-primary/10 border border-primary/20 text-primary flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-primary/10">
-            <Icon icon="tabler:robot" className="text-3xl" />
+            <Icon icon="tabler:robot" className="text-2xl" />
           </div>
           <Text as="h3" variant="h2" weight="semibold" className="text-white tracking-tight mb-4">How can I support you today?</Text>
-          <Text color="secondary" className="max-w-[45ch] mx-auto text-sm leading-relaxed">
+          <Text color="secondary" className="max-w-[45ch] mx-auto text-[1.0625rem] leading-relaxed">
             I&apos;m here to listen, analyze your thoughts, or just provide a safe space to talk through campus life.
           </Text>
         </div>
@@ -82,7 +82,7 @@ export function MindTab({ onOpenSidebar, onOpenCheckIn, onOpenQuestionnaire }: M
               <button 
                 key={suggest}
                 onClick={() => router.push(`/student/chat?initial=${encodeURIComponent(suggest)}`)}
-                className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-medium text-text-dim hover:bg-white/10 hover:text-white transition-all active:scale-[0.98]"
+                className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-base font-medium text-text-dim hover:bg-white/10 hover:text-white transition-all active:scale-[0.98]"
               >
                 {suggest}
               </button>
@@ -101,8 +101,8 @@ export function MindTab({ onOpenSidebar, onOpenCheckIn, onOpenQuestionnaire }: M
             <Icon icon="tabler:mood-smile" className="text-2xl" />
           </div>
           <div>
-            <Text weight="semibold" className="text-white text-sm mb-1 group-hover:text-primary transition-colors">Daily Check-in</Text>
-            <Text variant="small" className="text-text-dim text-[10px] font-medium ">Track your stability</Text>
+            <Text weight="semibold" className="text-white text-[1.0625rem] mb-1 group-hover:text-primary transition-colors">Daily Check-in</Text>
+            <Text variant="small" className="text-text-dim text-base font-medium ">Track your stability</Text>
           </div>
           <Icon icon="tabler:chevron-right" className="ml-auto text-text-dim opacity-0 group-hover:opacity-100 transition-all" />
         </button>
@@ -115,8 +115,8 @@ export function MindTab({ onOpenSidebar, onOpenCheckIn, onOpenQuestionnaire }: M
             <Icon icon="tabler:bolt" className="text-2xl" />
           </div>
           <div>
-            <Text weight="semibold" className="text-white text-sm mb-1 group-hover:text-secondary transition-colors">Guided Assessment</Text>
-            <Text variant="small" className="text-text-dim text-[10px] font-medium ">PHQ-9 & GAD-7 screening</Text>
+            <Text weight="semibold" className="text-white text-[1.0625rem] mb-1 group-hover:text-secondary transition-colors">Guided Assessment</Text>
+            <Text variant="small" className="text-text-dim text-base font-medium ">PHQ-9 & GAD-7 screening</Text>
           </div>
           <Icon icon="tabler:chevron-right" className="ml-auto text-text-dim opacity-0 group-hover:opacity-100 transition-all" />
         </button>

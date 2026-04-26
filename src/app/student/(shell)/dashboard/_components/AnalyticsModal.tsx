@@ -46,14 +46,14 @@ export function AnalyticsModal({ isOpen, onClose, onGoToDashboard }: AnalyticsMo
  <div className="mt-8 flex w-full flex-col gap-3">
  <Button
  onClick={onGoToDashboard}
- className="!h-12 !w-full !rounded-[14px] !text-sm"
+ className="!h-12 !w-full !rounded-[14px] !text-[1.0625rem]"
  >
  Open dashboard
  </Button>
  <Button
  variant="ghost"
  onClick={onClose}
- className="!h-10 !w-full !rounded-[12px] !text-sm text-[var(--text-secondary)] hover:bg-[var(--surface-default)]"
+ className="!h-10 !w-full !rounded-[12px] !text-[1.0625rem] text-[var(--text-secondary)] hover:bg-[var(--surface-default)]"
  >
  Not now
  </Button>

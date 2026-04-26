@@ -88,7 +88,7 @@ export function ChatInput({
  placeholder={placeholder}
  disabled={disabled || isLoading}
  rows={1}
- className="no-focus-ring max-h-[160px] min-h-[44px] w-full flex-1 resize-none bg-transparent py-2.5 text-sm leading-relaxed text-white placeholder:text-text-dim focus:outline-none disabled:opacity-50 font-medium"
+ className="no-focus-ring max-h-[160px] min-h-[44px] w-full flex-1 resize-none bg-transparent py-2.5 text-[1.0625rem] leading-relaxed text-white placeholder:text-text-dim focus:outline-none disabled:opacity-50 font-medium"
  aria-label="Message input"
  />
  </div>
@@ -162,7 +162,7 @@ export function ChatInput({
  }
  }}
  title={action.prompt}
- className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[10px] font-medium text-text-dim transition-all duration-150 hover:bg-white/5 hover:text-white active:scale-[0.98]"
+ className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-base font-medium text-text-dim transition-all duration-150 hover:bg-white/5 hover:text-white active:scale-[0.98]"
  aria-label={action.prompt}
  >
  <Icon icon={action.icon} className="h-3.5 w-3.5 text-primary" />

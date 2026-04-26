@@ -6,7 +6,8 @@ import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'motion/react'
 import { Icon } from '@iconify/react'
 import { cn } from "@/lib/utils"
-import { getCurrentDemoUser, clearDemoSession } from '@/lib/auth/demo-session'
+import { getCurrentDemoUser } from '@/lib/auth/demo-session'
+import { signOut } from '@/lib/auth/actions'
 
 export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
   const [loading, setLoading] = useState(true)
@@ -25,16 +26,21 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
       if (!user || !user.id) {
         throw new Error("User not available")
       }
-      
-      const { data, error } = await supabase
+
+      // Demo auth is the active auth system; use the current demo profile as source of truth.
+      setName(user.name || '')
+      setInstitution(user.institution || '')
+
+      // Skip browser-side Supabase profile query in demo mode to avoid RLS/session errors.
+      if (user.email.endsWith('.demo')) return
+
+      const { data } = await supabase
         .from('profiles')
-        .select('*')
+        .select('name, institution')
         .eq('id', user.id)
-        .single()
-      
-      if (error) {
-        console.error("Supabase error:", error)
-      } else if (data) {
+        .maybeSingle()
+
+      if (data) {
         setName(data.name || '')
         setInstitution(data.institution || '')
       }
@@ -58,6 +64,13 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
       const user = getCurrentDemoUser()
       if (user) {
         const trimmedName = name.trim()
+
+        if (user.email.endsWith('.demo')) {
+          setMessage({ text: 'Settings saved successfully.', type: 'success' })
+          if (onSuccess) setTimeout(onSuccess, 1500)
+          return
+        }
+
         const { error } = await supabase
           .from('profiles')
           .update({ name: trimmedName, institution })
@@ -80,7 +93,7 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
   }
 
   const handleSignOut = async () => {
-    clearDemoSession()
+    await signOut()
     window.location.href = '/login'
   }
 
@@ -101,7 +114,7 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
     <div className="space-y-8 p-1">
       <section className="space-y-6">
         <div className="space-y-2">
-          <Text variant="small" weight="medium" className=" text-text-dim text-[10px]">
+          <Text variant="small" weight="medium" className=" text-text-dim typo-ui">
             Display Name
           </Text>
           <Input 
@@ -114,7 +127,7 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
         </div>
 
         <div className="space-y-2">
-          <Text variant="small" weight="medium" className=" text-text-dim text-[10px]">
+          <Text variant="small" weight="medium" className=" text-text-dim typo-ui">
             Institution
           </Text>
           <Input 
@@ -130,7 +143,7 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
       <div className="flex items-center justify-between pt-6 border-t border-white/5">
         <button 
           onClick={handleSignOut}
-          className="flex items-center gap-2 text-xs font-medium text-danger hover:opacity-80 transition-opacity "
+          className="flex items-center gap-2 typo-ui font-medium text-danger hover:opacity-80 transition-opacity "
         >
           <Icon icon="tabler:logout-2" className="h-4 w-4" />
           Sign Out
@@ -153,7 +166,7 @@ export function SettingsForm({ onSuccess }: { onSuccess?: () => void }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             className={cn(
-              "p-4 rounded-md flex items-center gap-3 text-[11px] font-medium border",
+              "p-4 rounded-md flex items-center gap-3 typo-ui font-medium border",
               message.type === 'success' 
               ? "bg-success/5 text-success border-success/20" 
               : "bg-danger/5 text-danger border-danger/20"

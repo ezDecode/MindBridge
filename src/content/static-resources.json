@@ -1,65 +1,122 @@
 [
   {
-    "title": "5-Minute Guided Breathing for Anxiety Relief",
-    "url": "https://www.youtube.com/watch?v=tybOi4hjZFQ",
-    "type": "YouTube",
+    "title": "How to make stress your friend",
+    "url": "https://www.youtube.com/watch?v=RcGyVTAoXEU",
+    "category": "Video",
+    "duration": "14 min",
+    "source": "TED · Kelly McGonigal",
+    "description": "A health psychologist on why rethinking stress can transform how your body responds to pressure."
+  },
+  {
+    "title": "5-Minute Meditation You Can Do Anywhere",
+    "url": "https://www.youtube.com/watch?v=inpok4MKVLM",
+    "category": "Video",
     "duration": "5 min",
-    "description": "Simple breathing exercises to calm racing thoughts and reduce anxiety."
+    "source": "Goodful",
+    "description": "A short, guided meditation to reset your mind between classes, before exams, or whenever it gets noisy."
+  },
+  {
+    "title": "Guided Meditation for Anxiety & Stress",
+    "url": "https://www.youtube.com/watch?v=O-6f5wQXSu8",
+    "category": "Video",
+    "duration": "10 min",
+    "source": "The Mindful Movement",
+    "description": "A calming guided practice to ease anxious thoughts and bring you back into your body."
   },
   {
     "title": "Sleep Stories for College Students",
-    "url": "https://www.youtube.com/watch?v=lFcSrYw-ARY", 
-    "type": "YouTube",
+    "url": "https://www.youtube.com/watch?v=lFcSrYw-ARY",
+    "category": "Video",
     "duration": "20 min",
-    "description": "Peaceful bedtime stories designed to help you drift off to sleep."
-  },
-  {
-    "title": "Study Break Meditation",
-    "url": "https://www.youtube.com/watch?v=4EaMJOo1jks",
-    "type": "YouTube", 
-    "duration": "10 min",
-    "description": "Quick reset between study sessions to clear your mind and refocus."
+    "source": "YouTube",
+    "description": "Peaceful bedtime stories designed to help you drift off to sleep on busy semester nights."
   },
   {
     "title": "Exam Stress Relief Meditation",
     "url": "https://www.youtube.com/watch?v=YRPh_GaiL8s",
-    "type": "YouTube",
-    "duration": "12 min", 
-    "description": "Calm your nerves before and after exams with this guided meditation."
+    "category": "Video",
+    "duration": "12 min",
+    "source": "YouTube",
+    "description": "Calm your nerves before and after exams with this short guided meditation."
   },
   {
-    "title": "Body Scan for Deep Relaxation",
-    "url": "https://www.youtube.com/watch?v=ihO02wUzgkc",
-    "type": "Audio",
-    "duration": "15 min",
-    "description": "Progressive muscle relaxation to release physical tension and stress."
+    "title": "Tips for getting better sleep",
+    "url": "https://www.helpguide.org/articles/sleep/getting-better-sleep.htm",
+    "category": "Article",
+    "duration": "8 min read",
+    "source": "HelpGuide",
+    "description": "Evidence-backed habits that improve the quality and depth of your sleep — beyond just more hours."
   },
   {
-    "title": "Mindful Walking for Mental Clarity",
-    "url": "https://www.youtube.com/watch?v=eUFTiuqcNPY",
-    "type": "YouTube", 
-    "duration": "8 min",
-    "description": "Transform your daily walk into a mindfulness practice."
+    "title": "Student mental health: tips for coping",
+    "url": "https://www.mind.org.uk/information-support/tips-for-everyday-living/student-life/student-mental-health/",
+    "category": "Article",
+    "duration": "6 min read",
+    "source": "Mind UK",
+    "description": "Practical advice for managing low mood, loneliness, and pressure during student life."
   },
   {
-    "title": "Quick Morning Motivation",
-    "url": "https://www.youtube.com/watch?v=mgmVOuLgFB0",
-    "type": "Audio",
+    "title": "What is mindfulness? A beginner's guide",
+    "url": "https://www.mindful.org/what-is-mindfulness/",
+    "category": "Article",
+    "duration": "5 min read",
+    "source": "Mindful.org",
+    "description": "A clear, friendly introduction to what mindfulness actually is — and how to start practising in everyday life."
+  },
+  {
+    "title": "Beat exam stress: a practical guide",
+    "url": "https://www.nhs.uk/mental-health/children-and-young-adults/advice-for-parents/help-your-child-beat-exam-stress/",
+    "category": "Article",
+    "duration": "5 min read",
+    "source": "NHS",
+    "description": "Simple, science-backed strategies for managing pressure during exam season."
+  },
+  {
+    "title": "Coping with anxiety and panic",
+    "url": "https://www.helpguide.org/articles/anxiety/anxiety-disorders-and-anxiety-attacks.htm",
+    "category": "Article",
+    "duration": "10 min read",
+    "source": "HelpGuide",
+    "description": "Recognise the signs of anxiety and learn techniques to calm the nervous system in the moment."
+  },
+  {
+    "title": "4-7-8 breathing: a calming exercise",
+    "url": "https://www.healthline.com/health/4-7-8-breathing",
+    "category": "Exercise",
+    "duration": "4 min",
+    "source": "Healthline",
+    "description": "A simple breath pattern (inhale 4, hold 7, exhale 8) that can help you fall asleep or settle a racing mind."
+  },
+  {
+    "title": "5-4-3-2-1 grounding exercise",
+    "url": "https://www.healthline.com/health/grounding-techniques",
+    "category": "Exercise",
     "duration": "3 min",
-    "description": "Start your day with positive affirmations and gentle encouragement."
+    "source": "Healthline",
+    "description": "A sensory grounding technique to interrupt anxiety, panic, or overwhelming thoughts."
   },
   {
-    "title": "Rain Sounds for Focus",
-    "url": "https://www.youtube.com/watch?v=mPZkdNFkNps", 
-    "type": "Audio",
-    "duration": "60 min",
-    "description": "Natural rain sounds to help you concentrate while studying or working."
+    "title": "Progressive muscle relaxation",
+    "url": "https://www.anxietycanada.com/articles/how-to-do-progressive-muscle-relaxation/",
+    "category": "Exercise",
+    "duration": "10 min",
+    "source": "Anxiety Canada",
+    "description": "Step-by-step guide to releasing physical tension by tensing and relaxing muscle groups in sequence."
   },
   {
-    "title": "Gratitude Practice for Better Mental Health",
-    "url": "https://www.youtube.com/watch?v=WPPPFqsECz0",
-    "type": "YouTube",
-    "duration": "7 min",
-    "description": "Daily gratitude exercises to shift your mindset and improve wellbeing."
+    "title": "Body scan meditation",
+    "url": "https://www.youtube.com/watch?v=ihO02wUzgkc",
+    "category": "Exercise",
+    "duration": "15 min",
+    "source": "YouTube",
+    "description": "A guided body-scan practice to release stress that has built up across the day."
+  },
+  {
+    "title": "Box breathing technique",
+    "url": "https://www.youtube.com/watch?v=tEmt1Znux58",
+    "category": "Exercise",
+    "duration": "4 min",
+    "source": "YouTube",
+    "description": "The breathing pattern used by Navy SEALs to stay calm under pressure — works for exam stress too."
   }
 ]

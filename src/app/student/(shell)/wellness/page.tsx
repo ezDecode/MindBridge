@@ -60,24 +60,19 @@ export default function WellnessPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-10 pb-20">
-      <div>
-        <Text as="h2" variant="h3" weight="semibold" className="tracking-tight">Wellness Center</Text>
-        <p className="text-text-dim text-xs font-medium tracking-[0.15em] mt-1">Interactive activities & tools</p>
-      </div>
-
       <Card padding="lg" className="bg-surface border-border">
         <div className="flex items-center gap-6">
           <div className="h-16 w-16 rounded bg-primary/10 border border-primary/20 flex flex-col items-center justify-center text-primary">
-            <span className="text-xs font-medium ">Level</span>
-            <span className="text-2xl font-bold leading-none tabular-nums">3</span>
+            <span className="typo-base font-medium ">Level</span>
+            <span className="typo-metric font-bold leading-none tabular-nums">3</span>
           </div>
           <div className="flex-1">
             <div className="flex justify-between items-end mb-4">
               <div>
-                <Text weight="semibold" className="text-white text-base">Wellness Warrior</Text>
-                <Text variant="small" className="text-text-dim text-[10px] font-medium mt-1">Journey to level 4</Text>
+                <Text weight="semibold" className="text-white typo-base">Wellness Warrior</Text>
+                <Text variant="small" className="text-text-dim typo-base font-medium mt-1">Journey to level 4</Text>
               </div>
-              <Text weight="bold" className="text-sm tabular-nums text-white">240 <span className="text-text-dim">/ 300 XP</span></Text>
+              <Text weight="bold" className="typo-subtitle tabular-nums text-white">240 <span className="text-text-dim">/ 300 XP</span></Text>
             </div>
             <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
               <motion.div 
@@ -87,7 +82,7 @@ export default function WellnessPage() {
                 className="h-full bg-primary" 
               />
             </div>
-            <p className="text-[10px] font-medium text-text-dim mt-3">60 XP more to level up · Keep going!</p>
+            <p className="typo-base font-medium text-text-dim mt-3">60 XP more to level up · Keep going!</p>
           </div>
         </div>
       </Card>
@@ -110,11 +105,11 @@ export default function WellnessPage() {
             )}
           >
             <div className={cn("size-10 rounded-md bg-white/5 flex items-center justify-center mb-6 transition-colors", act.color)}>
-              <Icon icon={act.icon} className="text-2xl" />
+              <Icon icon={act.icon} className="typo-metric" />
             </div>
-            <Text weight="semibold" className="text-white text-sm mb-1">{act.label}</Text>
-            <Text variant="small" className="text-text-dim text-[10px] font-medium ">{act.sub}</Text>
-            <div className="absolute top-4 right-4 badge badge-primary bg-primary/10 text-primary border-primary/20 text-[9px]">
+            <Text weight="semibold" className="text-white typo-subtitle mb-1">{act.label}</Text>
+            <Text variant="small" className="text-text-dim typo-base font-medium ">{act.sub}</Text>
+            <div className="absolute top-4 right-4 badge badge-primary bg-primary/10 text-primary border-primary/20 typo-base">
               {act.xp} XP
             </div>
           </button>
@@ -135,14 +130,14 @@ export default function WellnessPage() {
                 breathRunning ? "border-primary scale-110 bg-primary/5" : "border-white/5 scale-100 bg-white/5"
               )}>
                 <div className="text-center">
-                  <Text weight="bold" className="text-white text-xl">
+                  <Text weight="bold" className="text-white typo-heading">
                     {breathRunning ? phases[breathPhase].label : "Ready?"}
                   </Text>
                   {!breathRunning && <Text variant="small" className="text-text-dim mt-2">Press Start</Text>}
                 </div>
               </div>
 
-              <Text variant="small" className="text-text-dim text-[10px] font-medium tracking-[0.2em] mt-12 mb-10">
+              <Text variant="small" className="text-text-dim typo-base font-medium mt-12 mb-10">
                 Inhale 4s · Hold 7s · Exhale 8s
               </Text>
 
@@ -181,8 +176,8 @@ export default function WellnessPage() {
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-4xl font-bold tabular-nums text-white">{formatTime(pomSeconds)}</span>
-                  <span className="text-[9px] font-medium text-text-dim mt-1">Focus Time</span>
+                  <span className="typo-metric font-bold tabular-nums text-white">{formatTime(pomSeconds)}</span>
+                  <span className="typo-base font-medium text-text-dim mt-1">Focus Time</span>
                 </div>
               </div>
 
@@ -206,11 +201,11 @@ export default function WellnessPage() {
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-3">
             <div className="size-8 rounded bg-primary/10 text-primary flex items-center justify-center border border-primary/20">
-              <Icon icon="tabler:target" className="text-xl" />
+              <Icon icon="tabler:target" className="typo-heading" />
             </div>
             <Text as="h3" variant="body" weight="semibold" className="text-white">Mindfulness Challenge</Text>
           </div>
-          <span className="badge badge-primary bg-primary/10 text-primary border-primary/20 tracking-[0.2em] text-[9px]">Day 4 of 7</span>
+          <span className="badge badge-primary bg-primary/10 text-primary border-primary/20 typo-base">Day 4 of 7</span>
         </div>
 
         <div className="grid grid-cols-7 gap-2 mb-10">
@@ -225,9 +220,9 @@ export default function WellnessPage() {
               )}
             >
               <div className="flex justify-center mb-1">
-                <Icon icon={d < 4 ? "tabler:check" : d === 4 ? "tabler:target" : "tabler:circle"} className="text-sm" />
+                <Icon icon={d < 4 ? "tabler:check" : d === 4 ? "tabler:target" : "tabler:circle"} className="typo-subtitle" />
               </div>
-              <div className="text-[9px] font-medium ">Day {d}</div>
+              <div className="typo-base font-medium ">Day {d}</div>
             </div>
           ))}
         </div>
@@ -241,7 +236,7 @@ export default function WellnessPage() {
               <Icon icon="tabler:pin" />
               Today&apos;s Task
             </Text>
-            <Text color="secondary" className="text-sm leading-relaxed mb-6 max-w-[60ch]">
+            <Text color="secondary" className="typo-subtitle leading-relaxed mb-6 max-w-[60ch]">
               Spend 5 minutes in silent observation. Sit comfortably, close your eyes, and simply notice your thoughts without judging them.
             </Text>
             <Button size="md" onClick={() => showToast("Day 4 completed! +20 XP", "success")}>

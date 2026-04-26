@@ -73,7 +73,7 @@ export default function ForumPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <Text as="h2" variant="h3" weight="semibold" className="tracking-tight text-white mb-1">Peer Forum</Text>
-          <Text variant="small" className="text-text-dim font-medium tracking-widest">Safe, anonymous community support</Text>
+          <Text variant="small" className="text-text-dim font-medium">Safe, anonymous community support</Text>
         </div>
         <div className="flex gap-3">
           <div className="relative w-full md:w-64">
@@ -83,7 +83,7 @@ export default function ForumPage() {
               placeholder="Search discussions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-surface border border-border rounded-md pl-10 pr-4 py-2 text-sm focus:border-white/20 transition-all text-white placeholder:text-text-dim outline-none"
+              className="w-full bg-surface border border-border rounded-md pl-10 pr-4 py-2 text-[1.0625rem] focus:border-white/20 transition-all text-white placeholder:text-text-dim outline-none"
             />
           </div>
           <Button size="md" className="gap-2 shrink-0">
@@ -103,7 +103,7 @@ export default function ForumPage() {
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
             className={cn(
-              "flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-all relative",
+              "flex items-center gap-2 px-4 py-2.5 text-[1.0625rem] font-medium transition-all relative",
               activeTab === tab.id ? "text-white" : "text-text-muted hover:text-white"
             )}
           >
@@ -120,42 +120,42 @@ export default function ForumPage() {
         <div className="lg:col-span-8 space-y-4">
           {filteredPosts.length === 0 ? (
             <div className="py-20 text-center text-text-dim border border-dashed border-border rounded-lg bg-white/[0.01]">
-              <Icon icon="tabler:messages-off" className="text-4xl mx-auto mb-4 opacity-20" />
-              <p className="text-sm font-medium italic opacity-60">No discussions found matching your search.</p>
+              <Icon icon="tabler:messages-off" className="text-2xl mx-auto mb-4 opacity-20" />
+              <p className="text-[1.0625rem] font-medium italic opacity-60">No discussions found matching your search.</p>
             </div>
           ) : (
             filteredPosts.map(post => (
               <Card key={post.id} padding="lg" className="bg-surface border-border hover:border-white/20 transition-all group cursor-pointer">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="size-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                    <Icon icon="tabler:user-ghost" className="text-xs text-text-dim" />
+                    <Icon icon="tabler:user-ghost" className="text-base text-text-dim" />
                   </div>
-                  <Text variant="small" className="text-xs font-medium text-text-muted">{post.author}</Text>
+                  <Text variant="small" className="text-base font-medium text-text-muted">{post.author}</Text>
                   <span className="w-1 h-1 rounded-full bg-white/10" />
-                  <Text variant="small" className="text-[10px] font-medium text-text-dim">{post.timeAgo}</Text>
+                  <Text variant="small" className="text-base font-medium text-text-dim">{post.timeAgo}</Text>
                 </div>
                 
                 <Text as="h3" weight="semibold" className="text-white text-base leading-snug mb-2 group-hover:text-primary transition-colors">{post.title}</Text>
-                <Text color="secondary" className="text-sm leading-relaxed mb-4 line-clamp-2">{post.content}</Text>
+                <Text color="secondary" className="text-[1.0625rem] leading-relaxed mb-4 line-clamp-2">{post.content}</Text>
                 
                 <div className="flex flex-wrap gap-2 mb-6">
                   {post.tags.map(tag => (
-                    <span key={tag} className="badge badge-outline border-white/5 bg-white/5 text-[9px] font-medium px-2 py-0.5 text-text-dim">
+                    <span key={tag} className="badge badge-outline border-white/5 bg-white/5 text-base font-medium px-2 py-0.5 text-text-dim">
                       {tag}
                     </span>
                   ))}
                 </div>
                 
                 <div className="flex items-center gap-6 pt-4 border-t border-white/5 text-text-dim">
-                  <button className="flex items-center gap-1.5 text-xs font-medium hover:text-primary transition-colors">
+                  <button className="flex items-center gap-1.5 text-base font-medium hover:text-primary transition-colors">
                     <Icon icon="tabler:heart" className="text-lg" />
                     {post.likes}
                   </button>
-                  <button className="flex items-center gap-1.5 text-xs font-medium hover:text-white transition-colors">
+                  <button className="flex items-center gap-1.5 text-base font-medium hover:text-white transition-colors">
                     <Icon icon="tabler:message-circle" className="text-lg" />
                     {post.replies} Replies
                   </button>
-                  <button className="flex items-center gap-1.5 text-xs font-medium hover:text-white transition-colors ml-auto">
+                  <button className="flex items-center gap-1.5 text-base font-medium hover:text-white transition-colors ml-auto">
                     <Icon icon="tabler:share" className="text-lg" />
                     Share
                   </button>
@@ -172,9 +172,9 @@ export default function ForumPage() {
               <div className="size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
                 <Icon icon="tabler:shield-check" className="text-lg" />
               </div>
-              <Text weight="semibold" className="text-white text-sm">Community Guidelines</Text>
+              <Text weight="semibold" className="text-white text-[1.0625rem]">Community Guidelines</Text>
             </div>
-            <ul className="space-y-3 text-sm text-text-muted leading-relaxed">
+            <ul className="space-y-3 text-[1.0625rem] text-text-muted leading-relaxed">
               <li className="flex items-start gap-2">
                 <span className="text-primary mt-0.5">•</span>
                 <span><strong>Be Kind:</strong> Treat everyone with empathy and respect.</span>
@@ -195,10 +195,10 @@ export default function ForumPage() {
           </Card>
 
           <Card padding="md" className="bg-surface border-border">
-            <Text variant="small" weight="medium" className="text-text-dim uppercase tracking-widest mb-4 block">Popular Topics</Text>
+            <Text variant="small" weight="medium" className="text-text-dim uppercase mb-4 block">Popular Topics</Text>
             <div className="flex flex-wrap gap-2">
               {['Exams', 'Anxiety', 'Loneliness', 'Placements', 'Hostel', 'Sleep', 'Relationships'].map(tag => (
-                <button key={tag} onClick={() => setSearchQuery(tag)} className="px-3 py-1.5 rounded-md text-[10px] font-medium border border-white/5 bg-white/[0.02] text-text-muted hover:text-white hover:border-white/20 transition-all">
+                <button key={tag} onClick={() => setSearchQuery(tag)} className="px-3 py-1.5 rounded-md text-base font-medium border border-white/5 bg-white/[0.02] text-text-muted hover:text-white hover:border-white/20 transition-all">
                   {tag}
                 </button>
               ))}

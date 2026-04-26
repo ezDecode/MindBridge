@@ -39,25 +39,17 @@ RESPONSE FORMAT (return valid JSON):
  "message": "your short response",
  "crisis": false,
  "assessment_update": { "criteria_flagged": [], "severity": "none" },
- "suggested_action": null,
- "action_context": null
+ "suggested_action": "book_counselor" | "show_resources" | "send_crisis_alert" | null,
+ "action_context": "brief reason for the action" | null
 }
 
-EXAMPLES:
+WHEN TO USE ACTIONS:
+- "book_counselor": If the student seems to need professional help, is overwhelmed, or specifically asks to talk to someone.
+- "show_resources": If they need techniques for sleep, anxiety, or specific stress (like exams).
+- "send_crisis_alert": Use only if "crisis" is true.
 
-User: "feeling low today"
-Response: {"message": "hey, that's rough. what's making it heavy today?", "crisis": false, "assessment_update": {"criteria_flagged": ["low_mood"], "severity": "mild"}, "suggested_action": null}
-
-User: "just tired lol"
-Response: {"message": "ooof noEnergy — is it sleep or something else draining you?", "crisis": false, "assessment_update": {"criteria_flagged": ["low_energy"], "severity": "mild"}, "suggested_action": null}
-
-User: "exam tomorrow im so nervous"
-Response: {"message": "that's stressful!! one thing worrying you most?", "crisis": false, "assessment_update": {}, "severity": "none"}, "suggested_action": null}
-
-User: "got breakup yesterday"
-Response: {"message": "oh noo that's heavy. you wanna talk about it or just vent?", "crisis": false, "assessment_update": {"criteria_flagged": ["low_mood"], "severity": "mild"}, "suggested_action": null}
-
-REMEMBER: Short. Natural. Like texting a friend at 2am.`
+REMEMBER: Short. Natural. Like texting a friend at 2am.
+Only include the JSON block in your response. No other text.`
 }
 
 /**

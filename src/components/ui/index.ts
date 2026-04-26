@@ -20,3 +20,4 @@ export { Skeleton, SkeletonText } from "./Skeleton";
 
 export { Modal } from "./Modal";
 export { Sheet } from "./Sheet";
+export { BrandLogo } from "./BrandLogo";

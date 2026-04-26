@@ -43,10 +43,6 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
     })
   }, [filteredLogs])
 
-  const pathD = chartData.length > 0 
-    ? `M ${chartData.map(p => `${p.x},${p.y}`).join(' L ')}` 
-    : ''
-
   const smoothPathD = chartData.length > 0
     ? chartData.reduce((acc, point, i, a) => {
         if (i === 0) return `M ${point.x},${point.y}`
@@ -78,7 +74,7 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
               key={t.id}
               onClick={() => setTimeframe(t.id as any)}
               className={cn(
-                "px-4 py-1.5 rounded-md text-xs font-medium transition-all",
+                "px-4 py-1.5 rounded-md text-base font-medium transition-all",
                 timeframe === t.id 
                   ? "bg-white/10 text-white shadow-sm" 
                   : "text-text-muted hover:text-white hover:bg-white/5"
@@ -101,7 +97,7 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
           <div className="flex gap-4">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-primary/20 border border-primary" />
-              <span className="text-xs font-medium text-text-muted ">Score</span>
+              <span className="text-base font-medium text-text-muted ">Score</span>
             </div>
           </div>
         </div>
@@ -110,8 +106,8 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
         <div className="h-64 w-full relative z-10 group">
           {chartData.length === 0 ? (
             <div className="w-full h-full flex flex-col items-center justify-center text-text-dim border border-dashed border-white/10 rounded-lg">
-              <Icon icon="tabler:chart-line-slash" className="text-3xl mb-2 opacity-50" />
-              <span className="text-xs font-medium">No data available</span>
+              <Icon icon="tabler:chart-line-slash" className="text-2xl mb-2 opacity-50" />
+              <span className="text-base font-medium">No data available</span>
             </div>
           ) : (
             <div className="w-full h-full relative">
@@ -119,7 +115,7 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
               <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
                 {[5, 4, 3, 2, 1].map(score => (
                   <div key={score} className="border-b border-white/5 w-full flex-1 relative flex items-start">
-                    <span className="absolute -left-6 -top-2 text-[10px] text-text-dim font-mono">{score}</span>
+                    <span className="absolute -left-6 -top-2 text-base text-text-dim font-mono">{score}</span>
                   </div>
                 ))}
               </div>
@@ -194,7 +190,7 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
                 </Text>
               </div>
               <div>
-                <Text weight="semibold" className="text-white text-sm">
+                <Text weight="semibold" className="text-white text-[1.0625rem]">
                   {new Date(log.logged_at).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} at {new Date(log.logged_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                 </Text>
                 {log.note && (
@@ -208,6 +204,14 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
           {filteredLogs.length === 0 && (
             <div className="col-span-full py-12 text-center text-text-dim border border-dashed border-border rounded-lg">
               No logs found for this timeframe.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+          No logs found for this timeframe.
             </div>
           )}
         </div>

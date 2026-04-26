@@ -1,9 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { getClient } from '@/lib/supabase/client'
-import { resolveProfileDisplayName } from '@/lib/profile-name'
 import { generateWeekMoodHistory, formatSessionTime } from './_components/types'
 import type { DashboardData } from './_components/types'
 import Link from 'next/link'
@@ -16,29 +13,12 @@ import { Button, Text } from "@/components/ui"
 
 import { getCurrentDemoUser } from '@/lib/auth/demo-session'
 
-const container = {
-  initial: { opacity: 0 },
-  animate: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2
-    }
-  }
-}
-
-const item = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0, transition: { type: 'spring' as const, duration: 0.6, bounce: 0 } }
-}
-
 export default function StudentDashboardPage() {
     return <StudentDashboardPageContent />
 }
 
 function StudentDashboardPageContent() {
     const { showToast } = useToast()
-    const router = useRouter()
     const [initError, setInitError] = useState<string | null>(null)
     const [data, setData] = useState<DashboardData | null>(null)
     const [userName, setUserName] = useState('')
@@ -151,10 +131,10 @@ function StudentDashboardPageContent() {
     if (initError) return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
             <div className="p-8 border border-red-500 bg-red-500/10 text-red-500 rounded-lg max-w-lg w-full text-center">
-                <Icon icon="tabler:alert-triangle" className="text-4xl mx-auto mb-4" />
+                <Icon icon="tabler:alert-triangle" className="text-2xl mx-auto mb-4" />
                 <h3 className="font-bold text-lg mb-2">Failed to load dashboard</h3>
-                <p className="text-sm font-mono break-all">{initError}</p>
-                <button onClick={() => window.location.reload()} className="mt-6 px-4 py-2 bg-red-500 text-white rounded font-medium text-xs hover:bg-red-600 transition-colors">Reload Page</button>
+                <p className="text-[1.0625rem] font-mono break-all">{initError}</p>
+                <button onClick={() => window.location.reload()} className="mt-6 px-4 py-2 bg-red-500 text-white rounded font-medium typo-base hover:bg-red-600 transition-colors">Reload Page</button>
             </div>
         </div>
     )
@@ -182,44 +162,35 @@ function StudentDashboardPageContent() {
                 className="mx-auto max-w-7xl space-y-12"
             >
                 {/* Hero Header */}
-                <div 
-                    
-                    className="flex flex-col md:flex-row md:items-end justify-between gap-8"
-                >
-                    <div >
-                        <Text as="h2" variant="h1" weight="semibold" className="mb-4">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                    <div>
+                        <Text variant="h1" className="mb-4">
                             Good morning, <span className="text-primary">{userName}</span>
                         </Text>
                         <div className="flex items-center gap-4">
-                            <p className="text-text-muted text-sm font-medium flex items-center gap-2" suppressHydrationWarning>
+                            <Text color="secondary" weight="medium" className="flex items-center gap-2" suppressHydrationWarning>
                                 <Icon icon="tabler:calendar-heart" className="text-primary" />
                                 {new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                            </p>
+                            </Text>
                         </div>
                     </div>
                     
-                    <div 
-                        
-                        className="flex items-center gap-3 px-4 py-2 rounded-md bg-surface border border-border shadow-sm"
-                    >
+                    <div className="flex items-center gap-3 px-4 py-2 rounded-md bg-surface border border-border shadow-sm">
                         <Icon icon="tabler:flame" className="text-xl text-primary animate-pulse" />
-                        <Text as="span" variant="small" weight="semibold">{data.streak} day streak</Text>
+                        <Text variant="small" weight="semibold">{data.streak} day streak</Text>
                     </div>
                 </div>
 
                 {/* Main Dashboard Grid */}
-                <div 
-                    
-                    className="grid grid-cols-1 lg:grid-cols-12 gap-8"
-                >
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     
                     {/* Left Column: Mood & Stats */}
-                    <div  className="lg:col-span-8 space-y-8">
+                    <div className="lg:col-span-8 space-y-8">
                         {/* Mood Logger */}
-                        <div  className="card relative overflow-hidden group p-8 bg-surface-raised">
+                        <div className="card relative overflow-hidden group p-8 bg-surface-raised">
                             <div className="relative z-10 h-full flex flex-col">
                                 <div className="flex items-center justify-between mb-2">
-                                    <Text as="h3" variant="h4" weight="semibold">How&apos;s your mind today?</Text>
+                                    <Text variant="h3">How&apos;s your mind today?</Text>
                                     <span className={cn(
                                         "badge",
                                         scored.some(m => new Date().getDay() === ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(m.day)) 
@@ -228,23 +199,18 @@ function StudentDashboardPageContent() {
                                         {scored.some(m => new Date().getDay() === ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(m.day)) ? 'Logged' : 'Pending'}
                                     </span>
                                 </div>
-                                <Text color="secondary" className="mb-10 text-sm">Checking in daily helps track your progress and reveals patterns in your wellbeing.</Text>
+                                <Text color="secondary" variant="subtitle" className="mb-10">Checking in daily helps track your progress and reveals patterns in your wellbeing.</Text>
                                 
-                                <div 
-                                    
-                                    className="flex justify-between items-center gap-3 mb-10 overflow-x-auto no-scrollbar pb-2"
-                                >
+                                <div className="flex justify-between items-center gap-3 mb-10 overflow-x-auto no-scrollbar pb-2">
                                     {[
                                         { val: 1, label: 'Low', icon: 'tabler:mood-sad', color: 'text-rose-500' },
                                         { val: 2, label: 'Down', icon: 'tabler:mood-neutral', color: 'text-orange-400' },
                                         { val: 3, label: 'Okay', icon: 'tabler:mood-smile', color: 'text-amber-400' },
                                         { val: 4, label: 'Good', icon: 'tabler:mood-happy', color: 'text-emerald-400' },
-                                        { val: 5, label: 'Great', icon: 'tabler:mood-star', color: 'text-primary' }
+                                        { val: 5, label: 'Great', icon: 'tabler:mood-smile-beam', color: 'text-primary' }
                                     ].map((mood) => (
                                         <button 
                                             key={mood.val}
-                                            
-                                            
                                             onClick={() => setSelectedMood(mood.val)}
                                             className={cn(
                                                 "flex flex-col items-center gap-3 p-4 min-w-[80px] rounded-lg border transition-all duration-150",
@@ -253,8 +219,8 @@ function StudentDashboardPageContent() {
                                                     : "border-transparent hover:bg-white/5 hover:border-border"
                                             )}
                                         >
-                                            <Icon icon={mood.icon} className={cn("text-3xl", mood.color)} />
-                                            <span className="text-[10px] font-medium text-text-muted">{mood.label}</span>
+                                            <Icon icon={mood.icon} className={cn("text-2xl", mood.color)} />
+                                            <Text variant="small" weight="medium" color="secondary">{mood.label}</Text>
                                         </button>
                                     ))}
                                 </div>
@@ -274,26 +240,22 @@ function StudentDashboardPageContent() {
                         </div>
 
                         {/* Mood Trends Visualization */}
-                        <div  className="card p-8">
+                        <div className="card p-8">
                             <div className="flex items-center justify-between mb-10">
                                 <div>
-                                    <Text as="h3" weight="semibold">Mood Trends</Text>
-                                    <p className="text-[10px] text-text-dim font-medium mt-1">Weekly stability overview</p>
+                                    <Text variant="h3">Mood Trends</Text>
+                                    <Text variant="small" color="muted" weight="medium" className="mt-1">Weekly stability overview</Text>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button className="px-3 py-1 rounded bg-white/5 text-white text-[10px] font-bold border border-white/10 transition-colors hover:bg-white/10">Week</button>
-                                    <button className="px-3 py-1 rounded text-text-dim text-[10px] font-bold hover:text-white transition-colors">Month</button>
+                                    <button className="px-3 py-1 rounded bg-white/5 text-white text-[14px] font-bold border border-white/10 transition-colors hover:bg-white/10">Week</button>
+                                    <button className="px-3 py-1 rounded text-text-dim text-[14px] font-bold hover:text-white transition-colors">Month</button>
                                 </div>
                             </div>
                             
                             <div className="h-44 flex items-end gap-3 px-2">
                                 {data.moodHistory.map((entry, i) => (
                                     <div key={i} className="flex-1 flex flex-col items-center gap-4 h-full justify-end group">
-                                        <div 
-                                            
-                                            
-                                            
-                                            className={cn(
+                                        <div className={cn(
                                                 "w-full rounded-sm relative transition-all duration-150",
                                                 entry.score > 0 
                                                     ? "bg-primary/40 group-hover:bg-primary shadow-[0_0_15px_rgba(99,102,241,0.2)]" 
@@ -302,11 +264,11 @@ function StudentDashboardPageContent() {
                                         >
                                             {entry.score > 0 && (
                                                 <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none">
-                                                    <span className="bg-white text-black text-[10px] px-2 py-0.5 rounded font-bold shadow-xl">{entry.score}</span>
+                                                    <Text variant="caption" weight="bold" className="bg-white text-black px-2 py-0.5 rounded shadow-xl">{entry.score}</Text>
                                                 </div>
                                             )}
                                         </div>
-                                        <span className="text-[10px] font-medium text-text-dim tabular-nums">{entry.day}</span>
+                                        <Text variant="small" color="muted" weight="medium" className="tabular-nums">{entry.day}</Text>
                                     </div>
                                 ))}
                             </div>
@@ -314,41 +276,41 @@ function StudentDashboardPageContent() {
                     </div>
 
                     {/* Right Column: Stats & Actions */}
-                    <div  className="lg:col-span-4 space-y-8">
+                    <div className="lg:col-span-4 space-y-8">
                         {/* Quick Stats Grid */}
-                        <div  className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-4">
                             {[
                                 { label: 'Weekly Avg', value: averageMood.toFixed(1), icon: 'tabler:chart-line', color: 'text-primary', sub: 'Improved 12%' },
                                 { label: 'Wellness XP', value: '240', icon: 'tabler:bolt', color: 'text-warning', sub: 'Level 4' },
                                 { label: 'Assessments', value: data.latestAssessment ? '1' : '0', icon: 'tabler:clipboard-text', color: 'text-secondary', sub: 'Next: July 24' },
                                 { label: 'Milestones', value: '4', icon: 'tabler:confetti', color: 'text-primary', sub: 'Rising Star' }
                             ].map((stat, i) => (
-                                <div key={i}  className="card-raised p-5 flex flex-col gap-1 group hover:border-white/20 transition-colors">
+                                <div key={i} className="card-raised p-5 flex flex-col gap-1 group hover:border-white/20 transition-colors">
                                     <div className="flex h-8 w-8 items-center justify-center rounded bg-white/5 mb-4">
                                         <Icon icon={stat.icon} className={cn("text-xl", stat.color)} />
                                     </div>
-                                    <div className="text-2xl font-semibold tabular-nums text-white leading-none">{stat.value}</div>
-                                    <div className="text-[9px] font-medium text-text-dim mt-1">{stat.label}</div>
+                                    <Text variant="metric" className="tabular-nums">{stat.value}</Text>
+                                    <Text variant="caption" color="muted" className="mt-1">{stat.label}</Text>
                                 </div>
                             ))}
                         </div>
 
                         {/* Upcoming Support */}
-                        <div  className="card p-8 bg-surface">
-                            <Text as="h3" weight="semibold" className="mb-8">Upcoming Support</Text>
+                        <div className="card p-8 bg-surface">
+                            <Text variant="h3" className="mb-8">Upcoming Support</Text>
                             
                             {data.nextSession ? (
                                 <div className="rounded-lg p-5 bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all mb-6 cursor-pointer group">
                                     <div className="flex items-center gap-4">
                                         <div className="flex flex-col items-center justify-center size-14 rounded bg-surface-raised border border-border shadow-sm group-hover:bg-surface-hover transition-colors shrink-0">
-                                            <span className="text-[9px] font-medium text-text-dim">{data.nextSession.replace(',', '').split(' ')[0]}</span>
-                                            <span className="text-xl font-bold text-white leading-tight tabular-nums">{data.nextSession.replace(',', '').split(' ')[1]}</span>
+                                            <Text variant="caption" color="muted">{data.nextSession.replace(',', '').split(' ')[0]}</Text>
+                                            <Text variant="h3" className="leading-tight tabular-nums">{data.nextSession.replace(',', '').split(' ')[1]}</Text>
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <h4 className="font-semibold text-sm mb-1 text-white truncate">Campus Counselor</h4>
-                                            <div className="flex flex-col gap-1 text-[10px] font-medium text-text-dim ">
-                                                <span className="flex items-center gap-1.5"><Icon icon="tabler:clock" className="text-primary" /> {data.nextSession.replace(',', '').split(' ').slice(1).join(' ')}</span>
-                                                <span className="flex items-center gap-1.5"><Icon icon="tabler:video" className="text-secondary" /> Video Call</span>
+                                            <Text variant="h4" className="mb-1 truncate">Campus Counselor</Text>
+                                            <div className="flex flex-col gap-1">
+                                                <Text variant="small" color="secondary" weight="medium" className="flex items-center gap-1.5"><Icon icon="tabler:clock" className="text-primary" /> {data.nextSession.replace(',', '').split(' ').slice(1).join(' ')}</Text>
+                                                <Text variant="small" color="secondary" weight="medium" className="flex items-center gap-1.5"><Icon icon="tabler:video" className="text-secondary" /> Video Call</Text>
                                             </div>
                                         </div>
                                         <div className="size-10 rounded-md bg-white text-black flex items-center justify-center shrink-0">
@@ -358,20 +320,23 @@ function StudentDashboardPageContent() {
                                 </div>
                             ) : (
                                 <div className="p-8 text-center text-text-dim border border-dashed border-border rounded-lg mb-8 bg-white/[0.01]">
-                                    <Icon icon="tabler:calendar-cancel" className="text-3xl mx-auto mb-4 opacity-20" />
-                                    <p className="text-[10px] font-medium ">No sessions scheduled</p>
-                                    <Link href="/student/book" className="text-primary text-[10px] font-medium hover:text-primary-hover mt-3 inline-block tracking-[0.2em]">Book a slot →</Link>
+                                    <Icon icon="tabler:calendar-cancel" className="text-2xl mx-auto mb-4 opacity-20" />
+                                    <Text variant="small" color="muted" weight="medium">No sessions scheduled</Text>
+                                    <Link href="/student/book" className="flex items-center gap-2 text-primary text-[14px] font-medium hover:text-primary-hover mt-3 inline-block">
+                                        Book a slot
+                                        <Icon icon="tabler:arrow-right" className="text-lg" />
+                                    </Link>
                                 </div>
                             )}
 
                             <div className="grid grid-cols-2 gap-3">
                                 <Link href="/student/chat" className="flex items-center justify-center gap-3 bg-surface-raised border border-border rounded-md px-4 py-3 hover:bg-surface-hover hover:border-white/20 transition-all group">
                                     <Icon icon="tabler:robot" className="text-lg text-primary" />
-                                    <span className="text-[10px] font-medium text-white ">MindBot</span>
+                                    <Text variant="small" weight="medium">MindBot</Text>
                                 </Link>
                                 <Link href="/student/screening" className="flex items-center justify-center gap-3 bg-surface-raised border border-border rounded-md px-4 py-3 hover:bg-surface-hover hover:border-white/20 transition-all group">
                                     <Icon icon="tabler:clipboard-check" className="text-lg text-secondary" />
-                                    <span className="text-[10px] font-medium text-white ">Assess</span>
+                                    <Text variant="small" weight="medium">Assess</Text>
                                 </Link>
                             </div>
                         </div>
@@ -379,21 +344,18 @@ function StudentDashboardPageContent() {
                 </div>
 
                 {/* Bottom Section: Resources */}
-                <div  className="pt-8 border-t border-white/5 pb-20">
-                    <div  className="flex items-end justify-between mb-10 px-1">
+                <div className="pt-8 border-t border-white/5 pb-20">
+                    <div className="flex items-end justify-between mb-10 px-1">
                         <div>
-                            <Text as="h3" variant="h3" weight="semibold">Curated for You</Text>
-                            <p className="text-text-dim text-[10px] font-medium mt-1">Personalized wellness recommendations</p>
+                            <Text variant="h2">Curated for You</Text>
+                            <Text color="muted" weight="medium" className="mt-1">Personalized wellness recommendations</Text>
                         </div>
-                        <Link href="/student/resources" className="text-[10px] font-medium text-text-dim hover:text-white transition-colors flex items-center gap-2 group ">
+                        <Link href="/student/resources" className="text-[14px] font-medium text-text-dim hover:text-white transition-colors flex items-center gap-2 group">
                             Explore All <Icon icon="tabler:arrow-up-right" />
                         </Link>
                     </div>
 
-                    <div 
-                        
-                        className="grid grid-cols-1 md:grid-cols-3 gap-6"
-                    >
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {[
                             { 
                                 title: '5-Minute Stress Relief', 
@@ -419,22 +381,21 @@ function StudentDashboardPageContent() {
                         ].map((res, i) => (
                             <div 
                                 key={i}
-                                
                                 className="group bg-surface border border-border rounded-lg overflow-hidden hover:border-white/20 transition-all duration-150 flex flex-col"
                             >
                                 <div className="h-40 bg-white/[0.02] border-b border-white/5 flex items-center justify-center relative overflow-hidden shrink-0">
-                                    <Icon icon={res.icon} className={cn("text-6xl opacity-5 transition-transform duration-500", res.color)} />
+                                    <Icon icon={res.icon} className={cn("text-2xl opacity-5 transition-transform duration-500", res.color)} />
                                     <div className="absolute top-4 right-4">
-                                        <span className="px-2 py-0.5 rounded bg-white/5 text-white text-[9px] font-medium border border-white/10">
+                                        <Text variant="caption" className="px-2 py-0.5 rounded bg-white/5 border border-white/10">
                                             {res.type}
-                                        </span>
+                                        </Text>
                                     </div>
                                 </div>
                                 <div className="p-6 flex-1 flex flex-col">
-                                    <h4 className="text-sm font-semibold mb-6 leading-snug group-hover:text-primary transition-colors text-white flex-1">{res.title}</h4>
-                                    <div className="flex items-center gap-4 text-[9px] font-medium text-text-dim tracking-[0.15em]">
-                                        <span className="flex items-center gap-1.5"><Icon icon="tabler:clock" /> {res.time}</span>
-                                        <span className="flex items-center gap-1.5"><Icon icon="tabler:world" /> Bilingual</span>
+                                    <Text variant="h4" className="mb-6 leading-snug group-hover:text-primary transition-colors flex-1">{res.title}</Text>
+                                    <div className="flex items-center gap-4">
+                                        <Text variant="small" color="muted" weight="medium" className="flex items-center gap-1.5"><Icon icon="tabler:clock" /> {res.time}</Text>
+                                        <Text variant="small" color="muted" weight="medium" className="flex items-center gap-1.5"><Icon icon="tabler:world" /> Bilingual</Text>
                                     </div>
                                 </div>
                             </div>

@@ -106,8 +106,8 @@ export default function BookCounselorClient({ initialCounselors, initialSlots }:
                   {(c.name || 'C').split(' ').map(n => n[0]).join('')}
                 </div>
                 <div>
-                  <Text weight="semibold" className="text-sm text-white group-hover:text-primary transition-colors">{c.name || 'Counselor'}</Text>
-                  <Text variant="small" className="text-text-dim text-[10px] mt-1">Therapist</Text>
+                  <Text weight="semibold" className="text-[1.0625rem] text-white group-hover:text-primary transition-colors">{c.name || 'Counselor'}</Text>
+                  <Text variant="small" className="text-text-dim text-base mt-1">Therapist</Text>
                 </div>
               </button>
             ))}
@@ -121,8 +121,8 @@ export default function BookCounselorClient({ initialCounselors, initialSlots }:
             
             {availableDates.length === 0 ? (
               <div className="flex-1 flex flex-col items-center justify-center text-text-dim">
-                <Icon icon="tabler:calendar-cancel" className="text-4xl mb-4 opacity-50" />
-                <p className="text-sm">No availability for this professional.</p>
+                <Icon icon="tabler:calendar-cancel" className="text-2xl mb-4 opacity-50" />
+                <p className="text-[1.0625rem]">No availability for this professional.</p>
               </div>
             ) : (
               <div className="flex flex-col gap-8 flex-1">
@@ -142,7 +142,7 @@ export default function BookCounselorClient({ initialCounselors, initialSlots }:
                             : "bg-surface-raised border-border hover:border-white/20 hover:bg-surface-hover"
                         )}
                       >
-                        <span className={cn("text-[10px] font-medium mb-1", isSelected ? "text-primary" : "text-text-muted")}>
+                        <span className={cn("text-base font-medium mb-1", isSelected ? "text-primary" : "text-text-muted")}>
                           {d.toLocaleDateString('en-US', { weekday: 'short' })}
                         </span>
                         <span className={cn("text-xl font-bold leading-none", isSelected ? "text-white" : "text-white/80")}>
@@ -164,7 +164,7 @@ export default function BookCounselorClient({ initialCounselors, initialSlots }:
                           key={slot.id}
                           onClick={() => setSelectedSlot(slot)}
                           className={cn(
-                            "py-3 px-2 rounded-md border transition-all text-sm font-semibold tabular-nums text-center",
+                            "py-3 px-2 rounded-md border transition-all text-[1.0625rem] font-semibold tabular-nums text-center",
                             isSelected
                               ? "bg-white text-black border-white shadow-md scale-[1.02]"
                               : "bg-surface-raised border-border text-white/90 hover:border-white/30 hover:bg-surface-hover"
@@ -181,14 +181,14 @@ export default function BookCounselorClient({ initialCounselors, initialSlots }:
                 <div className="pt-6 border-t border-white/5 flex items-center justify-between mt-auto">
                   <div>
                     {selectedSlot ? (
-                      <div className="text-sm">
+                      <div className="text-[1.0625rem]">
                         <span className="text-text-muted">Selected: </span>
                         <span className="text-white font-bold">
                           {new Date(selectedSlot.slot_start).toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
                         </span>
                       </div>
                     ) : (
-                      <span className="text-sm text-text-dim">Select a time to continue</span>
+                      <span className="text-[1.0625rem] text-text-dim">Select a time to continue</span>
                     )}
                   </div>
                   <Button 

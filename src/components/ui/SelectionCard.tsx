@@ -49,14 +49,14 @@ const SelectionCard = forwardRef<HTMLButtonElement, SelectionCardProps>(
  <Text 
  weight="semibold" 
  className={cn(
- "block text-sm transition-colors",
+ "block text-[1.0625rem] transition-colors",
  selected ? "text-white" : "text-text-muted group-hover:text-white"
  )}
  >
  {label}
  </Text>
  {sublabel && (
- <Text variant="small" className="text-text-dim text-[10px] font-medium mt-1">
+ <Text variant="small" className="text-text-dim text-base font-medium mt-1">
  {sublabel}
  </Text>
  )}

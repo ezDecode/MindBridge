@@ -276,7 +276,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                         label={type.label}
                         sublabel={type.note}
                         onClick={() => setBookingType(typeKey)}
-                        className="h-full flex-col items-start justify-center gap-1.5 p-3 text-sm"
+                        className="h-full flex-col items-start justify-center gap-1.5 p-3 text-[1.0625rem]"
                       />
                     </div>
                   );
@@ -302,7 +302,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                         setSelectedCounselorId(counselor.id);
                         setSelectedSlot(null);
                       }}
-                      className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all border ${
+                      className={`px-4 py-2 rounded-xl text-[1.0625rem] font-semibold whitespace-nowrap transition-all border ${
                         selectedCounselorId === counselor.id
                           ? "bg-[var(--action-primary)] text-white border-[var(--action-primary)] shadow-md"
                           : "bg-[var(--surface-default)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--action-primary)]/50 hover:bg-[var(--surface-strong)]"
@@ -328,7 +328,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                           setSelectedDate(dateString);
                           setSelectedSlot(null);
                         }}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all border ${
+                        className={`px-3 py-1.5 rounded-lg text-base font-semibold whitespace-nowrap transition-all border ${
                           selectedDate === dateString
                             ? "bg-[var(--surface-strong)] text-[var(--text-primary)] border-[var(--border-strong)] shadow-sm"
                             : "bg-[var(--surface-default)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--border-strong)]/50 hover:bg-[var(--surface-warm)]"
@@ -388,12 +388,12 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                         }`}
                       >
                         <div className="flex flex-col items-center justify-center gap-1">
-                          <span className="text-[11px] font-semibold text-[var(--text-secondary)] truncate w-full px-1">
+                          <span className="text-base font-semibold text-[var(--text-secondary)] truncate w-full px-1">
                             {resolveProfileDisplayName({ profileName: slot.counselor?.name }) || "Counselor"}
                           </span>
                           <div className="flex items-center gap-1.5 bg-[var(--surface-default)] px-2 py-1 rounded-md shadow-sm border border-[var(--border-default)]">
                             <Icon icon="tabler:clock" className="h-3 w-3 text-[var(--action-primary)]" />
-                            <span className="text-xs font-bold text-[var(--text-primary)]">{formatSlotTime(slot)}</span>
+                            <span className="text-base font-bold text-[var(--text-primary)]">{formatSlotTime(slot)}</span>
                           </div>
                         </div>
                       </button>

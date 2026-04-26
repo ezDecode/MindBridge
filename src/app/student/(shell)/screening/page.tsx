@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import { Button, Card, Text } from "@/components/ui";
 import { cn } from "@/lib/utils";
@@ -40,8 +40,23 @@ export default function ScreeningPage() {
   const [currentStep, setCurrentQuizStep] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [results, setResults] = useState<{ score: number; severity: string; badge: string; rec: string } | null>(null);
+  const autoAdvanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+    };
+  }, []);
+
+  const clearAutoAdvance = () => {
+    if (autoAdvanceTimer.current) {
+      clearTimeout(autoAdvanceTimer.current);
+      autoAdvanceTimer.current = null;
+    }
+  };
 
   const startQuiz = (type: string) => {
+    clearAutoAdvance();
     setActiveQuiz(type);
     setCurrentQuizStep(0);
     setAnswers([]);
@@ -52,9 +67,23 @@ export default function ScreeningPage() {
     const newAnswers = [...answers];
     newAnswers[currentStep] = val;
     setAnswers(newAnswers);
+    clearAutoAdvance();
+
+    if (!activeQuiz) return;
+
+    const total = quizzes[activeQuiz].questions.length;
+    autoAdvanceTimer.current = setTimeout(() => {
+      if (currentStep < total - 1) {
+        setCurrentQuizStep((step) => step === currentStep ? step + 1 : step);
+      } else {
+        calculateResults(newAnswers);
+      }
+      autoAdvanceTimer.current = null;
+    }, 300);
   };
 
   const nextStep = () => {
+    clearAutoAdvance();
     if (answers[currentStep] === undefined) return;
     const total = quizzes[activeQuiz!].questions.length;
     if (currentStep < total - 1) {
@@ -65,11 +94,12 @@ export default function ScreeningPage() {
   };
 
   const prevStep = () => {
+    clearAutoAdvance();
     if (currentStep > 0) setCurrentQuizStep(currentStep - 1);
   };
 
-  const calculateResults = () => {
-    const score = answers.reduce((a, b) => a + b, 0);
+  const calculateResults = (quizAnswers = answers) => {
+    const score = quizAnswers.reduce((a, b) => a + b, 0);
     let severity, badge, rec;
     
     if (activeQuiz === 'PHQ-9') {
@@ -91,19 +121,22 @@ export default function ScreeningPage() {
     return (
       <div className="max-w-2xl mx-auto space-y-8 pb-20">
         <button 
-          className="flex items-center gap-2 text-xs font-medium text-text-dim hover:text-white transition-colors " 
-          onClick={() => setActiveQuiz(null)}
+          className="flex items-center gap-2 text-base font-medium text-text-dim hover:text-white transition-colors " 
+          onClick={() => {
+            clearAutoAdvance();
+            setActiveQuiz(null);
+          }}
         >
           <Icon icon="tabler:arrow-left" /> Back to assessments
         </button>
         
         <Card padding="lg" className="bg-surface border-border text-center py-16">
           <div className="size-16 rounded-full bg-primary/10 border border-primary/20 text-primary flex items-center justify-center mx-auto mb-8">
-            <Icon icon="tabler:chart-bar" className="text-3xl" />
+            <Icon icon="tabler:chart-bar" className="text-2xl" />
           </div>
           <Text as="h3" variant="h3" weight="semibold" className="mb-2">{activeQuiz} Results</Text>
-          <div className="text-6xl font-bold tabular-nums text-white my-8 tracking-tight">{results.score}</div>
-          <span className={cn("badge px-4 py-1.5 tracking-[0.2em] text-[10px]", results.badge)}>{results.severity}</span>
+          <div className="text-2xl font-bold tabular-nums text-white my-8 tracking-tight">{results.score}</div>
+          <span className={cn("badge px-4 py-1.5 text-base", results.badge)}>{results.severity}</span>
           
           <div className="bg-background/50 border border-white/5 rounded-lg p-6 my-10 text-left relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none transition-transform">
@@ -114,22 +147,22 @@ export default function ScreeningPage() {
                 <Icon icon="tabler:info-circle" />
                 What this means
               </Text>
-              <Text color="secondary" className="text-sm leading-relaxed">{results.rec}</Text>
+              <Text color="secondary" className="text-[1.0625rem] leading-relaxed">{results.rec}</Text>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" className="gap-2">
-              <Icon icon="tabler:calendar-event" className="text-lg" />
+              <Icon icon="tabler:calendar-event" className="typo-subtitle" />
               Book Counselor
             </Button>
             <Button variant="warm" size="lg" className="gap-2">
-              <Icon icon="tabler:books" className="text-lg" />
+              <Icon icon="tabler:books" className="typo-subtitle" />
               View Resources
             </Button>
           </div>
           
-          <Text variant="small" className="text-text-dim text-[10px] font-medium tracking-[0.2em] mt-12 block">
+          <Text variant="small" className="text-text-dim text-base font-medium mt-12 block">
             Standardized screening · Not a clinical diagnosis
           </Text>
         </Card>
@@ -142,8 +175,11 @@ export default function ScreeningPage() {
     return (
       <div className="max-w-2xl mx-auto space-y-8 pb-20">
         <button 
-          className="flex items-center gap-2 text-xs font-medium text-text-dim hover:text-white transition-colors " 
-          onClick={() => setActiveQuiz(null)}
+          className="flex items-center gap-2 text-base font-medium text-text-dim hover:text-white transition-colors " 
+          onClick={() => {
+            clearAutoAdvance();
+            setActiveQuiz(null);
+          }}
         >
           <Icon icon="tabler:arrow-left" /> Back to assessments
         </button>
@@ -151,7 +187,7 @@ export default function ScreeningPage() {
         <Card padding="lg" className="bg-surface border-border">
           <div className="flex items-center justify-between mb-10">
             <Text as="h3" variant="body" weight="semibold" className="text-white">{q.title}</Text>
-            <span className="badge badge-outline text-[9px] px-3">Question {currentStep + 1} <span className="text-text-dim">/ {q.questions.length}</span></span>
+            <span className="badge badge-outline text-base px-3">Question {currentStep + 1} <span className="text-text-dim">/ {q.questions.length}</span></span>
           </div>
 
           <div className="flex gap-1.5 mb-12">
@@ -164,7 +200,7 @@ export default function ScreeningPage() {
           </div>
 
           <div className="min-h-[340px] flex flex-col">
-            <Text as="h4" weight="semibold" className="text-lg text-white mb-10 leading-snug">
+            <Text as="h4" weight="semibold" className="typo-subtitle text-white mb-10 leading-snug">
               Over the last 2 weeks, how often have you been bothered by: <span className="text-primary italic">&ldquo;{q.questions[currentStep]}&rdquo;</span>
             </Text>
 
@@ -187,7 +223,7 @@ export default function ScreeningPage() {
                     {answers[currentStep] === i && <div className="size-1.5 rounded-full bg-black" />}
                   </div>
                   <span className={cn(
-                    "text-sm font-medium transition-colors",
+                    "text-[1.0625rem] font-medium transition-colors",
                     answers[currentStep] === i ? "text-white" : "text-text-muted group-hover:text-white"
                   )}>{opt}</span>
                 </button>
@@ -211,11 +247,6 @@ export default function ScreeningPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-10 pb-20">
-      <div>
-        <Text as="h2" variant="h3" weight="semibold" className="tracking-tight">Clinical Assessments</Text>
-        <p className="text-text-dim text-xs font-medium tracking-[0.15em] mt-1">Standardized PHQ-9 & GAD-7 screening tools</p>
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
           { id: 'PHQ-9', title: 'PHQ-9', sub: 'Depression screening', desc: 'A standardized tool for clinical depression assessment.', meta: '9 questions · ~3 mins', icon: 'tabler:mood-sad', color: 'text-primary' },
@@ -223,20 +254,20 @@ export default function ScreeningPage() {
         ].map((quiz) => (
           <Card key={quiz.id} padding="lg" className="bg-surface border-border flex flex-col h-full group hover:border-white/20 transition-all cursor-pointer" onClick={() => startQuiz(quiz.id)}>
             <div className={cn("size-12 rounded bg-white/5 flex items-center justify-center mb-8 transition-colors", quiz.color)}>
-              <Icon icon={quiz.icon} className="text-3xl" />
+              <Icon icon={quiz.icon} className="text-2xl" />
             </div>
             <div className="mb-8 flex-1">
               <div className="flex items-center justify-between mb-2">
-                <Text weight="semibold" className="text-white text-lg">{quiz.title}</Text>
-                <span className="badge badge-outline text-[9px] border-white/5 bg-white/5">Confidential</span>
+                <Text weight="semibold" className="text-white typo-subtitle">{quiz.title}</Text>
+                <span className="badge badge-outline text-base border-white/5 bg-white/5">Confidential</span>
               </div>
-              <Text variant="small" className="text-text-dim text-[10px] font-medium mb-4 block">{quiz.sub}</Text>
-              <Text color="secondary" className="text-sm leading-relaxed">{quiz.desc}</Text>
+              <Text variant="small" className="text-text-dim text-base font-medium mb-4 block">{quiz.sub}</Text>
+              <Text color="secondary" className="text-[1.0625rem] leading-relaxed">{quiz.desc}</Text>
             </div>
             <div className="pt-6 border-t border-white/5 flex items-center justify-between">
-              <Text variant="small" className="text-text-dim text-[10px] font-medium ">{quiz.meta}</Text>
+              <Text variant="small" className="text-text-dim text-base font-medium ">{quiz.meta}</Text>
               <Button size="sm" className="gap-1">
-                Start <Icon icon="tabler:chevron-right" className="text-xs" />
+                Start <Icon icon="tabler:chevron-right" className="text-base" />
               </Button>
             </div>
           </Card>
@@ -253,7 +284,7 @@ export default function ScreeningPage() {
           </div>
           <div>
             <Text weight="semibold" className="text-white mb-2">Standardized & Private</Text>
-            <Text color="secondary" className="text-sm leading-relaxed max-w-[70ch]">
+            <Text color="secondary" className="text-[1.0625rem] leading-relaxed max-w-[70ch]">
               Standardized assessment results are completely confidential. They are only accessible to you and shared with campus counseling staff only if you explicitly choose to include them in a session booking.
             </Text>
           </div>

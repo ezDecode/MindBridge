@@ -36,9 +36,9 @@ const variantStyles: Record<ButtonVariant, string> = {
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
- sm: "h-8 px-3 text-xs",
- md: "h-10 px-4 text-sm",
- lg: "h-12 px-6 text-base",
+ sm: "h-8 px-3 typo-ui",
+ md: "h-10 px-4 typo-base",
+ lg: "h-12 px-6 typo-body",
 };
 
 const weightStyles: Record<ButtonWeight, string> = {

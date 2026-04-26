@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { useToast } from "@/components/ui/Toast";
 
@@ -67,15 +68,18 @@ export default function JournalPage() {
                 <Icon icon="tabler:bulb" className="mt-0.5 shrink-0 text-primary" />
                 <div className="flex-1">
                   <Text as="span" variant="small" weight="medium" className="text-primary block mb-1">Today&apos;s Prompt</Text>
-                  <Text as="p" className="text-sm text-text-muted leading-relaxed italic group-hover:text-white transition-colors">
+                  <Text as="p" className="typo-subtitle text-text-muted leading-relaxed italic group-hover:text-white transition-colors">
                     &ldquo;{prompts[promptIdx]}&rdquo;
                   </Text>
-                  <span className="text-[10px] font-medium text-text-dim mt-3 block group-hover:text-primary transition-colors">Click for new prompt →</span>
+                  <span className="flex items-center gap-1.5 typo-base font-medium text-text-dim mt-3 group-hover:text-primary transition-colors">
+                    Click for new prompt 
+                    <Icon icon="tabler:arrow-right" className="text-lg" />
+                  </span>
                 </div>
               </button>
 
               <textarea 
-                className="w-full min-h-[300px] bg-background border border-border rounded-md px-4 py-3 text-sm text-white placeholder:text-text-dim focus:border-white/20 transition-all outline-none resize-none leading-relaxed" 
+                className="w-full min-h-[300px] bg-background border border-border rounded-md px-4 py-3 typo-subtitle text-white placeholder:text-text-dim focus:border-white/20 transition-all outline-none resize-none leading-relaxed" 
                 placeholder="Write your thoughts here... This is your safe space. Only you can read this." 
                 value={journalContent}
                 onChange={(e) => setJournalContent(e.target.value)}
@@ -102,11 +106,11 @@ export default function JournalPage() {
 
                 <div className="relative z-10">
                   <div className="flex items-center gap-2 mb-6">
-                    <Icon icon="tabler:sparkles" className="text-primary text-lg" />
+                    <Icon icon="tabler:sparkles" className="text-primary typo-heading" />
                     <Text variant="small" weight="medium" className="text-primary ">MindBot Reflection</Text>
                   </div>
 
-                  <Text className="text-white text-sm leading-relaxed mb-8 max-w-[65ch]">
+                  <Text className="text-white typo-subtitle leading-relaxed mb-8 max-w-[65ch]">
                     It sounds like you&apos;re carrying a lot right now with exams approaching. It&apos;s completely okay to feel the pressure — it shows how much you care. Try taking one small step today instead of looking at everything at once. You&apos;ve got this.
                   </Text>
 
@@ -133,10 +137,10 @@ export default function JournalPage() {
             <div className="flex items-center gap-6">
               <div className="h-14 w-14 rounded bg-primary/10 border border-primary/20 flex flex-col items-center justify-center text-primary">
                 <Icon icon="tabler:flame" className="text-xl mb-0.5" />
-                <span className="text-xs font-bold tabular-nums">{streak}</span>
+                <span className="typo-base font-bold tabular-nums">{streak}</span>
               </div>
               <div className="flex-1">
-                <Text weight="semibold" className="text-white text-sm">Keep it up!</Text>
+                <Text weight="semibold" className="text-white typo-subtitle">Keep it up!</Text>
                 <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden mt-3 mb-2">
                   <motion.div 
                     initial={{ width: 0 }}
@@ -145,7 +149,7 @@ export default function JournalPage() {
                     className="h-full bg-primary" 
                   />
                 </div>
-                <Text variant="small" className="text-text-dim text-[10px] font-medium ">2 days to next badge</Text>
+                <Text variant="small" className="text-text-dim typo-base font-medium ">2 days to next badge</Text>
               </div>
             </div>
           </Card>
@@ -164,16 +168,17 @@ export default function JournalPage() {
               ].map((entry, i) => (
                 <div key={i} className="group p-4 rounded-md border border-white/5 bg-white/[0.02] hover:bg-white/5 hover:border-white/10 transition-all cursor-pointer">
                   <div className="flex items-start justify-between gap-4 mb-2">
-                    <Text weight="semibold" className="text-xs text-white group-hover:text-primary transition-colors line-clamp-1">{entry.title}</Text>
+                    <Text weight="semibold" className="typo-base text-white group-hover:text-primary transition-colors line-clamp-1">{entry.title}</Text>
                     <div className={cn("shrink-0 size-1.5 rounded-full mt-1.5", entry.bg)} />
                   </div>
-                  <Text variant="small" className="text-text-dim text-[10px] font-medium ">{entry.date} · {entry.words} words</Text>
+                  <Text variant="small" className="text-text-dim typo-base font-medium ">{entry.date} · {entry.words} words</Text>
                 </div>
               ))}
             </div>
 
-            <Link href="/student/mood-history" className="w-full mt-6 py-2 text-[10px] font-medium text-text-muted hover:text-white transition-colors tracking-[0.2em] border-t border-white/5 pt-6 text-center block">
-              View full history →
+            <Link href="/student/mood-history" className="flex items-center justify-center gap-2 w-full mt-6 py-2 typo-base font-medium text-text-muted hover:text-white transition-colors border-t border-white/5 pt-6 text-center">
+              View full history
+              <Icon icon="tabler:arrow-right" className="text-lg" />
             </Link>
           </Card>
         </div>

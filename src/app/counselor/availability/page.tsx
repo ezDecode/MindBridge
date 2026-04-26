@@ -22,9 +22,8 @@ export default async function AvailabilityPage() {
     .gte('slot_start', new Date(new Date().setHours(0,0,0,0)).toISOString())
 
   return (
-    <AvailabilityClient 
-      counselorId={user.id}
-      initialSlots={slots || []} 
+    <AvailabilityClient
+      initialSlots={slots || []}
       initialBookings={bookings || []}
     />
   )

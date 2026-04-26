@@ -96,7 +96,7 @@ export function BreathingExercise({
               <h2 className="text-2xl font-semibold text-white tracking-tight leading-tight">
                 Breathe & Relax
               </h2>
-              <p className="text-text-muted text-sm max-w-[240px] mx-auto leading-relaxed">
+              <p className="text-text-muted text-[1.0625rem] max-w-[240px] mx-auto leading-relaxed">
                 Choose a technique and follow the gentle visual guide
               </p>
             </motion.div>
@@ -118,15 +118,15 @@ export function BreathingExercise({
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
-                      <span className={`text-sm font-semibold block transition-colors ${technique === tech ? "text-white" : "text-text-muted"}`}>
+                      <span className={`text-[1.0625rem] font-semibold block transition-colors ${technique === tech ? "text-white" : "text-text-muted"}`}>
                         {TECHNIQUES[tech].name}
                       </span>
-                      <p className="text-[11px] text-text-dim mt-1 truncate">
+                      <p className="text-base text-text-dim mt-1 truncate">
                         {TECHNIQUES[tech].description}
                       </p>
                     </div>
                     <div className="flex flex-col items-end gap-1 ml-3 shrink-0 tabular-nums">
-                      <span className="text-[9px] font-medium text-text-muted bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                      <span className="text-base font-medium text-text-muted bg-white/5 px-2 py-0.5 rounded border border-white/10">
                         {TECHNIQUES[tech].cycles} cycles
                       </span>
                     </div>
@@ -162,7 +162,7 @@ export function BreathingExercise({
             <h3 className="text-2xl font-semibold text-white mb-3 tracking-tight">
               Well Done
             </h3>
-            <p className="text-text-muted text-sm mb-10 leading-relaxed">
+            <p className="text-text-muted text-[1.0625rem] mb-10 leading-relaxed">
               You&apos;ve successfully completed {completedCycles} mindful breathing cycles
             </p>
             <Button onClick={handleReset} variant="warm" size="lg" className="px-10">
@@ -189,7 +189,7 @@ export function BreathingExercise({
               </button>
               
               <div className="flex items-center gap-2 px-4 py-1.5 bg-surface rounded-md border border-border tabular-nums">
-                <span className="text-[10px] font-medium text-white ">
+                <span className="text-base font-medium text-white ">
                   Cycle {cycleCount + 1} <span className="text-text-dim">/ {totalCycles}</span>
                 </span>
               </div>
@@ -253,7 +253,7 @@ export function BreathingExercise({
               </Button>
             </div>
 
-            <div className="mt-10 flex items-center justify-center gap-2 text-text-dim font-medium text-[10px] tabular-nums">
+            <div className="mt-10 flex items-center justify-center gap-2 text-text-dim font-medium text-base tabular-nums">
               <Icon icon="tabler:clock" className="h-3 w-3" />
               <span>{formatTime(totalTimeElapsed)} / {formatTime(currentTechnique.totalDuration)}</span>
             </div>

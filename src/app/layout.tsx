@@ -1,17 +1,7 @@
 import type { Metadata } from "next";
 import type { Viewport } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const interDisplay = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter-display",
-});
+import { proVariable } from "./fonts";
 
 export const metadata: Metadata = {
   title: {
@@ -35,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${interDisplay.variable}`}>
+    <html lang="en" className={proVariable.variable}>
       <body className="font-sans antialiased bg-[#0A0A0A] text-white">
         <ToastProvider>
           <a href="#main-content" className="skip-link">

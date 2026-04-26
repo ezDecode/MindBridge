@@ -39,8 +39,8 @@ export default function StudentsClient({
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 pb-20">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <Text as="h2" variant="h2" weight="semibold" className="text-white tracking-tight">Student Management</Text>
-          <Text variant="small" className="text-text-dim font-medium mt-1">Monitor assigned students & alerts</Text>
+          <Text variant="h2" className="tracking-tight">Student Management</Text>
+          <Text variant="small" color="muted" weight="medium" className="mt-1">Monitor assigned students & alerts</Text>
         </div>
         <div className="relative w-full md:w-72">
           <Icon icon="tabler:search" className="absolute left-3 top-1/2 -translate-y-1/2 text-text-dim text-lg" />
@@ -49,7 +49,7 @@ export default function StudentsClient({
             placeholder="Search by name or ID..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-surface border border-border rounded-md pl-10 pr-4 py-2 text-sm focus:border-white/20 transition-all text-white placeholder:text-text-dim outline-none"
+            className="w-full bg-surface border border-border rounded-md pl-10 pr-4 py-2 text-[14px] focus:border-white/20 transition-all text-white placeholder:text-text-dim outline-none"
           />
         </div>
       </div>
@@ -84,8 +84,8 @@ export default function StudentsClient({
                     {(resolveProfileDisplayName({ profileName: student.name }) || 'U')[0]}
                   </div>
                   <div>
-                    <Text weight="semibold" className="text-white mb-0.5">{resolveProfileDisplayName({ profileName: student.name }) || 'Unknown Student'}</Text>
-                    <Text variant="small" className="text-text-dim text-[10px] font-mono">ID: {student.id.split('-')[0]}</Text>
+                    <Text weight="semibold" className="mb-0.5">{resolveProfileDisplayName({ profileName: student.name }) || 'Unknown Student'}</Text>
+                    <Text variant="caption" color="muted" className="font-mono">ID: {student.id.split('-')[0]}</Text>
                   </div>
                 </div>
                 {hasActiveCrisis && (
@@ -97,7 +97,7 @@ export default function StudentsClient({
 
               <div className="grid grid-cols-2 gap-4 mt-auto border-t border-white/5 pt-4">
                 <div>
-                  <Text variant="small" className="text-text-dim text-[10px] font-medium mb-1">Latest Mood</Text>
+                  <Text variant="caption" color="muted" weight="medium" className="mb-1">Latest Mood</Text>
                   <div className="flex items-center gap-2">
                     {lastMood ? (
                       <>
@@ -105,19 +105,19 @@ export default function StudentsClient({
                           "w-2 h-2 rounded-full",
                           lastMood.score >= 4 ? "bg-success" : lastMood.score === 3 ? "bg-warning" : "bg-danger"
                         )} />
-                        <span className="text-xs font-semibold text-white">{lastMood.score}/5</span>
+                        <Text variant="subtitle" weight="semibold" className="tabular-nums">{lastMood.score}/5</Text>
                       </>
                     ) : (
-                      <span className="text-xs text-text-dim italic">No logs</span>
+                      <Text variant="small" color="muted" className="italic">No logs</Text>
                     )}
                   </div>
                 </div>
                 <div>
-                  <Text variant="small" className="text-text-dim text-[10px] font-medium mb-1">Status</Text>
+                  <Text variant="caption" color="muted" weight="medium" className="mb-1">Status</Text>
                   {hasActiveCrisis ? (
-                    <span className="text-xs font-semibold text-danger">Requires Attention</span>
+                    <Text variant="subtitle" weight="semibold" color="danger">Requires Attention</Text>
                   ) : (
-                    <span className="text-xs font-semibold text-text-muted">Stable</span>
+                    <Text variant="subtitle" weight="semibold" color="secondary">Stable</Text>
                   )}
                 </div>
               </div>
@@ -126,8 +126,8 @@ export default function StudentsClient({
         })}
         {filteredStudents.length === 0 && (
           <div className="col-span-full py-20 flex flex-col items-center justify-center text-text-dim border border-dashed border-white/5 rounded-xl">
-            <Icon icon="tabler:users-slash" className="text-4xl mb-4 opacity-50" />
-            <Text>No students found matching your criteria.</Text>
+            <Icon icon="tabler:users-slash" className="text-2xl mb-4 opacity-50" />
+            <Text variant="small" weight="medium">No students found matching your criteria.</Text>
           </div>
         )}
       </div>
@@ -145,12 +145,12 @@ export default function StudentsClient({
           return (
             <div className="space-y-10">
               <div className="flex items-center gap-6">
-                <div className="size-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-3xl font-bold text-white">
+                <div className="size-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-2xl font-bold text-white">
                   {(resolveProfileDisplayName({ profileName: selectedStudent.name }) || 'U')[0]}
                 </div>
                 <div>
-                  <Text as="h3" variant="h3" weight="semibold" className="text-white mb-1">{resolveProfileDisplayName({ profileName: selectedStudent.name }) || 'Unknown Student'}</Text>
-                  <Text variant="small" className="text-text-muted">{selectedStudent.institution || 'Computer Science'}</Text>
+                  <Text variant="h3" className="mb-1">{resolveProfileDisplayName({ profileName: selectedStudent.name }) || 'Unknown Student'}</Text>
+                  <Text color="secondary" weight="medium">{selectedStudent.institution || 'Computer Science'}</Text>
                   <div className="flex gap-2 mt-3">
                     <span className="badge badge-outline">ID: {selectedStudent.id.split('-')[0]}</span>
                     <span className="badge badge-outline">Enrolled 2024</span>
@@ -163,14 +163,14 @@ export default function StudentsClient({
                   <div className="absolute top-0 left-0 w-1 h-full bg-danger" />
                   <div className="flex items-center gap-3 mb-4">
                     <Icon icon="tabler:alert-triangle" className="text-danger text-xl" />
-                    <Text variant="body" weight="semibold" className="text-danger">Active Crisis Alerts</Text>
+                    <Text variant="subtitle" weight="semibold" color="danger">Active Crisis Alerts</Text>
                   </div>
                   <div className="space-y-3">
                     {studentCrises.map(c => (
                       <div key={c.id} className="flex justify-between items-center bg-danger/5 p-3 rounded">
                         <div>
-                          <Text variant="small" weight="medium" className="text-danger text-[10px]">{c.severity} Severity</Text>
-                          <Text variant="small" className="text-white mt-1">{new Date(c.triggered_at).toLocaleString()}</Text>
+                          <Text variant="small" weight="medium" color="danger">{c.severity} Severity</Text>
+                          <Text variant="caption" className="mt-1 block">{new Date(c.triggered_at).toLocaleString()}</Text>
                         </div>
                         <Button size="sm" className="bg-danger text-white hover:bg-danger-hover border-none">Acknowledge</Button>
                       </div>
@@ -181,7 +181,7 @@ export default function StudentsClient({
 
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <Text variant="h4" weight="semibold">Recent Mood Trends</Text>
+                  <Text variant="h4">Recent Mood Trends</Text>
                   <Button size="sm" className="bg-white/5 hover:bg-white/10 border-white/10 text-text-muted">View Full History</Button>
                 </div>
                 {studentMoods.length > 0 ? (
@@ -189,25 +189,25 @@ export default function StudentsClient({
                     {studentMoods.slice(0, 5).map(m => (
                       <div key={m.id} className="flex items-start gap-4 p-4 rounded-lg bg-white/[0.02] border border-white/5">
                         <div className={cn(
-                          "size-8 rounded flex items-center justify-center text-xs font-bold shrink-0",
+                          "size-8 rounded flex items-center justify-center text-[14px] font-bold shrink-0",
                           m.score >= 4 ? "bg-success/20 text-success" : m.score === 3 ? "bg-warning/20 text-warning" : "bg-danger/20 text-danger"
                         )}>
                           {m.score}
                         </div>
                         <div>
-                          <Text variant="small" weight="medium" className="text-text-dim text-[10px] ">{new Date(m.logged_at).toLocaleString()}</Text>
+                          <Text variant="caption" color="muted" weight="medium" className="tabular-nums">{new Date(m.logged_at).toLocaleString()}</Text>
                           {m.note ? (
-                            <Text variant="small" className="text-white mt-1 italic opacity-80">"{m.note}"</Text>
+                            <Text variant="subtitle" className="mt-1 italic opacity-80">&ldquo;{m.note}&rdquo;</Text>
                           ) : (
-                            <Text variant="small" className="text-text-muted mt-1 opacity-50">No notes provided.</Text>
+                            <Text variant="subtitle" color="muted" className="mt-1 opacity-50">No notes provided.</Text>
                           )}
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="p-8 text-center border border-dashed border-white/5 rounded-lg bg-white/[0.01] text-text-dim text-sm italic">
-                    No mood logs recorded yet.
+                  <div className="p-8 text-center border border-dashed border-white/5 rounded-lg bg-white/[0.01]">
+                    <Text variant="subtitle" color="muted" className="italic opacity-60">No mood logs recorded yet.</Text>
                   </div>
                 )}
               </div>

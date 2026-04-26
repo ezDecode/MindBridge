@@ -2,7 +2,9 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { nim, DEFAULT_CHAT_PARAMS, parseCompanionResponse } from '@/lib/nvidia-nim'
 import { buildQuickContext, contextToPrompt } from '@/lib/simple-context'
 import { buildSystemPrompt } from '@/lib/agents/companion-agent'
+import { buildMemoryContext } from '@/lib/agents/memory-agent'
 import { triggerCrisisAlert } from '@/lib/crisis'
+import { executeBooking } from '@/lib/agents/action-agent'
 import { NextResponse } from 'next/server'
 import { cookies } from "next/headers"
 import { DEMO_USERS, type DemoRole } from "@/lib/auth/demo-users"
@@ -191,9 +193,10 @@ export async function POST(request: Request) {
  )
  }
 
- // 1. Build quick context (simple, no LLM call)
- const [quickContext, historyResult] = await Promise.all([
+ // 1. Build Context (Quick Structured + Rich Synthesized)
+ const [quickContext, memorySummary, historyResult] = await Promise.all([
  buildQuickContext(user.id),
+ buildMemoryContext(user.id),
  supabase
  .from('chat_messages')
  .select('role, content')
@@ -204,9 +207,11 @@ export async function POST(request: Request) {
  ])
 
  const history = historyResult.data ?? []
- const contextString = contextToPrompt(quickContext)
+ 
+ // Combine both contexts
+ const contextString = `${contextToPrompt(quickContext)}\n\nRECENT HISTORY SUMMARY:\n${memorySummary}`
 
- // 2. Build system prompt with simple context
+ // 2. Build system prompt
  const systemPrompt = buildSystemPrompt(contextString)
 
  // 3. Create the streaming response from NIM with timeout protection
@@ -276,50 +281,58 @@ export async function POST(request: Request) {
  }
  }
 
- // 5. Parse the complete response
- const parsed = parseCompanionResponse(fullResponse)
- 
- // 6. Save messages to database
- await saveMessages(
- supabase,
- user.id,
- sessionId,
- message,
- parsed?.message ?? fullResponse,
- parsed?.crisis ?? false
- )
+          // 5. Parse the complete response
+          const parsed = parseCompanionResponse(fullResponse)
+          
+          // 6. Save messages to database
+          await saveMessages(
+            supabase,
+            user.id,
+            sessionId,
+            message,
+            parsed?.message ?? fullResponse,
+            parsed?.crisis ?? false
+          )
 
- // 7. Handle crisis
- if (parsed?.crisis) {
- await triggerCrisisAlert(user.id)
- }
+          // 7. Handle actions
+          let actionContext = parsed?.action_context || null
+          if (parsed?.suggested_action === 'book_counselor') {
+            const result = await executeBooking(user.id)
+            if (result.success) {
+              actionContext = result.message
+            }
+          }
 
- // 8. Update assessment if new signals found
- if (parsed?.assessment_update?.criteria_flagged && parsed.assessment_update.criteria_flagged.length > 0) {
- await updateAssessment(supabase, user.id, parsed.assessment_update)
- }
+          // 8. Handle crisis
+          if (parsed?.crisis) {
+            await triggerCrisisAlert(user.id)
+          }
 
- // 9. Send final metadata with smart suggestions
- // 9. Send final metadata with simple suggestions (no extra LLM call)
- const suggestions = parsed?.suggestions?.length
- ? parsed.suggestions.slice(0, 3)
- : buildSuggestions({
- message: parsed?.message ?? fullResponse,
- action: parsed?.suggested_action ?? null,
- crisis: parsed?.crisis ?? false,
- })
+          // 9. Update assessment if new signals found
+          if (parsed?.assessment_update?.criteria_flagged && parsed.assessment_update.criteria_flagged.length > 0) {
+            await updateAssessment(supabase, user.id, parsed.assessment_update)
+          }
 
- controller.enqueue(
- encoder.encode(
- `data: ${JSON.stringify({
- done: true,
- action: parsed?.suggested_action ?? null,
- actionContext: parsed?.action_context ?? null,
- suggestions,
- crisis: parsed?.crisis ?? false,
- })}\n\n`
- )
- )
+          // 10. Send final metadata with smart suggestions
+          const suggestions = parsed?.suggestions?.length
+            ? parsed.suggestions.slice(0, 3)
+            : buildSuggestions({
+                message: parsed?.message ?? fullResponse,
+                action: parsed?.suggested_action ?? null,
+                crisis: parsed?.crisis ?? false,
+              })
+
+          controller.enqueue(
+            encoder.encode(
+              `data: ${JSON.stringify({
+                done: true,
+                action: parsed?.suggested_action ?? null,
+                actionContext: actionContext,
+                suggestions,
+                crisis: parsed?.crisis ?? false,
+              })}\n\n`
+            )
+          )
  } catch (error) {
  console.error('Stream processing error:', error)
  controller.enqueue(

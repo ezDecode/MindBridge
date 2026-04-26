@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Icon } from '@iconify/react';
-import { Container, Text } from "@/components/ui";
+import { Container, Text, BrandLogo } from "@/components/ui";
 
 const footerNavigation = {
  tools: [
@@ -22,13 +22,13 @@ export function SiteFooter() {
  <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr]">
  {/* Brand & Mission */}
  <div className="max-w-[42rem]">
- <div className="inline-flex items-center gap-2 mb-6">
- <span className="flex h-6 w-6 items-center justify-center rounded bg-white text-[10px] font-bold text-black">
- MB
- </span>
- <Text as="span" variant="label" weight="bold" className="tracking-widest">
+ <div className="inline-flex items-center gap-3 mb-6">
+ <Link href="/" suppressHydrationWarning className="inline-flex items-center gap-3 group">
+ <BrandLogo className="h-6 w-6 text-white" />
+ <Text as="span" variant="label" weight="bold">
  MindBridge
  </Text>
+ </Link>
  </div>
  <Text as="h2" variant="h3" weight="semibold" className="mb-4 leading-tight">
  Life-changing habits start with a single calm conversation.
@@ -41,7 +41,7 @@ export function SiteFooter() {
  {/* Navigation Grid */}
  <div className="grid gap-8 sm:grid-cols-2">
  <div>
- <Text as="p" variant="label" weight="bold" color="muted" className="mb-6 tracking-widest">
+ <Text as="p" variant="label" weight="bold" color="muted" className="mb-6">
  Explore
  </Text>
  <div className="grid gap-3">
@@ -49,7 +49,7 @@ export function SiteFooter() {
  <Link
  key={item.href}
  href={item.href}
- className="group flex items-center gap-2 text-sm text-text-muted transition-colors hover:text-white"
+ className="group flex items-center gap-2 text-[1.0625rem] text-text-muted transition-colors hover:text-white"
  >
  {item.label}
  <Icon icon="tabler:arrow-right" className="h-3.5 w-3.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100" />
@@ -58,7 +58,7 @@ export function SiteFooter() {
  </div>
  </div>
  <div>
- <Text as="p" variant="label" weight="bold" color="muted" className="mb-6 tracking-widest">
+ <Text as="p" variant="label" weight="bold" color="muted" className="mb-6">
  Support
  </Text>
  <div className="grid gap-3">
@@ -66,7 +66,7 @@ export function SiteFooter() {
  <Link
  key={item.href}
  href={item.href}
- className="group flex items-center gap-2 text-sm text-text-muted transition-colors hover:text-white"
+ className="group flex items-center gap-2 text-[1.0625rem] text-text-muted transition-colors hover:text-white"
  >
  {item.label}
  <Icon icon="tabler:arrow-right" className="h-3.5 w-3.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100" />
@@ -92,7 +92,7 @@ export function SiteFooter() {
  </Text>
  </div>
  </div>
- <div className="flex items-center gap-2 px-6 py-2 bg-white rounded-md text-black font-semibold text-sm transition-opacity hover:opacity-90">
+ <div className="flex items-center gap-2 px-6 py-2 bg-white rounded-md text-black font-semibold text-[1.0625rem] transition-opacity hover:opacity-90">
  iCall · 9152987821
  </div>
  </div>

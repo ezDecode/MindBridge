@@ -111,12 +111,12 @@ export function MoodGauge({ value, max = 5, size = 140 }: { value: number; max?:
  <span className="text-[2rem] font-bold leading-none text-[var(--text-primary)]">
  <AnimatedNumber value={value} decimals={1} />
  </span>
- <span className="mt-1 text-[11px] font-medium text-[var(--text-muted)]">out of {max}</span>
+ <span className="mt-1 text-base font-medium text-[var(--text-muted)]">out of {max}</span>
  </div>
  </div>
  {/* Label below */}
  <span
- className="mt-1 rounded-full px-3 py-1 text-[11px] font-medium "
+ className="mt-1 rounded-full px-3 py-1 text-base font-medium "
  style={{
  color: moodColor,
  backgroundColor: `${moodColor}15`,

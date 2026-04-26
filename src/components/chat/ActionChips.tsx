@@ -43,7 +43,7 @@ export function BookingSuggestion({
  type="button"
  onClick={onConfirm}
  disabled={isLoading}
- className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--action-primary)] px-4 py-2 text-xs font-bold text-[var(--text-inverse)] transition-all hover:bg-[var(--action-primary-hover)] disabled:opacity-50"
+ className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--action-primary)] px-4 py-2 text-base font-bold text-[var(--text-inverse)] transition-all hover:bg-[var(--action-primary-hover)] disabled:opacity-50"
  >
  <Icon icon="tabler:circle-check" className="h-3.5 w-3.5" />
  Confirm
@@ -52,7 +52,7 @@ export function BookingSuggestion({
  type="button"
  onClick={onCancel}
  disabled={isLoading}
- className="inline-flex h-9 items-center justify-center rounded-full border border-[var(--border-default)] bg-[var(--surface-default)] px-3 text-xs font-bold text-[var(--text-secondary)] transition-all hover:bg-[var(--surface-warm)] disabled:opacity-50"
+ className="inline-flex h-9 items-center justify-center rounded-full border border-[var(--border-default)] bg-[var(--surface-default)] px-3 text-base font-bold text-[var(--text-secondary)] transition-all hover:bg-[var(--surface-warm)] disabled:opacity-50"
  >
  Not now
  </button>
@@ -96,7 +96,7 @@ export function ResourceSuggestion({
  <button
  type="button"
  onClick={onShow}
- className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--status-success)] px-4 py-2 text-xs font-bold text-[var(--text-primary)] transition-all hover:bg-[var(--status-success-dark)] "
+ className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--status-success)] px-4 py-2 text-base font-bold text-[var(--text-primary)] transition-all hover:bg-[var(--status-success-dark)] "
  >
  <Icon icon="tabler:arrow-right" className="h-3.5 w-3.5" />
  Show me
@@ -104,7 +104,7 @@ export function ResourceSuggestion({
  <button
  type="button"
  onClick={onDismiss}
- className="inline-flex h-9 items-center justify-center rounded-full bg-[var(--surface-default)] px-3 text-xs font-bold text-[var(--text-secondary)] transition-all hover:bg-[var(--surface-warm)] "
+ className="inline-flex h-9 items-center justify-center rounded-full bg-[var(--surface-default)] px-3 text-base font-bold text-[var(--text-secondary)] transition-all hover:bg-[var(--surface-warm)] "
  >
  Maybe later
  </button>

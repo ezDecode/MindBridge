@@ -1,16 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Modal, Text } from "@/components/ui";
+import { Modal, Text, BrandLogo } from "@/components/ui";
 import { SettingsForm } from "@/components/settings/SettingsForm";
 import { Icon } from "@iconify/react";
 import { cn } from "@/lib/utils";
 import { signOut } from "@/lib/auth/actions";
 import { AnimatePresence, motion } from "motion/react";
 import { PanicModal } from "./PanicModal";
-import { getCurrentDemoUser, clearDemoSession } from "@/lib/auth/demo-session";
+import { getCurrentDemoUser } from "@/lib/auth/demo-session";
 
 interface RoleShellProps {
   children: React.ReactNode;
@@ -22,6 +22,7 @@ import { DEMO_USERS } from "@/lib/auth/demo-users";
 
 export function RoleShell({ children, navItems, fullHeight = false }: RoleShellProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -37,7 +38,7 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  const [demoUser, setDemoUser] = useState(DEMO_USERS["student"]);
+  const [demoUser, setDemoUser] = useState(DEMO_USERS.student);
 
   useEffect(() => {
     setDemoUser(getCurrentDemoUser());
@@ -45,7 +46,7 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
 
   const user = {
     name: demoUser.name,
-    initials: demoUser.name.split(' ').map(n => n[0]).join('').slice(0, 2),
+    initials: (demoUser.name || 'User').split(' ').map(n => n[0]).join('').slice(0, 2),
     role: demoUser.role.charAt(0).toUpperCase() + demoUser.role.slice(1),
     dept: demoUser.institution,
   };
@@ -53,33 +54,18 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
   const isAdmin = pathname.startsWith("/admin");
   const isCounselor = pathname.startsWith("/counselor");
 
-  const pageTitles: Record<string, string> = {
-    "/student/dashboard": "Personal Dashboard",
-    "/student/chat": "MindBot Companion",
-    "/student/resources": "Wellness Library",
-    "/student/book": "Expert Support",
-    "/student/journal": "Thought Journal",
-    "/student/screening": "Clinical Assessments",
-    "/student/wellness": "Wellness Center",
-    "/student/check-in": "Daily Mood Log",
-    "/admin/dashboard": "Campus Intelligence",
-    "/counselor/dashboard": "Support Command",
-  };
-
-  const currentTitle = pageTitles[pathname] || "MindBridge";
-
   const handleLogout = async () => {
-    clearDemoSession();
     await signOut();
+    router.push("/login");
   };
 
   return (
     <div className="flex h-screen w-full bg-[#030406] text-white overflow-hidden selection:bg-primary/30">
-      <aside className="hidden w-64 shrink-0 flex-col bg-transparent lg:flex z-10">
+      <aside className="hidden w-64 shrink-0 flex-col bg-transparent lg:flex z-30">
         <div className="p-6 pb-5">
-          <Link href="/" className="group flex items-center gap-3">
+          <Link href="/" className="group flex items-center gap-3" suppressHydrationWarning>
             <BrandLogo className="h-7 w-7 text-white transition-transform group-hover:scale-105" />
-            <Text variant="small" weight="medium" className=" text-white">
+            <Text variant="small" weight="bold" className="uppercase text-white">
               MindBridge
             </Text>
           </Link>
@@ -133,8 +119,8 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
                   className="absolute bottom-full left-0 z-50 mb-2 w-72 overflow-hidden rounded-xl border border-white/[0.08] bg-[#0c0f14] shadow-2xl"
                 >
                   <div className="flex items-center justify-between border-b border-white/[0.06] p-4">
-                    <span className="text-[10px] font-medium text-white">Alerts</span>
-                    <button className="text-[9px] font-medium text-primary hover:text-primary-hover">
+                    <span className="text-[10px] font-bold uppercase text-white">Alerts</span>
+                    <button className="text-[9px] font-bold uppercase text-primary hover:text-primary-hover">
                       Clear
                     </button>
                   </div>
@@ -166,19 +152,11 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
             </div>
             <div className="min-w-0 flex-1 text-left">
               <div className="truncate text-xs font-semibold text-white">{user.name}</div>
-              <div className="truncate text-[10px] text-text-dim">
+              <div className="truncate text-[10px] uppercase text-text-dim">
                 {user.role} · {user.dept}
               </div>
             </div>
             <Icon icon="tabler:settings" className="h-4 w-4 text-text-dim transition-colors group-hover:text-white" />
-          </button>
-          
-          <button
-            onClick={handleLogout}
-            className="group flex w-full items-center justify-center gap-2 rounded-xl bg-danger/10 text-danger p-2.5 text-xs font-medium transition-colors hover:bg-danger/20"
-          >
-            <Icon icon="tabler:logout" className="h-4 w-4" />
-            Sign Out
           </button>
         </div>
       </aside>
@@ -186,21 +164,15 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
       <div className="flex min-w-0 flex-1 flex-col p-2 sm:p-3 lg:p-4 lg:pl-0">
         <div className="flex h-full w-full flex-col overflow-hidden rounded-[1.5rem] border border-white/[0.08] bg-[#080a0d] shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-white/5 relative z-20">
           
-          <header className="z-30 flex h-16 shrink-0 items-center justify-between border-b border-white/[0.04] bg-white/[0.01] px-5 sm:px-8">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setIsMobileMenuOpen(true)}
-                className="flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] text-text-muted transition-all hover:bg-white/[0.04] hover:text-white lg:hidden"
-              >
-                <Icon icon="tabler:menu-2" className="h-5 w-5" />
-              </button>
-              <Text as="h1" variant="h6" weight="semibold" className="tracking-tight">
-                {currentTitle}
-              </Text>
-            </div>
-          </header>
+          <main className={cn("flex-1 min-h-0 relative no-scrollbar", fullHeight ? "h-full overflow-hidden" : "overflow-y-auto")}>
+            {/* Mobile Menu Trigger - Floating for cleaner look without header */}
+            <button
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="absolute top-5 left-5 z-40 flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] bg-black/40 backdrop-blur-md text-text-muted transition-all hover:bg-white/[0.04] hover:text-white lg:hidden"
+            >
+              <Icon icon="tabler:menu-2" className="h-5 w-5" />
+            </button>
 
-          <main className={`flex-1 min-h-0 relative no-scrollbar ${fullHeight ? "h-full overflow-hidden" : "overflow-y-auto"}`}>
             {!fullHeight && (
               <div
                 aria-hidden
@@ -245,9 +217,9 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
               className="fixed inset-y-0 left-0 z-[70] flex w-72 flex-col bg-[#030406] p-6 lg:hidden"
             >
               <div className="mb-10 flex items-center justify-between">
-                <Link href="/" className="flex items-center gap-3">
+                <Link href="/" className="flex items-center gap-3" suppressHydrationWarning>
                   <BrandLogo className="h-7 w-7 text-white" />
-                  <Text variant="small" weight="medium" className=" text-white">
+                  <Text variant="small" weight="bold" className="uppercase text-white">
                     MindBridge
                   </Text>
                 </Link>
@@ -255,7 +227,7 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex h-8 w-8 items-center justify-center rounded-md border border-white/[0.08] text-text-muted"
                 >
-                  <Icon icon="tabler:x" className="h-4 w-4" />
+                  <Icon icon="tabler:x" className="h-5 w-5" />
                 </button>
               </div>
 
@@ -268,9 +240,7 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
                       href={item.href}
                       className={cn(
                         "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all",
-                        isActive
-                          ? "bg-white/[0.08] text-white"
-                          : "text-text-muted hover:bg-white/[0.04] hover:text-white",
+                        isActive ? "bg-white/[0.08] text-white" : "text-text-muted"
                       )}
                     >
                       <Icon icon={item.icon} className={cn("h-5 w-5", isActive ? "text-primary" : "text-text-dim")} />
@@ -280,24 +250,20 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
                 })}
               </nav>
 
-              <div className="mt-auto pt-6 border-t border-white/[0.04]">
-                <button
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    setIsSettingsOpen(true);
-                  }}
-                  className="flex w-full items-center gap-3 rounded-xl border border-white/[0.04] bg-white/[0.02] p-2.5"
+              <div className="mt-auto border-t border-white/5 pt-6">
+                <button 
+                  onClick={() => { setIsSettingsOpen(true); setIsMobileMenuOpen(false); }}
+                  className="flex w-full items-center gap-3 px-3 py-3 text-sm font-medium text-text-muted"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10 text-xs font-bold text-primary">
-                    {user.initials}
-                  </div>
-                  <div className="min-w-0 flex-1 text-left">
-                    <div className="truncate text-xs font-semibold text-white">{user.name}</div>
-                    <div className="truncate text-[10px] text-text-dim">
-                      {user.role}
-                    </div>
-                  </div>
-                  <Icon icon="tabler:settings" className="h-4 w-4 text-text-dim" />
+                  <Icon icon="tabler:settings" className="h-5 w-5" />
+                  Settings
+                </button>
+                <button 
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-3 px-3 py-3 text-sm font-medium text-text-muted"
+                >
+                  <Icon icon="tabler:logout" className="h-5 w-5" />
+                  Sign Out
                 </button>
               </div>
             </motion.aside>
@@ -339,29 +305,7 @@ function NotificationItem({
         {unread && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
       </div>
       <div className="mb-2 line-clamp-1 text-[11px] text-text-muted">{desc}</div>
-      <div className="text-[9px] font-medium text-text-dim">{time}</div>
+      <div className="text-[9px] font-bold uppercase text-text-dim">{time}</div>
     </div>
-  );
-}
-
-function BrandLogo({ className }: { className?: string }) {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      role="img"
-      focusable="false"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      className={cn("shrink-0", className)}
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M11.3354 1.08228C11.7059 1.27438 11.8561 1.74156 11.6708 2.12576L9.5593 6.50508C9.39923 6.83707 9.64113 7.22224 10.0097 7.22224H14C14 7.22224 14.2275 7.22219 14.25 7.22219C14.6642 7.22219 15 7.57041 15 7.99996C15 8.4295 14.6642 8.77772 14.25 8.77772C10.4465 8.77772 7.32888 11.131 5.67083 14.5699C5.48559 14.9541 5.03507 15.1098 4.66459 14.9177C4.29411 14.7256 4.14394 14.2584 4.32918 13.8742L6.44081 9.49467C6.60085 9.16275 6.35907 8.77764 5.99059 8.77759C4.57706 8.7774 3.16352 8.77781 1.75 8.77781C1.33579 8.77781 1 8.42959 1 8.00004C1 7.5705 1.33579 7.22228 1.75 7.22228C5.55362 7.22228 8.67116 4.86885 10.3292 1.43003C10.5145 1.04588 10.965 0.890196 11.3354 1.08228Z"
-        fill="currentColor"
-      />
-    </svg>
   );
 }

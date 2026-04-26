@@ -3,28 +3,26 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Icon } from '@iconify/react';
-import { Container, Text } from "@/components/ui";
+import { Container, Text, BrandLogo } from "@/components/ui";
 import { marketingNav } from "@/content/mindbridge";
 
 export function SiteHeader() {
  const [isOpen, setIsOpen] = useState(false);
  const desktopGhostLinkClass =
- "inline-flex h-9 shrink-0 items-center justify-center rounded-md px-3 text-sm font-medium whitespace-nowrap text-text-muted transition-colors duration-150 hover:bg-white/5 hover:text-white";
+ "inline-flex h-9 shrink-0 items-center justify-center rounded-md px-3 text-[1.0625rem] font-medium whitespace-nowrap text-text-muted transition-colors duration-150 hover:bg-white/5 hover:text-white";
  const desktopWarmLinkClass =
- "inline-flex h-9 shrink-0 items-center justify-center rounded-md px-4 text-sm font-medium whitespace-nowrap bg-white text-black transition-opacity duration-150 hover:opacity-90";
+ "inline-flex h-9 shrink-0 items-center justify-center rounded-md px-4 text-[1.0625rem] font-medium whitespace-nowrap bg-white text-black transition-opacity duration-150 hover:opacity-90";
  const mobileGhostLinkClass =
- "inline-flex h-10 w-full items-center justify-center rounded-md px-4 text-sm font-medium text-text-muted transition-colors duration-150 hover:bg-white/5 hover:text-white";
+ "inline-flex h-10 w-full items-center justify-center rounded-md px-4 text-[1.0625rem] font-medium text-text-muted transition-colors duration-150 hover:bg-white/5 hover:text-white";
  const mobileWarmLinkClass =
- "inline-flex h-10 w-full items-center justify-center rounded-md px-4 text-sm font-medium bg-white text-black transition-opacity duration-150 hover:opacity-90";
+ "inline-flex h-10 w-full items-center justify-center rounded-md px-4 text-[1.0625rem] font-medium bg-white text-black transition-opacity duration-150 hover:opacity-90";
 
  return (
  <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md">
  <Container size="md">
  <div className="flex h-16 items-center justify-between gap-3">
- <Link href="/" className="flex min-w-0 items-center gap-3 group">
- <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-white text-xs font-bold text-black transition-colors">
- MB
- </span>
+ <Link href="/" className="flex min-w-0 items-center gap-3 group" suppressHydrationWarning>
+ <BrandLogo className="h-8 w-8 text-white transition-transform group-hover:scale-105" />
  <div className="min-w-0">
  <Text as="p" variant="small" weight="bold" className="tracking-tight">
  MindBridge
@@ -37,7 +35,7 @@ export function SiteHeader() {
  <Link
  key={item.href}
  href={item.href}
- className="rounded-md px-3 py-1.5 text-sm font-medium text-text-muted transition-colors duration-150 hover:text-white hover:bg-white/5"
+ className="rounded-md px-3 py-1.5 text-[1.0625rem] font-medium text-text-muted transition-colors duration-150 hover:text-white hover:bg-white/5"
  >
  {item.label}
  </Link>
@@ -73,7 +71,7 @@ export function SiteHeader() {
  key={item.href}
  href={item.href}
  onClick={() => setIsOpen(false)}
- className="flex items-center justify-between rounded-md px-3 py-2.5 text-sm font-medium text-text-muted transition-colors hover:text-white hover:bg-white/5"
+ className="flex items-center justify-between rounded-md px-3 py-2.5 text-[1.0625rem] font-medium text-text-muted transition-colors hover:text-white hover:bg-white/5"
  >
  <span>{item.label}</span>
  <Icon icon="tabler:arrow-right" className="h-4 w-4 opacity-50" />

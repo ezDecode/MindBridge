@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { firstNameOrFallback, resolveProfileDisplayName } from '@/lib/profile-name'
 import { DEMO_USERS } from '@/lib/auth/demo-users'
+import { nim, DEFAULT_CHAT_PARAMS } from '@/lib/nvidia-nim'
+import { buildQuickContext, contextToPrompt } from '@/lib/simple-context'
 
 // We run this as a system process, so we use the Service Role Key to bypass Row Level Security
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
@@ -29,121 +31,122 @@ export async function POST(req: Request) {
     const demoUserById = new Map(demoUsers.map((u) => [u.id, u]))
 
     let triggeredCount = 0
-    const profileNameUpdates: Array<{ id: string; name: string }> = []
 
     // 3. Analyze each student
     for (const student of students || []) {
-      let triggerProactiveMessage = false
-      let reason = ''
+      let triggerReason = ''
 
       try {
-        const { data: recentLogs } = await supabase
-          .from('mood_logs')
-          .select('*')
-          .eq('user_id', student.id)
-          .order('logged_at', { ascending: false })
-          .limit(1)
+        const [quickContext, recentLogs] = await Promise.all([
+          buildQuickContext(student.id),
+          supabase
+            .from('mood_logs')
+            .select('*')
+            .eq('user_id', student.id)
+            .order('logged_at', { ascending: false })
+            .limit(1)
+        ])
 
-        const hasRecentLog = recentLogs && recentLogs.length > 0
+        const hasRecentLog = recentLogs.data && recentLogs.data.length > 0
 
         if (!hasRecentLog) {
-          triggerProactiveMessage = true
-          reason = "Haven't heard from you in a while."
-        } else if (recentLogs[0].score <= 2) {
-          triggerProactiveMessage = true
-          reason = "Noticed you were feeling a bit down in your last check-in."
-        }
-      } catch (err) {
-        console.error('Error fetching logs for student', student.id, err)
-      }
-
-      if (triggerProactiveMessage) {
-        const demoUser = demoUserById.get(student.id)
-        const resolvedName = resolveProfileDisplayName({
-          profileName: student.name,
-          email: demoUser?.email,
-        })
-        
-        if (resolvedName && resolvedName !== student.name) {
-          profileNameUpdates.push({ id: student.id, name: resolvedName })
+          triggerReason = "Haven't checked in for a few days."
+        } else if (recentLogs.data[0].score <= 2) {
+          triggerReason = "Recent mood check-in was low."
+        } else if (quickContext.mood.trend === 'down') {
+          triggerReason = "Emotional trend is declining."
         }
 
-        // 4. Ensure a chat session exists
-        let sessionId: string | null = null
-        
-        // Try to find the most recent session
-        const { data: recentSessions } = await supabase
-          .from('chat_sessions')
-          .select('id')
-          .eq('user_id', student.id)
-          .order('last_message_at', { ascending: false })
-          .limit(1)
-
-        if (recentSessions && recentSessions.length > 0) {
-          sessionId = recentSessions[0].id
-        } else {
-          // Create a new session
-          const { data: newSession, error: sessionError } = await supabase
-            .from('chat_sessions')
-            .insert({
-              user_id: student.id,
-              title: 'Checking in',
-            })
-            .select()
-            .single()
-          
-          if (!sessionError && newSession) {
-            sessionId = newSession.id
-          }
-        }
-
-        if (sessionId) {
-          const messageContent = `Hey ${firstNameOrFallback(resolvedName)}, ${reason.toLowerCase()} How's today treating you?`
-
-          // 5. Send an initial outreach message from the AI Assistant
-          await supabase.from('chat_messages').insert({
-            session_id: sessionId,
-            user_id: student.id,
-            role: 'assistant',
-            proactive: true,
-            is_proactive: true, // Supporting both column names if they exist
-            content: messageContent,
+        if (triggerReason) {
+          const contextString = contextToPrompt(quickContext)
+          const demoUser = demoUserById.get(student.id)
+          const resolvedName = resolveProfileDisplayName({
+            profileName: student.name,
+            email: demoUser?.email,
           })
 
-          // 6. Log to proactive_outreach_logs
-          try {
+          // 4. Use NIM to craft a natural opening message
+          const completion = await nim.chat.completions.create({
+            ...DEFAULT_CHAT_PARAMS,
+            messages: [
+              {
+                role: 'system',
+                content: `You're MindBridge checking in on ${firstNameOrFallback(resolvedName)} proactively.
+                
+                CONTEXT:
+                ${contextString}
+                
+                TRIGGER REASON: ${triggerReason}
+                
+                TASK:
+                Write a single, natural opening message (1-2 sentences max). 
+                Don't mention the app or say "I noticed". Just open conversation naturally.
+                Sound like a friend texting, not a bot.
+                
+                GOOD EXAMPLES:
+                - "Hey, rough few days — how's today treating you?"
+                - "Haven't heard from you in a bit. What's going on?"
+                - "Exams are close — how are you holding up?"
+                
+                Return just the message text, no JSON, no quotes.`
+              }
+            ],
+            max_tokens: 60,
+          })
+
+          const openingMessage = completion.choices[0].message.content?.trim().replace(/^["']|["']$/g, '') || `Hey ${firstNameOrFallback(resolvedName)}, how's your day going?`
+
+          // 5. Ensure a chat session exists
+          let sessionId: string | null = null
+          const { data: recentSessions } = await supabase
+            .from('chat_sessions')
+            .select('id')
+            .eq('user_id', student.id)
+            .order('last_message_at', { ascending: false })
+            .limit(1)
+
+          if (recentSessions && recentSessions.length > 0) {
+            sessionId = recentSessions[0].id
+          } else {
+            const { data: newSession } = await supabase
+              .from('chat_sessions')
+              .insert({ user_id: student.id, title: 'Checking in' })
+              .select().single()
+            if (newSession) sessionId = newSession.id
+          }
+
+          if (sessionId) {
+            // 6. Send message from Assistant
+            await supabase.from('chat_messages').insert({
+              session_id: sessionId,
+              user_id: student.id,
+              role: 'assistant',
+              is_proactive: true,
+              content: openingMessage,
+            })
+
+            // 7. Log to proactive_outreach_logs
             await supabase.from('proactive_outreach_logs').insert({
               student_id: student.id,
               urgency: 'low',
-              reason: reason,
-              message_sent: messageContent,
+              reason: triggerReason,
+              message_sent: openingMessage,
               session_id: sessionId,
             })
-          } catch (logErr) {
-            console.error("Could not log to proactive_outreach_logs table", logErr)
+
+            triggeredCount++
           }
-
-          triggeredCount++
         }
+      } catch (err) {
+        console.error('Error processing proactive for student', student.id, err)
       }
-    }
-
-    if (profileNameUpdates.length > 0) {
-      await Promise.all(
-        profileNameUpdates.map(({ id, name }) =>
-          supabase.from('profiles').update({ name }).eq('id', id)
-        )
-      )
     }
 
     return NextResponse.json({
       success: true,
-      message: `Proactive agent ran successfully. Triggered messages for ${triggeredCount} student(s).`
-    }, { status: 200 })
-
-  } catch (err: unknown) {
-    const error = err as Error;
-    console.error('Proactive Cron Error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+      message: `Proactive agent ran. Triggered messages for ${triggeredCount} student(s).`
+    })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
   }
 }

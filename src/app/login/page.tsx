@@ -105,10 +105,10 @@ function LoginForm() {
                     <Text as="h3" variant="h4" weight="semibold" className="text-white mb-1">
                       {persona.name}
                     </Text>
-                    <code className="text-[11px] text-primary/60 font-mono tracking-wider block mb-4">
+                    <code className="text-base text-primary/60 font-mono block mb-4">
                       {persona.email}
                     </code>
-                    <Text as="p" color="secondary" className="text-sm leading-relaxed mb-8 opacity-70">
+                    <Text as="p" color="secondary" className="text-[1.0625rem] leading-relaxed mb-8 opacity-70">
                       {persona.description}
                     </Text>
                   </div>
@@ -119,7 +119,7 @@ function LoginForm() {
                   }}>
                     <button 
                       type="submit"
-                      className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-white text-black text-sm font-semibold hover:bg-gray-200 active:scale-[0.98] transition-all"
+                      className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-white text-black text-[1.0625rem] font-semibold hover:bg-gray-200 active:scale-[0.98] transition-all"
                     >
                       Launch
                       <Icon icon="tabler:arrow-right" className="h-4 w-4" />
@@ -136,7 +136,7 @@ function LoginForm() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 1 }}
           >
-            <Text as="p" variant="small" className="text-white/20 tracking-[0.2em] font-medium">
+            <Text as="p" variant="small" className="text-white/20 font-medium">
               Demo environment — no real data is stored
             </Text>
           </motion.div>

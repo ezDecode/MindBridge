@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 type Slot = { id: string, slot_start: string, slot_end: string, available: boolean }
 type Booking = { id: string, slot_id: string | null, status: string, type: string, profiles: { name: string | null } | null }
 
-export default function AvailabilityClient({ counselorId, initialSlots, initialBookings }: { counselorId: string, initialSlots: Slot[], initialBookings: Booking[] }) {
+export default function AvailabilityClient({ initialSlots, initialBookings }: { initialSlots: Slot[], initialBookings: Booking[] }) {
   const { showToast } = useToast()
   const [slots, setSlots] = useState<Slot[]>(initialSlots)
   const [isAdding, setIsAdding] = useState(false)
@@ -86,28 +86,28 @@ export default function AvailabilityClient({ counselorId, initialSlots, initialB
               </div>
               <div>
                 <Text variant="h4" weight="semibold">New Availability</Text>
-                <Text variant="small" className="text-text-dim text-[10px] font-medium">Create 1hr blocks</Text>
+                <Text variant="small" className="text-text-dim text-base font-medium">Create 1hr blocks</Text>
               </div>
             </div>
 
             <div className="space-y-5">
               <div>
-                <label className="block text-[10px] font-medium text-text-muted mb-2">Select Date</label>
+                <label className="block text-base font-medium text-text-muted mb-2">Select Date</label>
                 <input 
                   type="date"
                   value={newDate}
                   onChange={(e) => setNewDate(e.target.value)}
                   min={new Date().toISOString().split('T')[0]}
-                  className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm text-white outline-none focus:border-primary/50 transition-colors"
+                  className="w-full bg-background border border-border rounded-lg px-4 py-3 text-[1.0625rem] text-white outline-none focus:border-primary/50 transition-colors"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-medium text-text-muted mb-2">Start Time</label>
+                <label className="block text-base font-medium text-text-muted mb-2">Start Time</label>
                 <input 
                   type="time"
                   value={newTime}
                   onChange={(e) => setNewTime(e.target.value)}
-                  className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm text-white outline-none focus:border-primary/50 transition-colors [&::-webkit-calendar-picker-indicator]:invert"
+                  className="w-full bg-background border border-border rounded-lg px-4 py-3 text-[1.0625rem] text-white outline-none focus:border-primary/50 transition-colors [&::-webkit-calendar-picker-indicator]:invert"
                 />
               </div>
               <Button 
@@ -126,7 +126,7 @@ export default function AvailabilityClient({ counselorId, initialSlots, initialB
         <div className="lg:col-span-8">
           {groupedSlots.length === 0 ? (
             <div className="h-full min-h-[400px] flex flex-col items-center justify-center border border-dashed border-white/10 rounded-xl bg-white/[0.01] text-text-dim">
-              <Icon icon="tabler:calendar-cancel" className="text-4xl mb-4 opacity-50" />
+              <Icon icon="tabler:calendar-cancel" className="text-2xl mb-4 opacity-50" />
               <Text>Your schedule is completely empty.</Text>
               <Text variant="small" className="mt-1">Add slots from the sidebar to accept bookings.</Text>
             </div>
@@ -136,7 +136,7 @@ export default function AvailabilityClient({ counselorId, initialSlots, initialB
                 <div key={date.toISOString()} className="flex flex-col sm:flex-row gap-6 p-6 rounded-xl bg-surface border border-white/5 shadow-sm">
                   <div className="sm:w-32 shrink-0 border-b sm:border-b-0 sm:border-r border-white/5 pb-4 sm:pb-0 sm:pr-4 flex flex-col sm:items-end sm:text-right pt-1">
                     <Text variant="h4" weight="semibold" className="text-white leading-none mb-1">{date.getDate()}</Text>
-                    <Text variant="small" className="text-text-muted text-xs font-medium ">{date.toLocaleDateString('en-US', { weekday: 'short', month: 'short' })}</Text>
+                    <Text variant="small" className="text-text-muted text-base font-medium ">{date.toLocaleDateString('en-US', { weekday: 'short', month: 'short' })}</Text>
                   </div>
                   
                   <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
@@ -154,18 +154,18 @@ export default function AvailabilityClient({ counselorId, initialSlots, initialB
                               : "bg-white/[0.02] border-white/10 hover:border-white/20 hover:bg-white/[0.04]"
                           )}
                         >
-                          <Text variant="small" weight="semibold" className={cn("text-xs mb-1 block", isBooked ? "text-primary" : "text-white")}>
+                          <Text variant="small" weight="semibold" className={cn("text-base mb-1 block", isBooked ? "text-primary" : "text-white")}>
                             {new Date(slot.slot_start).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
                           </Text>
                           {isBooked ? (
                             <>
-                              <Text variant="small" className="text-[10px] font-medium text-text-dim block truncate">
+                              <Text variant="small" className="text-base font-medium text-text-dim block truncate">
                                 {booking?.profiles?.name || 'Booked'}
                               </Text>
                               <div className="absolute -top-1 -right-1 size-2.5 rounded-full bg-warning shadow-[0_0_8px_rgba(245,158,11,0.6)]" />
                             </>
                           ) : (
-                            <Text variant="small" className="text-[10px] font-medium text-text-dim block opacity-50">
+                            <Text variant="small" className="text-base font-medium text-text-dim block opacity-50">
                               Open
                             </Text>
                           )}

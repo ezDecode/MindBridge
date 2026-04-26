@@ -189,26 +189,48 @@ export function useChat({ sessionId, initialMessages = [], onAction, onCrisis }:
 
 // Helper to extract clean message text (remove JSON if present)
 export function cleanMessageContent(content: string): string {
- if (!content) return ''
+  if (!content) return "";
 
- try {
- const jsonBlockMatch = content.match(/```json\s*([\s\S]*?)\s*```/i)
- if (jsonBlockMatch?.[1]) {
- const parsed = JSON.parse(jsonBlockMatch[1])
- return parsed.message || parsed.text || content
- }
+  // 1. Check for complete JSON blocks first
+  try {
+    const jsonBlockMatch = content.match(/```json\s*([\s\S]*?)\s*```/i);
+    if (jsonBlockMatch?.[1]) {
+      const parsed = JSON.parse(jsonBlockMatch[1]);
+      return parsed.message || parsed.text || content;
+    }
 
- const jsonMatch = content.match(/\{[\s\S]*\}/)
- if (jsonMatch) {
- const parsed = JSON.parse(jsonMatch[0])
- return parsed.message || parsed.text || content
- }
- } catch {
- // Not JSON, return as-is
- }
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0]);
+      return parsed.message || parsed.text || content;
+    }
+  } catch {
+    // Fall through to partial parsing
+  }
 
- return content
- .trim()
- .replace(/^["']|["']$/g, '')
- .replace(/\\n/g, '\n')
+  // 2. Handle partial streaming JSON (e.g., {"message": "Hello...)
+  // This regex looks for the content of the "message" field
+  const partialMessageMatch = content.match(/"message"\s*:\s*"((?:[^"\\]|\\.)*)/i);
+  if (partialMessageMatch?.[1]) {
+    // Unescape the captured partial string
+    try {
+      return partialMessageMatch[1]
+        .replace(/\\n/g, "\n")
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, "\\");
+    } catch {
+      return partialMessageMatch[1];
+    }
+  }
+
+  // 3. If it looks like JSON but we can't find a message yet, show nothing (it's internal structure)
+  if (content.trim().startsWith("{")) {
+    return "";
+  }
+
+  // 4. Default fallback
+  return content
+    .trim()
+    .replace(/^["']|["']$/g, "")
+    .replace(/\\n/g, "\n");
 }

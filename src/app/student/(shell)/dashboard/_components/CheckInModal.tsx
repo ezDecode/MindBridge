@@ -175,7 +175,7 @@ export function CheckInModal({ isOpen, onClose, onComplete }: CheckInModalProps)
              value={note}
              onChange={(e) => setNote(e.target.value)}
              placeholder="What's on your mind? (optional)"
-             className="mt-6 w-full resize-none rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition-all duration-200 focus:border-[var(--action-primary)] focus:shadow-[0_0_0_4px_rgba(244,125,75,0.08)] placeholder:text-[var(--text-muted)] text-wrap-pretty"
+             className="mt-6 w-full resize-none rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] px-4 py-3 text-[1.0625rem] text-[var(--text-primary)] outline-none transition-all duration-200 focus:border-[var(--action-primary)] focus:shadow-[0_0_0_4px_rgba(244,125,75,0.08)] placeholder:text-[var(--text-muted)] text-wrap-pretty"
            />
 
            {/* Actions */}

@@ -185,18 +185,40 @@ function parseAndSanitize(jsonString: string): CompanionResponse | null {
 }
 
 function extractMessageFallback(text: string): CompanionResponse {
- // Clean up the text for use as a direct message
- const cleaned = text
- .replace(/```[\s\S]*?```/g, '')
- .replace(/\n+/g, ' ')
- .trim()
- 
- return {
- message: ensureWarmTone(sanitizeClinicalLanguage(cleaned)),
- crisis: false,
- assessment_update: { criteria_flagged: [], severity: 'none' },
- suggested_action: null,
- action_context: null,
- suggestions: [],
- }
+  // If it looks like JSON but parsing failed, try to extract just the message field with regex
+  const messageMatch = text.match(/"message"\s*:\s*"((?:[^"\\]|\\.)*)"/i);
+  if (messageMatch?.[1]) {
+    try {
+      const extracted = messageMatch[1]
+        .replace(/\\n/g, "\n")
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, "\\");
+      return {
+        message: ensureWarmTone(sanitizeClinicalLanguage(extracted)),
+        crisis: false,
+        assessment_update: { criteria_flagged: [], severity: "none" },
+        suggested_action: null,
+        action_context: null,
+        suggestions: [],
+      };
+    } catch {
+      // Fall through if unescaping fails
+    }
+  }
+
+  // Clean up the text for use as a direct message
+  const cleaned = text
+    .replace(/```json[\s\S]*?```/gi, "")
+    .replace(/\{[\s\S]*\}/g, "")
+    .replace(/\n+/g, " ")
+    .trim();
+
+  return {
+    message: ensureWarmTone(sanitizeClinicalLanguage(cleaned || "I'm here for you. What's on your mind?")),
+    crisis: false,
+    assessment_update: { criteria_flagged: [], severity: "none" },
+    suggested_action: null,
+    action_context: null,
+    suggestions: [],
+  };
 }

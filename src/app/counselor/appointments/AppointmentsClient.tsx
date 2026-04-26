@@ -67,7 +67,7 @@ export default function AppointmentsClient({ initialBookings }: { initialBooking
               key={t.id}
               onClick={() => setFilter(t.id as any)}
               className={cn(
-                "px-4 py-1.5 rounded-md text-xs font-medium transition-all",
+                "px-4 py-1.5 rounded-md text-base font-medium transition-all",
                 filter === t.id 
                   ? "bg-white/10 text-white shadow-sm" 
                   : "text-text-muted hover:text-white hover:bg-white/5"
@@ -85,7 +85,7 @@ export default function AppointmentsClient({ initialBookings }: { initialBooking
       <div className="grid grid-cols-1 gap-4">
         {filteredBookings.length === 0 ? (
           <div className="py-20 flex flex-col items-center justify-center text-text-dim border border-dashed border-white/5 rounded-xl bg-white/[0.01]">
-            <Icon icon="tabler:calendar-cancel" className="text-4xl mb-4 opacity-50" />
+            <Icon icon="tabler:calendar-cancel" className="text-2xl mb-4 opacity-50" />
             <Text>No appointments found.</Text>
           </div>
         ) : (
@@ -96,34 +96,34 @@ export default function AppointmentsClient({ initialBookings }: { initialBooking
             return (
               <Card key={booking.id} padding="lg" className="bg-surface hover:border-white/20 transition-all flex flex-col md:flex-row items-center gap-6 group">
                 <div className="flex flex-col items-center justify-center size-16 rounded bg-surface-raised border border-border shadow-sm shrink-0 group-hover:bg-surface-hover transition-colors">
-                  <span className="text-[9px] font-medium text-text-muted">{date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                  <span className="text-base font-medium text-text-muted">{date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
                   <span className="text-xl font-bold text-white leading-tight tabular-nums">{date.getDate()}</span>
-                  <span className="text-[9px] font-medium text-text-dim ">{date.toLocaleDateString('en-US', { month: 'short' })}</span>
+                  <span className="text-base font-medium text-text-dim ">{date.toLocaleDateString('en-US', { month: 'short' })}</span>
                 </div>
                 
                 <div className="flex-1 text-center md:text-left min-w-0">
                   <div className="flex items-center justify-center md:justify-start gap-3 mb-1">
                     <Text weight="semibold" className="text-white text-base">{studentName}</Text>
-                    {booking.type === 'crisis' && <span className="badge bg-danger/10 text-danger border-danger/20 text-[9px]">CRISIS</span>}
-                    {booking.type === 'anonymous' && <span className="badge badge-outline text-[9px]">ANON</span>}
+                    {booking.type === 'crisis' && <span className="badge bg-danger/10 text-danger border-danger/20 text-base">CRISIS</span>}
+                    {booking.type === 'anonymous' && <span className="badge badge-outline text-base">ANON</span>}
                   </div>
-                  <div className="flex flex-wrap justify-center md:justify-start gap-4 text-[10px] font-medium text-text-dim tabular-nums">
+                  <div className="flex flex-wrap justify-center md:justify-start gap-4 text-base font-medium text-text-dim tabular-nums">
                     <span className="flex items-center gap-1.5">
-                      <Icon icon="tabler:clock" className="text-primary text-xs" /> 
+                      <Icon icon="tabler:clock" className="text-primary text-base" /> 
                       {date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Icon icon="tabler:video" className="text-secondary text-xs" /> Online
+                      <Icon icon="tabler:video" className="text-secondary text-base" /> Online
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Icon icon="tabler:school" className="text-warning text-xs" /> {booking.profiles?.institution || 'Campus'}
+                      <Icon icon="tabler:school" className="text-warning text-base" /> {booking.profiles?.institution || 'Campus'}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
                   <span className={cn(
-                    "badge text-[9px] w-full sm:w-auto text-center justify-center",
+                    "badge text-base w-full sm:w-auto text-center justify-center",
                     booking.status === 'confirmed' ? "bg-success/10 text-success border-success/20" :
                     booking.status === 'pending_confirmation' ? "bg-warning/10 text-warning border-warning/20" :
                     "bg-white/5 text-text-dim border-white/10"

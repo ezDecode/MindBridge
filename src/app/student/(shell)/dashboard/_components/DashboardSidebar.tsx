@@ -53,10 +53,10 @@ export function DashboardSidebar({
         <div className="flex h-full flex-col px-4 pb-4">
           <div className="flex items-center justify-between pt-6 pb-8">
             <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80 ml-1 group">
-              <div className="flex h-7 w-7 items-center justify-center rounded bg-white text-black text-xs font-bold transition-transform">
+              <div className="flex h-7 w-7 items-center justify-center rounded bg-white text-black text-base font-bold transition-transform">
                 MB
               </div>
-              <span className="text-sm font-medium tracking-tight text-white ">MindBridge</span>
+              <span className="text-[1.0625rem] font-medium tracking-tight text-white ">MindBridge</span>
             </Link>
             <button
               type="button"
@@ -81,7 +81,7 @@ export function DashboardSidebar({
             >
               <Icon icon="tabler:plus" className="h-4 w-4" strokeWidth={2.5} />
               New Session
-              <div className="ml-auto flex items-center gap-0.5 rounded border border-black/10 px-1 py-0.5 text-[9px] font-bold opacity-60">
+              <div className="ml-auto flex items-center gap-0.5 rounded border border-black/10 px-1 py-0.5 text-base font-bold opacity-60">
                 <Icon icon="tabler:command" className="h-2.5 w-2.5" /> K
               </div>
             </button>
@@ -90,7 +90,7 @@ export function DashboardSidebar({
           <div className="flex-1 overflow-y-auto no-scrollbar -mx-2 px-2">
             
             <div className="mb-8">
-              <h3 className="mb-3 px-3 text-[10px] font-medium tracking-[0.15em] text-text-dim">
+              <h3 className="mb-3 px-3 text-base font-medium text-text-dim">
                 Analyze
               </h3>
               <nav className="flex flex-col gap-1">
@@ -103,7 +103,7 @@ export function DashboardSidebar({
             </div>
 
             <div className="mb-8">
-              <h3 className="mb-3 px-3 text-[10px] font-medium tracking-[0.15em] text-text-dim">
+              <h3 className="mb-3 px-3 text-base font-medium text-text-dim">
                 Support
               </h3>
               <nav className="flex flex-col gap-1">
@@ -136,12 +136,12 @@ export function DashboardSidebar({
                className="group flex w-full items-center justify-between rounded-md px-2 py-2 transition-all hover:bg-white/5 active:scale-[0.98]"
              >
                <div className="flex items-center gap-3">
-                 <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10 text-primary font-bold text-xs">
+                 <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10 text-primary font-bold text-base">
                    {userName.charAt(0)}
                  </div>
                  <div className="flex flex-col items-start justify-center">
                    <span className="text-[13px] font-semibold text-white leading-none">{userName}</span>
-                   <span className="text-[9px] font-medium text-text-dim mt-1 leading-none ">Student</span>
+                   <span className="text-base font-medium text-text-dim mt-1 leading-none ">Student</span>
                  </div>
                </div>
                <Icon icon="tabler:settings" className="h-4 w-4 text-text-dim transition-colors group-hover:text-white" />

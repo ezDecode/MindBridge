@@ -256,10 +256,10 @@ export function QuestionSessionSheet({
  </Text>
  ) : currentQuestion ? (
  <>
- <span className="rounded bg-white/5 px-2 py-0.5 text-[9px] font-medium text-text-dim border border-white/5">
+ <span className="rounded bg-white/5 px-2 py-0.5 text-base font-medium text-text-dim border border-white/5">
  {categoryLabels[currentQuestion.category] || currentQuestion.category}
  </span>
- <span className="text-[10px] font-medium text-text-dim tabular-nums">
+ <span className="text-base font-medium text-text-dim tabular-nums">
  {step + 1} of {session?.questions.length || 0}
  </span>
  </>
@@ -300,12 +300,12 @@ export function QuestionSessionSheet({
  <Text weight="semibold" className="mt-6 text-white tracking-tight">
  We hit a small bump
  </Text>
- <Text color="secondary" className="mt-2 text-sm leading-relaxed">
+ <Text color="secondary" className="mt-2 text-[1.0625rem] leading-relaxed">
  {error}
  </Text>
  <Button
  onClick={() => void loadSession()}
- className="mt-8 gap-2 text-[10px] font-medium"
+ className="mt-8 gap-2 text-base font-medium"
  >
  <Icon icon="tabler:refresh" className="h-3.5 w-3.5" />
  Try again
@@ -325,11 +325,11 @@ export function QuestionSessionSheet({
 
  <div className="relative z-10">
    <div className="flex flex-wrap items-center gap-3 mb-8">
-     <span className={cn("badge px-3 py-1 text-[9px] ", severityStyles[summary.severity])}>
+     <span className={cn("badge px-3 py-1 text-base ", severityStyles[summary.severity])}>
        {severityTone[summary.severity]}
      </span>
      <div className="h-3 w-px bg-white/10 mx-1" />
-     <span className="text-[10px] font-medium text-text-dim tracking-[0.2em] tabular-nums">
+     <span className="text-base font-medium text-text-dim tabular-nums">
        Overall Score {summary.derivedMoodScore}/5
      </span>
    </div>
@@ -376,7 +376,7 @@ export function QuestionSessionSheet({
  <Text weight="semibold" className="text-white text-base">
  Immediate support is available
  </Text>
- <Text color="secondary" className="mt-2 text-sm leading-relaxed max-w-lg">
+ <Text color="secondary" className="mt-2 text-[1.0625rem] leading-relaxed max-w-lg">
  Please reach out to iCall at <a className="text-white font-bold underline underline-offset-4" href="tel:9152987821">9152987821</a> or your local emergency team. You don&apos;t have to carry this alone.
  </Text>
  </div>
@@ -389,7 +389,7 @@ export function QuestionSessionSheet({
  <section>
  <div className="flex items-center gap-2 mb-6 px-1">
  <div className="h-1 w-1 rounded-full bg-primary" />
- <Text variant="small" weight="medium" className="text-[10px] font-medium tracking-[0.2em] text-text-dim">
+ <Text variant="small" weight="medium" className="text-base font-medium text-text-dim">
  Strongest signals
  </Text>
  </div>
@@ -399,7 +399,7 @@ export function QuestionSessionSheet({
  key={insight.category}
  className="group flex items-center justify-between rounded-md border border-border bg-white/[0.02] px-4 py-3 hover:border-white/20 hover:bg-white/5 transition-all"
  >
- <Text weight="semibold" className="truncate text-xs text-white">
+ <Text weight="semibold" className="truncate text-base text-white">
  {insight.label}
  </Text>
  <span className={cn("badge px-2 py-0.5 text-[8px] ", intensityStyles[insight.intensity])}>
@@ -413,17 +413,17 @@ export function QuestionSessionSheet({
  <section>
  <div className="flex items-center gap-2 mb-6 px-1">
  <div className="h-1 w-1 rounded-full bg-primary" />
- <Text variant="small" weight="medium" className="text-[10px] font-medium tracking-[0.2em] text-text-dim">
+ <Text variant="small" weight="medium" className="text-base font-medium text-text-dim">
  Recommended steps
  </Text>
  </div>
  <div className="space-y-3">
  {summary.nextSteps.map((stepText, index) => (
  <div key={stepText} className="flex gap-4 p-4 rounded-md border border-white/5 bg-white/[0.01] hover:border-white/10 transition-all">
- <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[9px] font-bold text-primary border border-primary/20 tabular-nums">
+ <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-base font-bold text-primary border border-primary/20 tabular-nums">
  {index + 1}
  </div>
- <Text className="text-xs text-text-muted leading-relaxed tracking-tight group-hover:text-white transition-colors">
+ <Text className="text-base text-text-muted leading-relaxed tracking-tight group-hover:text-white transition-colors">
  {stepText}
  </Text>
  </div>
@@ -436,7 +436,7 @@ export function QuestionSessionSheet({
  <div className="mx-auto flex w-full max-w-xl flex-col pb-6">
  <div className="mb-12 text-center sm:text-left">
  <div className="inline-flex items-center justify-center rounded bg-primary/10 border border-primary/20 px-2.5 py-1 mb-6">
- <span className="text-[9px] font-medium tracking-[0.2em] text-primary">
+ <span className="text-base font-medium text-primary">
  {categoryLabels[currentQuestion.category] || currentQuestion.category}
  </span>
  </div>
@@ -465,7 +465,7 @@ export function QuestionSessionSheet({
  )}
  >
  <span className={cn(
-   "text-sm font-semibold transition-colors",
+   "text-[1.0625rem] font-semibold transition-colors",
    selected ? "text-white" : "text-text-muted group-hover:text-white"
  )}>
  {option.label}
@@ -498,7 +498,7 @@ export function QuestionSessionSheet({
  }}
  disabled={!canGoNext || isSubmitting}
  size="md"
- className="min-w-[100px] gap-2 text-[10px] font-medium"
+ className="min-w-[100px] gap-2 text-base font-medium"
  >
  {isSubmitting ? (
  <Icon icon="tabler:loader" className="h-3.5 w-3.5 animate-spin" />
@@ -514,7 +514,7 @@ export function QuestionSessionSheet({
  type="button"
  onClick={() => setStep((current) => Math.max(0, current - 1))}
  disabled={step === 0}
- className="inline-flex h-10 items-center justify-center gap-1.5 px-4 text-[10px] font-medium text-text-dim transition-colors hover:text-white disabled:invisible"
+ className="inline-flex h-10 items-center justify-center gap-1.5 px-4 text-base font-medium text-text-dim transition-colors hover:text-white disabled:invisible"
  >
  <Icon icon="tabler:arrow-left" className="h-3.5 w-3.5" />
  Back
