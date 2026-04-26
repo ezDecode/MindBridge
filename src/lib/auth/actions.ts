@@ -7,12 +7,32 @@ import { setDemoRoleCookie, clearDemoRoleCookie, getCurrentDemoUserServer } from
 
 import { createClient } from '@/lib/supabase/server'
 
+function getAppOrigin() {
+  const configuredOrigin =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    process.env.SITE_URL
+
+  if (configuredOrigin) {
+    return configuredOrigin.replace(/\/+$/, '')
+  }
+
+  const vercelUrl = process.env.VERCEL_URL
+  if (vercelUrl) {
+    const normalizedHost = vercelUrl.replace(/^https?:\/\//, '').replace(/\/+$/, '')
+    return `https://${normalizedHost}`
+  }
+
+  return 'http://localhost:3000'
+}
+
 export async function signInWithGoogle() {
   const supabase = await createClient()
+  const appOrigin = getAppOrigin()
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
+      redirectTo: `${appOrigin}/auth/callback`,
     },
   })
 
