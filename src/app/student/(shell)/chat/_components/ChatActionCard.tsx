@@ -16,22 +16,25 @@ export function ChatActionCard({ type, context, onConfirm, onCancel }: ChatActio
   const config = {
     book_counselor: {
       title: 'Counseling Session',
+      description: 'Connect with a professional counselor for personalized support.',
       icon: 'tabler:calendar-check',
-      iconWrap: 'bg-primary/10 text-primary border-primary/20',
+      iconWrap: 'bg-primary/20 text-primary border-primary/20 shadow-inner',
       actionLabel: 'Confirm Booking',
       cancelLabel: 'Not now'
     },
     show_resources: {
       title: 'Helpful Resources',
+      description: 'Explore a curated list of tools and articles for your well-being.',
       icon: 'tabler:library',
-      iconWrap: 'bg-warning/10 text-warning border-warning/20',
+      iconWrap: 'bg-primary/20 text-primary border-primary/20 shadow-inner',
       actionLabel: 'View Resources',
       cancelLabel: 'Close'
     },
     send_crisis_alert: {
       title: 'Crisis Support',
+      description: 'Immediate help is available. We are here for you.',
       icon: 'tabler:alert-triangle',
-      iconWrap: 'bg-danger/10 text-danger border-danger/20',
+      iconWrap: 'bg-danger/20 text-danger border-danger/20 shadow-inner',
       actionLabel: 'Contact Support',
       cancelLabel: 'I am okay now'
     }
@@ -39,39 +42,38 @@ export function ChatActionCard({ type, context, onConfirm, onCancel }: ChatActio
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+      initial={{ opacity: 0, y: 12, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      className="my-3 max-w-sm rounded-lg border border-white/[0.08] bg-[#101113] p-4 shadow-lg"
+      className="my-4 max-w-sm rounded-[2rem] border border-white/5 bg-white/[0.03] p-6 shadow-2xl backdrop-blur-md"
     >
-      <div className="flex items-center gap-3 mb-3">
-        <div className={cn("rounded-md border p-2", config.iconWrap)}>
-          <Icon icon={config.icon} className="text-xl" />
+      <div className="flex items-center gap-4 mb-4">
+        <div className={cn("rounded-2xl border p-2.5", config.iconWrap)}>
+          <Icon icon={config.icon} className="text-2xl" />
         </div>
-        <Text variant="body" weight="semibold" className="text-white">
+        <Text variant="body" weight="bold" className="text-white text-lg">
           {config.title}
         </Text>
       </div>
 
-      <Text variant="small" className="text-text-muted mb-4 leading-relaxed">
-        {context || 'I found something that might help you. Would you like to proceed?'}
+      <Text variant="small" className="text-text-dim mb-6 leading-relaxed font-medium">
+        {context || config.description}
       </Text>
 
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-2.5">
         <Button 
-          size="sm" 
-          className="flex-1"
+          size="lg"
+          className="w-full rounded-2xl bg-primary text-black font-bold shadow-lg shadow-primary/10 hover:scale-[1.02] active:scale-[0.98] transition-transform"
           onClick={onConfirm}
         >
           {config.actionLabel}
         </Button>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="flex-1"
+        <button 
+          type="button"
           onClick={onCancel}
+          className="w-full py-2.5 text-sm font-bold text-text-dim hover:text-white transition-colors"
         >
           {config.cancelLabel}
-        </Button>
+        </button>
       </div>
     </motion.div>
   )

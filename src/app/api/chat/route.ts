@@ -7,8 +7,7 @@ import { getCoreMemory, maybeCompressMemory } from '@/lib/agents/compression-age
 import { triggerCrisisAlert } from '@/lib/crisis'
 import { executeBooking } from '@/lib/agents/action-agent'
 import { NextResponse } from 'next/server'
-import { cookies } from "next/headers"
-import { DEMO_USERS, type DemoRole } from "@/lib/auth/demo-users"
+import { getAuthUser } from '@/lib/auth/user'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -212,12 +211,7 @@ function clientContextToPrompt(ctx: SanitizedClientContext): string {
 
 export async function POST(request: Request) {
  try {
- const supabase = await createServiceClient()
- 
- // Get demo user from cookie
- const cookieStore = await cookies()
- const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "student"
- const user = DEMO_USERS[role]
+ const user = await getAuthUser()
  
  if (!user) {
  return NextResponse.json(
@@ -226,6 +220,7 @@ export async function POST(request: Request) {
  )
  }
 
+ const supabase = await createServiceClient()
  const body: ChatRequest = await request.json()
  const { message, sessionId } = body
 

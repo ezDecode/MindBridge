@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react';
 import { motion } from "motion/react";
 import { Container, Text } from "@/components/ui";
 import { SiteHeader } from "@/components/site";
-import { loginAsRole } from "@/lib/auth/actions";
+import { loginAsRole, signInWithGoogle } from "@/lib/auth/actions";
 import { setDemoRole } from "@/lib/auth/demo-session";
 import { type DemoRole } from "@/lib/auth/demo-users";
 import { type Variants } from "motion/react";
@@ -83,9 +83,30 @@ function LoginForm() {
                 MindBridge
               </Text>
               <Text as="p" variant="h4" color="secondary" className="opacity-80">
-                Select a persona to explore
+                Continue to your wellness journey
               </Text>
             </motion.div>
+          </div>
+
+          <div className="max-w-md mx-auto mb-16">
+            <form action={signInWithGoogle}>
+              <button 
+                type="submit"
+                className="w-full h-12 flex items-center justify-center gap-3 rounded-xl bg-white text-black text-[1.0625rem] font-bold hover:bg-gray-200 active:scale-[0.98] transition-all shadow-lg"
+              >
+                <Icon icon="logos:google-icon" className="h-5 w-5" />
+                Continue with Google
+              </button>
+            </form>
+            
+            <div className="relative my-10">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-white/10"></div>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-[#030406] px-4 text-white/30 font-bold tracking-widest">Or explore as</span>
+              </div>
+            </div>
           </div>
 
           <motion.div 
@@ -137,7 +158,7 @@ function LoginForm() {
             transition={{ delay: 0.8, duration: 1 }}
           >
             <Text as="p" variant="small" className="text-white/20 font-medium">
-              Demo environment — no real data is stored
+              Demo environment — select a persona to test features immediately
             </Text>
           </motion.div>
         </Container>

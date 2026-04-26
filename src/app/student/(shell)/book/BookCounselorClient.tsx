@@ -17,18 +17,21 @@ type Slot = {
 }
 
 export default function BookCounselorClient({ initialCounselors, initialSlots }: { initialCounselors: Counselor[], initialSlots: Slot[] }) {
+  const DEFAULT_ID = "87a24859-7892-49f8-b26d-c2878fe09f43" // Dr. Radha Sharma
   const { showToast } = useToast()
-  const [selectedCounselor, setSelectedCounselor] = useState<string | null>(null)
+  const [selectedCounselor, setSelectedCounselor] = useState<string | null>(() => {
+    return initialCounselors.find(c => c.id === DEFAULT_ID) ? DEFAULT_ID : (initialCounselors[0]?.id || null)
+  })
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null)
   const [isBooking, setIsBooking] = useState(false)
 
   // Group slots by counselor
   const slotsByCounselor = useMemo(() => {
-    const counselorId = selectedCounselor || initialCounselors[0]?.id
+    const counselorId = selectedCounselor
     if (!counselorId) return []
     return initialSlots.filter(s => s.counselor_id === counselorId)
-  }, [initialSlots, selectedCounselor, initialCounselors])
+  }, [initialSlots, selectedCounselor])
 
   // Get unique dates for the selected counselor
   const availableDates = useMemo(() => {

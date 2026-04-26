@@ -13,8 +13,13 @@ export interface DashboardData {
 
 export type TabId = "mind" | "bridge";
 
+export interface MoodRecord {
+  score: number;
+  logged_at: string;
+}
+
 export function generateWeekMoodHistory(
-  moods: { score: number; logged_at: string }[]
+  moods: MoodRecord[]
 ): { day: string; score: number }[] {
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const today = new Date();

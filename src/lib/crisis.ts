@@ -1,6 +1,5 @@
 import { createServiceClient } from '@/lib/supabase/server'
 import { Resend } from 'resend'
-import { resolveProfileDisplayName } from '@/lib/profile-name'
 import { DEMO_USERS } from '@/lib/auth/demo-users'
 
 // Lazy initialization to prevent build-time errors
@@ -63,16 +62,9 @@ export async function triggerCrisisAlert(studentId: string) {
  console.error('Failed to create crisis log:', logError)
  }
 
- // 3. Send backup email to counselor
+ // 3. Resolve student name for the email
   const demoStudent = Object.values(DEMO_USERS).find(u => u.id === studentId)
-  const resolvedStudentName = resolveProfileDisplayName({
-  profileName: student.name,
-  email: demoStudent?.email,
-  })
-
-  if (resolvedStudentName && resolvedStudentName !== student.name) {
-  await supabase.from('profiles').update({ name: resolvedStudentName }).eq('id', studentId)
-  }
+  const resolvedStudentName = student.name || (demoStudent ? demoStudent.name : 'Anonymous Student')
 
   await sendCrisisEmail(student.counselor_id, studentId, resolvedStudentName)
 
@@ -119,27 +111,29 @@ async function sendCrisisEmail(
 ) {
  const supabase = await createServiceClient()
 
- // Get counselor's email
+ // Get counselor's info
  const { data: counselor } = await supabase
  .from('profiles')
   .select('name')
   .eq('id', counselorId)
   .single()
 
- // Get counselor's auth email
+ // Try to find email from demo users or real auth
+ let counselorEmail: string | undefined
  const demoCounselor = Object.values(DEMO_USERS).find(u => u.id === counselorId)
- const counselorEmail = demoCounselor?.email
- const counselorName = resolveProfileDisplayName({
- profileName: counselor?.name,
- email: demoCounselor?.email,
- })
-
- if (counselorName && counselorName !== counselor?.name) {
- await supabase.from('profiles').update({ name: counselorName }).eq('id', counselorId)
+ 
+ if (demoCounselor) {
+  counselorEmail = demoCounselor.email
+ } else {
+  // Try fetching from auth.users (requires service role, which we have in createServiceClient)
+  const { data: authUser } = await supabase.auth.admin.getUserById(counselorId)
+  counselorEmail = authUser.user?.email
  }
 
+ const counselorName = counselor?.name || (demoCounselor ? demoCounselor.name : 'Counselor')
+
  if (!counselorEmail) {
- console.error('Could not find counselor email')
+ console.error('Could not find counselor email for ID:', counselorId)
  return
  }
 
@@ -156,7 +150,7 @@ async function sendCrisisEmail(
  </div>
  <div style="background: #fff; padding: 24px; border: 1px solid #eee; border-radius: 0 0 12px 12px;">
  <p style="font-size: 16px; color: #333; margin: 0 0 16px;">
-  Hi ${counselorName ?? 'Counselor'},
+  Hi ${counselorName},
   </p>
  <p style="font-size: 16px; color: #333; margin: 0 0 16px;">
  A student requires immediate attention. Crisis signals were detected during their MindBridge conversation.
@@ -172,7 +166,7 @@ async function sendCrisisEmail(
  <p style="font-size: 16px; color: #333; margin: 16px 0;">
  Please check your MindBridge dashboard for more details and to acknowledge this alert.
  </p>
- <a href="${process.env.NEXT_PUBLIC_APP_URL}/counselor/dashboard" 
+ <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/counselor/dashboard" 
  style="display: inline-block; background: #F47D4B; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 8px;">
  Open Dashboard
  </a>
@@ -185,7 +179,6 @@ async function sendCrisisEmail(
  })
  } catch (error) {
  console.error('Failed to send crisis email:', error)
- // Don't throw — email is backup, Realtime is primary
  }
 }
 

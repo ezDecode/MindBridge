@@ -12,10 +12,13 @@ import { ChatActionCard } from "./_components/ChatActionCard";
 
 const STORAGE_KEY = "currentChatSession";
 
-const messageMotion = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.16, ease: "easeOut" as const } },
-  exit: { opacity: 0, y: -6, transition: { duration: 0.12 } },
+// Sophisticated compact easing
+const transition = { duration: 0.5, ease: [0.16, 1, 0.3, 1] };
+
+const messageVariants = {
+  initial: { opacity: 0, y: 12, scale: 0.98 },
+  animate: { opacity: 1, y: 0, scale: 1, transition },
+  exit: { opacity: 0, scale: 0.98, transition: { duration: 0.15 } },
 };
 
 export default function StudentChatPage() {
@@ -80,164 +83,225 @@ export default function StudentChatPage() {
   };
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col bg-[#111214]">
-      <header className="flex h-14 shrink-0 items-center justify-between border-b border-white/[0.06] px-4 pl-16 lg:pl-5">
-        <div className="flex min-w-0 items-center gap-2.5">
-          <span className="rounded-md bg-white/[0.06] px-2 py-1 typo-ui font-medium text-text-dim">Beta</span>
-          <Text as="h1" variant="body" weight="semibold" className="truncate text-white">
-            MindBot
-          </Text>
-        </div>
-
-        <button
-          type="button"
-          onClick={startNewChat}
-          className="inline-flex h-9 items-center gap-2 rounded-md border border-white/[0.08] bg-white/[0.04] px-3 typo-base font-medium text-text-muted hover:bg-white/[0.07] hover:text-white"
-        >
-          <Icon icon="tabler:plus" className="text-base" />
-          New chat
-        </button>
-      </header>
-
-      <main
-        className={cn(
-          "min-h-0 flex-1 overflow-y-auto no-scrollbar",
-          hasMessages ? "px-4 py-6 sm:px-8" : "flex items-center justify-center px-4 pb-28 pt-8"
-        )}
+    <div className="bg-sanctuary flex h-full min-h-0 w-full flex-col font-sans selection:bg-primary/30">
+      {/* Floating Action Button (New chat) - Minimalist */}
+      <button
+        type="button"
+        onClick={startNewChat}
+        className="absolute top-4 right-6 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-white/[0.02] border border-white/5 text-text-dim transition-all hover:bg-white/10 hover:text-white active:scale-90"
+        title="Start fresh"
       >
-        <AnimatePresence initial={false}>
-          {!hasMessages ? (
-            <motion.div
-              key="welcome"
-              variants={messageMotion}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="mx-auto flex w-full max-w-2xl flex-col items-center text-center"
-            >
-              <Icon icon="tabler:message-heart" className="mb-6 text-3xl text-text-muted" />
-              <Text as="h2" variant="h3" weight="semibold" className="mb-3 text-white">
-                Welcome to MindBot
-              </Text>
-              <p className="mb-7 max-w-md typo-base font-medium text-text-muted">
-                Ask anything or talk through what is on your mind.
-              </p>
-            </motion.div>
-          ) : (
-            <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
-              {messages.map((msg, index) => {
-                const isUser = msg.role === "user";
+        <Icon icon="tabler:plus" className="text-lg" />
+      </button>
 
-                return (
-                  <motion.div
-                    key={msg.id || index}
-                    variants={messageMotion}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    className={cn("flex gap-3", isUser && "justify-end")}
-                  >
-                    {!isUser && (
-                      <div className="mt-1 flex size-8 shrink-0 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
-                        <Icon icon="tabler:message-heart" className="text-lg" />
+      {/* Chat Area */}
+      <main className="min-h-0 flex-1 overflow-y-auto no-scrollbar relative z-10">
+        <div className={cn(
+          "mx-auto w-full max-w-2xl px-4 py-8 sm:px-6",
+          !hasMessages && "flex h-full items-center justify-center"
+        )}>
+          <AnimatePresence initial={false} mode="popLayout">
+            {!hasMessages ? (
+              <motion.div
+                key="welcome"
+                variants={messageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="flex flex-col items-center text-center"
+              >
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/[0.02] border border-white/5 text-primary">
+                  <Icon icon="tabler:message-heart" className="text-2xl" />
+                </div>
+                
+                <Text as="h2" weight="bold" className="mb-1 text-xl tracking-tight text-white">
+                  MindBot
+                </Text>
+                <p className="max-w-[240px] text-sm font-medium text-text-muted leading-relaxed mb-6">
+                  A simple, quiet space to talk through what is on your mind.
+                </p>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 w-full max-w-sm">
+                  {[
+                    { icon: 'tabler:mood-smile', label: 'Mood check', prompt: 'I want to talk about my mood.' },
+                    { icon: 'tabler:wind', label: 'Feel calm', prompt: 'Can you help me with stress?' },
+                    { icon: 'tabler:brain', label: 'Guided session', prompt: 'I would like a guided check-in.' },
+                    { icon: 'tabler:leaf', label: 'Simple unwind', prompt: 'Help me unwind.' },
+                  ].map((tip, i) => (
+                    <motion.button
+                      key={tip.label}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 + (i * 0.04), ...transition }}
+                      onClick={() => send(tip.prompt)}
+                      className="flex items-center gap-2 rounded-xl bg-white/[0.01] border border-white/5 px-2.5 py-1.5 text-left transition-all hover:bg-white/[0.03] group"
+                    >
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/[0.02] text-primary group-hover:scale-105 transition-transform">
+                        <Icon icon={tip.icon} className="text-base" />
                       </div>
-                    )}
+                      <span className="text-[11px] font-bold text-text-dim group-hover:text-white transition-colors">
+                        {tip.label}
+                      </span>
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {messages.map((msg, index) => {
+                  const isUser = msg.role === "user";
+                  const isFirst = index === 0 || messages[index - 1]?.role !== msg.role;
 
-                    <div className={cn("min-w-0", isUser ? "max-w-[min(36rem,86vw)]" : "max-w-[min(42rem,86vw)]")}>
-                      <div
-                        className={cn(
-                          "whitespace-pre-wrap rounded-xl px-3 py-1.5 text-[1.0625rem] leading-relaxed",
-                          isUser ? "bg-transparent text-white border border-white/10" : "bg-transparent text-white border border-white/[0.04]"
-                        )}
-                      >
-                        {cleanMessageContent(msg.content) ? (
-                          cleanMessageContent(msg.content)
-                        ) : !isUser && msg.isStreaming ? (
-                          <div className="flex items-center gap-2 py-1">
-                            <div className="flex gap-1">
+                  return (
+                    <motion.div
+                      key={msg.id || index}
+                      variants={messageVariants}
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
+                      className={cn(
+                        "group flex w-full gap-2.5",
+                        isUser && "flex-row-reverse"
+                      )}
+                    >
+                      {/* Avatar */}
+                      {!isUser && isFirst ? (
+                        <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-xl bg-white/[0.02] text-primary border border-white/5 transition-transform">
+                          <Icon icon="tabler:robot" className="text-base" />
+                        </div>
+                      ) : (
+                        <div className="size-7 shrink-0" />
+                      )}
+
+                      <div className={cn("flex flex-col min-w-0 max-w-[90%]", isUser ? "items-end" : "items-start")}>
+                        <div
+                          className={cn(
+                            "relative overflow-hidden rounded-xl px-4 py-2.5 transition-all duration-200",
+                            isUser 
+                              ? "bg-primary text-black font-bold rounded-tr-none" 
+                              : "glass-sanctuary text-white/90 rounded-tl-none leading-snug",
+                            !isFirst && (isUser ? "rounded-tr-xl" : "rounded-tl-xl")
+                          )}
+                        >
+                          {cleanMessageContent(msg.content) ? (
+                            <div className="text-[0.9375rem]">{cleanMessageContent(msg.content)}</div>
+                          ) : !isUser && msg.isStreaming ? (
+                            <div className="flex items-center gap-1.5 py-0.5">
                               {[0, 1, 2].map((dot) => (
                                 <motion.span
                                   key={dot}
-                                  animate={{ opacity: [0.4, 1, 0.4] }}
-                                  transition={{ repeat: Infinity, duration: 1, delay: dot * 0.2 }}
-                                  className="size-1.5 rounded-full bg-primary"
+                                  animate={{ 
+                                    scale: [1, 1.2, 1],
+                                    opacity: [0.4, 1, 0.4] 
+                                  }}
+                                  transition={{ repeat: Infinity, duration: 1.2, delay: dot * 0.15 }}
+                                  className="size-1 rounded-full bg-primary"
                                 />
                               ))}
                             </div>
-                            <span className="typo-ui font-medium text-text-dim">Thinking...</span>
-                          </div>
-                        ) : null}
+                          ) : null}
 
-                        {!isUser && msg.action && (
-                          <ChatActionCard
-                            type={msg.action}
-                            context={msg.actionContext || null}
-                            onConfirm={() => confirmAction(msg.id, msg.action)}
-                            onCancel={() => clearAction(msg.id)}
-                          />
-                        )}
+                          {!isUser && msg.action && (
+                            <div className="mt-3 scale-90 origin-top-left">
+                              <ChatActionCard
+                                type={msg.action}
+                                context={msg.actionContext || null}
+                                onConfirm={() => confirmAction(msg.id, msg.action)}
+                                onCancel={() => clearAction(msg.id)}
+                              />
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
+                    </motion.div>
+                  );
+                })}
 
-              <div ref={messagesEndRef} className="h-2" />
-            </div>
-          )}
-        </AnimatePresence>
+                <div ref={messagesEndRef} className="h-2" />
+              </div>
+            )}
+          </AnimatePresence>
+        </div>
       </main>
 
-      <footer className="shrink-0 border-t border-white/[0.06] bg-[#111214] px-4 py-4 sm:px-6">
-        {error && (
-          <div className="mx-auto mb-3 flex max-w-3xl items-center gap-2 rounded-lg border border-danger/20 bg-danger/10 px-3 py-2 typo-ui text-danger">
-            <Icon icon="tabler:alert-circle" className="text-base" />
-            {error}
-          </div>
-        )}
+      {/* Compact Immersive Input Area */}
+      <footer className="relative z-20 px-4 pb-6 pt-2">
+        <div className="mx-auto max-w-xl">
+          {error && (
+            <motion.div 
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-2 flex items-center gap-2 rounded-xl border border-danger/20 bg-danger/10 px-3 py-2 text-[11px] font-bold text-danger backdrop-blur-md"
+            >
+              <Icon icon="tabler:alert-circle" className="text-base" />
+              {error}
+            </motion.div>
+          )}
 
-        <form
-          onSubmit={handleSubmit}
-          className="mx-auto flex max-w-3xl flex-col bg-transparent"
-        >
-          <textarea
-            value={inputValue}
-            disabled={!sessionId || isLoading}
-            onChange={(event) => setInputValue(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" && !event.shiftKey) {
-                event.preventDefault();
-                void send();
-              }
-            }}
-            placeholder="Ask MindBot..."
-            className="max-h-36 min-h-12 resize-none bg-transparent px-0 py-2 text-[1.0625rem] leading-relaxed text-white outline-none focus:outline-none focus:ring-0 placeholder:text-text-dim disabled:opacity-50"
-          />
+          <form
+            onSubmit={handleSubmit}
+            className="group relative"
+          >
+            <div className="relative flex items-end gap-2 rounded-2xl bg-white/[0.02] border border-white/5 p-1.5 transition-all duration-300 backdrop-blur-2xl">
+              <textarea
+                value={inputValue}
+                disabled={!sessionId || isLoading}
+                onChange={(event) => setInputValue(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    void send();
+                  }
+                }}
+                placeholder="Talk to MindBot..."
+                className="no-focus-ring max-h-32 min-h-[48px] flex-1 resize-none bg-transparent px-3 py-2.5 text-[0.9375rem] font-medium text-white placeholder:text-white/20"
+              />
 
-          <div className="flex items-center justify-between gap-3 pb-1">
-            <p className="hidden typo-ui text-text-dim sm:block">Enter to send · Shift Enter for a new line</p>
-            <div className="ml-auto flex items-center gap-2">
-              {isLoading && (
-                <button
-                  type="button"
-                  onClick={stopGenerating}
-                  className="inline-flex h-9 items-center gap-2 rounded-md border border-white/[0.08] px-3 typo-ui font-medium text-text-muted hover:bg-white/[0.05] hover:text-white"
-                >
-                  <Icon icon="tabler:player-stop" className="text-base" />
-                  Stop
-                </button>
-              )}
-              <button
-                type="submit"
-                disabled={!inputValue.trim() || isLoading || !sessionId}
-                className="flex size-9 items-center justify-center rounded-full bg-primary text-white hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-30 transition-colors"
-                aria-label="Send message"
-              >
-                <Icon icon="tabler:arrow-up" className="text-xl" />
-              </button>
+
+              <div className="flex h-[48px] items-center pr-1">
+                <AnimatePresence mode="wait">
+                  {isLoading ? (
+                    <motion.button
+                      key="stop"
+                      type="button"
+                      onClick={stopGenerating}
+                      whileTap={{ scale: 0.95 }}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      className="flex h-8 w-8 items-center justify-center rounded-full bg-danger/10 text-danger border border-white/5"
+                    >
+                      <Icon icon="tabler:player-stop-filled" className="text-base" />
+                    </motion.button>
+                  ) : (
+                    <motion.button
+                      key="send"
+                      type="submit"
+                      disabled={!inputValue.trim() || isLoading || !sessionId}
+                      whileTap={{ scale: 0.95 }}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black transition-all disabled:opacity-5"
+                    >
+                      <Icon icon="tabler:arrow-up" className="text-lg" strokeWidth={3} />
+                    </motion.button>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
-          </div>
-        </form>
+            
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.15 }}
+              className="mt-3 flex items-center justify-center gap-3 text-[8px] uppercase tracking-[0.25em] font-black text-white"
+            >
+               <span>Safe Sanctuary</span>
+               <span className="opacity-20">•</span>
+               <span>End-to-End Quiet</span>
+            </motion.div>
+          </form>
+        </div>
       </footer>
     </div>
   );

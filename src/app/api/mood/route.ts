@@ -1,16 +1,10 @@
 import { createServiceClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
-import { cookies } from "next/headers"
-import { DEMO_USERS, type DemoRole } from "@/lib/auth/demo-users"
+import { getAuthUser } from '@/lib/auth/user'
 
 export async function POST(request: Request) {
  try {
- const supabase = await createServiceClient()
- 
- // Get demo user from cookie
- const cookieStore = await cookies()
- const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "student"
- const user = DEMO_USERS[role]
+ const user = await getAuthUser()
  
  if (!user) {
  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -24,6 +18,8 @@ export async function POST(request: Request) {
  { status: 400 }
  )
  }
+
+ const supabase = await createServiceClient()
 
  // Insert mood log
  const { data, error } = await supabase
@@ -44,7 +40,33 @@ export async function POST(request: Request) {
  )
  }
 
- return NextResponse.json({ success: true, data })
+ // Check if user already logged mood today to avoid double XP
+ const today = new Date()
+ today.setHours(0, 0, 0, 0)
+ 
+ const { count } = await supabase
+   .from('mood_logs')
+   .select('*', { count: 'exact', head: true })
+   .eq('user_id', user.id)
+   .gte('logged_at', today.toISOString())
+   .lt('logged_at', new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString())
+
+ // Award XP only if this is the first log of the day
+ if (count && count <= 1) {
+   // Increment XP in profile
+   const { error: xpError } = await supabase.rpc('increment_xp', { 
+     user_id: user.id, 
+     amount: 10 
+   })
+
+   if (xpError) {
+     console.warn('Increment XP RPC failed, trying manual update:', xpError)
+     const { data: profile } = await supabase.from('profiles').select('xp').eq('id', user.id).single()
+     await supabase.from('profiles').update({ xp: (profile?.xp || 0) + 10 }).eq('id', user.id)
+   }
+ }
+
+ return NextResponse.json({ success: true, data, xpAwarded: count && count <= 1 })
  } catch (error) {
  console.error('Mood API error:', error)
  return NextResponse.json(
@@ -56,17 +78,13 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
  try {
- const supabase = await createServiceClient()
- 
- // Get demo user from cookie
- const cookieStore = await cookies()
- const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "student"
- const user = DEMO_USERS[role]
+ const user = await getAuthUser()
  
  if (!user) {
  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
  }
 
+ const supabase = await createServiceClient()
  const { searchParams } = new URL(request.url)
  const days = parseInt(searchParams.get('days') || '30')
 
@@ -74,16 +92,23 @@ export async function GET(request: Request) {
  const startDate = new Date()
  startDate.setDate(startDate.getDate() - days)
 
- // Fetch mood logs
- const { data, error } = await supabase
- .from('mood_logs')
- .select('score, note, logged_at')
- .eq('user_id', user.id)
- .gte('logged_at', startDate.toISOString())
- .order('logged_at', { ascending: false })
+ // Fetch mood logs and profile XP
+ const [moodsRes, profileRes] = await Promise.all([
+   supabase
+     .from('mood_logs')
+     .select('score, note, logged_at')
+     .eq('user_id', user.id)
+     .gte('logged_at', startDate.toISOString())
+     .order('logged_at', { ascending: false }),
+   supabase
+     .from('profiles')
+     .select('xp')
+     .eq('id', user.id)
+     .single()
+ ])
 
- if (error) {
- console.error('Failed to fetch moods:', error)
+ if (moodsRes.error) {
+ console.error('Failed to fetch moods:', moodsRes.error)
  return NextResponse.json(
  { error: 'Failed to fetch moods' },
  { status: 500 }
@@ -91,13 +116,14 @@ export async function GET(request: Request) {
  }
 
  // Calculate streak
- const streak = calculateStreak(data || [])
+ const streak = calculateStreak(moodsRes.data || [])
 
  return NextResponse.json({
- moods: data || [],
+ moods: moodsRes.data || [],
  streak,
- average: data?.length 
- ? (data.reduce((sum, m) => sum + m.score, 0) / data.length).toFixed(1)
+ xp: profileRes.data?.xp || 0,
+ average: moodsRes.data?.length 
+ ? (moodsRes.data.reduce((sum, m) => sum + m.score, 0) / moodsRes.data.length).toFixed(1)
  : null,
  })
  } catch (error) {

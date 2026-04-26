@@ -1,20 +1,17 @@
 import { createServiceClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
-import { cookies } from "next/headers"
-import { DEMO_USERS, type DemoRole } from "@/lib/auth/demo-users"
+import { getAuthUser } from '@/lib/auth/user'
 import { resolveProfileDisplayName } from '@/lib/profile-name'
 
 export async function GET() {
   try {
-    const supabase = await createServiceClient()
+    const user = await getAuthUser()
 
-    const cookieStore = await cookies()
-    const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "counselor"
-    const user = DEMO_USERS[role]
-
-    if (!user) {
+    if (!user || user.role !== 'counselor') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    const supabase = await createServiceClient()
 
     // Fetch crisis logs from the last 24h
     const { data: alerts } = await supabase

@@ -7,10 +7,9 @@ import { Modal, Text, BrandLogo } from "@/components/ui";
 import { SettingsForm } from "@/components/settings/SettingsForm";
 import { Icon } from "@iconify/react";
 import { cn } from "@/lib/utils";
-import { signOut } from "@/lib/auth/actions";
+import { signOut, getProfile } from "@/lib/auth/actions";
 import { AnimatePresence, motion } from "motion/react";
 import { PanicModal } from "./PanicModal";
-import { getCurrentDemoUser } from "@/lib/auth/demo-session";
 
 interface RoleShellProps {
   children: React.ReactNode;
@@ -18,29 +17,37 @@ interface RoleShellProps {
   fullHeight?: boolean;
 }
 
-import { DEMO_USERS } from "@/lib/auth/demo-users";
-
 export function RoleShell({ children, navItems, fullHeight = false }: RoleShellProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState({
+    name: 'User',
+    initials: 'U',
+    role: 'Student',
+    dept: 'Wellness',
+  });
 
   useEffect(() => {
     const handleOpenSettings = () => setIsSettingsOpen(true);
     window.addEventListener("open-settings", handleOpenSettings);
+    
+    // Fetch real profile
+    getProfile().then(profile => {
+      if (profile) {
+        setUser({
+          name: profile.name || 'User',
+          initials: (profile.name || 'User').split(' ').map((n: string) => n[0]).join('').slice(0, 2),
+          role: profile.role ? (profile.role.charAt(0).toUpperCase() + profile.role.slice(1)) : 'Student',
+          dept: profile.institution || 'Wellness',
+        });
+      }
+    });
+
     return () => window.removeEventListener("open-settings", handleOpenSettings);
   }, []);
-
-  const [demoUser] = useState(() => getCurrentDemoUser() || DEMO_USERS.student);
-
-  const user = {
-    name: demoUser.name,
-    initials: (demoUser.name || 'User').split(' ').map(n => n[0]).join('').slice(0, 2),
-    role: demoUser.role.charAt(0).toUpperCase() + demoUser.role.slice(1),
-    dept: demoUser.institution,
-  };
 
   const isAdmin = pathname.startsWith("/admin");
   const isCounselor = pathname.startsWith("/counselor");

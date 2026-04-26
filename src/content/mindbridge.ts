@@ -13,7 +13,6 @@ export const marketingNav = [
 
 export const studentNav: NavItem[] = [
   { href: "/student/dashboard", label: "Dashboard", icon: "tabler:home" },
-  { href: "/student/check-in", label: "Mood Tracker", icon: "tabler:mood-smile" },
   { href: "/student/chat", label: "MindBot", icon: "tabler:robot" },
   { href: "/student/screening", label: "Screening", icon: "tabler:clipboard-check" },
   { href: "/student/journal", label: "Journal", icon: "tabler:notebook" },

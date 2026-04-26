@@ -1,19 +1,16 @@
 import { createServiceClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
-import { cookies } from "next/headers"
-import { DEMO_USERS, type DemoRole } from "@/lib/auth/demo-users"
+import { getAuthUser } from '@/lib/auth/user'
 
 export async function GET() {
   try {
-    const supabase = await createServiceClient()
-    
-    const cookieStore = await cookies()
-    const role = (cookieStore.get("mindbridge_demo_role")?.value as DemoRole) || "student"
-    const user = DEMO_USERS[role]
+    const user = await getAuthUser()
     
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    const supabase = await createServiceClient()
 
     // Fetch chat sessions
     const { data: sessions } = await supabase
