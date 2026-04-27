@@ -2,10 +2,9 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { nim, DEFAULT_CHAT_PARAMS, parseCompanionResponse } from '@/lib/nvidia-nim'
 import { buildHolisticContext, holisticContextToPrompt } from '@/lib/holistic-context'
 import { buildSystemPrompt } from '@/lib/agents/companion-agent'
-import { buildFastMemoryContext, snapshotToPrompt } from '@/lib/agents/memory-agent'
 import { getCoreMemory, maybeCompressMemory } from '@/lib/agents/compression-agent'
 import { triggerCrisisAlert } from '@/lib/crisis'
-import { executeBooking } from '@/lib/agents/action-agent'
+import { executeBooking, type SlotOption } from '@/lib/agents/action-agent'
 import { NextResponse } from 'next/server'
 import { getAuthUser } from '@/lib/auth/user'
 
@@ -14,153 +13,36 @@ export const dynamic = 'force-dynamic'
 
 // Increased timeout for better response quality
 const DEMO_TIMEOUT_MS = 12000 // 12 seconds
+const FALLBACK_MODEL = 'meta/llama-3.1-8b-instruct'
+const FALLBACK_MAX_TOKENS = 150
+const SUGGESTION_MAX_TOKENS = 100
 
-// Contextual fallbacks based on mood
-const FALLBACK_RESPONSES_BY_MOOD: Record<string, string[]> = {
-  low: [
-    "I'm here with you. Take your time — what's on your mind?",
-    "That sounds really heavy. Want to just talk it through?",
-    "I'm listening. Whatever's going on, you've got space here.",
-  ],
-  medium: [
-    "Thanks for sharing that. How are you feeling about all this?",
-    "I hear you. What's the hardest part right now?",
-    "That makes sense. Want to unpack it a bit more?",
-  ],
-  good: [
-    "That's great to hear! What's been helping lately?",
-    "Nice! So what's been making things better?",
-    "I love that for you. What's contributing to this?",
-  ],
-  unknown: [
-    "I'm here. Take your time — what's going on?",
-    "Hey, thanks for reaching out. What's on your mind?",
-    "What's feeling most pressing right now?",
-  ],
-}
-
-// Generic fallbacks for when we don't know their mood
-const GENERIC_FALLBACKS = [
-  "I'm here with you. Take your time — what's on your mind?",
-  "That sounds really challenging. Want to talk more about it?",
-  "Thanks for sharing that. How are you feeling right now?",
-  "I appreciate you opening up. What's the heaviest part?",
-]
-
-interface MoodContext {
-  trend: string
-  lastScore: number | null
-}
-
-async function getMoodContext(userId: string): Promise<MoodContext> {
-  const supabase = await createServiceClient()
-
-  const { data } = await supabase
-    .from('mood_logs')
-    .select('score')
-    .eq('user_id', userId)
-    .order('logged_at', { ascending: false })
-    .limit(7)
-    .single()
-
-  if (!data) return { trend: 'unknown', lastScore: null }
-
-  const avgScore = data.score
-  let trend = 'unknown'
-  if (avgScore >= 4) trend = 'good'
-  else if (avgScore >= 3) trend = 'medium'
-  else trend = 'low'
-
-  return { trend, lastScore: data.score }
-}
-
-function getContextualFallback(moodContext: MoodContext, userMessage: string): string {
-  const lower = userMessage.toLowerCase()
-
-  // Topic-specific fallbacks
-  if (/sleep|tired|exhausted|rest/.test(lower)) {
-    return moodContext.trend === 'low'
-      ? "Sleep issues when you're already drained is the worst. Have you been able to rest at all?"
-      : "Exhaustion hits different. Want to talk about what's draining you?"
+// Helper: Generate suggestions via fallback model if AI returns empty
+async function generateFallbackSuggestions(
+  systemPrompt: string,
+  userMessage: string,
+  assistantMessage: string
+): Promise<string[]> {
+  try {
+    const completion = await nim.chat.completions.create({
+      model: FALLBACK_MODEL,
+      messages: [
+        { role: 'system', content: `${systemPrompt}\n\nReturn ONLY a JSON array of 3 short follow-up suggestions (10 words max each), no other text.` },
+        { role: 'user', content: userMessage },
+        { role: 'assistant', content: assistantMessage },
+        { role: 'user', content: 'Generate 3 relevant follow-up suggestions based on our conversation.' },
+      ],
+      max_tokens: SUGGESTION_MAX_TOKENS,
+      temperature: 0.3,
+      stream: false,
+    })
+    const content = completion.choices[0]?.message?.content?.trim() || ''
+    const parsed = JSON.parse(content)
+    return Array.isArray(parsed) ? parsed.slice(0, 3) : []
+  } catch (error) {
+    console.error('Failed to generate fallback suggestions:', error)
+    return []
   }
-
-  if (/sad|heavy|down|hopeless|alone|lonely/.test(lower)) {
-    return "That sounds really lonely. I'm here — want to talk about what's making it heavy?"
-  }
-
-  if (/anxi|panic|overwhelm|stress|nervous/.test(lower)) {
-    return "That overwhelm is real. Before everything spirals — what's the biggest thing right now?"
-  }
-
-  if (/exam|test|assignment|college|university|placement/.test(lower)) {
-    return "Academic pressure hits hard. What's worrying you most — the marks or something else?"
-  }
-
-  // Mood-based selection
-  const moodResponses = FALLBACK_RESPONSES_BY_MOOD[moodContext.trend] || GENERIC_FALLBACKS
-  return moodResponses[Math.floor(Math.random() * moodResponses.length)]
-}
-
-function buildSuggestions({
-  message,
-  action,
-  crisis,
-}: {
-  message: string
-  action: 'book_counselor' | 'show_resources' | 'send_crisis_alert' | null
-  crisis: boolean
-}) {
-  if (crisis) {
-    return [
-      'Stay with me for a minute',
-      'Help me contact support',
-      'What should I do right now?',
-    ]
-  }
-
-  if (action === 'book_counselor') {
-    return [
-      'Book a session',
-      'What should I say in counseling?',
-      'Can we talk a little more first?',
-    ]
-  }
-
-  if (action === 'show_resources') {
-    return [
-      'Show me resources',
-      'Give me a grounding exercise',
-      'What can help tonight?',
-    ]
-  }
-
-  const lower = message.toLowerCase()
-
-  if (/sleep|rest|tired|exhausted/.test(lower)) {
-    return [
-      'How can I sleep better tonight?',
-      'Give me a short wind-down plan',
-      'What if my mind will not slow down?',
-    ]
-  }
-
-  if (/anx|panic|overwhelm|stress|nervous/.test(lower)) {
-    return [
-      'Help me calm down right now',
-      'Give me a 2-minute grounding exercise',
-      'What should I do next today?',
-    ]
-  }
-
-  if (/sad|heavy|down|hopeless|alone|lonely/.test(lower)) {
-    return [
-      'Can we unpack that a bit more?',
-      'What is one gentle next step?',
-      'Help me name what I am feeling',
-    ]
-  }
-
-  return []
 }
 
 interface ChatRequest {
@@ -227,13 +109,12 @@ export async function POST(request: Request) {
 
     const sanitizedClientContext = sanitizeClientContext(body.clientContext)
 
-    // 1. Build Holistic Context (parallel: omniscient + fast snapshot + core memory)
-    const [holisticContext, snapshot, coreMemory] = await Promise.all([
+    // 1. Build Unified Holistic Context (parallel: omniscient + core memory)
+    const [holisticContext, coreMemory] = await Promise.all([
       buildHolisticContext(user.id, {
         currentPage: sanitizedClientContext.currentPage,
         idleSeconds: sanitizedClientContext.idleSeconds,
       }),
-      buildFastMemoryContext(user.id),
       getCoreMemory(user.id),
     ])
 
@@ -254,7 +135,7 @@ export async function POST(request: Request) {
     const history = (historyResult.data ?? []).slice().reverse()
 
     // 3. Assemble holistic context string with SUPERVISOR_CONTEXT block
-    const parts: string[] = [holisticContextToPrompt(holisticContext), snapshotToPrompt(snapshot)]
+    const parts: string[] = [holisticContextToPrompt(holisticContext)]
     if (hasSummary) {
       parts.push(`LONG-TERM MEMORY (compressed):\n${coreMemory!.summary_text.trim()}`)
     }
@@ -273,6 +154,7 @@ export async function POST(request: Request) {
     let stream: AsyncIterable<unknown>
     let usesFallback = false
 
+    let fallbackText: string | null = null
     try {
       // Race between NIM call and timeout
       const nimPromise = nim.chat.completions.create({
@@ -295,8 +177,28 @@ export async function POST(request: Request) {
       stream = await Promise.race([nimPromise, timeoutPromise])
     } catch (error) {
       if (error instanceof Error && error.message === 'DEMO_TIMEOUT') {
-        console.warn('[Demo Fail-safe] NIM timeout, using fallback response')
+        console.warn('[Demo Fail-safe] NIM timeout, attempting fallback model')
         usesFallback = true
+        try {
+          // Use smaller, faster model for fallback
+          const fallbackCompletion = await nim.chat.completions.create({
+            model: FALLBACK_MODEL,
+            messages: [
+              { role: 'system', content: systemPrompt },
+              ...history.map(msg => ({
+                role: msg.role as 'user' | 'assistant',
+                content: msg.content,
+              })),
+              { role: 'user', content: message },
+            ],
+            max_tokens: FALLBACK_MAX_TOKENS,
+            temperature: 0.3,
+            stream: false,
+          })
+          fallbackText = fallbackCompletion.choices[0]?.message?.content?.trim() || null
+        } catch (fallbackError) {
+          console.error('[Demo Fail-safe] Fallback model failed:', fallbackError)
+        }
       } else {
         throw error // Re-throw non-timeout errors
       }
@@ -309,14 +211,13 @@ export async function POST(request: Request) {
         let fullResponse = ''
 
         try {
-          // If we're using fallback, simulate streaming with contextual response
+          // If we're using fallback, simulate streaming with AI-generated response
           if (usesFallback) {
-            const moodCtx = await getMoodContext(user.id)
-            const fallbackText = getContextualFallback(moodCtx, message)
-            fullResponse = fallbackText
+            const text = fallbackText || "I'm here. Take your time — what's on your mind?"
+            fullResponse = text
 
             // Simulate natural typing by sending character by character
-            for (const char of fallbackText) {
+            for (const char of text) {
               controller.enqueue(
                 encoder.encode(`data: ${JSON.stringify({ text: char })}\n\n`)
               )
@@ -336,28 +237,43 @@ export async function POST(request: Request) {
             }
           }
 
-          // 7. Parse the complete response
-          const parsed = parseCompanionResponse(fullResponse)
+            // 7. Parse the complete response
+            const parsed = parseCompanionResponse(fullResponse)
 
-          // 8. Save messages to database
-          await saveMessages(
-            supabase,
-            user.id,
-            sessionId,
-            message,
-            parsed?.message ?? fullResponse,
-            parsed?.crisis ?? false
-          )
+            // 8. Enforce crisis logic (manifesto §7): override AI if clear signals
+            if (
+              holisticContext.moodPulse.trend === 'Declining' &&
+              holisticContext.assessment.severity === 'severe' &&
+              holisticContext.journalThemes.some(t =>
+                /hopeless|suicide|end it all|want to die|kill myself/i.test(t)
+              )
+            ) {
+              if (parsed) parsed.crisis = true
+              await triggerCrisisAlert(user.id)
+              console.warn(`[Crisis Enforced] User ${user.id.slice(0,8)}: Declining mood + severe assessment + hopeless themes`)
+            }
+
+            // 9. Save messages to database
+            await saveMessages(
+              supabase,
+              user.id,
+              sessionId,
+              message,
+              parsed?.message ?? fullResponse,
+              parsed?.crisis ?? false
+            )
 
           // 9. Fire-and-forget compression check
           void maybeCompressMemory(user.id).catch(console.error)
 
           // 10. Handle actions
           let actionContext = parsed?.action_context || null
+          let availableSlots: SlotOption[] | undefined = undefined
           if (parsed?.suggested_action === 'book_counselor') {
             const result = await executeBooking(user.id)
             if (result.success) {
               actionContext = result.message
+              availableSlots = result.availableSlots
             }
           }
 
@@ -371,14 +287,18 @@ export async function POST(request: Request) {
             await updateAssessment(supabase, user.id, parsed.assessment_update)
           }
 
-          // 13. Send final metadata with smart suggestions
-          const suggestions = parsed?.suggestions?.length
+          // 13. Send final metadata with AI-generated suggestions
+          let suggestions = parsed?.suggestions?.length
             ? parsed.suggestions.slice(0, 3)
-            : buildSuggestions({
-              message: parsed?.message ?? fullResponse,
-              action: parsed?.suggested_action ?? null,
-              crisis: parsed?.crisis ?? false,
-            })
+            : await generateFallbackSuggestions(
+              systemPrompt,
+              message,
+              parsed?.message ?? fullResponse
+            )
+          // Final safety: ensure at least 1 suggestion
+          if (!suggestions.length) {
+            suggestions = ["What's on your mind now?"]
+          }
 
           controller.enqueue(
             encoder.encode(
@@ -388,6 +308,7 @@ export async function POST(request: Request) {
                 actionContext: actionContext,
                 suggestions,
                 crisis: parsed?.crisis ?? false,
+                bookingSlots: availableSlots,
               })}\n\n`
             )
           )

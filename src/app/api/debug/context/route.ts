@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server'
 import { getAuthUser } from '@/lib/auth/user'
+import { createServiceClient } from '@/lib/supabase/server'
 import {
   buildHolisticContext,
   holisticContextToPrompt,
-  getDataPresence,
-  getContextQualityScore,
 } from '@/lib/holistic-context'
 
 export const runtime = 'nodejs'
@@ -13,21 +12,36 @@ export const dynamic = 'force-dynamic'
 /**
  * GET /api/debug/context
  * 
- * Diagnostic endpoint that returns the full SUPERVISOR_CONTEXT block
- * exactly as the AI sees it. Use this to verify the Omniscient Context
- * Engine is working end-to-end.
- * 
- * Returns:
- *  - raw: The full HolisticContext object
- *  - prompt: The serialized [SUPERVISOR_CONTEXT] prompt string
- *  - dataPresence: Which data sources populated vs empty
- *  - qualityScore: "strong" | "partial" | "minimal"
- *  - tokenEstimate: Rough token count (chars / 4)
+ * Diagnostic endpoint restricted to admin users and enabled via ENABLE_DEBUG_ENDPOINT env var.
+ * Returns the full SUPERVISOR_CONTEXT block exactly as the AI sees it.
  */
 export async function GET() {
+  // 1. Check env var guard (default disabled)
+  if (process.env.ENABLE_DEBUG_ENDPOINT !== 'true') {
+    return NextResponse.json(
+      { error: 'Debug endpoints are disabled in production' },
+      { status: 403 }
+    )
+  }
+
   const user = await getAuthUser()
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // 2. Check admin role
+  const supabase = await createServiceClient()
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (profile?.role !== 'admin') {
+    return NextResponse.json(
+      { error: 'Forbidden: Admin access required' },
+      { status: 403 }
+    )
   }
 
   try {
@@ -39,8 +53,6 @@ export async function GET() {
     })
 
     const prompt = holisticContextToPrompt(ctx)
-    const dataPresence = getDataPresence(ctx)
-    const qualityScore = getContextQualityScore(ctx)
     const elapsedMs = Date.now() - startMs
 
     return NextResponse.json({
@@ -48,8 +60,6 @@ export async function GET() {
       role: user.role,
       raw: ctx,
       prompt,
-      dataPresence,
-      qualityScore,
       tokenEstimate: Math.ceil(prompt.length / 4),
       promptLength: prompt.length,
       buildTimeMs: elapsedMs,

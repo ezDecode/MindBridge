@@ -136,20 +136,33 @@ export default function AdminDashboardPage() {
           <div className="card lg:col-span-4 p-8">
             <Text variant="h3" className="mb-10">Departmental Wellness</Text>
             <div className="space-y-6">
-              {(data?.deptStats || []).map((dept: { name: string; score: number }, i: number) => (
+              {(() => {
+                const deptStats = data?.deptStats || [];
+                if (deptStats.length === 0) return <Text color="muted" variant="small">No data available yet.</Text>
+                return (
+                  <>
+              {deptStats.map((dept: { name: string; score: number }, i: number) => {
+                const isHotspot = dept.score < 3.5;
+                return (
                 <div key={i} className="space-y-3 group">
                   <div className="flex justify-between items-end">
-                    <Text color="secondary" weight="medium" className="tracking-wide truncate max-w-[150px]">{dept.name}</Text>
-                    <Text weight="bold" className="tabular-nums">{dept.score}</Text>
+                    <div className="flex items-center gap-2">
+                      <Text color={isHotspot ? "danger" : "secondary"} weight={isHotspot ? "bold" : "medium"} className="tracking-wide truncate max-w-[150px]">{dept.name}</Text>
+                      {isHotspot && <span className="bg-danger/20 text-danger text-[10px] uppercase font-bold px-1.5 py-0.5 rounded animate-pulse">Hotspot</span>}
+                    </div>
+                    <Text weight="bold" className={cn("tabular-nums", isHotspot && "text-danger")}>{dept.score.toFixed(1)}</Text>
                   </div>
                   <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                     <div 
                       style={{ width: `${(dept.score / 5) * 100}%` }}
-                      className="h-full rounded-full transition-all duration-500 bg-primary" 
+                      className={cn("h-full rounded-full transition-all duration-500", isHotspot ? "bg-danger" : "bg-primary")} 
                     />
                   </div>
                 </div>
-              ))}
+              )})}
+                  </>
+                )
+              })()}
             </div>
           </div>
 

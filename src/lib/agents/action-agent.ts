@@ -1,11 +1,20 @@
 import { createServiceClient } from '@/lib/supabase/server'
 
+export interface SlotOption {
+  id: string
+  counselorName: string
+  slotTime: string
+  slotStart: string
+  slotEnd: string
+}
+
 export interface BookingResult {
   success: boolean
   message: string
   booking?: unknown
   counselorName?: string
   slotTime?: string
+  availableSlots?: SlotOption[]
 }
 
 function ordinalDay(day: number) {
@@ -38,36 +47,76 @@ function formatBookingDate(date: Date) {
 
 export async function executeBooking(
   studentId: string,
-  bookingType: 'anonymous' | 'named' | 'crisis' = 'named'
+  _bookingType: 'anonymous' | 'named' | 'crisis' = 'named'
 ): Promise<BookingResult> {
   const supabase = await createServiceClient()
 
   try {
-    // 1. Find earliest available counselor slot
+    // 1. Find earliest available counselor slots
     // In a real app, we'd filter by counselor specialty etc.
-    const { data: slot, error: slotError } = await supabase
+    const { data: slots, error: slotsError } = await supabase
       .from('counselor_slots')
       .select('*, counselor:profiles(name)')
       .eq('available', true)
       .gte('slot_start', new Date().toISOString())
       .order('slot_start', { ascending: true })
-      .limit(1)
-      .single()
+      .limit(3)
 
-    if (slotError || !slot) {
+    if (slotsError || !slots || slots.length === 0) {
       return { 
         success: false, 
         message: 'I checked for available slots but couldn\'t find any for this week. Would you like me to notify a counselor to reach out to you instead?' 
       }
     }
 
-    // 2. Create a PENDING booking
-    // This allows the student to confirm before it's final
+    const availableSlots: SlotOption[] = slots.map(slot => {
+      const startTime = new Date(slot.slot_start)
+      return {
+        id: slot.id,
+        counselorName: slot.counselor?.name || 'a counselor',
+        slotTime: formatBookingDate(startTime),
+        slotStart: slot.slot_start,
+        slotEnd: slot.slot_end
+      }
+    })
+
+    return {
+      success: true,
+      message: `I found a few available slots. Which one works best for you?`,
+      availableSlots
+    }
+  } catch (error) {
+    console.error('Action agent execution error:', error)
+    return { success: false, message: 'I couldn\'t complete the booking process right now.' }
+  }
+}
+
+export async function confirmSlotBooking(
+  studentId: string,
+  slotId: string,
+  bookingType: 'anonymous' | 'named' | 'crisis' = 'named'
+): Promise<BookingResult> {
+  const supabase = await createServiceClient()
+
+  try {
+    // Get the slot
+    const { data: slot, error: slotError } = await supabase
+      .from('counselor_slots')
+      .select('*, counselor:profiles(name)')
+      .eq('id', slotId)
+      .single()
+
+    if (slotError || !slot) {
+      return { success: false, message: 'That slot is no longer available.' }
+    }
+
+    // Create a PENDING booking
     const { data: booking, error: bookingError } = await supabase
       .from('bookings')
       .insert({
         student_id: studentId,
         counselor_id: slot.counselor_id,
+        slot_id: slot.id,
         slot_start: slot.slot_start,
         slot_end: slot.slot_end,
         type: bookingType,
@@ -81,22 +130,22 @@ export async function executeBooking(
       return { success: false, message: 'I ran into a technical snag while trying to hold that slot. Can we try again in a moment?' }
     }
 
-    // 3. Mark slot as tentatively held (optional, depends on schema)
-    // For the demo, we just return the success
-    
+    // Mark slot as unavailable
+    await supabase.from('counselor_slots').update({ available: false }).eq('id', slotId)
+
     const startTime = new Date(slot.slot_start)
     const formattedTime = formatBookingDate(startTime)
 
     return {
       success: true,
-      message: `I found an available slot with ${slot.counselor?.name || 'a counselor'} on ${formattedTime}.`,
+      message: `Your session with ${slot.counselor?.name || 'a counselor'} on ${formattedTime} has been requested.`,
       booking: booking,
       counselorName: slot.counselor?.name ?? undefined,
       slotTime: formattedTime
     }
   } catch (error) {
-    console.error('Action agent execution error:', error)
-    return { success: false, message: 'I couldn\'t complete the booking process right now.' }
+    console.error('Booking confirmation error:', error)
+    return { success: false, message: 'I couldn\'t confirm the booking right now.' }
   }
 }
 

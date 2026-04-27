@@ -62,11 +62,35 @@ export async function triggerCrisisAlert(studentId: string) {
  console.error('Failed to create crisis log:', logError)
  }
 
- // 3. Resolve student name for the email
+  // 3. Resolve student name for the email
   const demoStudent = Object.values(DEMO_USERS).find(u => u.id === studentId)
   const resolvedStudentName = student.name || (demoStudent ? demoStudent.name : 'Anonymous Student')
 
   await sendCrisisEmail(student.counselor_id, studentId, resolvedStudentName)
+
+  // 4. Notify all Admins in the same institution
+  const { data: admins } = await supabase
+    .from('profiles')
+    .select('id, name')
+    .eq('role', 'admin')
+    .eq('institution', student.institution)
+
+  if (admins && admins.length > 0) {
+    // Insert in-app notifications
+    await supabase.from('notifications').insert(
+      admins.map(admin => ({
+        user_id: admin.id,
+        type: 'crisis',
+        message: `CRITICAL: Crisis alert triggered for ${resolvedStudentName}. Please coordinate with the assigned counselor.`,
+        metadata: { student_id: studentId, severity: 'high' }
+      }))
+    )
+
+    // Send emails in parallel
+    await Promise.all(
+      admins.map(admin => sendCrisisEmail(admin.id, studentId, resolvedStudentName, true))
+    )
+  }
 
  } catch (error) {
  console.error('Crisis alert failed:', error)
@@ -105,52 +129,54 @@ async function logCrisisWithoutCounselor(
 }
 
 async function sendCrisisEmail(
- counselorId: string,
- studentId: string,
- studentName: string | null
+  userId: string,
+  studentId: string,
+  studentName: string | null,
+  isAdmin: boolean = false
 ) {
- const supabase = await createServiceClient()
+  const supabase = await createServiceClient()
 
- // Get counselor's info
- const { data: counselor } = await supabase
- .from('profiles')
-  .select('name')
-  .eq('id', counselorId)
-  .single()
+  // Get user's info
+  const { data: user } = await supabase
+    .from('profiles')
+    .select('name')
+    .eq('id', userId)
+    .single()
 
- // Try to find email from demo users or real auth
- let counselorEmail: string | undefined
- const demoCounselor = Object.values(DEMO_USERS).find(u => u.id === counselorId)
- 
- if (demoCounselor) {
-  counselorEmail = demoCounselor.email
- } else {
-  // Try fetching from auth.users (requires service role, which we have in createServiceClient)
-  const { data: authUser } = await supabase.auth.admin.getUserById(counselorId)
-  counselorEmail = authUser.user?.email
- }
+  // Try to find email from demo users or real auth
+  let userEmail: string | undefined
+  const demoUser = Object.values(DEMO_USERS).find(u => u.id === userId)
+  
+  if (demoUser) {
+    userEmail = demoUser.email
+  } else {
+    // Try fetching from auth.users (requires service role, which we have in createServiceClient)
+    const { data: authUser } = await supabase.auth.admin.getUserById(userId)
+    userEmail = authUser.user?.email
+  }
 
- const counselorName = counselor?.name || (demoCounselor ? demoCounselor.name : 'Counselor')
+  const recipientName = user?.name || (demoUser ? demoUser.name : (isAdmin ? 'Admin' : 'Counselor'))
 
- if (!counselorEmail) {
- console.error('Could not find counselor email for ID:', counselorId)
- return
- }
+  if (!userEmail) {
+    console.error(`Could not find email for user ID:`, userId)
+    return
+  }
 
- try {
- const resend = getResendClient()
- await resend.emails.send({
- from: 'MindBridge Alerts <alerts@mindbridge.app>',
- to: counselorEmail,
+  try {
+    const resend = getResendClient()
+    const dashboardLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/${isAdmin ? 'admin' : 'counselor'}/dashboard`
+  await resend.emails.send({
+  from: 'MindBridge Alerts <alerts@mindbridge.app>',
+  to: userEmail,
  subject: '🚨 Crisis Alert - Student Needs Support',
  html: `
  <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto;">
  <div style="background: #F47D4B; padding: 20px; border-radius: 12px 12px 0 0;">
  <h1 style="color: white; margin: 0; font-size: 24px;">🚨 Crisis Alert</h1>
  </div>
- <div style="background: #fff; padding: 24px; border: 1px solid #eee; border-radius: 0 0 12px 12px;">
- <p style="font-size: 16px; color: #333; margin: 0 0 16px;">
-  Hi ${counselorName},
+  <div style="background: #fff; padding: 24px; border: 1px solid #eee; border-radius: 0 0 12px 12px;">
+  <p style="font-size: 16px; color: #333; margin: 0 0 16px;">
+  Hi ${recipientName},
   </p>
  <p style="font-size: 16px; color: #333; margin: 0 0 16px;">
  A student requires immediate attention. Crisis signals were detected during their MindBridge conversation.
@@ -164,12 +190,12 @@ async function sendCrisisEmail(
  </p>
  </div>
  <p style="font-size: 16px; color: #333; margin: 16px 0;">
- Please check your MindBridge dashboard for more details and to acknowledge this alert.
- </p>
- <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/counselor/dashboard" 
- style="display: inline-block; background: #F47D4B; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 8px;">
- Open Dashboard
- </a>
+  Please check your MindBridge dashboard for more details and to coordinate support.
+  </p>
+  <a href="${dashboardLink}" 
+  style="display: inline-block; background: #F47D4B; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 8px;">
+  Open Dashboard
+  </a>
  <p style="font-size: 14px; color: #718096; margin: 24px 0 0;">
  This is an automated alert from MindBridge. No message content is shared for privacy.
  </p>

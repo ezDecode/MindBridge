@@ -50,13 +50,30 @@ export async function GET() {
       .from('bookings')
       .select('*', { count: 'exact', head: true })
 
-    // 5. Dept Moods (Simulated from existing data)
-    const depts = ['Computer Science', 'Psychology & Wellness', 'Campus Administration', 'Science', 'Arts']
-    const deptStats = depts.map(dept => ({
-      name: dept,
-      score: (3 + Math.random() * 2).toFixed(1),
-      count: Math.floor(Math.random() * 50) + 10
-    }))
+    // 5. Dept Moods (Real data)
+    const { data: moodWithProfiles } = await supabase
+      .from('mood_logs')
+      .select('score, user_id, profiles(institution)')
+
+    const deptMap = new Map<string, { totalScore: number, count: number }>()
+
+    if (moodWithProfiles) {
+      moodWithProfiles.forEach((log) => {
+        const profiles = log.profiles as { institution: string | null } | null
+        const inst = profiles?.institution || 'General'
+        const existing = deptMap.get(inst) || { totalScore: 0, count: 0 }
+        deptMap.set(inst, {
+          totalScore: existing.totalScore + log.score,
+          count: existing.count + 1
+        })
+      })
+    }
+
+    const deptStats = Array.from(deptMap.entries()).map(([name, data]) => ({
+      name,
+      score: Number((data.totalScore / data.count).toFixed(1)),
+      count: data.count
+    })).sort((a, b) => b.count - a.count)
 
     return NextResponse.json({
       moodAvg,

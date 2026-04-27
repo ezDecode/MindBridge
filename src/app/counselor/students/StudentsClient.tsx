@@ -11,15 +11,18 @@ import { useToast } from '@/components/ui/Toast'
 type Student = { id: string, name: string | null, institution: string | null }
 type CrisisLog = { id: string, student_id: string, severity: string | null, triggered_at: string | null, acknowledged: boolean | null }
 type MoodLog = { id: string, user_id: string, score: number, logged_at: string | null, note: string | null }
+type Booking = { id: string, student_id: string, status: string | null }
 
 export default function StudentsClient({ 
   initialStudents, 
   initialCrisisLogs,
-  initialMoodLogs
+  initialMoodLogs,
+  initialBookings
 }: { 
   initialStudents: Student[], 
   initialCrisisLogs: CrisisLog[],
-  initialMoodLogs: MoodLog[]
+  initialMoodLogs: MoodLog[],
+  initialBookings: Booking[]
 }) {
   const { showToast } = useToast()
   const [search, setSearch] = useState('')
@@ -30,6 +33,18 @@ export default function StudentsClient({
     const name = resolveProfileDisplayName({ profileName: s.name }) || 'Unknown Student'
     return name.toLowerCase().includes(search.toLowerCase()) || 
            s.id.toLowerCase().includes(search.toLowerCase())
+  }).sort((a, b) => {
+    const aCrises = initialCrisisLogs.filter(c => c.student_id === a.id).length > 0
+    const bCrises = initialCrisisLogs.filter(c => c.student_id === b.id).length > 0
+    if (aCrises && !bCrises) return -1
+    if (!aCrises && bCrises) return 1
+
+    const aBookings = initialBookings.filter(bkg => bkg.student_id === a.id && bkg.status === 'pending_confirmation').length > 0
+    const bBookings = initialBookings.filter(bkg => bkg.student_id === b.id && bkg.status === 'pending_confirmation').length > 0
+    if (aBookings && !bBookings) return -1
+    if (!aBookings && bBookings) return 1
+
+    return 0
   })
 
   const openStudentDetails = (student: Student) => {
@@ -60,8 +75,14 @@ export default function StudentsClient({
         {filteredStudents.map(student => {
           const studentCrises = initialCrisisLogs.filter(c => c.student_id === student.id)
           const studentMoods = initialMoodLogs.filter(m => m.user_id === student.id)
+          const studentPendingBookings = initialBookings.filter(b => b.student_id === student.id && b.status === 'pending_confirmation')
+          
           const lastMood = studentMoods.length > 0 ? studentMoods[0] : null
+          const prevMood = studentMoods.length > 1 ? studentMoods[1] : null
+          
           const hasActiveCrisis = studentCrises.length > 0
+          const hasPendingBooking = studentPendingBookings.length > 0
+          const isDeclining = lastMood && prevMood && lastMood.score < prevMood.score
 
           return (
             <Card 
@@ -69,19 +90,27 @@ export default function StudentsClient({
               padding="lg" 
               className={cn(
                 "group hover:border-white/20 transition-all cursor-pointer relative overflow-hidden flex flex-col",
-                hasActiveCrisis ? "border-danger/30 bg-danger/[0.02]" : "bg-surface"
+                hasActiveCrisis ? "border-danger/30 bg-danger/[0.02]" : 
+                hasPendingBooking ? "border-warning/30 bg-warning/[0.02]" : "bg-surface"
               )}
               onClick={() => openStudentDetails(student)}
             >
               {hasActiveCrisis && (
                 <div className="absolute top-0 left-0 w-full h-1 bg-danger shadow-[0_0_10px_rgba(239,68,68,0.8)]" />
               )}
+              {!hasActiveCrisis && hasPendingBooking && (
+                <div className="absolute top-0 left-0 w-full h-1 bg-warning shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
+              )}
+              {isDeclining && !hasActiveCrisis && !hasPendingBooking && (
+                <div className="absolute inset-0 border border-white/5 shadow-[inset_0_0_20px_rgba(255,255,255,0.03)] pointer-events-none" />
+              )}
               
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-4">
                   <div className={cn(
                     "size-12 rounded-full flex items-center justify-center font-bold text-lg border",
-                    hasActiveCrisis ? "bg-danger/20 text-danger border-danger/30" : "bg-white/5 text-white border-white/10"
+                    hasActiveCrisis ? "bg-danger/20 text-danger border-danger/30" : 
+                    hasPendingBooking ? "bg-warning/20 text-warning border-warning/30" : "bg-white/5 text-white border-white/10"
                   )}>
                     {(resolveProfileDisplayName({ profileName: student.name }) || 'U')[0]}
                   </div>
@@ -90,11 +119,19 @@ export default function StudentsClient({
                     <Text variant="caption" color="muted" className="font-mono">ID: {student.id.split('-')[0]}</Text>
                   </div>
                 </div>
-                {hasActiveCrisis && (
+                {hasActiveCrisis ? (
                   <span className="flex items-center justify-center size-8 rounded-full bg-danger/10 text-danger animate-pulse">
                     <Icon icon="tabler:alert-triangle-filled" className="text-xl" />
                   </span>
-                )}
+                ) : hasPendingBooking ? (
+                  <span className="flex items-center justify-center size-8 rounded-full bg-warning/10 text-warning">
+                    <Icon icon="tabler:calendar-event" className="text-xl" />
+                  </span>
+                ) : isDeclining ? (
+                  <span className="flex items-center justify-center size-8 rounded-full bg-white/5 text-text-muted">
+                    <Icon icon="tabler:trending-down" className="text-xl" />
+                  </span>
+                ) : null}
               </div>
 
               <div className="grid grid-cols-2 gap-4 mt-auto border-t border-white/5 pt-4">
@@ -118,6 +155,8 @@ export default function StudentsClient({
                   <Text variant="caption" color="muted" weight="medium" className="mb-1">Status</Text>
                   {hasActiveCrisis ? (
                     <Text variant="subtitle" weight="semibold" color="danger">Requires Attention</Text>
+                  ) : hasPendingBooking ? (
+                    <Text variant="subtitle" weight="semibold" className="text-warning">Booking Request</Text>
                   ) : (
                     <Text variant="subtitle" weight="semibold" color="secondary">Stable</Text>
                   )}

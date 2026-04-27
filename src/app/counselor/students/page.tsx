@@ -36,11 +36,19 @@ export default async function StudentsPage() {
     .order('logged_at', { ascending: false })
     .limit(200)
 
+  // Fetch pending bookings
+  const { data: bookings } = await supabase
+    .from('bookings')
+    .select('*')
+    .in('student_id', studentIds)
+    .eq('status', 'pending_confirmation')
+
   return (
     <StudentsClient 
       initialStudents={students || []} 
       initialCrisisLogs={crisisLogs || []}
       initialMoodLogs={moodLogs || []}
+      initialBookings={bookings || []}
     />
   )
 }

@@ -34,7 +34,9 @@ export interface HolisticContext {
     lastScore: number | null
     label: string
     recentNote: string | null
-    avgScore: number | null
+    avgScore: number | null // 7d average
+    avgScore30d: number | null // 30d average
+    count7d: number // number of mood logs in last 7d
   }
   journalThemes: string[]        // last 3 ai_insight summaries
   forumFootprint: string[]       // last 3 topic tags engaged
@@ -60,17 +62,8 @@ export interface HolisticContext {
     journalStale: boolean   // last journal > 14 days ago
     assessmentStale: boolean // last assessment > 30 days ago
   }
-}
-
-/** Data presence summary for debugging */
-export interface ContextDataPresence {
-  moodLogs: { present: boolean; count: number }
-  journals: { present: boolean; count: number }
-  forum: { present: boolean; count: number }
-  assessment: { present: boolean; severity: string }
-  wellness: { present: boolean; level: number; xp: number }
-  chatHistory: { present: boolean; topicCount: number }
-  freshness: HolisticContext['freshness']
+  totalChatMessages: number
+  recentCrisisFlag: boolean // any crisis in last 7d
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────
@@ -203,6 +196,8 @@ export async function buildHolisticContext(
 ): Promise<HolisticContext> {
   const supabase = await createServiceClient()
   const now = Date.now()
+  const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString()
+  const thirtyDaysAgo = new Date(now - 30 * 24 * 60 * 60 * 1000).toISOString()
 
   // Parallel fetch — all lightweight queries, capped rows
   // Uses Promise.allSettled so one failing query doesn't kill all context
@@ -213,12 +208,13 @@ export async function buildHolisticContext(
       .eq('id', userId)
       .single(),
 
+    // Fetch last 30 mood logs to derive 7d/30d metrics
     supabase
       .from('mood_logs')
       .select('score, note, logged_at')
       .eq('user_id', userId)
       .order('logged_at', { ascending: false })
-      .limit(7),
+      .limit(30),
 
     supabase
       .from('assessments')
@@ -259,6 +255,20 @@ export async function buildHolisticContext(
       .select('xp, level, streak')
       .eq('user_id', userId)
       .single(),
+
+    // Total chat message count
+    supabase
+      .from('chat_messages')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId),
+
+    // Crisis flag count (last 7d)
+    supabase
+      .from('chat_messages')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .eq('crisis_flag', true)
+      .gte('sent_at', sevenDaysAgo),
   ])
 
   // Extract results safely — a failed query returns null, not an error
@@ -269,6 +279,8 @@ export async function buildHolisticContext(
   const journalResult = settled(results[4])
   const forumResult = settled(results[5])
   const wellnessResult = settled(results[6])
+  const chatTotalCountResult = settled(results[7])
+  const crisisCountResult = settled(results[8])
 
   const moods = moodResult?.data ?? []
   const chats = chatResult?.data ?? []
@@ -282,6 +294,17 @@ export async function buildHolisticContext(
   const assessment = assessmentResult?.data
   const wellness = wellnessResult?.data
 
+  // Compute 7d/30d mood metrics (filter out null logged_at)
+  const moods7d = moods.filter(m => m.logged_at && m.logged_at >= sevenDaysAgo)
+  const moods30d = moods.filter(m => m.logged_at && m.logged_at >= thirtyDaysAgo)
+  const mood_avg_7d = moods7d.length > 0
+    ? Math.round(moods7d.reduce((sum, m) => sum + m.score, 0) / moods7d.length * 10) / 10
+    : null
+  const mood_avg_30d = moods30d.length > 0
+    ? Math.round(moods30d.reduce((sum, m) => sum + m.score, 0) / moods30d.length * 10) / 10
+    : null
+  const mood_count_7d = moods7d.length
+
   const lastMood = moods[0]
   const displayName = resolveProfileDisplayName({
     profileName: profileResult?.data?.name ?? null,
@@ -289,14 +312,13 @@ export async function buildHolisticContext(
 
   const isNewUser = moods.length === 0 && chats.length === 0
 
-  // Calculate avg score
-  const avgScore = moods.length > 0
-    ? moods.reduce((sum, m) => sum + m.score, 0) / moods.length
-    : null
-
   // Days since last chat
   const lastChatAt = chats[0]?.sent_at ?? null
   const daysSinceLastChat = lastChatAt ? daysBetween(lastChatAt, now) : null
+
+  // Total chat messages and crisis flag
+  const totalChatMessages = chatTotalCountResult?.count ?? 0
+  const recentCrisisFlag = (crisisCountResult?.count ?? 0) > 0
 
   // Freshness checks
   const lastMoodAt = lastMood?.logged_at
@@ -316,7 +338,9 @@ export async function buildHolisticContext(
       lastScore: lastMood?.score ?? null,
       label: getScoreLabel(lastMood?.score ?? 3),
       recentNote: lastMood?.note ?? null,
-      avgScore: avgScore ? Math.round(avgScore * 10) / 10 : null,
+      avgScore: mood_avg_7d, // 7d average
+      avgScore30d: mood_avg_30d, // 30d average
+      count7d: mood_count_7d,
     },
     journalThemes: journalInsights,
     forumFootprint: uniqueForumTags,
@@ -338,44 +362,20 @@ export async function buildHolisticContext(
     level: wellness?.level ?? 1,
     xp: wellness?.xp ?? 0,
     freshness,
+    totalChatMessages,
+    recentCrisisFlag,
   }
-}
-
-// ─── Data Presence (for debug endpoint) ──────────────────────────
-
-export function getDataPresence(ctx: HolisticContext): ContextDataPresence {
-  return {
-    moodLogs: {
-      present: ctx.moodPulse.lastScore !== null,
-      count: ctx.moodPulse.avgScore !== null ? 1 : 0, // simplified
-    },
-    journals: { present: ctx.journalThemes.length > 0, count: ctx.journalThemes.length },
-    forum: { present: ctx.forumFootprint.length > 0, count: ctx.forumFootprint.length },
-    assessment: { present: ctx.assessment.severity !== 'none', severity: ctx.assessment.severity },
-    wellness: { present: ctx.level > 1 || ctx.xp > 0, level: ctx.level, xp: ctx.xp },
-    chatHistory: { present: ctx.recentChatTopics.length > 0, topicCount: ctx.recentChatTopics.length },
-    freshness: ctx.freshness,
-  }
-}
-
-export function getContextQualityScore(ctx: HolisticContext): 'strong' | 'partial' | 'minimal' {
-  let score = 0
-  if (ctx.moodPulse.lastScore !== null) score++
-  if (ctx.journalThemes.length > 0) score++
-  if (ctx.forumFootprint.length > 0) score++
-  if (ctx.assessment.severity !== 'none') score++
-  if (ctx.recentChatTopics.length > 0) score++
-  if (ctx.level > 1 || ctx.xp > 0) score++
-
-  if (score >= 4) return 'strong'
-  if (score >= 2) return 'partial'
-  return 'minimal'
 }
 
 // ─── Prompt Serializer ───────────────────────────────────────────
 
-/** Hard cap to prevent token overflow */
-const MAX_CONTEXT_CHARS = 2000
+/** Scrub PII from context strings */
+function scrubPii(text: string): string {
+  return text
+    .replace(/\b\d{10}\b/g, '***PHONE***')
+    .replace(/\b[\w.%+-]+@[\w.-]+\.[A-Z|a-z]{2,}\b/g, '***EMAIL***')
+    .replace(/\b\d+\s+[A-Za-z\s]+(?:Street|St|Road|Rd|Avenue|Ave|Lane|Ln)\b/gi, '***ADDRESS***')
+}
 
 export function holisticContextToPrompt(ctx: HolisticContext): string {
   if (ctx.isNewUser) {
@@ -399,7 +399,10 @@ export function holisticContextToPrompt(ctx: HolisticContext): string {
   }
   lines.push(`- Trend: ${ctx.moodPulse.trend}`)
   if (ctx.moodPulse.avgScore !== null) {
-    lines.push(`- 7-day average: ${ctx.moodPulse.avgScore}/5`)
+    lines.push(`- 7-day average: ${ctx.moodPulse.avgScore}/5 (${ctx.moodPulse.count7d} logs)`)
+  }
+  if (ctx.moodPulse.avgScore30d !== null) {
+    lines.push(`- 30-day average: ${ctx.moodPulse.avgScore30d}/5`)
   }
   if (ctx.moodPulse.recentNote && !ctx.freshness.moodStale) {
     // Only include mood note if data is fresh
@@ -429,9 +432,16 @@ export function holisticContextToPrompt(ctx: HolisticContext): string {
     }
   }
 
-  // Chat Topics
+  // Chat Topics & Stats
   if (ctx.recentChatTopics.length > 0) {
     lines.push(`\nRECENT CHAT TOPICS: ${ctx.recentChatTopics.join(', ')}`)
+  }
+  lines.push(`- Total chat messages: ${ctx.totalChatMessages}`)
+  if (ctx.lastChatAt) {
+    lines.push(`- Last chat: ${ctx.lastChatAt.slice(0, 10)}`)
+  }
+  if (ctx.recentCrisisFlag) {
+    lines.push(`- ⚠ Crisis signal flagged in last 7 days`)
   }
 
   // UI Telemetry
@@ -461,17 +471,28 @@ export function holisticContextToPrompt(ctx: HolisticContext): string {
 
   lines.push(`[/SUPERVISOR_CONTEXT]`)
 
-  // Hard cap — progressively trim if too long
+  // Token-aware trim (500 tokens ≈ 2000 chars)
   let prompt = lines.join('\n')
-  if (prompt.length > MAX_CONTEXT_CHARS) {
-    // Remove forum footprint first (least critical)
-    const forumIdx = lines.findIndex(l => l.includes('FORUM ACTIVITY'))
-    if (forumIdx !== -1) {
-      const nextSectionIdx = lines.findIndex((l, i) => i > forumIdx && l.startsWith('\n'))
-      lines.splice(forumIdx, (nextSectionIdx !== -1 ? nextSectionIdx : forumIdx + 2) - forumIdx)
+  const estimatedTokens = Math.ceil(prompt.length / 4)
+  if (estimatedTokens > 500) {
+    // Trim lowest priority sections first: Forum > Wellness > UI Telemetry
+    const priorityRemovals = [
+      { keyword: 'FORUM ACTIVITY', count: 2 },
+      { keyword: 'WELLNESS:', count: 1 },
+      { keyword: 'CURRENT SESSION:', count: 2 },
+    ]
+    for (const { keyword, count } of priorityRemovals) {
+      if (Math.ceil(prompt.length / 4) <= 500) break
+      const idx = lines.findIndex(l => l.includes(keyword))
+      if (idx !== -1) {
+        const nextSectionIdx = lines.findIndex((l, i) => i > idx && l.startsWith('\n'))
+        lines.splice(idx, (nextSectionIdx !== -1 ? nextSectionIdx : idx + count) - idx)
+        prompt = lines.join('\n')
+      }
     }
-    prompt = lines.join('\n')
   }
 
-  return prompt
+   // Scrub PII before sending to AI
+   const scrubbedPrompt = scrubPii(prompt)
+   return scrubbedPrompt
 }

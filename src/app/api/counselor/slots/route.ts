@@ -12,15 +12,28 @@ export async function GET() {
 
     const supabase = await createServiceClient()
 
-    const { data: slots, error } = await supabase
+    const { data: slots, error: slotsError } = await supabase
       .from('counselor_slots')
       .select('*')
       .eq('counselor_id', user.id)
       .order('slot_start', { ascending: true })
 
-    if (error) throw error
+    if (slotsError) throw slotsError
 
-    return NextResponse.json(slots || [])
+    // Fetch pending bookings
+    const { data: bookings, error: bookingsError } = await supabase
+      .from('bookings')
+      .select('*, student:profiles(name)')
+      .eq('counselor_id', user.id)
+      .eq('status', 'pending_confirmation')
+      .order('slot_start', { ascending: true })
+
+    if (bookingsError) throw bookingsError
+
+    return NextResponse.json({
+      slots: slots || [],
+      bookings: bookings || []
+    })
   } catch (error) {
     console.error('Slots API error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

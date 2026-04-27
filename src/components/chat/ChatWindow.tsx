@@ -9,6 +9,8 @@ import { cleanMessageContent, type Message } from '@/hooks/useChat'
 import { cn } from '@/lib/utils'
 import { MessageActions } from './MessageActions'
 import { SuggestionChips } from './SuggestionChips'
+import { SlotCarousel } from './SlotCarousel'
+import { BookingSuccessCard } from './BookingSuccessCard'
 
 interface ChatWindowProps {
   messages: Message[]
@@ -45,6 +47,14 @@ export function ChatWindow({
       role="log"
       aria-label="Chat conversation"
     >
+      {messages.some(m => m.crisis) && (
+        <div className="absolute top-0 left-0 w-full flex items-center justify-center pointer-events-none z-10 p-2">
+          <div className="bg-[var(--status-error)]/10 border border-[var(--status-error)]/30 text-[var(--status-error)] px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+            <Icon icon="tabler:alert-triangle-filled" className="size-3.5" />
+            Support Activated
+          </div>
+        </div>
+      )}
       <div className="flex flex-col gap-2 pb-6">
         <AnimatePresence initial={false} mode="popLayout">
           {messages.map((message, index) => {
@@ -108,6 +118,14 @@ function MessageBubble({
   onActionSelect: (action: 'book_counselor' | 'show_resources' | 'send_crisis_alert') => void
   onDismiss: () => void
 }) {
+  const [confirmedBooking, setConfirmedBooking] = useState<{
+    counselorName: string
+    slotTime: string
+    slotStart?: string
+    slotEnd?: string
+  } | null>(message.bookingConfirmed || null)
+  const [isConfirmingSlot, setIsConfirmingSlot] = useState(false)
+
   const isUser = message.role === 'user'
   const displayContent = cleanMessageContent(message.content)
   const showSuggestions =
@@ -162,7 +180,7 @@ function MessageBubble({
           </Text>
         </div>
 
-        {!isUser && (showSuggestions || showActions) && (
+        {!isUser && (showSuggestions || showActions || message.bookingSlots || confirmedBooking) && (
           <motion.div
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
@@ -172,7 +190,44 @@ function MessageBubble({
               <SuggestionChips suggestions={message.suggestions} onSelect={onSuggestionSelect} />
             )}
 
-            {showActions && message.action && (
+            {confirmedBooking ? (
+              <BookingSuccessCard
+                counselorName={confirmedBooking.counselorName}
+                slotTime={confirmedBooking.slotTime}
+                slotStart={confirmedBooking.slotStart}
+                slotEnd={confirmedBooking.slotEnd}
+              />
+            ) : message.bookingSlots && message.bookingSlots.length > 0 ? (
+              <SlotCarousel
+                slots={message.bookingSlots}
+                isLoading={isConfirmingSlot}
+                onSelectSlot={async (slot) => {
+                  setIsConfirmingSlot(true)
+                  try {
+                    const res = await fetch('/api/bookings/confirm-slot', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ slotId: slot.id })
+                    })
+                    const data = await res.json()
+                    if (data.success) {
+                      setConfirmedBooking({
+                        counselorName: slot.counselorName,
+                        slotTime: slot.slotTime,
+                        slotStart: slot.slotStart,
+                        slotEnd: slot.slotEnd
+                      })
+                      onDismiss()
+                    }
+                  } catch (e) {
+                    console.error('Failed to confirm slot', e)
+                  } finally {
+                    setIsConfirmingSlot(false)
+                  }
+                }}
+                onCancel={onDismiss}
+              />
+            ) : showActions && message.action ? (
               <div className="mt-2">
                 <MessageActions
                   action={message.action}
@@ -180,7 +235,7 @@ function MessageBubble({
                   onDismiss={onDismiss}
                 />
               </div>
-            )}
+            ) : null}
           </motion.div>
         )}
       </div>

@@ -56,6 +56,9 @@ export default function AdminStudentsPage() {
       (s.institution?.toLowerCase().includes(searchQuery.toLowerCase()))
     const matchesFilter = filterStability === 'all' || s.stability === filterStability
     return matchesSearch && matchesFilter
+  }).sort((a, b) => {
+    const stabilityWeight = { 'at-risk': 1, 'watch': 2, 'stable': 3 }
+    return stabilityWeight[a.stability] - stabilityWeight[b.stability]
   })
 
   const handleDelegateBooking = async () => {
@@ -241,12 +244,22 @@ export default function AdminStudentsPage() {
               <tbody>
                 {filteredStudents.map(student => {
                   const config = stabilityConfig[student.stability]
+                  const isAtRisk = student.stability === 'at-risk'
                   return (
-                    <tr key={student.id} className="border-b border-white/3 hover:bg-white/2 transition-colors">
+                    <tr key={student.id} className={cn(
+                      "border-b border-white/3 transition-all relative overflow-hidden",
+                      isAtRisk ? "bg-danger/[0.02] hover:bg-danger/[0.05]" : "hover:bg-white/2"
+                    )}>
+                      {isAtRisk && (
+                        <td className="absolute top-0 left-0 w-1 h-full bg-danger shadow-[0_0_10px_rgba(239,68,68,0.8)] z-10" />
+                      )}
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="size-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                            <Icon icon="tabler:user" className="text-sm text-text-dim" />
+                          <div className={cn(
+                            "size-8 rounded-full border flex items-center justify-center",
+                            isAtRisk ? "bg-danger/20 border-danger/30 text-danger" : "bg-white/5 border-white/10 text-text-dim"
+                          )}>
+                            <Icon icon="tabler:user" className="text-sm" />
                           </div>
                           <div>
                             <Text weight="medium" className="text-white text-sm">{student.name ?? 'Unknown'}</Text>

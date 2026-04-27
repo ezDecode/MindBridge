@@ -33,7 +33,7 @@ export default function BookCounselorClient({ initialCounselors, initialSlots }:
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null)
   const [isBooking, setIsBooking] = useState(false)
   const [existingBooking, setExistingBooking] = useState<Booking | null>(null)
-  const [_checkingExisting, setCheckingExisting] = useState(true)
+  const [, setCheckingExisting] = useState(true)
 
   // Check for existing upcoming bookings on mount
   useState(() => {

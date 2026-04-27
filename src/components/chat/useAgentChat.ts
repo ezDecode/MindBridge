@@ -110,7 +110,9 @@ export function useAgentChat({
                 if (
                   data.suggestions ||
                   typeof data.action !== 'undefined' ||
-                  typeof data.actionContext !== 'undefined'
+                  typeof data.actionContext !== 'undefined' ||
+                  data.bookingSlots ||
+                  typeof data.crisis !== 'undefined'
                 ) {
                   setMessages((prev) =>
                     prev.map((msg) =>
@@ -124,6 +126,8 @@ export function useAgentChat({
                               typeof data.actionContext !== 'undefined'
                                 ? data.actionContext
                                 : msg.actionContext,
+                            bookingSlots: data.bookingSlots ?? msg.bookingSlots,
+                            crisis: typeof data.crisis !== 'undefined' ? data.crisis : msg.crisis,
                           }
                         : msg,
                     ),

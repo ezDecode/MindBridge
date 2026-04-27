@@ -6,8 +6,20 @@ export interface Message {
  content: string
  isStreaming?: boolean
  suggestions?: string[]
- action?: 'book_counselor' | 'show_resources' | 'send_crisis_alert' | null
- actionContext?: string | null
+  action?: 'book_counselor' | 'show_resources' | 'send_crisis_alert' | null
+  actionContext?: string | null
+  bookingSlots?: Array<{
+    id: string
+    counselorName: string
+    slotTime: string
+    slotStart: string
+    slotEnd: string
+  }>
+  bookingConfirmed?: {
+    counselorName: string
+    slotTime: string
+  }
+  crisis?: boolean
 }
 
 interface ChatAction {
@@ -102,20 +114,22 @@ export function useChat({ sessionId, initialMessages = [], onAction, onCrisis }:
  )
  }
 
- if (data.suggestions || typeof data.action !== 'undefined' || typeof data.actionContext !== 'undefined') {
- setMessages(prev =>
- prev.map(msg =>
- msg.id === assistantId
- ? {
- ...msg,
- suggestions: data.suggestions ?? msg.suggestions,
- action: typeof data.action !== 'undefined' ? data.action : msg.action,
- actionContext: typeof data.actionContext !== 'undefined' ? data.actionContext : msg.actionContext,
- }
- : msg
- )
- )
- }
+  if (data.suggestions || typeof data.action !== 'undefined' || typeof data.actionContext !== 'undefined' || data.bookingSlots || typeof data.crisis !== 'undefined') {
+  setMessages(prev =>
+  prev.map(msg =>
+  msg.id === assistantId
+  ? {
+  ...msg,
+  suggestions: data.suggestions ?? msg.suggestions,
+  action: typeof data.action !== 'undefined' ? data.action : msg.action,
+  actionContext: typeof data.actionContext !== 'undefined' ? data.actionContext : msg.actionContext,
+  bookingSlots: data.bookingSlots ?? msg.bookingSlots,
+  crisis: typeof data.crisis !== 'undefined' ? data.crisis : msg.crisis,
+  }
+  : msg
+  )
+  )
+  }
 
  if (data.done) {
  // Mark streaming as complete
