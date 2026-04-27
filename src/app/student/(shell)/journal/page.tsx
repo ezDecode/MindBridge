@@ -1,20 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { useToast } from "@/components/ui/Toast";
-
 import { Button, Card, Text, Input } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
+
+interface JournalEntry {
+  id: string;
+  title: string;
+  content: string;
+  ai_insight: string | null;
+  created_at: string;
+}
 
 export default function JournalPage() {
   const { showToast } = useToast();
   const [journalTitle, setJournalTitle] = useState("");
   const [journalContent, setJournalContent] = useState("");
+  const [aiInsight, setAiInsight] = useState<string | null>(null);
   const [showAiInsight, setShowAiInsight] = useState(false);
-  const streak = 8;
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [pollingInsight, setPollingInsight] = useState(false);
 
   const prompts = [
     'What is one thing you are grateful for today, even if small?',
@@ -26,18 +37,99 @@ export default function JournalPage() {
   ];
   const [promptIdx, setPromptIdx] = useState(0);
 
+  const fetchEntries = useCallback(async () => {
+    try {
+      const res = await fetch('/api/student/journals');
+      if (res.ok) {
+        const data = await res.json();
+        setEntries(data.journals ?? []);
+      }
+    } catch {
+      console.error('Failed to fetch journals');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchEntries();
+  }, [fetchEntries]);
+
   const getNewPrompt = () => {
     setPromptIdx((prev) => (prev + 1) % prompts.length);
   };
 
-  const saveJournal = () => {
+  const saveJournal = async () => {
     if (!journalContent.trim()) {
       showToast("Please write something first", "info");
       return;
     }
-    showToast("Journal saved & analyzed!", "success");
-    setShowAiInsight(true);
+
+    setSaving(true);
+    try {
+      const res = await fetch('/api/student/journals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: journalTitle.trim(),
+          content: journalContent.trim(),
+        }),
+      });
+
+      if (!res.ok) throw new Error('Save failed');
+      const data = await res.json();
+      showToast("Journal saved! AI is analyzing...", "success");
+
+      // Add to entries list
+      setEntries(prev => [data.journal, ...prev]);
+      setJournalTitle("");
+      setJournalContent("");
+      setShowAiInsight(true);
+      setPollingInsight(true);
+
+      // Poll for AI insight (generated in background)
+      const journalId = data.journal.id;
+      let attempts = 0;
+      const poll = setInterval(async () => {
+        attempts++;
+        try {
+          const pollRes = await fetch('/api/student/journals');
+          if (pollRes.ok) {
+            const pollData = await pollRes.json();
+            const updated = pollData.journals?.find((j: JournalEntry) => j.id === journalId);
+            if (updated?.ai_insight) {
+              setAiInsight(updated.ai_insight);
+              setPollingInsight(false);
+              setEntries(pollData.journals);
+              clearInterval(poll);
+            }
+          }
+        } catch { /* retry */ }
+        if (attempts >= 15) {
+          setPollingInsight(false);
+          setAiInsight("Your thoughts have been safely recorded.");
+          clearInterval(poll);
+        }
+      }, 2000);
+    } catch {
+      showToast("Failed to save journal", "error");
+    } finally {
+      setSaving(false);
+    }
   };
+
+  const streak = entries.length > 0
+    ? Math.min(entries.length, 30) // Simple streak approximation
+    : 0;
+
+  // Derive sentiment from ai_insight
+  function getSentiment(insight: string | null): { label: string; color: string; bg: string } {
+    if (!insight) return { label: "Neutral", color: "text-muted", bg: "bg-white/20" };
+    const lower = insight.toLowerCase();
+    if (/grateful|happy|positive|good|hopeful|victory/.test(lower)) return { label: "Positive", color: "text-success", bg: "bg-success" };
+    if (/struggle|stress|anxiety|burnout|lonely|low|severe|hopeless/.test(lower)) return { label: "Negative", color: "text-danger", bg: "bg-danger" };
+    return { label: "Neutral", color: "text-muted", bg: "bg-white/20" };
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-20">
@@ -90,8 +182,8 @@ export default function JournalPage() {
               <Text variant="small" weight="medium" className="text-text-dim ">
                 {journalContent.split(/\s+/).filter(Boolean).length} words
               </Text>
-              <Button onClick={saveJournal} size="md" className="gap-2">
-                Save & Analyze
+              <Button onClick={saveJournal} size="md" className="gap-2" disabled={saving}>
+                {saving ? "Saving..." : "Save & Analyze"}
                 <Icon icon="tabler:sparkles" className="h-4 w-4" />
               </Button>
             </div>
@@ -110,20 +202,32 @@ export default function JournalPage() {
                     <Text variant="small" weight="medium" className="text-primary ">MindBot Reflection</Text>
                   </div>
 
-                  <Text className="text-white typo-subtitle leading-relaxed mb-8 max-w-[65ch]">
-                    It sounds like you&apos;re carrying a lot right now with exams approaching. It&apos;s completely okay to feel the pressure — it shows how much you care. Try taking one small step today instead of looking at everything at once. You&apos;ve got this.
-                  </Text>
+                  {pollingInsight ? (
+                    <div className="flex items-center gap-3">
+                      <div className="size-4 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                      <Text className="text-text-muted typo-subtitle">Analyzing your entry...</Text>
+                    </div>
+                  ) : (
+                    <>
+                      <Text className="text-white typo-subtitle leading-relaxed mb-8 max-w-[65ch]">
+                        {aiInsight ?? "Your thoughts have been safely recorded."}
+                      </Text>
 
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    <span className="badge badge-outline border-white/10">Anxiety</span>
-                    <span className="badge badge-outline border-white/10">Academic Stress</span>
-                    <span className="badge badge-outline border-white/10 text-primary border-primary/20">Pressure</span>
-                  </div>
-
-                  <div className="flex items-center gap-3 pt-6 border-t border-white/5">
-                    <Text variant="small" weight="medium" className="text-text-dim ">Sentiment:</Text>
-                    <span className="badge badge-primary bg-warning/10 text-warning border-warning/20">Neutral leaning negative</span>
-                  </div>
+                      {aiInsight && (
+                        <div className="flex items-center gap-3 pt-6 border-t border-white/5">
+                          <Text variant="small" weight="medium" className="text-text-dim ">Theme:</Text>
+                          <span className={cn(
+                            "badge badge-primary bg-opacity-10 border-opacity-20",
+                            getSentiment(aiInsight).color === "text-danger" && "bg-danger/10 text-danger border-danger/20",
+                            getSentiment(aiInsight).color === "text-success" && "bg-success/10 text-success border-success/20",
+                            getSentiment(aiInsight).color === "text-muted" && "bg-warning/10 text-warning border-warning/20",
+                          )}>
+                            {getSentiment(aiInsight).label}
+                          </span>
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
               </Card>
             </motion.div>
@@ -140,16 +244,20 @@ export default function JournalPage() {
                 <span className="typo-base font-bold tabular-nums">{streak}</span>
               </div>
               <div className="flex-1">
-                <Text weight="semibold" className="text-white typo-subtitle">Keep it up!</Text>
+                <Text weight="semibold" className="text-white typo-subtitle">
+                  {streak > 0 ? "Keep it up!" : "Start your streak!"}
+                </Text>
                 <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden mt-3 mb-2">
                   <motion.div 
                     initial={{ width: 0 }}
-                    animate={{ width: '80%' }}
+                    animate={{ width: `${Math.min((streak / 10) * 100, 100)}%` }}
                     transition={{ duration: 1.5 }}
                     className="h-full bg-primary" 
                   />
                 </div>
-                <Text variant="small" className="text-text-dim typo-base font-medium ">2 days to next badge</Text>
+                <Text variant="small" className="text-text-dim typo-base font-medium ">
+                  {streak > 0 ? `${10 - (streak % 10)} entries to next badge` : "Write your first entry"}
+                </Text>
               </div>
             </div>
           </Card>
@@ -157,29 +265,48 @@ export default function JournalPage() {
           <Card padding="md" className="bg-surface border-border">
             <div className="flex items-center justify-between mb-8 px-1">
               <Text as="h3" variant="small" weight="medium" className="text-text-dim ">Past Entries</Text>
-              <span className="badge badge-outline">April</span>
+              <span className="badge badge-outline">
+                {new Date().toLocaleString('default', { month: 'long' })}
+              </span>
             </div>
 
             <div className="space-y-4">
-              {[
-                { title: "Feeling overwhelmed", sentiment: "Negative", color: "text-danger", bg: "bg-danger", date: "Apr 20", words: 142 },
-                { title: "Good day today", sentiment: "Positive", color: "text-success", bg: "bg-success", date: "Apr 18", words: 89 },
-                { title: "Hostel life thoughts", sentiment: "Neutral", color: "text-muted", bg: "bg-white/20", date: "Apr 17", words: 67 },
-              ].map((entry, i) => (
-                <div key={i} className="group p-4 rounded-md border border-white/5 bg-white/[0.02] hover:bg-white/5 hover:border-white/10 transition-all cursor-pointer">
-                  <div className="flex items-start justify-between gap-4 mb-2">
-                    <Text weight="semibold" className="typo-base text-white group-hover:text-primary transition-colors line-clamp-1">{entry.title}</Text>
-                    <div className={cn("shrink-0 size-1.5 rounded-full mt-1.5", entry.bg)} />
-                  </div>
-                  <Text variant="small" className="text-text-dim typo-base font-medium ">{entry.date} · {entry.words} words</Text>
+              {loading ? (
+                <div className="py-8 text-center">
+                  <div className="size-5 rounded-full border-2 border-primary border-t-transparent animate-spin mx-auto mb-3" />
+                  <Text variant="small" className="text-text-dim">Loading entries...</Text>
                 </div>
-              ))}
+              ) : entries.length === 0 ? (
+                <div className="py-8 text-center">
+                  <Icon icon="tabler:notebook" className="text-2xl text-text-dim mx-auto mb-3 opacity-30" />
+                  <Text variant="small" className="text-text-dim italic">No journal entries yet</Text>
+                </div>
+              ) : (
+                entries.slice(0, 5).map((entry) => {
+                  const sentiment = getSentiment(entry.ai_insight);
+                  const wordCount = entry.content.split(/\s+/).filter(Boolean).length;
+                  const date = new Date(entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                  return (
+                    <div key={entry.id} className="group p-4 rounded-md border border-white/5 bg-white/2 hover:bg-white/5 hover:border-white/10 transition-all cursor-pointer">
+                      <div className="flex items-start justify-between gap-4 mb-2">
+                        <Text weight="semibold" className="typo-base text-white group-hover:text-primary transition-colors line-clamp-1">
+                          {entry.title || entry.ai_insight || "Untitled entry"}
+                        </Text>
+                        <div className={cn("shrink-0 size-1.5 rounded-full mt-1.5", sentiment.bg)} />
+                      </div>
+                      <Text variant="small" className="text-text-dim typo-base font-medium ">{date} · {wordCount} words</Text>
+                    </div>
+                  );
+                })
+              )}
             </div>
 
-            <Link href="/student/mood-history" className="flex items-center justify-center gap-2 w-full mt-6 py-2 typo-base font-medium text-text-muted hover:text-white transition-colors border-t border-white/5 pt-6 text-center">
-              View full history
-              <Icon icon="tabler:arrow-right" className="text-lg" />
-            </Link>
+            {entries.length > 5 && (
+              <Link href="/student/mood-history" className="flex items-center justify-center gap-2 w-full mt-6 py-2 typo-base font-medium text-text-muted hover:text-white transition-colors border-t border-white/5 pt-6 text-center">
+                View full history
+                <Icon icon="tabler:arrow-right" className="text-lg" />
+              </Link>
+            )}
           </Card>
         </div>
       </div>

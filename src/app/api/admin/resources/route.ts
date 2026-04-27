@@ -12,7 +12,7 @@ export async function GET() {
 
     const supabase = await createServiceClient();
     const { data: resources, error } = await supabase
-      .from('wellness_resources')
+      .from('resources')
       .select('*')
       .order('created_at', { ascending: false });
 
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     const supabase = await createServiceClient();
 
     const { data: resource, error } = await supabase
-      .from('wellness_resources')
+      .from('resources')
       .insert(body)
       .select()
       .single();

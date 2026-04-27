@@ -1,25 +1,37 @@
-'use client'
+import { getDemoRoleCookie } from "@/lib/auth/demo-cookie"
+import { createClient } from "@/lib/supabase/server"
+import { StudentShellClient } from "./shell-client"
 
-import { usePathname } from "next/navigation"
-import { RoleShell } from "@/components/site"
-import { AgentProvider, FloatingAgentBubble } from "@/components/chat"
-import { studentNav } from "@/content/mindbridge"
-
-export default function StudentShellLayout({
- children,
+/**
+ * Server Component wrapper for the student shell.
+ * Resolves role server-side to fix the production HttpOnly cookie
+ * issue where the bot becomes invisible (§6 of the manifesto).
+ */
+export default async function StudentShellLayout({
+  children,
 }: Readonly<{ children: React.ReactNode }>) {
- const pathname = usePathname()
- const isChat = pathname === "/student/chat"
+  // Resolve role server-side — no client-side cookie reading needed
+  let isStudent = false
 
- return (
-  <AgentProvider>
-   <RoleShell
-    navItems={studentNav}
-    fullHeight={isChat}
-   >
-    {children}
-   </RoleShell>
-   <FloatingAgentBubble />
-  </AgentProvider>
- )
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+    isStudent = profile?.role === 'student'
+  } else {
+    // Demo mode — resolve from HttpOnly cookie server-side
+    const demoRole = await getDemoRoleCookie()
+    isStudent = demoRole === 'student'
+  }
+
+  return (
+    <StudentShellClient isStudent={isStudent}>
+      {children}
+    </StudentShellClient>
+  )
 }

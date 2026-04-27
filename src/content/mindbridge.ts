@@ -25,6 +25,7 @@ export const studentNav: NavItem[] = [
 export const counselorNav: NavItem[] = [
   { href: "/counselor/dashboard", label: "Dashboard", icon: "tabler:home" },
   { href: "/counselor/students", label: "My Students", icon: "tabler:users" },
+  { href: "/counselor/messages", label: "Broadcasts", icon: "tabler:speakerphone" },
   { href: "/counselor/appointments", label: "Appointments", icon: "tabler:calendar-event" },
   { href: "/counselor/notes", label: "Session Notes", icon: "tabler:note" },
   { href: "/counselor/availability", label: "Availability", icon: "tabler:settings" },
@@ -32,6 +33,7 @@ export const counselorNav: NavItem[] = [
 
 export const adminNav: NavItem[] = [
   { href: "/admin/dashboard", label: "Analytics", icon: "tabler:chart-bar" },
+  { href: "/admin/students", label: "Students", icon: "tabler:users" },
   { href: "/admin/resources", label: "Resources", icon: "tabler:books" },
 ];
 

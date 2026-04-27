@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { firstNameOrFallback, resolveProfileDisplayName } from '@/lib/profile-name'
 import { DEMO_USERS } from '@/lib/auth/demo-users'
 import { nim, DEFAULT_CHAT_PARAMS } from '@/lib/nvidia-nim'
-import { buildQuickContext, contextToPrompt } from '@/lib/simple-context'
+import { buildHolisticContext, holisticContextToPrompt } from '@/lib/holistic-context'
 
 // We run this as a system process, so we use the Service Role Key to bypass Row Level Security
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
@@ -37,28 +37,18 @@ export async function POST(req: Request) {
       let triggerReason = ''
 
       try {
-        const [quickContext, recentLogs] = await Promise.all([
-          buildQuickContext(student.id),
-          supabase
-            .from('mood_logs')
-            .select('*')
-            .eq('user_id', student.id)
-            .order('logged_at', { ascending: false })
-            .limit(1)
-        ])
+        const holisticContext = await buildHolisticContext(student.id)
 
-        const hasRecentLog = recentLogs.data && recentLogs.data.length > 0
-
-        if (!hasRecentLog) {
+        if (holisticContext.daysSinceLastChat !== null && holisticContext.daysSinceLastChat >= 3) {
           triggerReason = "Haven't checked in for a few days."
-        } else if (recentLogs.data[0].score <= 2) {
+        } else if (holisticContext.moodPulse.lastScore !== null && holisticContext.moodPulse.lastScore <= 2) {
           triggerReason = "Recent mood check-in was low."
-        } else if (quickContext.mood.trend === 'down') {
+        } else if (holisticContext.moodPulse.trend === 'Declining') {
           triggerReason = "Emotional trend is declining."
         }
 
         if (triggerReason) {
-          const contextString = contextToPrompt(quickContext)
+          const contextString = holisticContextToPrompt(holisticContext)
           const demoUser = demoUserById.get(student.id)
           const resolvedName = resolveProfileDisplayName({
             profileName: student.name,

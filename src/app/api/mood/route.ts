@@ -115,8 +115,9 @@ export async function GET(request: Request) {
  )
  }
 
- // Calculate streak
- const streak = calculateStreak(moodsRes.data || [])
+  // Calculate streak
+  const validMoods = (moodsRes.data || []).filter(m => m.logged_at !== null) as { logged_at: string }[]
+  const streak = calculateStreak(validMoods)
 
  return NextResponse.json({
  moods: moodsRes.data || [],

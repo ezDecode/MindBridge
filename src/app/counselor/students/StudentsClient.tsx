@@ -6,10 +6,11 @@ import { Card, Text, Button } from '@/components/ui'
 import { Sheet } from '@/components/ui/Sheet'
 import { cn } from '@/lib/utils'
 import { resolveProfileDisplayName } from '@/lib/profile-name'
+import { useToast } from '@/components/ui/Toast'
 
 type Student = { id: string, name: string | null, institution: string | null }
-type CrisisLog = { id: string, student_id: string, severity: string, triggered_at: string, acknowledged: boolean }
-type MoodLog = { id: string, user_id: string, score: number, logged_at: string, note: string | null }
+type CrisisLog = { id: string, student_id: string, severity: string | null, triggered_at: string | null, acknowledged: boolean | null }
+type MoodLog = { id: string, user_id: string, score: number, logged_at: string | null, note: string | null }
 
 export default function StudentsClient({ 
   initialStudents, 
@@ -20,6 +21,7 @@ export default function StudentsClient({
   initialCrisisLogs: CrisisLog[],
   initialMoodLogs: MoodLog[]
 }) {
+  const { showToast } = useToast()
   const [search, setSearch] = useState('')
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
@@ -170,7 +172,7 @@ export default function StudentsClient({
                       <div key={c.id} className="flex justify-between items-center bg-danger/5 p-3 rounded">
                         <div>
                           <Text variant="small" weight="medium" color="danger">{c.severity} Severity</Text>
-                          <Text variant="caption" className="mt-1 block">{new Date(c.triggered_at).toLocaleString()}</Text>
+                          <Text variant="caption" className="mt-1 block">{c.triggered_at ? new Date(c.triggered_at).toLocaleString() : 'N/A'}</Text>
                         </div>
                         <Button size="sm" className="bg-danger text-white hover:bg-danger-hover border-none">Acknowledge</Button>
                       </div>
@@ -195,7 +197,7 @@ export default function StudentsClient({
                           {m.score}
                         </div>
                         <div>
-                          <Text variant="caption" color="muted" weight="medium" className="tabular-nums">{new Date(m.logged_at).toLocaleString()}</Text>
+                          <Text variant="caption" color="muted" weight="medium" className="tabular-nums">{m.logged_at ? new Date(m.logged_at).toLocaleString() : 'N/A'}</Text>
                           {m.note ? (
                             <Text variant="subtitle" className="mt-1 italic opacity-80">&ldquo;{m.note}&rdquo;</Text>
                           ) : (
@@ -213,8 +215,10 @@ export default function StudentsClient({
               </div>
               
               <div className="pt-6 border-t border-white/5 flex gap-4">
-                <Button size="lg" className="flex-1 bg-white text-black hover:bg-white/90">Message Student</Button>
-                <Button size="lg" className="flex-1 bg-surface-raised border-border text-white hover:bg-surface-hover">Schedule Session</Button>
+                <Button size="lg" className="flex-1 bg-surface-raised border-border text-white hover:bg-surface-hover w-full" onClick={() => {
+                  // Link to booking or just keep as is
+                  showToast("Use the booking tool to schedule a session", "info")
+                }}>Schedule Session</Button>
               </div>
             </div>
           )

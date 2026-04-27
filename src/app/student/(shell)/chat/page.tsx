@@ -24,12 +24,18 @@ const messageVariants = {
 
 export default function StudentChatPage() {
   const router = useRouter();
-  const [sessionId, setSessionId] = useState<string>(() => {
-    if (typeof window !== "undefined") {
+  const [mounted, setMounted] = useState(false);
+  const [sessionId, setSessionId] = useState(() => {
+    if (typeof window !== 'undefined') {
       return localStorage.getItem(STORAGE_KEY) || generateSessionId();
     }
     return "";
   });
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -89,7 +95,7 @@ export default function StudentChatPage() {
       <button
         type="button"
         onClick={startNewChat}
-        className="absolute top-4 right-6 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-white/[0.02] border border-white/5 text-text-dim transition-all hover:bg-white/10 hover:text-white active:scale-90"
+        className="absolute top-4 right-6 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-white/2 border border-white/5 text-text-dim transition-all hover:bg-white/10 hover:text-white active:scale-90"
         title="Start fresh"
       >
         <Icon icon="tabler:plus" className="text-lg" />
@@ -111,7 +117,7 @@ export default function StudentChatPage() {
                 exit="exit"
                 className="flex flex-col items-center text-center"
               >
-                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/[0.02] border border-white/5 text-primary">
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/2 border border-white/5 text-primary">
                   <Icon icon="tabler:message-heart" className="text-2xl" />
                 </div>
                 
@@ -135,9 +141,9 @@ export default function StudentChatPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 + (i * 0.04), ...transition }}
                       onClick={() => send(tip.prompt)}
-                      className="flex items-center gap-2 rounded-xl bg-white/[0.01] border border-white/5 px-2.5 py-1.5 text-left transition-all hover:bg-white/[0.03] group"
+                      className="flex items-center gap-2 rounded-xl bg-white/1 border border-white/5 px-2.5 py-1.5 text-left transition-all hover:bg-white/3 group"
                     >
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/[0.02] text-primary group-hover:scale-105 transition-transform">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/2 text-primary group-hover:scale-105 transition-transform">
                         <Icon icon={tip.icon} className="text-base" />
                       </div>
                       <span className="text-[11px] font-bold text-text-dim group-hover:text-white transition-colors">
@@ -167,7 +173,7 @@ export default function StudentChatPage() {
                     >
                       {/* Avatar */}
                       {!isUser && isFirst ? (
-                        <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-xl bg-white/[0.02] text-primary border border-white/5 transition-transform">
+                        <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-xl bg-white/2 text-primary border border-white/5 transition-transform">
                           <Icon icon="tabler:robot" className="text-base" />
                         </div>
                       ) : (
@@ -243,10 +249,10 @@ export default function StudentChatPage() {
             onSubmit={handleSubmit}
             className="group relative"
           >
-            <div className="relative flex items-end gap-2 rounded-2xl bg-white/[0.02] border border-white/5 p-1.5 transition-all duration-300 backdrop-blur-2xl">
+            <div className="relative flex items-end gap-2 rounded-2xl bg-white/2 border border-white/5 p-1.5 transition-all duration-300 backdrop-blur-2xl">
               <textarea
                 value={inputValue}
-                disabled={!sessionId || isLoading}
+                disabled={!mounted || !sessionId || isLoading}
                 onChange={(event) => setInputValue(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter" && !event.shiftKey) {
@@ -278,7 +284,7 @@ export default function StudentChatPage() {
                     <motion.button
                       key="send"
                       type="submit"
-                      disabled={!inputValue.trim() || isLoading || !sessionId}
+                      disabled={!mounted || !inputValue.trim() || isLoading || !sessionId}
                       whileTap={{ scale: 0.95 }}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}

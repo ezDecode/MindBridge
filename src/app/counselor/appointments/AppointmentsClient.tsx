@@ -11,9 +11,9 @@ type Booking = {
   id: string
   slot_start: string
   slot_end: string
-  status: string
+  status: string | null
   type: string
-  profiles: { id: string, name: string | null, institution: string | null } | null
+  profiles: { id: string, name: string | null, institution: string | null } | { id: string, name: string | null, institution: string | null }[] | null
 }
 
 export default function AppointmentsClient({ initialBookings }: { initialBookings: Booking[] }) {
@@ -90,7 +90,8 @@ export default function AppointmentsClient({ initialBookings }: { initialBooking
           </div>
         ) : (
           filteredBookings.map(booking => {
-            const studentName = booking.type === 'anonymous' ? 'Anonymous Student' : (resolveProfileDisplayName({ profileName: booking.profiles?.name }) || 'Student')
+            const profile = Array.isArray(booking.profiles) ? booking.profiles[0] : booking.profiles
+            const studentName = booking.type === 'anonymous' ? 'Anonymous Student' : (resolveProfileDisplayName({ profileName: profile?.name }) || 'Student')
             const date = new Date(booking.slot_start)
             
             return (
@@ -116,7 +117,7 @@ export default function AppointmentsClient({ initialBookings }: { initialBooking
                       <Icon icon="tabler:video" className="text-secondary text-base" /> Online
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Icon icon="tabler:school" className="text-warning text-base" /> {booking.profiles?.institution || 'Campus'}
+                      <Icon icon="tabler:school" className="text-warning text-base" /> {profile?.institution || 'Campus'}
                     </span>
                   </div>
                 </div>
@@ -128,7 +129,7 @@ export default function AppointmentsClient({ initialBookings }: { initialBooking
                     booking.status === 'pending_confirmation' ? "bg-warning/10 text-warning border-warning/20" :
                     "bg-white/5 text-text-dim border-white/10"
                   )}>
-                    {booking.status.replace('_', ' ')}
+                    {booking.status?.replace('_', ' ') || 'pending'}
                   </span>
                   
                   {filter === 'pending' && (

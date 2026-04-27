@@ -48,6 +48,29 @@ export async function POST(request: Request) {
 
     const supabase = await createServiceClient()
 
+    // Check for redundant bookings: ignore crisis sessions, only look at upcoming ones
+    if (type !== 'crisis') {
+      const { data: existingBooking, error: checkError } = await supabase
+        .from('bookings')
+        .select('id, slot_start')
+        .eq('student_id', user.id)
+        .in('status', ['pending_confirmation', 'confirmed'])
+        .neq('type', 'crisis')
+        .gt('slot_start', new Date().toISOString())
+        .limit(1)
+        .maybeSingle()
+
+      if (checkError) throw checkError
+
+      if (existingBooking) {
+        return NextResponse.json({ 
+          error: 'You already have an active session scheduled. Please complete or cancel it before booking a new one.',
+          code: 'REDUNDANT_BOOKING',
+          existingBooking
+        }, { status: 409 })
+      }
+    }
+
     // Create booking
     const { data: booking, error } = await supabase
       .from('bookings')

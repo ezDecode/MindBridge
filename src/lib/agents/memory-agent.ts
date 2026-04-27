@@ -103,7 +103,7 @@ export async function buildFastMemoryContext(
     ])
 
     const moods30 = moods30Result.data ?? []
-    const moods7 = moods30.filter((m) => m.logged_at >= sevenDaysAgo)
+    const moods7 = moods30.filter((m) => m.logged_at && m.logged_at >= sevenDaysAgo)
 
     const mood_avg_7d = average(moods7.map((m) => m.score))
     const mood_avg_30d = average(moods30.map((m) => m.score))
@@ -111,9 +111,9 @@ export async function buildFastMemoryContext(
     const screening = latestAssessmentResult.data
     const latest_screening = screening
       ? {
-          severity: screening.severity,
+          severity: screening.severity || 'unknown',
           criteria: screening.criteria_flagged ?? [],
-          assessed_at: screening.assessed_at,
+          assessed_at: screening.assessed_at || new Date().toISOString(),
         }
       : null
 

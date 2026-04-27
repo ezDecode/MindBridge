@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils";
 import { signOut, getProfile } from "@/lib/auth/actions";
 import { AnimatePresence, motion } from "motion/react";
 import { PanicModal } from "./PanicModal";
+import { useNotifications } from "@/hooks/useNotifications";
+
 
 interface RoleShellProps {
   children: React.ReactNode;
@@ -21,7 +23,6 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
   const pathname = usePathname();
   const router = useRouter();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState({
     name: 'User',
@@ -29,6 +30,8 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
     role: 'Student',
     dept: 'Wellness',
   });
+
+  const { unreadCount } = useNotifications();
 
   useEffect(() => {
     const handleOpenSettings = () => setIsSettingsOpen(true);
@@ -82,8 +85,8 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
                   isActive
-                    ? "bg-white/[0.08] text-white shadow-sm"
-                    : "text-text-muted hover:bg-white/[0.04] hover:text-white",
+                    ? "bg-white/8 text-white shadow-sm"
+                    : "text-text-muted hover:bg-white/4 hover:text-white",
                 )}
               >
                 <Icon icon={item.icon} className={cn("h-4.5 w-4.5", isActive ? "text-primary" : "text-text-dim")} />
@@ -94,59 +97,30 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
         </nav>
 
         <div className="p-4 space-y-2">
-          {/* Notifications in Sidebar */}
+          {/* Notifications Link */}
           <div className="relative">
-            <button
-              onClick={() => setIsNotifOpen(!isNotifOpen)}
+            <Link
+              href={isAdmin ? "/admin/notifications" : isCounselor ? "/counselor/notifications" : "/student/notifications"}
               className={cn(
                 "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all border border-transparent",
-                isNotifOpen ? "bg-white/[0.08] text-white" : "text-text-muted hover:bg-white/[0.04] hover:text-white"
+                pathname.includes("/notifications") ? "bg-white/8 text-white shadow-sm" : "text-text-muted hover:bg-white/4 hover:text-white"
               )}
             >
               <div className="relative">
                 <Icon icon="tabler:bell" className="h-4.5 w-4.5" />
-                <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-primary" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-white shadow-sm ring-2 ring-[#0c0f14]">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
               </div>
               Notifications
-            </button>
-
-            <AnimatePresence>
-              {isNotifOpen && (
-                <motion.div
-                  initial={{ opacity: 0, x: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, x: 0, scale: 1 }}
-                  exit={{ opacity: 0, x: 10, scale: 0.95 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute bottom-full left-0 z-50 mb-2 w-72 overflow-hidden rounded-xl border border-white/[0.08] bg-[#0c0f14] shadow-2xl"
-                >
-                  <div className="flex items-center justify-between border-b border-white/[0.06] p-4">
-                    <span className="text-[10px] font-bold uppercase text-white">Alerts</span>
-                    <button className="text-[9px] font-bold uppercase text-primary hover:text-primary-hover">
-                      Clear
-                    </button>
-                  </div>
-                  <div className="max-h-64 overflow-y-auto custom-scrollbar">
-                    <NotificationItem
-                      title="Appointment Reminder"
-                      desc="Dr. Radha session tomorrow"
-                      time="2h ago"
-                      unread
-                    />
-                    <NotificationItem
-                      title="Mood Check-in"
-                      desc="How are you feeling?"
-                      time="5h ago"
-                      unread
-                    />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            </Link>
           </div>
 
           <button
             onClick={() => setIsSettingsOpen(true)}
-            className="group flex w-full items-center gap-3 rounded-xl border border-white/[0.04] bg-white/[0.02] p-2.5 transition-colors hover:border-white/[0.08] hover:bg-white/[0.04]"
+            className="group flex w-full items-center gap-3 rounded-xl border border-white/4 bg-white/2 p-2.5 transition-colors hover:border-white/8 hover:bg-white/4"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10 text-xs font-bold text-primary">
               {user.initials}
@@ -163,13 +137,13 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col p-2 sm:p-3 lg:p-4 lg:pl-0">
-        <div className="flex h-full w-full flex-col overflow-hidden rounded-[1.5rem] border border-white/[0.08] bg-[#080a0d] shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-white/5 relative z-20">
+        <div className="flex h-full w-full flex-col overflow-hidden rounded-3xl border border-white/8 bg-[#080a0d] shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-white/5 relative z-20">
           
           <main className={cn("flex-1 min-h-0 relative no-scrollbar", fullHeight ? "h-full overflow-hidden" : "overflow-y-auto")}>
             {/* Mobile Menu Trigger - Floating for cleaner look without header */}
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="absolute top-5 left-5 z-40 flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] bg-black/40 backdrop-blur-md text-text-muted transition-all hover:bg-white/[0.04] hover:text-white lg:hidden"
+              className="absolute top-5 left-5 z-40 flex h-9 w-9 items-center justify-center rounded-md border border-white/8 bg-black/40 backdrop-blur-md text-text-muted transition-all hover:bg-white/4 hover:text-white lg:hidden"
             >
               <Icon icon="tabler:menu-2" className="h-5 w-5" />
             </button>
@@ -177,7 +151,7 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
             {!fullHeight && (
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/[0.02] to-transparent z-0"
+                className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-linear-to-b from-white/2 to-transparent z-0"
               />
             )}
             <div className={cn("relative z-10", fullHeight ? "h-full" : "p-5 md:p-8 lg:p-10")}>
@@ -208,14 +182,14 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-60 bg-black/60 backdrop-blur-sm lg:hidden"
             />
             <motion.aside
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 z-[70] flex w-72 flex-col bg-[#030406] p-6 lg:hidden"
+              className="fixed inset-y-0 left-0 z-70 flex w-72 flex-col bg-[#030406] p-6 lg:hidden"
             >
               <div className="mb-10 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-3" suppressHydrationWarning>
@@ -226,7 +200,7 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
                 </Link>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex h-8 w-8 items-center justify-center rounded-md border border-white/[0.08] text-text-muted"
+                  className="flex h-8 w-8 items-center justify-center rounded-md border border-white/8 text-text-muted"
                 >
                   <Icon icon="tabler:x" className="h-5 w-5" />
                 </button>
@@ -241,7 +215,7 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
                       href={item.href}
                       className={cn(
                         "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all",
-                        isActive ? "bg-white/[0.08] text-white" : "text-text-muted"
+                        isActive ? "bg-white/8 text-white" : "text-text-muted"
                       )}
                     >
                       <Icon icon={item.icon} className={cn("h-5 w-5", isActive ? "text-primary" : "text-text-dim")} />
@@ -279,34 +253,6 @@ export function RoleShell({ children, navItems, fullHeight = false }: RoleShellP
           </div>
         </Modal>
       )}
-    </div>
-  );
-}
-
-function NotificationItem({
-  title,
-  desc,
-  time,
-  unread = false,
-}: {
-  title: string;
-  desc: string;
-  time: string;
-  unread?: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        "cursor-pointer border-b border-white/[0.06] p-4 transition-colors hover:bg-white/[0.02]",
-        unread && "bg-white/[0.015]",
-      )}
-    >
-      <div className="mb-1 flex items-center gap-2">
-        <div className="text-xs font-semibold text-white">{title}</div>
-        {unread && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
-      </div>
-      <div className="mb-2 line-clamp-1 text-[11px] text-text-muted">{desc}</div>
-      <div className="text-[9px] font-bold uppercase text-text-dim">{time}</div>
     </div>
   );
 }

@@ -9,7 +9,7 @@ type MoodLog = {
   id: string
   score: number
   note: string | null
-  logged_at: string
+  logged_at: string | null
 }
 
 export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLog[] }) {
@@ -17,14 +17,16 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
 
   const filteredLogs = useMemo(() => {
     const now = new Date()
-    return initialLogs.filter(log => {
-      if (timeframe === 'all') return true
-      const days = timeframe === '7' ? 7 : 30
-      const logDate = new Date(log.logged_at)
-      const diffTime = Math.abs(now.getTime() - logDate.getTime())
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-      return diffDays <= days
-    })
+    return initialLogs
+      .filter(log => log.logged_at !== null)
+      .filter(log => {
+        if (timeframe === 'all') return true
+        const days = timeframe === '7' ? 7 : 30
+        const logDate = new Date(log.logged_at!)
+        const diffTime = Math.abs(now.getTime() - logDate.getTime())
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        return diffDays <= days
+      })
   }, [initialLogs, timeframe])
 
   // Simple SVG Chart data preparation
@@ -32,12 +34,12 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
     if (filteredLogs.length === 0) return []
     
     // Normalize data points to a 0-100 X grid and 0-50 Y grid
-    const start = new Date(filteredLogs[0].logged_at).getTime()
-    const end = new Date(filteredLogs[filteredLogs.length - 1].logged_at).getTime()
+    const start = new Date(filteredLogs[0].logged_at!).getTime()
+    const end = new Date(filteredLogs[filteredLogs.length - 1].logged_at!).getTime()
     const range = end - start || 1
     
     return filteredLogs.map((log) => {
-      const x = ((new Date(log.logged_at).getTime() - start) / range) * 100
+      const x = ((new Date(log.logged_at!).getTime() - start) / range) * 100
       const y = 50 - (log.score * 10) // Score 1-5 maps to 40-0
       return { ...log, x, y }
     })
@@ -191,7 +193,7 @@ export default function MoodHistoryClient({ initialLogs }: { initialLogs: MoodLo
               </div>
               <div>
                 <Text weight="semibold" className="text-white text-[1.0625rem]">
-                  {new Date(log.logged_at).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} at {new Date(log.logged_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                  {new Date(log.logged_at!).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} at {new Date(log.logged_at!).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                 </Text>
                 {log.note && (
                   <Text variant="small" className="text-text-muted mt-2 leading-relaxed">

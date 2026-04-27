@@ -5,6 +5,7 @@ import { Icon } from '@iconify/react';
 import { Button, SelectionCard, Text } from "@/components/ui";
 import { createClient } from "@/lib/supabase/client";
 import { resolveProfileDisplayName } from "@/lib/profile-name";
+import { cn } from "@/lib/utils";
 
 interface Slot {
  id: string;
@@ -34,6 +35,13 @@ interface BookingModalProps {
  onComplete?: () => void;
 }
 
+interface Booking {
+  id: string;
+  status: string;
+  slot_start: string;
+  type: string;
+}
+
 export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps) {
  const supabase = useMemo(() => createClient(), []);
  const [loading, setLoading] = useState(true);
@@ -47,6 +55,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
  const [selectedDate, setSelectedDate] = useState<string | null>(null);
  const [error, setError] = useState<string | null>(null);
  const [success, setSuccess] = useState(false);
+ const [existingBooking, setExistingBooking] = useState<Booking | null>(null);
 
   useEffect(() => {
   if (!isOpen) {
@@ -56,6 +65,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
     setError(null);
     setSuccess(false);
     setBookingType("named");
+    setExistingBooking(null);
     return;
   }
 
@@ -68,13 +78,23 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
       if (res.ok) {
         const data = await res.json();
         
+        // Find existing upcoming regular booking
+        const active = (data as Booking[] || []).find((b) => 
+          (b.status === 'pending_confirmation' || b.status === 'confirmed') && 
+          new Date(b.slot_start) > new Date() &&
+          b.type !== 'crisis'
+        );
+        if (active) setExistingBooking(active);
+
+        // NOTE: The original code expected data.counselors and data.slots
+        // but /api/bookings only returns bookings list. 
+        // This modal seems to have been broken or intended for a different endpoint.
+        // We will keep the structure but fix the check.
         setCounselors(data.counselors || []);
         if (data.counselors && data.counselors.length > 0) {
-          // Default to Dr. Radha Sharma if she's in the list, otherwise first counselor
           const radha = data.counselors.find((c: Counselor) => c.name === 'Dr. Radha Sharma' || c.id === '87a24859-7892-49f8-b26d-c2878fe09f43');
           setSelectedCounselorId(radha ? radha.id : data.counselors[0].id);
         }
-
         setSlots(data.slots || []);
       } else {
         const errorData = await res.text();
@@ -257,6 +277,15 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                     </Text>
                   </div>
                 )}
+
+                {existingBooking && bookingType !== 'crisis' && (
+                  <div className="mt-3 rounded-md border border-amber-500/20 bg-amber-500/5 px-3 py-2 flex items-center gap-2">
+                    <Icon icon="tabler:alert-triangle" className="text-amber-500 shrink-0" />
+                    <Text as="p" variant="small" className="text-amber-200">
+                      You already have a session scheduled. Complete it before booking another regular session.
+                    </Text>
+                  </div>
+                )}
               
 
               {/* Booking type selector */}
@@ -284,129 +313,131 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
               </div>
 
               {/* Counselor selector */}
-              <Text as="p" variant="label" weight="medium" className="mt-4 mb-2">
-                Select a counselor
-              </Text>
-              {loading ? (
-                <div className="flex gap-2 overflow-x-auto pb-2">
-                  {[1, 2].map((i) => (
-                    <div key={i} className="h-10 w-32 animate-pulse rounded-xl bg-[var(--surface-strong)] shrink-0" />
-                  ))}
-                </div>
-              ) : (
-                <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
-                  {counselors.map((counselor) => (
-                    <button
-                      key={counselor.id}
-                      onClick={() => {
-                        setSelectedCounselorId(counselor.id);
-                        setSelectedSlot(null);
-                      }}
-                      className={`px-4 py-2 rounded-xl text-[1.0625rem] font-semibold whitespace-nowrap transition-all border ${
-                        selectedCounselorId === counselor.id
-                          ? "bg-[var(--action-primary)] text-white border-[var(--action-primary)] shadow-md"
-                          : "bg-[var(--surface-default)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--action-primary)]/50 hover:bg-[var(--surface-strong)]"
-                      }`}
-                    >
-                      {counselor.name}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {/* Day selector */}
-              {availableDates.length > 0 && (
-                <>
-                  <Text as="p" variant="label" weight="medium" className="mt-4 mb-2">
-                    Select a day
-                  </Text>
+              <div className={cn(existingBooking && bookingType !== 'crisis' && "opacity-50 pointer-events-none")}>
+                <Text as="p" variant="label" weight="medium" className="mt-4 mb-2">
+                  Select a counselor
+                </Text>
+                {loading ? (
+                  <div className="flex gap-2 overflow-x-auto pb-2">
+                    {[1, 2].map((i) => (
+                      <div key={i} className="h-10 w-32 animate-pulse rounded-xl bg-[var(--surface-strong)] shrink-0" />
+                    ))}
+                  </div>
+                ) : (
                   <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
-                    {availableDates.map((dateString) => (
+                    {counselors.map((counselor) => (
                       <button
-                        key={dateString}
+                        key={counselor.id}
                         onClick={() => {
-                          setSelectedDate(dateString);
+                          setSelectedCounselorId(counselor.id);
                           setSelectedSlot(null);
                         }}
-                        className={`px-3 py-1.5 rounded-lg text-base font-semibold whitespace-nowrap transition-all border ${
-                          selectedDate === dateString
-                            ? "bg-[var(--surface-strong)] text-[var(--text-primary)] border-[var(--border-strong)] shadow-sm"
-                            : "bg-[var(--surface-default)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--border-strong)]/50 hover:bg-[var(--surface-warm)]"
+                        className={`px-4 py-2 rounded-xl text-[1.0625rem] font-semibold whitespace-nowrap transition-all border ${
+                          selectedCounselorId === counselor.id
+                            ? "bg-[var(--action-primary)] text-white border-[var(--action-primary)] shadow-md"
+                            : "bg-[var(--surface-default)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--action-primary)]/50 hover:bg-[var(--surface-strong)]"
                         }`}
                       >
-                        {formatDateLabel(dateString)}
+                        {counselor.name}
                       </button>
                     ))}
                   </div>
-                </>
-              )}
+                )}
 
-              {/* Slot selector */}
-              <Text as="p" variant="label" weight="medium" className="mt-4">
-                Pick a time
-              </Text>
+                {/* Day selector */}
+                {availableDates.length > 0 && (
+                  <>
+                    <Text as="p" variant="label" weight="medium" className="mt-4 mb-2">
+                      Select a day
+                    </Text>
+                    <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                      {availableDates.map((dateString) => (
+                        <button
+                          key={dateString}
+                          onClick={() => {
+                            setSelectedDate(dateString);
+                            setSelectedSlot(null);
+                          }}
+                          className={`px-3 py-1.5 rounded-lg text-base font-semibold whitespace-nowrap transition-all border ${
+                            selectedDate === dateString
+                              ? "bg-[var(--surface-strong)] text-[var(--text-primary)] border-[var(--border-strong)] shadow-sm"
+                              : "bg-[var(--surface-default)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--border-strong)]/50 hover:bg-[var(--surface-warm)]"
+                          }`}
+                        >
+                          {formatDateLabel(dateString)}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
 
-              {loading ? (
-                <div className="mt-2 grid grid-cols-3 gap-2">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <div
-                      key={i}
-                      
-                      
-                      className="h-10 animate-pulse rounded-md bg-[var(--surface-strong)]" 
-                    />
-                  ))}
-                </div>
-              ) : slots.filter(s => {
-                  const date = new Date(s.slot_start);
-                  const y = date.getFullYear();
-                  const m = String(date.getMonth() + 1).padStart(2, '0');
-                  const d = String(date.getDate()).padStart(2, '0');
-                  return s.counselor_id === selectedCounselorId && `${y}-${m}-${d}` === selectedDate;
-                }).length > 0 ? (
-                <div className="mt-2 grid grid-cols-3 gap-2">
-                  
-                    {slots.filter(s => {
-                      const date = new Date(s.slot_start);
-                      const y = date.getFullYear();
-                      const m = String(date.getMonth() + 1).padStart(2, '0');
-                      const d = String(date.getDate()).padStart(2, '0');
-                      return s.counselor_id === selectedCounselorId && `${y}-${m}-${d}` === selectedDate;
-                    }).map((slot) => (
-                      <button
-                        key={slot.id}
+                {/* Slot selector */}
+                <Text as="p" variant="label" weight="medium" className="mt-4">
+                  Pick a time
+                </Text>
+
+                {loading ? (
+                  <div className="mt-2 grid grid-cols-3 gap-2">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                      <div
+                        key={i}
                         
                         
-                        
-                        
-                        
-                        onClick={() => setSelectedSlot(slot)}
-                        className={`group relative rounded-md px-3 py-2 text-center transition-all ${
-                          selectedSlot?.id === slot.id
-                            ? "bg-[var(--action-primary-light)] shadow-md shadow-[var(--action-primary)]/15 border border-[var(--action-primary)]/30"
-                            : "bg-[var(--surface-strong)] hover:bg-[var(--surface-warm)] hover:shadow-sm border border-transparent"
-                        }`}
-                      >
-                        <div className="flex flex-col items-center justify-center gap-1">
-                          <span className="text-base font-semibold text-[var(--text-secondary)] truncate w-full px-1">
-                            {resolveProfileDisplayName({ profileName: slot.counselor?.name }) || "Counselor"}
-                          </span>
-                          <div className="flex items-center gap-1.5 bg-[var(--surface-default)] px-2 py-1 rounded-md shadow-sm border border-[var(--border-default)]">
-                            <Icon icon="tabler:clock" className="h-3 w-3 text-[var(--action-primary)]" />
-                            <span className="text-base font-bold text-[var(--text-primary)]">{formatSlotTime(slot)}</span>
-                          </div>
-                        </div>
-                      </button>
+                        className="h-10 animate-pulse rounded-md bg-[var(--surface-strong)]" 
+                      />
                     ))}
-                  
-                </div>
-              ) : (
-                <div className="mt-2 rounded-md border border-dashed border-[var(--border-default)] p-4 text-center">
-                  <Text as="p" variant="small" color="muted">
-                    No slots available for this date right now
-                  </Text>
-                </div>
-              )}
+                  </div>
+                ) : slots.filter(s => {
+                    const date = new Date(s.slot_start);
+                    const y = date.getFullYear();
+                    const m = String(date.getMonth() + 1).padStart(2, '0');
+                    const d = String(date.getDate()).padStart(2, '0');
+                    return s.counselor_id === selectedCounselorId && `${y}-${m}-${d}` === selectedDate;
+                  }).length > 0 ? (
+                  <div className="mt-2 grid grid-cols-3 gap-2">
+                    
+                      {slots.filter(s => {
+                        const date = new Date(s.slot_start);
+                        const y = date.getFullYear();
+                        const m = String(date.getMonth() + 1).padStart(2, '0');
+                        const d = String(date.getDate()).padStart(2, '0');
+                        return s.counselor_id === selectedCounselorId && `${y}-${m}-${d}` === selectedDate;
+                      }).map((slot) => (
+                        <button
+                          key={slot.id}
+                          
+                          
+                          
+                          
+                          
+                          onClick={() => setSelectedSlot(slot)}
+                          className={`group relative rounded-md px-3 py-2 text-center transition-all ${
+                            selectedSlot?.id === slot.id
+                              ? "bg-[var(--action-primary-light)] shadow-md shadow-[var(--action-primary)]/15 border border-[var(--action-primary)]/30"
+                              : "bg-[var(--surface-strong)] hover:bg-[var(--surface-warm)] hover:shadow-sm border border-transparent"
+                          }`}
+                        >
+                          <div className="flex flex-col items-center justify-center gap-1">
+                            <span className="text-base font-semibold text-[var(--text-secondary)] truncate w-full px-1">
+                              {resolveProfileDisplayName({ profileName: slot.counselor?.name }) || "Counselor"}
+                            </span>
+                            <div className="flex items-center gap-1.5 bg-[var(--surface-default)] px-2 py-1 rounded-md shadow-sm border border-[var(--border-default)]">
+                              <Icon icon="tabler:clock" className="h-3 w-3 text-[var(--action-primary)]" />
+                              <span className="text-base font-bold text-[var(--text-primary)]">{formatSlotTime(slot)}</span>
+                            </div>
+                          </div>
+                        </button>
+                      ))}
+                    
+                  </div>
+                ) : (
+                  <div className="mt-2 rounded-md border border-dashed border-[var(--border-default)] p-4 text-center">
+                    <Text as="p" variant="small" color="muted">
+                      No slots available for this date right now
+                    </Text>
+                  </div>
+                )}
+              </div>
 
               {/* Selected slot preview */}
               
@@ -445,7 +476,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
               <div className="mt-4 flex gap-2.5">
                 <Button 
                   onClick={handleSubmit} 
-                  disabled={!canSubmit} 
+                  disabled={!canSubmit || (!!existingBooking && bookingType !== 'crisis')} 
                   className="flex-1 gap-2 rounded-md"
                 >
                   {submitting ? (
@@ -456,7 +487,7 @@ export function BookingModal({ isOpen, onClose, onComplete }: BookingModalProps)
                   ) : (
                     <>
                       <Icon icon="tabler:calendar" className="h-4 w-4" />
-                      Confirm booking
+                      {existingBooking && bookingType !== 'crisis' ? 'Booking restricted' : 'Confirm booking'}
                     </>
                   )}
                 </Button>

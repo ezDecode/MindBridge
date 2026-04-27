@@ -6,8 +6,8 @@ import { Card, Text, Button } from '@/components/ui'
 import { useToast } from '@/components/ui/Toast'
 import { cn } from '@/lib/utils'
 
-type Slot = { id: string, slot_start: string, slot_end: string, available: boolean }
-type Booking = { id: string, slot_id: string | null, status: string, type: string, profiles: { name: string | null } | null }
+type Slot = { id: string, slot_start: string, slot_end: string, available: boolean | null }
+type Booking = { id: string, slot_id: string | null, status: string | null, type: string, profiles: { name: string | null } | { name: string | null }[] | null }
 
 export default function AvailabilityClient({ initialSlots, initialBookings }: { initialSlots: Slot[], initialBookings: Booking[] }) {
   const { showToast } = useToast()
@@ -160,7 +160,7 @@ export default function AvailabilityClient({ initialSlots, initialBookings }: { 
                           {isBooked ? (
                             <>
                               <Text variant="small" className="text-base font-medium text-text-dim block truncate">
-                                {booking?.profiles?.name || 'Booked'}
+                                {(Array.isArray(booking?.profiles) ? booking.profiles[0]?.name : booking?.profiles?.name) || 'Booked'}
                               </Text>
                               <div className="absolute -top-1 -right-1 size-2.5 rounded-full bg-warning shadow-[0_0_8px_rgba(245,158,11,0.6)]" />
                             </>

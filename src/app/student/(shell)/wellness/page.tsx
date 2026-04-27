@@ -1,11 +1,18 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Icon } from "@iconify/react";
 import { useToast } from "@/components/ui/Toast";
 import { Button, Card, Text } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
+
+interface WellnessProgress {
+  xp: number;
+  level: number;
+  streak: number;
+  last_activity: string | null;
+}
 
 export default function WellnessPage() {
   const { showToast } = useToast();
@@ -14,6 +21,8 @@ export default function WellnessPage() {
   const [pomRunning, setPomRunning] = useState(false);
   const [pomSeconds, setPomSeconds] = useState(1500);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [progress, setProgress] = useState<WellnessProgress>({ xp: 0, level: 1, streak: 0, last_activity: null });
+  const [awarding, setAwarding] = useState(false);
 
   const phases = useMemo(() => [
     { label: 'Inhale...', duration: 4000 },
@@ -21,14 +30,63 @@ export default function WellnessPage() {
     { label: 'Exhale...', duration: 8000 }
   ], []);
 
+  // Fetch wellness progress on mount
+  const fetchProgress = useCallback(async () => {
+    try {
+      const res = await fetch('/api/student/wellness');
+      if (res.ok) {
+        const data = await res.json();
+        setProgress(data.progress);
+      }
+    } catch {
+      console.error('Failed to fetch wellness progress');
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProgress();
+  }, [fetchProgress]);
+
+  // Award XP helper
+  const awardXP = async (activity: string, xpAmount: number) => {
+    if (awarding) return;
+    setAwarding(true);
+    try {
+      const res = await fetch('/api/student/wellness', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ activity, xpAmount }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProgress(data.progress);
+        if (data.leveledUp) {
+          showToast(`🎉 Level Up! You reached Level ${data.progress.level}!`, "success");
+        } else {
+          showToast(`+${xpAmount} XP earned! (${activity})`, "success");
+        }
+      }
+    } catch {
+      showToast("Failed to award XP", "error");
+    } finally {
+      setAwarding(false);
+    }
+  };
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (breathRunning) {
       interval = setTimeout(() => {
-        setBreathPhase((prev) => (prev + 1) % 3);
+        const nextPhase = (breathPhase + 1) % 3;
+        setBreathPhase(nextPhase);
+        // After completing a full cycle (back to phase 0), award XP
+        if (nextPhase === 0) {
+          awardXP('breathing', 10);
+        }
       }, phases[breathPhase].duration);
     }
     return () => clearTimeout(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [breathRunning, breathPhase, phases]);
 
   useEffect(() => {
@@ -43,14 +101,14 @@ export default function WellnessPage() {
 
   useEffect(() => {
     if (pomSeconds === 0 && pomRunning) {
-      // Use a small timeout to avoid cascading render warning in some environments
       const timer = setTimeout(() => {
         setPomRunning(false);
-        showToast("Pomodoro complete! Take a break", "success");
+        awardXP('pomodoro', 5);
       }, 0);
       return () => clearTimeout(timer);
     }
-  }, [pomSeconds, pomRunning, showToast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pomSeconds, pomRunning]);
 
   const formatTime = (sec: number) => {
     const m = Math.floor(sec / 60).toString().padStart(2, '0');
@@ -58,31 +116,40 @@ export default function WellnessPage() {
     return `${m}:${s}`;
   };
 
+  const xpForNextLevel = progress.level * 100;
+  const xpPercent = Math.min((progress.xp / xpForNextLevel) * 100, 100);
+
   return (
     <div className="max-w-6xl mx-auto space-y-10 pb-20">
       <Card padding="lg" className="bg-surface border-border">
         <div className="flex items-center gap-6">
           <div className="h-16 w-16 rounded bg-primary/10 border border-primary/20 flex flex-col items-center justify-center text-primary">
             <span className="typo-base font-medium ">Level</span>
-            <span className="typo-metric font-bold leading-none tabular-nums">3</span>
+            <span className="typo-metric font-bold leading-none tabular-nums">{progress.level}</span>
           </div>
           <div className="flex-1">
             <div className="flex justify-between items-end mb-4">
               <div>
                 <Text weight="semibold" className="text-white typo-base">Wellness Warrior</Text>
-                <Text variant="small" className="text-text-dim typo-base font-medium mt-1">Journey to level 4</Text>
+                <Text variant="small" className="text-text-dim typo-base font-medium mt-1">
+                  {progress.streak > 0 ? `${progress.streak}-day streak 🔥` : 'Start your streak!'}
+                </Text>
               </div>
-              <Text weight="bold" className="typo-subtitle tabular-nums text-white">240 <span className="text-text-dim">/ 300 XP</span></Text>
+              <Text weight="bold" className="typo-subtitle tabular-nums text-white">
+                {progress.xp} <span className="text-text-dim">/ {xpForNextLevel} XP</span>
+              </Text>
             </div>
             <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
               <motion.div 
                 initial={{ width: 0 }}
-                animate={{ width: '80%' }}
+                animate={{ width: `${xpPercent}%` }}
                 transition={{ duration: 1.5 }}
                 className="h-full bg-primary" 
               />
             </div>
-            <p className="typo-base font-medium text-text-dim mt-3">60 XP more to level up · Keep going!</p>
+            <p className="typo-base font-medium text-text-dim mt-3">
+              {xpForNextLevel - progress.xp} XP more to level up · Keep going!
+            </p>
           </div>
         </div>
       </Card>
@@ -101,7 +168,7 @@ export default function WellnessPage() {
               "group p-6 rounded-lg border transition-all text-left relative overflow-hidden",
               activeSection === act.id 
                 ? "bg-white/5 border-white/20 shadow-xl" 
-                : "bg-surface border-border hover:border-white/10 hover:bg-white/[0.02]"
+                : "bg-surface border-border hover:border-white/10 hover:bg-white/2"
             )}
           >
             <div className={cn("size-10 rounded-md bg-white/5 flex items-center justify-center mb-6 transition-colors", act.color)}>
@@ -154,6 +221,50 @@ export default function WellnessPage() {
         </motion.div>
       )}
 
+      {activeSection === 'meditation' && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+          <Card padding="lg" className="bg-surface border-border max-w-2xl mx-auto text-center py-16">
+            <div className="flex flex-col items-center">
+              <div className="badge badge-outline gap-2 px-4 mb-8">
+                <Icon icon="tabler:yoga" className="text-secondary" />
+                <span>Guided Mindfulness</span>
+              </div>
+              <Text className="text-text-muted typo-subtitle leading-relaxed mb-8 max-w-[45ch]">
+                Close your eyes. Focus on your breath. Let thoughts pass like clouds. Stay for 5 minutes.
+              </Text>
+              <div className="flex gap-3">
+                <Button size="lg" onClick={() => awardXP('meditation', 25)} disabled={awarding}>
+                  <Icon icon="tabler:check" /> Complete Session (+25 XP)
+                </Button>
+                <Button variant="warm" size="lg" onClick={() => setActiveSection(null)}>Close</Button>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+      )}
+
+      {activeSection === 'gratitude' && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+          <Card padding="lg" className="bg-surface border-border max-w-2xl mx-auto text-center py-16">
+            <div className="flex flex-col items-center">
+              <div className="badge badge-outline gap-2 px-4 mb-8">
+                <Icon icon="tabler:hands-pray" className="text-warning" />
+                <span>Gratitude Log</span>
+              </div>
+              <Text className="text-text-muted typo-subtitle leading-relaxed mb-8 max-w-[45ch]">
+                Write down 3 things you&apos;re grateful for today, even small ones. Then mark as done.
+              </Text>
+              <div className="flex gap-3">
+                <Button size="lg" onClick={() => awardXP('gratitude', 10)} disabled={awarding}>
+                  <Icon icon="tabler:check" /> Log Gratitude (+10 XP)
+                </Button>
+                <Button variant="warm" size="lg" onClick={() => setActiveSection(null)}>Close</Button>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+      )}
+
       {activeSection === 'pomodoro' && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <Card padding="lg" className="bg-surface border-border max-w-md mx-auto text-center py-16">
@@ -164,7 +275,7 @@ export default function WellnessPage() {
               </div>
 
               <div className="relative size-48 mb-12">
-                <svg className="size-full rotate-[-90deg]" viewBox="0 0 100 100">
+                <svg className="size-full -rotate-90" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="45" fill="transparent" stroke="rgba(255,255,255,0.05)" strokeWidth="4" />
                   <motion.circle 
                     cx="50" cy="50" r="45" fill="transparent" 
@@ -205,7 +316,9 @@ export default function WellnessPage() {
             </div>
             <Text as="h3" variant="body" weight="semibold" className="text-white">Mindfulness Challenge</Text>
           </div>
-          <span className="badge badge-primary bg-primary/10 text-primary border-primary/20 typo-base">Day 4 of 7</span>
+          <span className="badge badge-primary bg-primary/10 text-primary border-primary/20 typo-base">
+            Day {Math.min(progress.streak, 7)} of 7
+          </span>
         </div>
 
         <div className="grid grid-cols-7 gap-2 mb-10">
@@ -214,20 +327,20 @@ export default function WellnessPage() {
               key={d} 
               className={cn(
                 "p-3 rounded border text-center transition-all",
-                d < 4 ? "bg-success/5 border-success/20 text-success" :
-                d === 4 ? "bg-primary/5 border-primary/40 text-primary ring-2 ring-primary/10" :
-                "bg-white/[0.02] border-white/5 text-text-dim"
+                d < Math.min(progress.streak, 7) + 1 ? "bg-success/5 border-success/20 text-success" :
+                d === Math.min(progress.streak, 7) + 1 ? "bg-primary/5 border-primary/40 text-primary ring-2 ring-primary/10" :
+                "bg-white/2 border-white/5 text-text-dim"
               )}
             >
               <div className="flex justify-center mb-1">
-                <Icon icon={d < 4 ? "tabler:check" : d === 4 ? "tabler:target" : "tabler:circle"} className="typo-subtitle" />
+                <Icon icon={d < Math.min(progress.streak, 7) + 1 ? "tabler:check" : d === Math.min(progress.streak, 7) + 1 ? "tabler:target" : "tabler:circle"} className="typo-subtitle" />
               </div>
               <div className="typo-base font-medium ">Day {d}</div>
             </div>
           ))}
         </div>
 
-        <div className="p-6 rounded-md bg-white/[0.02] border border-white/5 relative group hover:border-white/10 transition-all">
+        <div className="p-6 rounded-md bg-white/2 border border-white/5 relative group hover:border-white/10 transition-all">
           <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none transition-transform">
             <Icon icon="tabler:pin" className="h-16 w-16" />
           </div>
@@ -239,9 +352,9 @@ export default function WellnessPage() {
             <Text color="secondary" className="typo-subtitle leading-relaxed mb-6 max-w-[60ch]">
               Spend 5 minutes in silent observation. Sit comfortably, close your eyes, and simply notice your thoughts without judging them.
             </Text>
-            <Button size="md" onClick={() => showToast("Day 4 completed! +20 XP", "success")}>
+            <Button size="md" onClick={() => awardXP('mindfulness_challenge', 20)} disabled={awarding}>
               <Icon icon="tabler:check" />
-              Mark as complete
+              Mark as complete (+20 XP)
             </Button>
           </div>
         </div>
