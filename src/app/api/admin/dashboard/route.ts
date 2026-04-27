@@ -59,7 +59,12 @@ export async function GET() {
 
     if (moodWithProfiles) {
       moodWithProfiles.forEach((log) => {
-        const profiles = log.profiles as { institution: string | null } | null
+        // Supabase join might return an array or a single object depending on the query
+        const profilesData = log.profiles as unknown
+        const profiles = Array.isArray(profilesData) 
+          ? (profilesData[0] as { institution: string | null } | undefined)
+          : (profilesData as { institution: string | null } | null)
+          
         const inst = profiles?.institution || 'General'
         const existing = deptMap.get(inst) || { totalScore: 0, count: 0 }
         deptMap.set(inst, {

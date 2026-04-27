@@ -69,11 +69,16 @@ export async function triggerCrisisAlert(studentId: string) {
   await sendCrisisEmail(student.counselor_id, studentId, resolvedStudentName)
 
   // 4. Notify all Admins in the same institution
-  const { data: admins } = await supabase
+  let query = supabase
     .from('profiles')
     .select('id, name')
     .eq('role', 'admin')
-    .eq('institution', student.institution)
+  
+  if (student.institution) {
+    query = query.eq('institution', student.institution)
+  }
+
+  const { data: admins } = await query
 
   if (admins && admins.length > 0) {
     // Insert in-app notifications
