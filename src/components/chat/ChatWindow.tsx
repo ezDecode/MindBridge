@@ -17,6 +17,7 @@ interface ChatWindowProps {
   isLoading?: boolean
   onSuggestionSelect?: (suggestion: string) => void
   onActionSelect?: (action: 'book_counselor' | 'show_resources' | 'send_crisis_alert') => void
+  onStartChat?: (partnerId: string) => void
 }
 
 export function ChatWindow({
@@ -24,6 +25,7 @@ export function ChatWindow({
   isLoading,
   onSuggestionSelect,
   onActionSelect,
+  onStartChat,
 }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [dismissedMessageIds, setDismissedMessageIds] = useState<string[]>([])
@@ -76,6 +78,7 @@ export function ChatWindow({
                   onActionSelect?.(action)
                 }}
                 onDismiss={() => dismissMessageEnhancements(message.id)}
+                onStartChat={onStartChat}
               />
             )
           })}
@@ -102,6 +105,82 @@ export function ChatWindow({
   )
 }
 
+export function DirectChatView({
+  messages,
+  isLoading,
+  currentUserId,
+  partnerName,
+}: {
+  messages: Array<{
+    id: string;
+    sender_id: string;
+    content: string;
+    created_at: string;
+  }>
+  isLoading: boolean
+  currentUserId: string
+  partnerName: string
+}) {
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
+  return (
+    <div className="flex flex-col h-full">
+      <div className="flex items-center gap-3 pb-4 mb-4 border-b border-white/5">
+        <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+          <Icon icon="tabler:user" className="size-4" />
+        </div>
+        <div>
+          <Text variant="small" weight="bold" className="text-white">{partnerName}</Text>
+          <div className="flex items-center gap-1.5">
+            <span className="size-1.5 rounded-full bg-status-success animate-pulse" />
+            <Text variant="caption" className="text-status-success font-bold text-[10px]">Active Session</Text>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col gap-3 pb-4">
+        {messages.map((msg, i) => {
+          const isMe = msg.sender_id === currentUserId
+          return (
+            <motion.div
+              key={msg.id || i}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={cn("flex flex-col", isMe ? "items-end" : "items-start")}
+            >
+              <div
+                className={cn(
+                  "max-w-[85%] px-3.5 py-2 rounded-xl text-[0.9375rem] font-medium leading-snug",
+                  isMe 
+                    ? "bg-primary text-black rounded-tr-none font-bold shadow-lg shadow-primary/10" 
+                    : "bg-white/[0.03] text-white/90 border border-white/5 rounded-tl-none"
+                )}
+              >
+                {msg.content}
+              </div>
+              <Text variant="caption" className="mt-1 text-white/20 text-[9px] font-bold px-1">
+                {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </Text>
+            </motion.div>
+          )
+        })}
+        {isLoading && (
+           <div className="flex justify-start">
+             <div className="bg-white/[0.03] px-3.5 py-2 rounded-xl rounded-tl-none border border-white/5">
+                <TypingIndicator />
+             </div>
+           </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+    </div>
+  )
+}
+
 function MessageBubble({
   message,
   isFirst,
@@ -109,6 +188,7 @@ function MessageBubble({
   onSuggestionSelect,
   onActionSelect,
   onDismiss,
+  onStartChat,
 }: {
   message: Message
   isFirst: boolean
@@ -117,6 +197,7 @@ function MessageBubble({
   onSuggestionSelect: (suggestion: string) => void
   onActionSelect: (action: 'book_counselor' | 'show_resources' | 'send_crisis_alert') => void
   onDismiss: () => void
+  onStartChat?: (partnerId: string) => void
 }) {
   const [confirmedBooking, setConfirmedBooking] = useState<{
     counselorName: string
@@ -196,6 +277,7 @@ function MessageBubble({
                 slotTime={confirmedBooking.slotTime}
                 slotStart={confirmedBooking.slotStart}
                 slotEnd={confirmedBooking.slotEnd}
+                onStartChat={() => onStartChat?.(message.actionContext || '')}
               />
             ) : message.bookingSlots && message.bookingSlots.length > 0 ? (
               <SlotCarousel

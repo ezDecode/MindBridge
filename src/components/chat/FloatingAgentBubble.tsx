@@ -10,7 +10,8 @@ import { Text } from '@/components/ui'
 import { getCurrentDemoUser } from '@/lib/auth/demo-session'
 import { useAgent } from './AgentContext'
 import { useAgentChat } from './useAgentChat'
-import { ChatWindow } from './ChatWindow'
+import { ChatWindow, DirectChatView } from './ChatWindow'
+import { useDirectChat } from '@/hooks/useDirectChat'
 
 const QUICK_CHIPS = [
   { label: "Stressed", prompt: "I'm feeling stressed right now." },
@@ -46,10 +47,15 @@ export function FloatingAgentBubble() {
   } = useAgent()
 
   const [isStudent, setIsStudent] = useState(false)
+  const [partnerId, setPartnerId] = useState<string | null>(null)
+  const [currentUser, setCurrentUser] = useState<{id: string} | null>(null)
+
   useEffect(() => {
     queueMicrotask(() => {
       try {
-        setIsStudent(getCurrentDemoUser().role === 'student')
+        const user = getCurrentDemoUser()
+        setIsStudent(user.role === 'student')
+        setCurrentUser({ id: user.id })
       } catch {
         setIsStudent(false)
       }
@@ -61,10 +67,12 @@ export function FloatingAgentBubble() {
     ctxRef.current = { currentPage, idleSeconds }
   }, [currentPage, idleSeconds])
 
-  const { messages, sendMessage, isLoading, stopGenerating } = useAgentChat({
+  const agentChat = useAgentChat({
     sessionId,
     getClientContext: () => ctxRef.current,
   })
+
+  const directChat = useDirectChat(partnerId)
 
   const onRoute = useMemo(() => {
     if (!pathname) return false
@@ -77,7 +85,12 @@ export function FloatingAgentBubble() {
     if (!text.trim()) return
     if (!isOpen) open()
     dismissProactive()
-    sendMessage(text)
+    
+    if (partnerId) {
+      directChat.sendMessage(text)
+    } else {
+      agentChat.sendMessage(text)
+    }
   }
 
   const panelVariants = {
@@ -116,7 +129,14 @@ export function FloatingAgentBubble() {
 
             {/* Messages */}
             <div className="flex-1 overflow-hidden pt-6 px-4">
-              {messages.length === 0 ? (
+              {partnerId && currentUser ? (
+                <DirectChatView 
+                  messages={directChat.messages}
+                  isLoading={directChat.isLoading}
+                  currentUserId={currentUser.id}
+                  partnerName="Counselor"
+                />
+              ) : agentChat.messages.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center gap-4 px-8 text-center">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/[0.02] border border-white/5 text-primary">
                     <Icon icon="tabler:sparkles" className="h-6 w-6" />
@@ -132,9 +152,10 @@ export function FloatingAgentBubble() {
                 </div>
               ) : (
                 <ChatWindow
-                  messages={messages}
-                  isLoading={isLoading}
+                  messages={agentChat.messages}
+                  isLoading={agentChat.isLoading}
                   onSuggestionSelect={(s) => handleSend(s)}
+                  onStartChat={(pid) => setPartnerId(pid)}
                 />
               )}
             </div>
@@ -142,34 +163,49 @@ export function FloatingAgentBubble() {
             {/* Compact Quick chips & Actions */}
             <div className="px-4 py-3 relative z-10">
               <div className="flex flex-wrap items-center gap-1.5 mb-3">
-                {QUICK_CHIPS.map((chip) => (
+                {!partnerId && QUICK_CHIPS.map((chip) => (
                   <button
                     key={chip.label}
                     type="button"
                     onClick={() => handleSend(chip.prompt)}
-                    disabled={isLoading}
+                    disabled={agentChat.isLoading}
                     className="rounded-full border border-white/5 bg-white/[0.03] px-3.5 py-1.5 text-[10px] font-bold text-text-dim transition-all hover:bg-white/10 hover:text-white disabled:opacity-50 active:scale-95"
                   >
                     {chip.label}
                   </button>
                 ))}
                 
-                <button
-                  type="button"
-                  onClick={() => {
-                    close()
-                    router.push('/student/chat')
-                  }}
-                  className="ml-auto flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-primary/80 hover:text-primary transition-colors"
-                >
-                  <Icon icon="tabler:layout-maximize" className="h-3 w-3" />
-                  Full View
-                </button>
+                {partnerId ? (
+                  <button
+                    type="button"
+                    onClick={() => setPartnerId(null)}
+                    className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-text-dim hover:text-white transition-colors"
+                  >
+                    <Icon icon="tabler:arrow-left" className="h-3 w-3" />
+                    Back to AI
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close()
+                      router.push('/student/chat')
+                    }}
+                    className="ml-auto flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-primary/80 hover:text-primary transition-colors"
+                  >
+                    <Icon icon="tabler:layout-maximize" className="h-3 w-3" />
+                    Full View
+                  </button>
+                )}
               </div>
             </div>
 
             {/* Compact Mini Input */}
-            <MiniChatInput onSend={handleSend} isLoading={isLoading} onStop={stopGenerating} />
+            <MiniChatInput 
+              onSend={handleSend} 
+              isLoading={partnerId ? directChat.isSending : agentChat.isLoading} 
+              onStop={partnerId ? () => {} : agentChat.stopGenerating} 
+            />
           </motion.div>
         )}
       </AnimatePresence>

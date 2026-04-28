@@ -69,7 +69,17 @@ END:VCALENDAR`
         </div>
 
         {slotStart && slotEnd && (
-          <div className="flex justify-end mt-2 relative z-10">
+          <div className="flex justify-end gap-2 mt-2 relative z-10">
+            {onStartChat && (
+              <button
+                type="button"
+                onClick={onStartChat}
+                className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-[var(--action-primary)] text-white hover:opacity-90 transition-opacity text-sm font-semibold"
+              >
+                <Icon icon="tabler:message-2" className="size-4" />
+                Message Counselor
+              </button>
+            )}
             <button
               type="button"
               onClick={handleAddToCalendar}
