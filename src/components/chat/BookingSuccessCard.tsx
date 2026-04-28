@@ -9,6 +9,7 @@ interface BookingSuccessCardProps {
   slotTime: string
   slotStart?: string
   slotEnd?: string
+  onStartChat?: () => void
 }
 
 export function BookingSuccessCard({
@@ -16,6 +17,7 @@ export function BookingSuccessCard({
   slotTime,
   slotStart,
   slotEnd,
+  onStartChat,
 }: BookingSuccessCardProps) {
 
   const handleAddToCalendar = () => {

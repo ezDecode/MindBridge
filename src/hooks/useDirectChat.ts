@@ -8,8 +8,8 @@ export interface DirectMessage {
   sender_id: string
   receiver_id: string
   content: string
-  is_read: boolean
-  created_at: string
+  is_read: boolean | null
+  created_at: string | null
 }
 
 export function useDirectChat(partnerId: string | null) {
