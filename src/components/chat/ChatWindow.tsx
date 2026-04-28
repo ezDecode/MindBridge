@@ -163,7 +163,7 @@ export function DirectChatView({
                 {msg.content}
               </div>
               <Text variant="caption" className="mt-1 text-white/20 text-[9px] font-bold px-1">
-                {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {new Date(msg.created_at || new Date()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </Text>
             </motion.div>
           )
