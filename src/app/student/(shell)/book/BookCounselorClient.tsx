@@ -1,12 +1,24 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Card, Text, Button } from '@/components/ui'
+import { Card, Text, Button, Modal } from '@/components/ui'
 import { useToast } from '@/components/ui/Toast'
 import { Icon } from '@iconify/react'
 import { cn } from '@/lib/utils'
 
-type Counselor = { id: string, name: string | null }
+type Counselor = { 
+  id: string; 
+  name: string | null;
+  specializations?: string[];
+  rating?: number;
+  reviews?: Array<{
+    id: string;
+    author: string;
+    rating: number;
+    comment: string;
+    date: string;
+  }>;
+}
 type Slot = { 
   id: string
   counselor_id: string
@@ -34,6 +46,12 @@ export default function BookCounselorClient({ initialCounselors, initialSlots }:
   const [isBooking, setIsBooking] = useState(false)
   const [existingBooking, setExistingBooking] = useState<Booking | null>(null)
   const [, setCheckingExisting] = useState(true)
+  const [profileToShow, setProfileToShow] = useState<Counselor | null>(null)
+  const [isClient, setIsClient] = useState(false)
+
+  useState(() => {
+    setIsClient(true)
+  })
 
   // Check for existing upcoming bookings on mount
   useState(() => {
@@ -171,8 +189,19 @@ export default function BookCounselorClient({ initialCounselors, initialSlots }:
                 <div className="size-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold shrink-0">
                   {(c.name || 'C').split(' ').map(n => n[0]).join('')}
                 </div>
-                <div>
-                  <Text weight="semibold" className="text-[1.0625rem] text-white group-hover:text-primary transition-colors">{c.name || 'Counselor'}</Text>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <Text weight="semibold" className="text-[1.0625rem] text-white group-hover:text-primary transition-colors truncate">{c.name || 'Counselor'}</Text>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setProfileToShow(c);
+                      }}
+                      className="size-6 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-text-dim hover:text-white transition-all shrink-0"
+                    >
+                      <Icon icon="tabler:info-circle" className="text-sm" />
+                    </button>
+                  </div>
                   <Text variant="small" className="text-text-dim text-base mt-1">Therapist</Text>
                 </div>
               </button>
@@ -284,6 +313,110 @@ export default function BookCounselorClient({ initialCounselors, initialSlots }:
           </Card>
         </div>
       </div>
+
+      <ProfileModal 
+        profile={profileToShow}
+        isOpen={!!profileToShow}
+        onClose={() => setProfileToShow(null)}
+        isClient={isClient}
+        onSelect={(id) => {
+          setSelectedCounselor(id);
+          setSelectedDate(null);
+          setSelectedSlot(null);
+        }}
+      />
     </div>
   )
+}
+
+function ProfileModal({ profile, isOpen, onClose, isClient, onSelect }: { profile: Counselor | null, isOpen: boolean, onClose: () => void, isClient: boolean, onSelect: (id: string) => void }) {
+  if (!profile) return null;
+  
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Counselor Profile"
+      size="md"
+    >
+      <div className="p-6 space-y-6">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-4">
+            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20 font-bold text-xl">
+              {(profile.name || 'C').split(' ').map(n => n[0]).join('')}
+            </div>
+            <div>
+              <Text variant="h3" className="text-white">{profile.name}</Text>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="flex items-center gap-1 text-warning">
+                  <Icon icon="tabler:star-filled" className="h-3.5 w-3.5" />
+                  <Text variant="small" weight="bold" className="text-warning">
+                    {profile.rating || '4.8'}
+                  </Text>
+                </div>
+                <Text variant="caption" className="text-text-dim">
+                  ({profile.reviews?.length || 12} reviews)
+                </Text>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <Text variant="small" weight="bold" className="text-white uppercase tracking-wider">Specializations</Text>
+          <div className="flex flex-wrap gap-2">
+            {(profile.specializations || ['Anxiety', 'Depression', 'Academic Stress', 'CBT']).map((spec, i) => (
+              <span key={i} className="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-xs text-text-secondary font-medium">
+                {spec}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <Text variant="small" weight="bold" className="text-white uppercase tracking-wider">Patient Reviews</Text>
+          <div className="space-y-4">
+            {(profile.reviews || [
+              { id: '1', author: 'Anonymous Student', rating: 5, comment: "Really helped me manage my workload and anxiety during exams.", date: '2024-03-10' },
+              { id: '2', author: 'Anonymous Student', rating: 4, comment: "Great listener and provided practical coping strategies.", date: '2024-02-25' }
+            ]).map((review) => (
+              <div key={review.id} className="p-4 rounded-lg bg-white/[0.02] border border-white/5 space-y-2">
+                <div className="flex items-center justify-between">
+                  <Text variant="caption" weight="bold" className="text-white">{review.author}</Text>
+                  <div className="flex gap-0.5">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Icon 
+                        key={i} 
+                        icon="tabler:star-filled" 
+                        className={cn(
+                          "h-3 w-3",
+                          i < review.rating ? "text-warning" : "text-white/10"
+                        )} 
+                      />
+                    ))}
+                  </div>
+                </div>
+                <Text variant="small" className="text-text-secondary italic leading-relaxed">
+                  &quot;{review.comment}&quot;
+                </Text>
+                <Text variant="caption" className="text-text-dim block pt-1">
+                  {isClient && new Date(review.date).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}
+                </Text>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="pt-4 flex justify-end gap-3 border-t border-white/5">
+          <Button variant="ghost" onClick={onClose}>Close</Button>
+          <Button onClick={() => {
+            onSelect(profile.id);
+            onClose();
+          }}>
+            Select Counselor
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  );
 }

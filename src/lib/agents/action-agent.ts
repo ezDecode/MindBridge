@@ -6,6 +6,15 @@ export interface SlotOption {
   slotTime: string
   slotStart: string
   slotEnd: string
+  specializations?: string[]
+  rating?: number
+  reviews?: Array<{
+    id: string
+    author: string
+    rating: number
+    comment: string
+    date: string
+  }>
 }
 
 export interface BookingResult {
@@ -46,8 +55,7 @@ function formatBookingDate(date: Date) {
  */
 
 export async function executeBooking(
-  studentId: string,
-  _bookingType: 'anonymous' | 'named' | 'crisis' = 'named'
+  _studentId: string
 ): Promise<BookingResult> {
   const supabase = await createServiceClient()
 
@@ -56,7 +64,7 @@ export async function executeBooking(
     // In a real app, we'd filter by counselor specialty etc.
     const { data: slots, error: slotsError } = await supabase
       .from('counselor_slots')
-      .select('*, counselor:profiles(name)')
+      .select('*, counselor:profiles(name, specializations, rating, reviews)')
       .eq('available', true)
       .gte('slot_start', new Date().toISOString())
       .order('slot_start', { ascending: true })
@@ -71,12 +79,21 @@ export async function executeBooking(
 
     const availableSlots: SlotOption[] = slots.map(slot => {
       const startTime = new Date(slot.slot_start)
+      const counselor = slot.counselor as unknown as { 
+        name: string; 
+        specializations: string[]; 
+        rating: number; 
+        reviews: unknown[] 
+      }
       return {
         id: slot.id,
-        counselorName: slot.counselor?.name || 'a counselor',
+        counselorName: counselor?.name || 'a counselor',
         slotTime: formatBookingDate(startTime),
         slotStart: slot.slot_start,
-        slotEnd: slot.slot_end
+        slotEnd: slot.slot_end,
+        specializations: counselor?.specializations,
+        rating: counselor?.rating ? Number(counselor.rating) : undefined,
+        reviews: counselor?.reviews
       }
     })
 

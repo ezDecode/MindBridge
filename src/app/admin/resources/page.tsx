@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
-import { Button, Text } from "@/components/ui";
+import { Button, Text, Modal } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 type Category = "Video" | "Article" | "Exercise";
@@ -34,6 +34,8 @@ export default function AdminResourcesPage() {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY_FORM);
   const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -82,17 +84,21 @@ export default function AdminResourcesPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this resource?")) return;
+  const handleDelete = async () => {
+    if (!deleteId) return;
+    setDeleting(true);
     try {
-      const res = await fetch(`/api/admin/resources?id=${encodeURIComponent(id)}`, {
+      const res = await fetch(`/api/admin/resources?id=${encodeURIComponent(deleteId)}`, {
         method: "DELETE",
       });
       if (res.ok) {
-        setResources((prev) => prev.filter((r) => r.id !== id));
+        setResources((prev) => prev.filter((r) => r.id !== deleteId));
+        setDeleteId(null);
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -284,7 +290,7 @@ export default function AdminResourcesPage() {
                       </a>
                     </div>
                     <button
-                      onClick={() => handleDelete(r.id)}
+                      onClick={() => setDeleteId(r.id)}
                       className="size-8 rounded flex items-center justify-center text-text-dim hover:text-danger hover:bg-danger/10 transition-colors"
                       aria-label="Delete resource"
                     >
@@ -297,6 +303,37 @@ export default function AdminResourcesPage() {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={!!deleteId}
+        onClose={() => !deleting && setDeleteId(null)}
+        title="Confirm Deletion"
+        size="sm"
+      >
+        <div className="p-6">
+          <Text color="secondary" className="mb-6">
+            Are you sure you want to delete this resource? This action cannot be undone.
+          </Text>
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="ghost"
+              size="md"
+              onClick={() => setDeleteId(null)}
+              disabled={deleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              size="md"
+              onClick={handleDelete}
+              disabled={deleting}
+            >
+              {deleting ? "Deleting..." : "Delete Resource"}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

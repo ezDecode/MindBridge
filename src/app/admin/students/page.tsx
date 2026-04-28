@@ -250,10 +250,10 @@ export default function AdminStudentsPage() {
                       "border-b border-white/3 transition-all relative overflow-hidden",
                       isAtRisk ? "bg-danger/[0.02] hover:bg-danger/[0.05]" : "hover:bg-white/2"
                     )}>
-                      {isAtRisk && (
-                        <td className="absolute top-0 left-0 w-1 h-full bg-danger shadow-[0_0_10px_rgba(239,68,68,0.8)] z-10" />
-                      )}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 relative">
+                        {isAtRisk && (
+                          <div className="absolute top-0 left-0 w-1 h-full bg-danger shadow-[0_0_10px_rgba(239,68,68,0.8)] z-10" />
+                        )}
                         <div className="flex items-center gap-3">
                           <div className={cn(
                             "size-8 rounded-full border flex items-center justify-center",
