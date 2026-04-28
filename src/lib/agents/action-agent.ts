@@ -79,12 +79,8 @@ export async function executeBooking(
 
     const availableSlots: SlotOption[] = slots.map(slot => {
       const startTime = new Date(slot.slot_start)
-      const counselor = slot.counselor as unknown as { 
-        name: string; 
-        specializations: string[]; 
-        rating: number; 
-        reviews: unknown[] 
-      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const counselor = slot.counselor as any
       return {
         id: slot.id,
         counselorName: counselor?.name || 'a counselor',
@@ -93,7 +89,7 @@ export async function executeBooking(
         slotEnd: slot.slot_end,
         specializations: counselor?.specializations,
         rating: counselor?.rating ? Number(counselor.rating) : undefined,
-        reviews: counselor?.reviews
+        reviews: counselor?.reviews as SlotOption['reviews']
       }
     })
 

@@ -110,8 +110,10 @@ export default function AdminDashboardPage() {
             
             <div className="h-44 flex items-end gap-2 px-2 relative">
               <div className="absolute inset-x-0 top-1/2 border-t border-dashed border-white/5 pointer-events-none" />
-              {(data?.moodLogs?.length ? data.moodLogs : Array.from({ length: 30 })).slice(0, 30).reverse().map((log: { score?: number }, i: number) => {
-                const score = log?.score || (2.5 + Math.random() * 2.5)
+              {(data?.moodLogs?.length ? data.moodLogs : Array.from({ length: 30 })).slice(0, 30).reverse().map((log: unknown, i: number) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const l = log as any;
+                const score = l?.score || (2.5 + Math.random() * 2.5)
                 const h = Math.max(10, (score / 5) * 100);
                 return (
                   <div key={i} className="flex-1 flex flex-col items-center gap-2 group/bar">
