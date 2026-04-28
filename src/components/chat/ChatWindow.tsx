@@ -115,7 +115,7 @@ export function DirectChatView({
     id: string;
     sender_id: string;
     content: string;
-    created_at: string;
+    created_at: string | null;
   }>
   isLoading: boolean
   currentUserId: string
